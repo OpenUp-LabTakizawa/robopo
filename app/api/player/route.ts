@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/app/lib/db/db"
 import { player, SelectPlayer } from "@/app/lib/db/schema"
 import { createPlayer } from "@/app/lib/db/queries/insert"
-import { deletePlayerById } from "@/app/lib/db/queries/queries"
+import { deleteById } from "@/app/api/delete"
 
 export const revalidate = 0
 
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        message: "An error occurred while creating the course.",
+        message: "An error occurred while creating the player.",
         error: error,
       },
       { status: 500 }
@@ -37,20 +37,6 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const reqbody = await req.json()
-  const { id } = reqbody
-  try {
-    const result = await deletePlayerById(id)
-    return NextResponse.json({ success: true, data: result }, { status: 200 })
-  } catch (error) {
-    console.log("error: ", error)
-    return NextResponse.json(
-      {
-        success: false,
-        message: "An error occurred while creating the course.",
-        error: error,
-      },
-      { status: 500 }
-    )
-  }
+  const result = await deleteById(req, "player")
+  return result
 }

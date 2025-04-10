@@ -4,7 +4,7 @@ import { useState } from "react"
 import useSound from "use-sound"
 import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 import ChallengeList from "@/app/(nolinkheader)/challenge/challengeList"
-import CommonList from "@/app/components/common/commonList"
+import { CommonRadioList } from "@/app/components/common/commonList"
 import Challenge from "@/app/(nolinkheader)/challenge/challenge"
 import CircleButton from "@/app/components/parts/circleButton"
 import { SensorCourse } from "@/app/components/challenge/sensorCourse"
@@ -48,7 +48,11 @@ export const View = ({ courseDataList, initialPlayerDataList }: ViewProps) => {
       )}
       {step === 1 && (
         <>
-          <CommonList type="player" commonId={playerId} setCommonId={setPlayerId} commonDataList={playerDataList} />
+          <CommonRadioList
+            props={{ type: "player", commonDataList: playerDataList }}
+            commonId={playerId}
+            setCommonId={setPlayerId}
+          />
           <div className="grid grid-cols-2 gap-4">
             <button
               type="button"

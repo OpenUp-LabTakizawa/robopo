@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react"
 import { type SelectCourse, type SelectPlayer } from "@/app/lib/db/schema"
-import CommonList from "@/app/components/common/commonList"
+import { CommonRadioList } from "@/app/components/common/commonList"
 import Link from "next/link"
 
 type ViewProps = {
@@ -18,7 +18,11 @@ export const View = ({ initialPlayerDataList, competitionId, umpireId }: ViewPro
 
   return (
     <div className="flex flex-col justify-center items-center overflow-y-auto w-full pt-10">
-      <CommonList type="player" commonId={playerId} setCommonId={setPlayerId} commonDataList={playerDataList} />
+      <CommonRadioList
+        props={{ type: "player", commonDataList: playerDataList }}
+        commonId={playerId}
+        setCommonId={setPlayerId}
+      />
       <Link
         href={`/challenge/${competitionId}/${umpireId}/${playerId}`}
         className={"btn min-w-28 max-w-fit mx-auto mt-5" + (disableCondiion ? " btn-disabled" : " btn-primary")}>

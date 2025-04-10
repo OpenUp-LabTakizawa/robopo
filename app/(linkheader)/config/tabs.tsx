@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react"
 import Link from "next/link"
-import CommonList from "@/app/components/common/commonList"
+import { CommonRadioList } from "@/app/components/common/commonList"
 import type { SelectCompetition, SelectPlayer, SelectUmpire, SelectCourse } from "@/app/lib/db/schema"
 import CommonRegister from "@/app/components/common/commonRegister"
 
@@ -106,11 +106,10 @@ export const CompetitionListTab = ({
 
   return (
     <>
-      <CommonList
-        type="competition"
+      <CommonRadioList
+        props={{ type: "competition", commonDataList: competitionList }}
         commonId={competitionId}
         setCommonId={setCompetitionId}
-        commonDataList={competitionList}
       />
       <button
         className="btn btn-primary text-default max-w-fit m-1"
@@ -147,7 +146,6 @@ export const CompetitionListTab = ({
 }
 
 export const NewCompetitionTab = ({ setCompetitionList }: NewCompetitionTabProps) => {
-  const [commonId, setCommonId] = useState<number | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   return (
@@ -155,7 +153,6 @@ export const NewCompetitionTab = ({ setCompetitionList }: NewCompetitionTabProps
       <p>新しい大会を追加します</p>
       <CommonRegister
         type="competition"
-        setCommonId={setCommonId}
         setSuccessMessage={setSuccessMessage}
         setErrorMessage={setErrorMessage}
         setCommonDataList={
