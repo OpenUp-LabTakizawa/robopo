@@ -1,10 +1,11 @@
 "use client"
 import { useCallback, useState } from "react"
 import type { SelectPlayer, SelectUmpire, SelectCompetition } from "@/app/lib/db/schema"
-import { getPlayerList, getUmpireList, getCompetitionList } from "@/app/components/common/utils"
+import { getPlayerList } from "@/app/components/challenge/utils"
+import { getUmpireList, getCompetitionList } from "@/app/components/common/utils"
 
 type CommonRegisterProps = {
-  type: "player" | "umpire" | "course" | "competition"
+  type: "player" | "umpire" | "competition"
   setSuccessMessage: React.Dispatch<React.SetStateAction<string | null>>
   setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>
   setCommonDataList: React.Dispatch<React.SetStateAction<SelectPlayer[] | SelectUmpire[] | SelectCompetition[]>>
@@ -18,16 +19,13 @@ const CommonRegister = ({ type, setSuccessMessage, setErrorMessage, setCommonDat
   const [qr, setQr] = useState("")
 
   const formItems = [
-    (type === "competition"
-      ? { label: "name", dispName: "大会名", value: name, setValue: setName }
-      : { label: "name", dispName: "名前", value: name, setValue: setName }
-    ),
+    { label: "name", dispName: "名前", value: name, setValue: setName },
     ...(type === "player"
       ? [
-        { label: "furigana", dispName: "ふりがな", value: furigana, setValue: setFurigana },
-        { label: "zekken", dispName: "ゼッケン番号", value: zekken, setValue: setZekken },
-        { label: "qr", dispName: "QRコード", value: qr, setValue: setQr },
-      ]
+          { label: "furigana", dispName: "ふりがな", value: furigana, setValue: setFurigana },
+          { label: "zekken", dispName: "ゼッケン番号", value: zekken, setValue: setZekken },
+          { label: "qr", dispName: "QRコード", value: qr, setValue: setQr },
+        ]
       : []),
   ]
 

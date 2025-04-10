@@ -1,14 +1,15 @@
-import type { SelectPlayer, SelectUmpire, SelectCompetition, SelectAssignList, SelectPlayerWithCompetition, SelectUmpireWithCompetition, SelectCourseWithCompetition } from "@/app/lib/db/schema"
+import type { SelectPlayer, SelectUmpire, SelectCompetition, SelectAssignList } from "@/app/lib/db/schema"
+import React from "react"
 
 type commonListProps = {
-  type: "player" | "umpire" | "course" | "competition" | "assign"
-  commonDataList: SelectPlayer[] | SelectUmpire[] | SelectCompetition[] | SelectAssignList[] | SelectPlayerWithCompetition[] | SelectUmpireWithCompetition[]
+  type: "player" | "umpire" | "competition" | "assign"
+  commonDataList: SelectPlayer[] | SelectUmpire[] | SelectCompetition[] | SelectAssignList[]
 }
 
 type radioListProps = {
   props: commonListProps
-  commonId: number | null
   setCommonId: React.Dispatch<React.SetStateAction<number | null>>
+  commonId: number | null
 }
 
 type checkboxListProps = {
@@ -22,40 +23,30 @@ const TableComponent = ({
   common,
 }: {
   type: commonListProps["type"]
-  common: SelectPlayer | SelectUmpire | SelectCompetition | SelectAssignList | SelectPlayerWithCompetition | SelectUmpireWithCompetition
+  common: SelectPlayer | SelectUmpire | SelectCompetition | SelectAssignList
 }) => {
   return (
     <>
       {type === "player" && (
         <>
-          {/* <td>{(common as SelectPlayerWithCompetition).id}</td> */}
-          <td>{(common as SelectPlayerWithCompetition).zekken}</td>
-          <td>{(common as SelectPlayerWithCompetition).furigana}</td>
-          <td>{(common as SelectPlayerWithCompetition).name}</td>
-          <td>{(common as SelectPlayerWithCompetition).competitionName?.map((name, index) => (<div key={index}>{name}</div>))}</td>
-          {/* <td>{(common as SelectPlayerWithCompetition).qr}</td> */}
+          {/* <td>{(common as SelectPlayer).id}</td> */}
+          <td>{(common as SelectPlayer).zekken}</td>
+          <td>{(common as SelectPlayer).furigana}</td>
+          <td>{(common as SelectPlayer).name}</td>
+          {/* <td>{(common as SelectPlayer).qr}</td> */}
         </>
       )}
       {type === "umpire" && (
         <>
-          <td>{(common as SelectUmpireWithCompetition).id}</td>
-          <td>{(common as SelectUmpireWithCompetition).name}</td>
-          <td>{(common as SelectUmpireWithCompetition).competitionName?.map((name, index) => (<div key={index}>{name}</div>))}</td>
-        </>
-      )}
-      {type === "course" && (
-        <>
-          <td>{(common as SelectCourseWithCompetition).id}</td>
-          <td>{(common as SelectCourseWithCompetition).name}</td>
-          <td suppressHydrationWarning={true}>{(common as SelectCourseWithCompetition).createdAt?.toLocaleString("ja-JP")}</td>
-          <td>{(common as SelectCourseWithCompetition).competitionName?.map((name, index) => (<div key={index}>{name}</div>))}</td>
+          <td>{(common as SelectUmpire).id}</td>
+          <td>{(common as SelectUmpire).name}</td>
         </>
       )}
       {type === "competition" && (
         <>
           <td>{(common as SelectCompetition).id}</td>
           <td>{(common as SelectCompetition).name}</td>
-          <td>{(common as SelectCompetition).step === 0 ? "開催前" : (common as SelectCompetition).step === 1 ? "開催中" : "終了済"}</td>
+          <td>{(common as SelectCompetition).isOpen ? "開催中" : "未開催"}</td>
         </>
       )}
       {type === "assign" && (
@@ -72,11 +63,11 @@ const TableComponent = ({
 const itemNames = (type: commonListProps["type"]): string[] => {
   const itemNames: string[] = []
   if (type === "player") {
-    itemNames.push("ゼッケン番号", "ふりがな", "名前", "参加大会")
+    itemNames.push("ゼッケン番号", "ふりがな", "名前")
+    //   // itemNames.push("ゼッケン番号", "ふりがな", "名前", "参加大会")
   } else if (type === "umpire") {
-    itemNames.push("ID", "名前", "参加大会")
-  } else if (type === "course") {
-    itemNames.push("ID", "コース名", "作成日時", "使用大会")
+    itemNames.push("ID", "名前")
+    // itemNames.push("ID", "名前", "参加大会")
   } else if (type === "competition") {
     itemNames.push("ID", "名前", "開催中")
   } else if (type === "assign") {
@@ -94,7 +85,7 @@ export const CommonRadioList = ({ props: { type, commonDataList }, commonId, set
     <>
       {type !== "competition" && (
         <h2 className="text-center text-xl font-semibold">
-          {type === "player" ? "選手" : type === "umpire" ? "採点者" : type === "course" ? "コース" : type === "assign" ? "割当" : null}一覧
+          {type === "player" ? "選手" : type === "umpire" ? "採点者" : null}一覧
         </h2>
       )}
       <div className="w-full">
@@ -115,7 +106,7 @@ export const CommonRadioList = ({ props: { type, commonDataList }, commonId, set
             <tbody>
               {commonDataList.length > 0 ? (
                 commonDataList.map((common) => (
-                  <tr key={common.id} className="hover cursor-pointer" onClick={() => setCommonId(common.id)} hidden={common.id < 0}>
+                  <tr key={common.id} className="hover cursor-pointer" onClick={() => setCommonId(common.id)}>
                     <th>
                       <label>
                         <input
@@ -137,12 +128,10 @@ export const CommonRadioList = ({ props: { type, commonDataList }, commonId, set
                     {type === "player"
                       ? "選手"
                       : type === "umpire"
-                        ? "採点者"
-                        : type === "competition"
-                          ? "大会"
-                          : type === "assign"
-                            ? "割当"
-                            : null}
+                      ? "採点者"
+                      : type === "competition"
+                      ? "大会"
+                      : "割当"}
                     が登録されていません。
                   </td>
                 </tr>
@@ -170,7 +159,7 @@ export const CommonCheckboxList = ({ props: { type, commonDataList }, commonId, 
     <>
       {type !== "competition" && (
         <h2 className="text-center text-xl font-semibold">
-          {type === "player" ? "選手" : type === "umpire" ? "採点者" : type === "course" ? "コース" : null}一覧
+          {type === "player" ? "選手" : type === "umpire" ? "採点者" : null}一覧
         </h2>
       )}
       <div className="w-full">
@@ -191,7 +180,7 @@ export const CommonCheckboxList = ({ props: { type, commonDataList }, commonId, 
             <tbody>
               {commonDataList.length > 0 ? (
                 commonDataList.map((common) => (
-                  <tr key={common.id} className="hover cursor-pointer" onClick={() => handleCheckboxChange(common.id)} hidden={common.id < 0}>
+                  <tr key={common.id} className="hover cursor-pointer" onClick={() => handleCheckboxChange(common.id)}>
                     <th>
                       <label>
                         <input
@@ -213,12 +202,10 @@ export const CommonCheckboxList = ({ props: { type, commonDataList }, commonId, 
                     {type === "player"
                       ? "選手"
                       : type === "umpire"
-                        ? "採点者"
-                        : type === "course"
-                          ? "コース"
-                          : type === "competition"
-                            ? "大会"
-                            : "割当"}
+                      ? "採点者"
+                      : type === "competition"
+                      ? "大会"
+                      : "割当"}
                     が登録されていません。
                   </td>
                 </tr>
