@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
-import type { SelectPlayer, SelectUmpire } from "@/app/lib/db/schema"
+import type { SelectPlayer, SelectUmpire, SelectPlayerWithCompetition } from "@/app/lib/db/schema"
 import { CommonCheckboxList } from "@/app/components/common/commonList"
 import CommonRegister from "@/app/components/common/commonRegister"
 import Link from "next/link"
@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation"
 
 type PlayerProps = {
   type: "player"
-  initialCommonDataList: { players: SelectPlayer[] }
+  initialCommonDataList: SelectPlayerWithCompetition[]
 }
 
 type UmpireProps = {
@@ -23,8 +23,8 @@ export const View = ({ type, initialCommonDataList }: ViewProps) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [commonId, setCommonId] = useState<number[] | null>(null)
   const commonString = type === "player" ? "選手" : "採点者"
-  const [commonDataList, setCommonDataList] = useState<SelectPlayer[] | SelectUmpire[]>(
-    type === "player" ? initialCommonDataList.players : initialCommonDataList.umpires
+  const [commonDataList, setCommonDataList] = useState<SelectPlayerWithCompetition[] | SelectUmpire[]>(
+    type === "player" ? initialCommonDataList : initialCommonDataList.umpires
   )
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export const View = ({ type, initialCommonDataList }: ViewProps) => {
       <div className="lg:flex lg:flex-row">
         <div className="flex-col lg:w-2/3">
           <CommonCheckboxList
-            props={{ type: "player", commonDataList: commonDataList }}
+            props={{ type: type, commonDataList: commonDataList }}
             commonId={commonId}
             setCommonId={setCommonId}
           />
@@ -69,15 +69,23 @@ export const View = ({ type, initialCommonDataList }: ViewProps) => {
               }}>
               削除
             </Link>
-            <button
-              type="button"
-              className="flex btn btn-primary mx-auto ml-5 m-3"
-              disabled={commonId === null || commonId.length === 0}
+            <Link
+              href={
+                type === "player"
+                  ? `/player/assign/${createQueryParams(commonId)}`
+                  : `/umpire/assign/${createQueryParams(commonId)}`
+              }
+              className={
+                "flex btn mx-auto m-3 ml-5 " +
+                (commonId === null || commonId?.length === 0 ? "pointer-events-none btn-disabled" : "btn-primary")
+              }
+              aria-disabled={commonId === null || commonId?.length === 0}
+              tabIndex={commonId === null || commonId?.length === 0 ? -1 : undefined}
               onClick={() => {
                 setSuccessMessage(null)
               }}>
               大会割当
-            </button>
+              </Link>
           </div>
         </div>
         <div className="lg:w-1/3">

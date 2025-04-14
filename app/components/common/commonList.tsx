@@ -1,9 +1,9 @@
-import type { SelectPlayer, SelectUmpire, SelectCompetition, SelectAssignList } from "@/app/lib/db/schema"
+import type { SelectPlayer, SelectUmpire, SelectCompetition, SelectAssignList, SelectPlayerWithCompetition } from "@/app/lib/db/schema"
 import React from "react"
 
 type commonListProps = {
   type: "player" | "umpire" | "competition" | "assign"
-  commonDataList: SelectPlayer[] | SelectUmpire[] | SelectCompetition[] | SelectAssignList[]
+  commonDataList: SelectPlayer[] | SelectUmpire[] | SelectCompetition[] | SelectAssignList[] | SelectPlayerWithCompetition[]
 }
 
 type radioListProps = {
@@ -23,16 +23,17 @@ const TableComponent = ({
   common,
 }: {
   type: commonListProps["type"]
-  common: SelectPlayer | SelectUmpire | SelectCompetition | SelectAssignList
+  common: SelectPlayer | SelectUmpire | SelectCompetition | SelectAssignList | SelectPlayerWithCompetition
 }) => {
   return (
     <>
       {type === "player" && (
         <>
           {/* <td>{(common as SelectPlayer).id}</td> */}
-          <td>{(common as SelectPlayer).zekken}</td>
-          <td>{(common as SelectPlayer).furigana}</td>
-          <td>{(common as SelectPlayer).name}</td>
+          <td>{(common as SelectPlayerWithCompetition).zekken}</td>
+          <td>{(common as SelectPlayerWithCompetition).furigana}</td>
+          <td>{(common as SelectPlayerWithCompetition).name}</td>
+          <td>{(common as SelectPlayerWithCompetition).competitionName?.map((name, index) => (<div key={index}>{name}</div>))}</td>
           {/* <td>{(common as SelectPlayer).qr}</td> */}
         </>
       )}
@@ -63,8 +64,7 @@ const TableComponent = ({
 const itemNames = (type: commonListProps["type"]): string[] => {
   const itemNames: string[] = []
   if (type === "player") {
-    itemNames.push("ゼッケン番号", "ふりがな", "名前")
-    //   // itemNames.push("ゼッケン番号", "ふりがな", "名前", "参加大会")
+    itemNames.push("ゼッケン番号", "ふりがな", "名前", "参加大会")
   } else if (type === "umpire") {
     itemNames.push("ID", "名前")
     // itemNames.push("ID", "名前", "参加大会")

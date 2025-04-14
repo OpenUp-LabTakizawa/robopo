@@ -10,11 +10,7 @@ import {
   umpireCourse,
   SelectAssignList,
   competitionPlayer,
-  competitionUmpire,
-  competitionCourse,
   SelectPlayerWithCompetition,
-  SelectUmpireWithCompetition,
-  SelectCourseWithCompetition,
 } from "@/app/lib/db/schema"
 import { eq, sql, and, or } from "drizzle-orm"
 
@@ -83,7 +79,6 @@ export const getCompetitionById = async (id: number) => {
 // firstTCourseCountはresult1とresult2から最大のものを取得し、
 // それまで(created_atとidを昇順に並べた際の古いもの)のresult1とresult2の個数を最大のものが出るまで足している。
 // 完走してない時もその時点で最大のresultまでの回数が出るので、完走したかどうかで表示非表示を変える必要がある。
-// firstTCourseTimeは、firstTCourseCountで取得したもののcreated_atを取得している。
 export const getCourseSummary = async (competitionId: number, courseId: number): Promise<CourseSummary[]> => {
   const result = await db
     .select({
@@ -120,43 +115,7 @@ export const getCourseSummary = async (competitionId: number, courseId: number):
             )
           )
         )`.as("firstTCourseCount"),
-      firstTCourseTime: sql`
-        (
-          SELECT created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo' FROM (
-            SELECT
-              ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
-              created_at,
-              GREATEST(result1, COALESCE(result2, 0)) AS result
-            FROM challenge
-            WHERE
-              player_id = ${player.id}
-              AND course_id = ${courseId}
-              AND (result1 IS NOT NULL OR result2 IS NOT NULL)
-          ) AS RankedAttemptsWithDate
-          WHERE attempt_number = (
-            SELECT MIN(attempt_number) FROM (
-              SELECT
-                ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
-                GREATEST(result1, COALESCE(result2, 0)) AS result
-              FROM challenge
-              WHERE
-                player_id = ${player.id}
-                AND course_id = ${courseId}
-                AND competition_id = ${competitionId}
-            ) AS Attempts
-            WHERE result = (
-              SELECT MAX(GREATEST(result1, COALESCE(result2, 0)))
-              FROM challenge
-              WHERE
-                player_id = ${player.id}
-                AND course_id = ${courseId}
-                AND competition_id = ${competitionId}
-            )
-          )
-        )
-      `.as("firstTCourseTime"),
       tCourseCount:
-        // 単純にresult1とresult2の個数を足している。
         sql`SUM(CASE WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END) ELSE 0 END)`.as(
           "tCourseCount"
         ),
@@ -357,12 +316,12 @@ export const getChallengeCount = async (competitionId: number, courseId: number,
 
 // competitionのIDを指定して開催にする関数
 export const openCompetitionById = async (id: number) => {
-  const result = await db.update(competition).set({ step: 1 }).where(eq(competition.id, id))
+  const result = await db.update(competition).set({ isOpen: true }).where(eq(competition.id, id))
 }
 
 // competitionのIDを指定して非開催にする関数
 export const closeCompetitionById = async (id: number) => {
-  const result = await db.update(competition).set({ step: 2 }).where(eq(competition.id, id))
+  const result = await db.update(competition).set({ isOpen: false }).where(eq(competition.id, id))
 }
 
 // umpireCourseをそれぞれの大会・コース・採点者のnameを取得して返す関数
@@ -410,21 +369,19 @@ export const getPlayersWithCompetition = async () => {
 }
 
 // 上記queryをplayer毎にgroup化する。(配列を許可)
-export function groupByPlayer(
-  flatRows: {
-    id: number
-    name: string
-    furigana: string | null
-    zekken: string | null
-    competitionId: number | null
-    competitionName: string | null
-  }[]
-): SelectPlayerWithCompetition[] {
+export function groupByPlayer(flatRows: {
+  id: number
+  name: string
+  furigana: string | null
+  zekken: string | null
+  competitionId: number | null
+  competitionName: string | null
+}[]) : SelectPlayerWithCompetition[] {
   const playerMap = new Map<string, SelectPlayerWithCompetition>()
 
   for (const row of flatRows) {
     const key = row.id.toString()
-
+    
     if (!playerMap.has(key)) {
       playerMap.set(key, {
         id: row.id,
@@ -442,100 +399,4 @@ export function groupByPlayer(
   }
 
   return Array.from(playerMap.values())
-}
-
-// umpireと参加大会を表にする関数
-export const getUmpireWithCompetition = async () => {
-  const result = await db
-    .select({
-      id: umpire.id,
-      name: umpire.name,
-      competitionId: competition.id,
-      competitionName: competition.name,
-    })
-    .from(umpire)
-    .leftJoin(competitionUmpire, eq(umpire.id, competitionUmpire.umpireId))
-    .leftJoin(competition, eq(competitionUmpire.competitionId, competition.id))
-    .orderBy(umpire.id)
-  return result
-}
-
-// 上記queryをumpire毎にgroup化する。(配列を許可)
-export function groupByUmpire(
-  flatRows: {
-    id: number
-    name: string
-    competitionId: number | null
-    competitionName: string | null
-  }[]
-): SelectUmpireWithCompetition[] {
-  const umpireMap = new Map<string, SelectUmpireWithCompetition>()
-
-  for (const row of flatRows) {
-    const key = row.id.toString()
-
-    if (!umpireMap.has(key)) {
-      umpireMap.set(key, {
-        id: row.id,
-        name: row.name,
-        competitionId: row.competitionId,
-        competitionName: [],
-      })
-    }
-
-    if (row.competitionName) {
-      umpireMap.get(key)?.competitionName?.push(row.competitionName)
-    }
-  }
-
-  return Array.from(umpireMap.values())
-}
-
-// courseと参加大会を表にする関数
-export const getCourseWithCompetition = async () => {
-  const result = await db
-    .select({
-      id: course.id,
-      name: course.name,
-      createdAt: course.createdAt,
-      competitionId: competition.id,
-      competitionName: competition.name,
-    })
-    .from(course)
-    .leftJoin(competitionCourse, eq(course.id, competitionCourse.courseId))
-    .leftJoin(competition, eq(competitionCourse.competitionId, competition.id))
-    .orderBy(course.id)
-  return result
-}
-
-// 上記queryをcourse毎にgroup化する。(配列を許可)
-export function groupByCourse(
-  flatRows: {
-    id: number
-    name: string
-    createdAt: Date | null
-    competitionId: number | null
-    competitionName: string | null
-  }[]
-): SelectCourseWithCompetition[] {
-  const courseMap = new Map<string, SelectCourseWithCompetition>()
-
-  for (const row of flatRows) {
-    const key = row.id.toString()
-
-    if (!courseMap.has(key)) {
-      courseMap.set(key, {
-        id: row.id,
-        name: row.name,
-        createdAt: row.createdAt,
-        competitionId: row.competitionId,
-        competitionName: [],
-      })
-    }
-
-    if (row.competitionName) {
-      courseMap.get(key)?.competitionName?.push(row.competitionName)
-    }
-  }
-  return Array.from(courseMap.values())
 }

@@ -1,10 +1,9 @@
 import { boolean, integer, pgTable, serial, text, timestamp, primaryKey } from "drizzle-orm/pg-core"
 
-// step 0:prepare, 1:open, 2:close
 export const competition = pgTable("competition", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  step: integer("step").default(0).notNull(),
+  isOpen: boolean("isopen").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 })
 
@@ -47,7 +46,9 @@ export const challenge = pgTable("challenge", {
   playerId: integer("player_id")
     .notNull()
     .references(() => player.id, { onDelete: "cascade" }),
-  umpireId: integer("umpire_id").references(() => umpire.id),
+  umpireId: integer("umpire_id")
+    .notNull()
+    .references(() => umpire.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow(),
 })
 
@@ -140,21 +141,6 @@ export type SelectPlayerWithCompetition = {
   name: string
   furigana: string | null
   zekken: string | null
-  competitionId: number | null
-  competitionName: string[] | null
-}
-
-export type SelectUmpireWithCompetition = {
-  id: number
-  name: string
-  competitionId: number | null
-  competitionName: string[] | null
-}
-
-export type SelectCourseWithCompetition = {
-  id: number
-  name: string
-  createdAt: Date | null
   competitionId: number | null
   competitionName: string[] | null
 }
