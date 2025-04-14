@@ -9,6 +9,8 @@ import {
   umpire,
   umpireCourse,
   SelectAssignList,
+  competitionPlayer,
+  SelectPlayerWithCompetition,
 } from "@/app/lib/db/schema"
 import { eq, sql, and, or } from "drizzle-orm"
 
@@ -346,4 +348,55 @@ export const getCourseIdByCompetitionIdAndUmpireId = async (competitionId: numbe
     .where(and(eq(umpireCourse.competitionId, competitionId), eq(umpireCourse.umpireId, umpireId)))
     .limit(1)
   return result
+}
+
+// playerと参加大会を表にする関数
+export const getPlayersWithCompetition = async () => {
+  const result = await db
+    .select({
+      id: player.id,
+      name: player.name,
+      furigana: player.furigana,
+      zekken: player.zekken,
+      competitionId: competition.id,
+      competitionName: competition.name,
+    })
+    .from(player)
+    .leftJoin(competitionPlayer, eq(player.id, competitionPlayer.playerId))
+    .leftJoin(competition, eq(competitionPlayer.competitionId, competition.id))
+    .orderBy(player.id)
+  return result
+}
+
+// 上記queryをplayer毎にgroup化する。(配列を許可)
+export function groupByPlayer(flatRows: {
+  id: number
+  name: string
+  furigana: string | null
+  zekken: string | null
+  competitionId: number | null
+  competitionName: string | null
+}[]) : SelectPlayerWithCompetition[] {
+  const playerMap = new Map<string, SelectPlayerWithCompetition>()
+
+  for (const row of flatRows) {
+    const key = row.id.toString()
+    
+    if (!playerMap.has(key)) {
+      playerMap.set(key, {
+        id: row.id,
+        name: row.name,
+        furigana: row.furigana,
+        zekken: row.zekken,
+        competitionId: row.competitionId,
+        competitionName: [],
+      })
+    }
+
+    if (row.competitionName) {
+      playerMap.get(key)?.competitionName?.push(row.competitionName)
+    }
+  }
+
+  return Array.from(playerMap.values())
 }

@@ -74,6 +74,39 @@ export const umpireCourse = pgTable(
   }
 )
 
+export const competitionCourse = pgTable("competition_course", {
+  id: serial("id").primaryKey(),
+  competitionId: integer("competition_id")
+    .notNull()
+    .references(() => competition.id, { onDelete: "cascade" }),
+  courseId: integer("course_id")
+    .notNull()
+    .references(() => course.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow(),
+})
+
+export const competitionPlayer = pgTable("competition_player", {
+  id: serial("id").primaryKey(),
+  competitionId: integer("competition_id")
+    .notNull()
+    .references(() => competition.id, { onDelete: "cascade" }),
+  playerId: integer("player_id")
+    .notNull()
+    .references(() => player.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow(),
+})
+
+export const competitionUmpire = pgTable("competition_umpire", {
+  id: serial("id").primaryKey(),
+  competitionId: integer("competition_id")
+    .notNull()
+    .references(() => competition.id, { onDelete: "cascade" }),
+  umpireId: integer("umpire_id")
+    .notNull()
+    .references(() => umpire.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow(),
+})
+
 export type InsertCompetition = typeof competition.$inferInsert
 export type SelectCompetition = typeof competition.$inferSelect
 
@@ -92,4 +125,22 @@ export type SelectChallenge = typeof challenge.$inferSelect
 export type InsertUmpireCourse = typeof umpireCourse.$inferInsert
 export type SelectUmpireCourse = typeof umpireCourse.$inferSelect
 
+export type InsertCompetitionCourse = typeof competitionCourse.$inferInsert
+export type SelectCompetitionCourse = typeof competitionCourse.$inferSelect
+
+export type InsertCompetitionPlayer = typeof competitionPlayer.$inferInsert
+export type SelectCompetitionPlayer = typeof competitionPlayer.$inferSelect
+
+export type InsertCompetitionUmpire = typeof competitionUmpire.$inferInsert
+export type SelectCompetitionUmpire = typeof competitionUmpire.$inferSelect
+
 export type SelectAssignList = { id: number; competition: string | null; course: string | null; umpire: string | null }
+
+export type SelectPlayerWithCompetition = {
+  id: number
+  name: string
+  furigana: string | null
+  zekken: string | null
+  competitionId: number | null
+  competitionName: string[] | null
+}
