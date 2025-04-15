@@ -10,7 +10,9 @@ import {
   umpireCourse,
   SelectAssignList,
   competitionPlayer,
+  competitionUmpire,
   SelectPlayerWithCompetition,
+  SelectUmpireWithCompetition,
 } from "@/app/lib/db/schema"
 import { eq, sql, and, or } from "drizzle-orm"
 
@@ -369,19 +371,21 @@ export const getPlayersWithCompetition = async () => {
 }
 
 // 上記queryをplayer毎にgroup化する。(配列を許可)
-export function groupByPlayer(flatRows: {
-  id: number
-  name: string
-  furigana: string | null
-  zekken: string | null
-  competitionId: number | null
-  competitionName: string | null
-}[]) : SelectPlayerWithCompetition[] {
+export function groupByPlayer(
+  flatRows: {
+    id: number
+    name: string
+    furigana: string | null
+    zekken: string | null
+    competitionId: number | null
+    competitionName: string | null
+  }[]
+): SelectPlayerWithCompetition[] {
   const playerMap = new Map<string, SelectPlayerWithCompetition>()
 
   for (const row of flatRows) {
     const key = row.id.toString()
-    
+
     if (!playerMap.has(key)) {
       playerMap.set(key, {
         id: row.id,
@@ -399,4 +403,51 @@ export function groupByPlayer(flatRows: {
   }
 
   return Array.from(playerMap.values())
+}
+
+// umpireと参加大会を表にする関数
+export const getUmpireWithCompetition = async () => {
+  const result = await db
+    .select({
+      id: umpire.id,
+      name: umpire.name,
+      competitionId: competition.id,
+      competitionName: competition.name,
+    })
+    .from(umpire)
+    .leftJoin(competitionUmpire, eq(umpire.id, competitionUmpire.umpireId))
+    .leftJoin(competition, eq(competitionUmpire.competitionId, competition.id))
+    .orderBy(umpire.id)
+  return result
+}
+
+// 上記queryをumpire毎にgroup化する。(配列を許可)
+export function groupByUmpire(
+  flatRows: {
+    id: number
+    name: string
+    competitionId: number | null
+    competitionName: string | null
+  }[]
+): SelectUmpireWithCompetition[] {
+  const umpireMap = new Map<string, SelectUmpireWithCompetition>()
+
+  for (const row of flatRows) {
+    const key = row.id.toString()
+
+    if (!umpireMap.has(key)) {
+      umpireMap.set(key, {
+        id: row.id,
+        name: row.name,
+        competitionId: row.competitionId,
+        competitionName: [],
+      })
+    }
+
+    if (row.competitionName) {
+      umpireMap.get(key)?.competitionName?.push(row.competitionName)
+    }
+  }
+
+  return Array.from(umpireMap.values())
 }
