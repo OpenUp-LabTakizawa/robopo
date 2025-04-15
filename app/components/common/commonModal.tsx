@@ -3,13 +3,11 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { SelectCompetition } from "@/app/lib/db/schema"
 
-type inputType = "player" | "umpire" | "course"
-
-function getCommonString(type: inputType): string {
-  return type === "player" ? "選手" : type === "umpire" ? "採点者" : "コース"
+function getCommonString(type: "player" | "umpire") {
+  return type === "player" ? "選手" : "採点者"
 }
 
-export const DeleteModal = ({ type, ids }: { type: inputType; ids: number[] }) => {
+export const DeleteModal = ({ type, ids }: { type: "player" | "umpire"; ids: number[] }) => {
   const [loading, setLoading] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -18,7 +16,7 @@ export const DeleteModal = ({ type, ids }: { type: inputType; ids: number[] }) =
   const handleDelete = async () => {
     try {
       setLoading(true)
-      const url = "/api/" + type
+      const url = type === "player" ? "/api/player" : "/api/umpire"
       const response = await fetch(url, {
         method: "DELETE",
         headers: {
@@ -53,7 +51,7 @@ export const DeleteModal = ({ type, ids }: { type: inputType; ids: number[] }) =
         <button
           className="btn btn-accent m-3"
           onClick={() => {
-            window.location.href = "/" + type
+            window.location.href = type === "player" ? "/player" : "/umpire"
           }}
           disabled={loading}>
           戻る
@@ -66,7 +64,7 @@ export const DeleteModal = ({ type, ids }: { type: inputType; ids: number[] }) =
   )
 }
 
-export const AssignModal = (params: { type: inputType, ids: number[], competitionList: { competitions: SelectCompetition[] } }) => {
+export const AssignModal = (params: { type: "player" | "umpire", ids: number[], competitionList: { competitions: SelectCompetition[] } }) => {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const { type, ids, competitionList } = params
@@ -76,7 +74,7 @@ export const AssignModal = (params: { type: inputType, ids: number[], competitio
   const handleAssign = async () => {
     try {
       setLoading(true)
-      const url = "/api/assign/" + type
+      const url = "/api/assign/" + (type === "player" ? "player" : "umpire")
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -88,7 +86,7 @@ export const AssignModal = (params: { type: inputType, ids: number[], competitio
       if (response.ok) {
         const data = await response.json()
         alert(commonString + "の割当てに成功しました。")
-        window.location.href = "/" + type
+        window.location.href = type === "player" ? "/player" : "/umpire"
       } else {
         const errorData = await response.json()
         console.error("Error assigning:", errorData)
@@ -104,7 +102,7 @@ export const AssignModal = (params: { type: inputType, ids: number[], competitio
   const handleUnassign = async () => {
     try {
       setLoading(true)
-      const url = "/api/assign/" + type
+      const url = "/api/assign/" + (type === "player" ? "player" : "umpire")
       const response = await fetch(url, {
         method: "DELETE",
         headers: {
@@ -117,7 +115,7 @@ export const AssignModal = (params: { type: inputType, ids: number[], competitio
         const data = await response.json()
         console.log("Player unassigned successfully:", data)
         alert(commonString + "の割当てを解除しました。")
-        window.location.href = "/" + type
+        window.location.href = type === "player" ? "/player" : "/umpire"
       } else {
         const errorData = await response.json()
         console.error("Error unassigning player:", errorData)
@@ -159,7 +157,7 @@ export const AssignModal = (params: { type: inputType, ids: number[], competitio
         <button
           className="btn btn-accent m-3"
           onClick={() => {
-            window.location.href = "/" + type
+            window.location.href = "/player"
           }}
           disabled={loading}>
           戻る

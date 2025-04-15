@@ -1,10 +1,9 @@
 "use client"
 import { useState, useEffect } from "react"
-import type { SelectPlayer, SelectUmpire, SelectPlayerWithCompetition } from "@/app/lib/db/schema"
+import type { SelectPlayer, SelectUmpire, SelectPlayerWithCompetition, SelectUmpireWithCompetition } from "@/app/lib/db/schema"
 import { CommonCheckboxList } from "@/app/components/common/commonList"
 import CommonRegister from "@/app/components/common/commonRegister"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 
 type PlayerProps = {
   type: "player"
@@ -13,7 +12,7 @@ type PlayerProps = {
 
 type UmpireProps = {
   type: "umpire"
-  initialCommonDataList: { umpires: SelectUmpire[] }
+  initialCommonDataList: SelectUmpireWithCompetition[]
 }
 
 type ViewProps = PlayerProps | UmpireProps
@@ -23,8 +22,8 @@ export const View = ({ type, initialCommonDataList }: ViewProps) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [commonId, setCommonId] = useState<number[] | null>(null)
   const commonString = type === "player" ? "選手" : "採点者"
-  const [commonDataList, setCommonDataList] = useState<SelectPlayerWithCompetition[] | SelectUmpire[]>(
-    type === "player" ? initialCommonDataList : initialCommonDataList.umpires
+  const [commonDataList, setCommonDataList] = useState<SelectPlayerWithCompetition[] | SelectUmpireWithCompetition[] | SelectPlayer[] | SelectUmpire[]>(
+    initialCommonDataList
   )
 
   useEffect(() => {
@@ -85,7 +84,7 @@ export const View = ({ type, initialCommonDataList }: ViewProps) => {
                 setSuccessMessage(null)
               }}>
               大会割当
-              </Link>
+            </Link>
           </div>
         </div>
         <div className="lg:w-1/3">
@@ -103,62 +102,4 @@ export const View = ({ type, initialCommonDataList }: ViewProps) => {
   }
 
   return <DefaultView />
-}
-
-export const DeleteModal = ({ type, ids }: { type: "player" | "umpire"; ids: number[] }) => {
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-  const commonString = type === "player" ? "選手" : "採点者"
-  const router = useRouter()
-  const handleDelete = async () => {
-    try {
-      console.log("ids: ", ids)
-      setLoading(true)
-      const url = type === "player" ? "/api/player" : "/api/umpire"
-      const response = await fetch(url, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: ids }),
-      })
-
-      if (response.ok) {
-        // 削除成功時の処理
-        setSuccessMessage(commonString + "が正常に削除されました")
-      } else {
-        setErrorMessage(commonString + "を削除できませんでした")
-      }
-    } catch (error) {
-      console.log("error: ", error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <dialog id="challenge-modal" className="modal modal-open">
-      <div className="modal-box">
-        {successMessage ? successMessage : <p>選択した{commonString}を削除しますか?</p>}
-        {errorMessage ? errorMessage : <br />}
-        {!successMessage && (
-          <button className="btn btn-accent m-3" onClick={handleDelete} disabled={loading}>
-            はい
-          </button>
-        )}
-        <button
-          className="btn btn-accent m-3"
-          onClick={() => {
-            window.location.href = type === "player" ? "/player" : "/umpire"
-          }}
-          disabled={loading}>
-          戻る
-        </button>
-      </div>
-      <form method="dialog" className="modal-backdrop" onClick={() => router.back()}>
-        <button className="cursor-default">close</button>
-      </form>
-    </dialog>
-  )
 }

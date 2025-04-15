@@ -1,9 +1,9 @@
-import type { SelectPlayer, SelectUmpire, SelectCompetition, SelectAssignList, SelectPlayerWithCompetition } from "@/app/lib/db/schema"
+import type { SelectPlayer, SelectUmpire, SelectCompetition, SelectAssignList, SelectPlayerWithCompetition, SelectUmpireWithCompetition } from "@/app/lib/db/schema"
 import React from "react"
 
 type commonListProps = {
   type: "player" | "umpire" | "competition" | "assign"
-  commonDataList: SelectPlayer[] | SelectUmpire[] | SelectCompetition[] | SelectAssignList[] | SelectPlayerWithCompetition[]
+  commonDataList: SelectPlayer[] | SelectUmpire[] | SelectCompetition[] | SelectAssignList[] | SelectPlayerWithCompetition[] | SelectUmpireWithCompetition[]
 }
 
 type radioListProps = {
@@ -23,24 +23,25 @@ const TableComponent = ({
   common,
 }: {
   type: commonListProps["type"]
-  common: SelectPlayer | SelectUmpire | SelectCompetition | SelectAssignList | SelectPlayerWithCompetition
+  common: SelectPlayer | SelectUmpire | SelectCompetition | SelectAssignList | SelectPlayerWithCompetition | SelectUmpireWithCompetition
 }) => {
   return (
     <>
       {type === "player" && (
         <>
-          {/* <td>{(common as SelectPlayer).id}</td> */}
+          {/* <td>{(common as SelectPlayerWithCompetition).id}</td> */}
           <td>{(common as SelectPlayerWithCompetition).zekken}</td>
           <td>{(common as SelectPlayerWithCompetition).furigana}</td>
           <td>{(common as SelectPlayerWithCompetition).name}</td>
           <td>{(common as SelectPlayerWithCompetition).competitionName?.map((name, index) => (<div key={index}>{name}</div>))}</td>
-          {/* <td>{(common as SelectPlayer).qr}</td> */}
+          {/* <td>{(common as SelectPlayerWithCompetition).qr}</td> */}
         </>
       )}
       {type === "umpire" && (
         <>
-          <td>{(common as SelectUmpire).id}</td>
-          <td>{(common as SelectUmpire).name}</td>
+          <td>{(common as SelectUmpireWithCompetition).id}</td>
+          <td>{(common as SelectUmpireWithCompetition).name}</td>
+          <td>{(common as SelectUmpireWithCompetition).competitionName?.map((name, index) => (<div key={index}>{name}</div>))}</td>
         </>
       )}
       {type === "competition" && (
@@ -66,8 +67,7 @@ const itemNames = (type: commonListProps["type"]): string[] => {
   if (type === "player") {
     itemNames.push("ゼッケン番号", "ふりがな", "名前", "参加大会")
   } else if (type === "umpire") {
-    itemNames.push("ID", "名前")
-    // itemNames.push("ID", "名前", "参加大会")
+    itemNames.push("ID", "名前", "参加大会")
   } else if (type === "competition") {
     itemNames.push("ID", "名前", "開催中")
   } else if (type === "assign") {
@@ -128,10 +128,10 @@ export const CommonRadioList = ({ props: { type, commonDataList }, commonId, set
                     {type === "player"
                       ? "選手"
                       : type === "umpire"
-                      ? "採点者"
-                      : type === "competition"
-                      ? "大会"
-                      : "割当"}
+                        ? "採点者"
+                        : type === "competition"
+                          ? "大会"
+                          : "割当"}
                     が登録されていません。
                   </td>
                 </tr>
@@ -202,10 +202,10 @@ export const CommonCheckboxList = ({ props: { type, commonDataList }, commonId, 
                     {type === "player"
                       ? "選手"
                       : type === "umpire"
-                      ? "採点者"
-                      : type === "competition"
-                      ? "大会"
-                      : "割当"}
+                        ? "採点者"
+                        : type === "competition"
+                          ? "大会"
+                          : "割当"}
                     が登録されていません。
                   </td>
                 </tr>

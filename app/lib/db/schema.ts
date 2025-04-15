@@ -144,3 +144,10 @@ export type SelectPlayerWithCompetition = {
   competitionId: number | null
   competitionName: string[] | null
 }
+
+export type SelectUmpireWithCompetition = {
+  id: number
+  name: string
+  competitionId: number | null
+  competitionName: string[] | null
+}
