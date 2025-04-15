@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="ja" className={inter.className}>
       <body className="font-zenKakuGothicNew">
-        <main className="max-w-(--breakpoint-xl) mx-auto text-xs sm:px-12 lg:text-base w-screen h-screen">
+        <main className="mx-auto text-xs sm:px-12 lg:text-base w-screen h-screen">
           {children}
           {/* <ScrollToTop /> */}
         </main>

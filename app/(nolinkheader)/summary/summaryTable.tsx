@@ -110,7 +110,7 @@ export const SummaryTable = () => {
   }
 
   return (
-    <div className="h-full w-full">
+    <div className="w-full">
       <div className="flex mb-5">
         <h1 className="text-3xl font-bold m-2">
           <span className="hidden sm:inline">成績判定シート</span>
@@ -142,7 +142,7 @@ export const SummaryTable = () => {
           )}
         </select>
       </div>
-      <div className="flex m-5 overflow-x-auto 2xl:justify-center 2xl:overflow-x-visible">
+      <div className="flex m-5 overflow-x-auto overflow-y-auto 2xl:overflow-x-visible max-h-96">
         <table className="table table-pin-rows table-pin-cols">
           <thead>
             <tr>
