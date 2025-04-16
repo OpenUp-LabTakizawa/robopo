@@ -20,7 +20,6 @@ type ViewProps = PlayerProps | UmpireProps
 export const View = ({ type, initialCommonDataList }: ViewProps) => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [commonId, setCommonId] = useState<number[] | null>(null)
   const commonString = type === "player" ? "選手" : "採点者"
   const [commonDataList, setCommonDataList] = useState<SelectPlayerWithCompetition[] | SelectUmpireWithCompetition[] | SelectPlayer[] | SelectUmpire[]>(
     initialCommonDataList
@@ -31,6 +30,7 @@ export const View = ({ type, initialCommonDataList }: ViewProps) => {
   }, [commonDataList])
 
   const DefaultView = () => {
+    const [commonId, setCommonId] = useState<number[] | null>(null)
     // 配列をクエリ文字列に変換する関数
     const createQueryParams = (ids: number[] | null) => {
       if (!ids || ids.length === 0) return ""

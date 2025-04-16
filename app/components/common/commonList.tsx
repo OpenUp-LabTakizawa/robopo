@@ -1,5 +1,4 @@
 import type { SelectPlayer, SelectUmpire, SelectCompetition, SelectAssignList, SelectPlayerWithCompetition, SelectUmpireWithCompetition } from "@/app/lib/db/schema"
-import React from "react"
 
 type commonListProps = {
   type: "player" | "umpire" | "competition" | "assign"
