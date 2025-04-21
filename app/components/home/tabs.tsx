@@ -3,32 +3,26 @@ import Link from "next/link"
 import React, { useMemo, useState } from "react"
 import type { SelectCompetition, SelectUmpire, SelectUmpireCourse } from "@/app/lib/db/schema"
 
-const ContentButton = ({ name, link, disabled }: { name: string; link: string; disabled: boolean }) => {
+const TabButton = ({ name, link }: { name: string; link: string }) => {
   return (
-    <Link
-      href={disabled ? "" : link}
-      className={
-        "btn min-w-40 min-h-20 text-2xl max-w-fit m-3" + (disabled ? " btn-disabled" : " btn-primary")
-      }>
+    <Link href={link} className="btn btn-primary min-w-40 min-h-20 text-2xl max-w-fit m-3">
       {name}
     </Link>
   )
 }
 
 type ChallengeTabProps = {
+  // competitionList: SelectCompetition[]
   competitionList: { competitions: SelectCompetition[] }
   umpireList: { umpires: SelectUmpire[] }
   rawAssignList: { assigns: SelectUmpireCourse[] }
 }
 
-type SummaryTabProps = {
-  competitionList: { competitions: SelectCompetition[] }
-}
-
 export const ChallengeTab = ({ competitionList, umpireList, rawAssignList }: ChallengeTabProps): React.JSX.Element => {
   const [competitionId, setCompetitionId] = useState(0)
   const [umpireId, setUmpireId] = useState(0)
-  const disableCondition = !competitionId || !umpireId || competitionId === 0 || umpireId === 0
+  // const [competitionList, setCompetitionList] = useState<SelectCompetition[]>(initCompetitionList)
+  const disableCondiion = !competitionId || !umpireId || competitionId === 0 || umpireId === 0
 
   // 大会選択後割当済の採点者を表示する
   const filteredUmpires = useMemo(() => {
@@ -43,21 +37,22 @@ export const ChallengeTab = ({ competitionList, umpireList, rawAssignList }: Cha
   return (
     <div>
       <select
-        className="select select-bordered m-3 w-50"
+        className="select select-bordered m-3"
         onChange={(event) => setCompetitionId(Number(event.target.value))}
         value={competitionId || 0}>
         <option value={0} disabled>
           大会を選んでください
         </option>
+        {/* {competitionList?.competitions?.map((competition) => ( */}
         {competitionList?.competitions?.map((competition) => (
-          <option key={competition.id} value={competition.id} hidden={competition.step !== 1}>
+          <option key={competition.id} value={competition.id}>
             {competition.name}
           </option>
         ))}
       </select>
 
       <select
-        className="select select-bordered m-3 w-50"
+        className="select select-bordered m-3"
         onChange={(event) => setUmpireId(Number(event.target.value))}
         value={umpireId || 0}
         disabled={!competitionId}>
@@ -75,34 +70,44 @@ export const ChallengeTab = ({ competitionList, umpireList, rawAssignList }: Cha
         )}
       </select>
 
-      <ContentButton
-        name="採点"
-        link={`/challenge/${competitionId}/${umpireId}`}
-        disabled={disableCondition}
-      />
+      <Link
+        href={disableCondiion ? "" : `/challenge/${competitionId}/${umpireId}`}
+        className={
+          "btn min-w-40 min-h-20 text-2xl max-w-fit m-3" + (disableCondiion ? " btn-disabled" : " btn-primary")
+        }>
+        採点
+      </Link>
     </div>
   )
 }
 
-export const SummaryTab = ({ competitionList }: SummaryTabProps): React.JSX.Element => {
-  const [competitionId, setCompetitionId] = useState(0)
-  const disableCondition = !competitionId || competitionId === 0
+export const SummaryTab = (): React.JSX.Element => {
+  const [competitionId, setCompetitionId] = useState(1)
   return (
     <div>
       <select
-        className="select select-bordered m-3 w-50"
+        className="select select-bordered m-3"
         onChange={(event) => setCompetitionId(Number(event.target.value))}
-        value={competitionId || 0}>
+        value={competitionId ? competitionId : 0}>
         <option value={0} disabled>
           大会を選んでください
         </option>
-        {competitionList?.competitions?.map((competition) => (
-          <option key={competition.id} value={competition.id} hidden={competition.step === 0}>
-            {competition.name}
-          </option>
-        ))}
+        <option value="1">PreOpen</option>
+        {/* {competitionList ? (
+          competitionList.selectompetition.map(
+            (competition) =>
+            competition.id !== -1 &&
+            competition.id !== -2 && (
+              <option key={competition.id} value={competition.id}>
+              {competition.name}
+              </option>
+              )
+              )
+              ) : (
+                <option>コースがありません</option>
+                )} */}
       </select>
-      <ContentButton name="集計結果" link={`/summary/${competitionId}`} disabled={disableCondition} />
+      <TabButton name="集計結果" link={`/summary?competitionId=${competitionId}`} />
     </div>
   )
 }
@@ -110,10 +115,10 @@ export const SummaryTab = ({ competitionList }: SummaryTabProps): React.JSX.Elem
 export const ManageTab = (): React.JSX.Element => {
   return (
     <div className="grid sm:grid-cols-2 md:flex md:flex-col justify-center">
-      <ContentButton name="コース作成" link={`/course`} disabled={false} />
-      <ContentButton name="選手登録" link={`/player`} disabled={false} />
-      <ContentButton name="採点者登録" link={`/umpire`} disabled={false} />
-      <ContentButton name="大会設定" link={`/config`} disabled={false} />
+      <TabButton name="コース作成" link={`/course`} />
+      <TabButton name="選手登録" link={`/player`} />
+      <TabButton name="採点者登録" link={`/umpire`} />
+      <TabButton name="大会設定" link={`/config`} />
     </div>
   )
 }

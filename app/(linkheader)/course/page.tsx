@@ -3,6 +3,8 @@ import { View } from "@/app/components/common/view"
 import { getCourseWithCompetition, groupByCourse } from "@/app/lib/db/queries/queries"
 import { SelectCourseWithCompetition, SelectCourse } from "@/app/lib/db/schema"
 
+export const revalidate = 0
+
 export default async function Course() {
   const initialCourseDataList: SelectCourseWithCompetition[] = await groupByCourse(await getCourseWithCompetition())
   return (
