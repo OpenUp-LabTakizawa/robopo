@@ -12,6 +12,7 @@ const TabButton = ({ name, link }: { name: string; link: string }) => {
 }
 
 type ChallengeTabProps = {
+  // competitionList: SelectCompetition[]
   competitionList: { competitions: SelectCompetition[] }
   umpireList: { umpires: SelectUmpire[] }
   rawAssignList: { assigns: SelectUmpireCourse[] }
@@ -20,6 +21,7 @@ type ChallengeTabProps = {
 export const ChallengeTab = ({ competitionList, umpireList, rawAssignList }: ChallengeTabProps): React.JSX.Element => {
   const [competitionId, setCompetitionId] = useState(0)
   const [umpireId, setUmpireId] = useState(0)
+  // const [competitionList, setCompetitionList] = useState<SelectCompetition[]>(initCompetitionList)
   const disableCondiion = !competitionId || !umpireId || competitionId === 0 || umpireId === 0
 
   // 大会選択後割当済の採点者を表示する
@@ -41,6 +43,7 @@ export const ChallengeTab = ({ competitionList, umpireList, rawAssignList }: Cha
         <option value={0} disabled>
           大会を選んでください
         </option>
+        {/* {competitionList?.competitions?.map((competition) => ( */}
         {competitionList?.competitions?.map((competition) => (
           <option key={competition.id} value={competition.id}>
             {competition.name}

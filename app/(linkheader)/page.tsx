@@ -3,6 +3,8 @@ import { getCompetitionList, getUmpireList, getRawAssignList } from "@/app/compo
 import { ChallengeTab, SummaryTab, ManageTab } from "@/app/components/home/tabs"
 import { ThreeTabs } from "@/app/components/parts/threeTabs"
 
+
+export const dynamic = "force-dynamic"
 export const revalidate = 0
 
 export default async function Home() {

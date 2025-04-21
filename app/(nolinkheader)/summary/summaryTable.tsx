@@ -7,9 +7,13 @@ import { deserializePoint, PointValue } from "@/app/components/course/utils"
 import { calcPoint } from "@/app/components/challenge/utils"
 import { type SelectCourse } from "@/app/lib/db/schema"
 
-export const SummaryTable = () => {
+type Props = {
+  courseList: { selectCourses: SelectCourse[] }
+}
+
+export const SummaryTable = (courseList: Props) => {
   const competitionId: number = 1 //一旦1
-  const [courseData, setCourseData] = useState<{ selectCourses: SelectCourse[] }>({ selectCourses: [] })
+  const [courseData, setCourseData] = useState<{ selectCourses: SelectCourse[] }>(courseList.courseList)
   const [pointData, setPointData] = useState<PointValue[]>([])
   const [ipponBashiPoint, setIpponBashiPoint] = useState<PointValue[]>([])
   const [courseId, setCourseId] = useState<number | null>(0)
@@ -25,7 +29,7 @@ export const SummaryTable = () => {
         const newCourseData: { selectCourses: SelectCourse[] } = await getCourseList()
         setCourseData(newCourseData)
 
-        const newIpponBashiPoint = newCourseData.selectCourses.find((course) => course.id === -1)?.point
+        const newIpponBashiPoint = newCourseData.selectCourses?.find((course) => course.id === -1)?.point
         newIpponBashiPoint && setIpponBashiPoint(await deserializePoint(newIpponBashiPoint))
 
         // コースIDが選択されている場合、そのコースのデータを取得
@@ -37,7 +41,7 @@ export const SummaryTable = () => {
               .reduce((mincourse, currentCourse) => (currentCourse.id < mincourse.id ? currentCourse : mincourse)).id
           )
         }
-        const selectedCourse = courseData.selectCourses.find((course) => course.id === courseId)
+        const selectedCourse = courseData.selectCourses?.find((course) => course.id === courseId)
         if (selectedCourse) {
           const point = await deserializePoint(selectedCourse.point)
           setPointData(point)
@@ -67,16 +71,16 @@ export const SummaryTable = () => {
             ? "" // 何も入ってない時に何入れるかは考える余地あり。
             : a[key]
           : a[key] === null
-          ? 0
-          : +a[key]
+            ? 0
+            : +a[key]
       const bValue: number | string =
         key === "playerFurigana" || key === "playerZekken"
           ? b[key] === null
             ? "" // 何も入ってない時に何入れるかは考える余地あり。
             : b[key]
           : b[key] === null
-          ? 0
-          : +b[key]
+            ? 0
+            : +b[key]
 
       if (order === "asc") {
         return aValue > bValue ? 1 : -1
@@ -128,7 +132,7 @@ export const SummaryTable = () => {
             コースを選んでください
           </option>
           {courseData ? (
-            courseData.selectCourses.map(
+            courseData.selectCourses?.map(
               (course) =>
                 course.id !== -1 &&
                 course.id !== -2 && (
@@ -169,7 +173,7 @@ export const SummaryTable = () => {
                 </td>
               </tr>
             ) : courseSummary.length > 0 ? (
-              courseSummary.map((player) => (
+              courseSummary?.map((player) => (
                 <tr key={player.playerId}>
                   <th className="border border-gray-400 p-2">
                     <Link
