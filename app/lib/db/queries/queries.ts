@@ -11,8 +11,10 @@ import {
   SelectAssignList,
   competitionPlayer,
   competitionUmpire,
+  competitionCourse,
   SelectPlayerWithCompetition,
   SelectUmpireWithCompetition,
+  SelectCourseWithCompetition,
 } from "@/app/lib/db/schema"
 import { eq, sql, and, or } from "drizzle-orm"
 
@@ -450,4 +452,53 @@ export function groupByUmpire(
   }
 
   return Array.from(umpireMap.values())
+}
+
+// courseと参加大会を表にする関数
+export const getCourseWithCompetition = async () => {
+  const result = await db
+    .select({
+      id: course.id,
+      name: course.name,
+      createdAt: course.createdAt,
+      competitionId: competition.id,
+      competitionName: competition.name,
+    })
+    .from(course)
+    .leftJoin(competitionCourse, eq(course.id, competitionCourse.courseId))
+    .leftJoin(competition, eq(competitionCourse.competitionId, competition.id))
+    .orderBy(course.id)
+  return result
+}
+
+// 上記queryをcourse毎にgroup化する。(配列を許可)
+export function groupByCourse(
+  flatRows: {
+    id: number
+    name: string
+    createdAt: Date | null
+    competitionId: number | null
+    competitionName: string | null
+  }[]
+): SelectCourseWithCompetition[] {
+  const courseMap = new Map<string, SelectCourseWithCompetition>()
+
+  for (const row of flatRows) {
+    const key = row.id.toString()
+
+    if (!courseMap.has(key)) {
+      courseMap.set(key, {
+        id: row.id,
+        name: row.name,
+        createdAt: row.createdAt,
+        competitionId: row.competitionId,
+        competitionName: [],
+      })
+    }
+
+    if (row.competitionName) {
+      courseMap.get(key)?.competitionName?.push(row.competitionName)
+    }
+  }
+  return Array.from(courseMap.values())
 }
