@@ -1,8 +1,7 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import { Suspense } from "react"
+import { UnloadProvider } from "@/app/components/beforeUnload/provider"
 import "@/app/globals.css"
-import { PageLoading } from "@/app/components/parts/pageLoading"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -13,9 +12,15 @@ export const metadata: Metadata = {
 
 export default function Layout({
   children,
-}: // modal
-  Readonly<{
-    children: React.ReactNode
-  }>) {
-  return <Suspense fallback={<PageLoading />}>{children}</Suspense>
+  modal,
+}: Readonly<{
+  children: React.ReactNode
+  modal: React.ReactNode
+}>) {
+  return (
+    <UnloadProvider>
+      {children}
+      {modal}
+    </UnloadProvider>
+  )
 }

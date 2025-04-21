@@ -1,13 +1,16 @@
 import Link from "next/link"
-import { EditList } from "@/app/(linkheader)/course/editList"
+import { View } from "@/app/components/common/view"
+import { getCourseWithCompetition, groupByCourse } from "@/app/lib/db/queries/queries"
+import { SelectCourseWithCompetition, SelectCourse } from "@/app/lib/db/schema"
 
-export default function Course() {
+export default async function Course() {
+  const initialCourseDataList: SelectCourseWithCompetition[] = await groupByCourse(await getCourseWithCompetition())
   return (
     <>
       <Link href="/course/edit" className="btn btn-primary min-w-28 max-w-fit mx-auto">
         コース新規作成
       </Link>
-      <EditList />
+      <View type="course" initialCommonDataList={initialCourseDataList} />
       <Link href="/" className="btn btn-primary min-w-28 max-w-fit mx-auto">
         トップへ戻る
       </Link>

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createCourse } from "@/app/lib/db/queries/insert"
 import { getCourseById } from "@/app/lib/db/queries/queries"
+import { deleteById } from "@/app/api/delete"
 
 export const revalidate = 0
 
@@ -42,4 +43,9 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     )
   }
+}
+
+export async function DELETE(req: NextRequest) {
+  const result = await deleteById(req, "course")
+  return result
 }

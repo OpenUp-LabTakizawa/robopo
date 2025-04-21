@@ -33,7 +33,7 @@ export const Field = (props: Props) => {
   return (
     <div
       className={"relative grid grid-cols-" + MAX_FIELD_WIDTH + " grid-rows-" + MAX_FIELD_HEIGHT + " mx-auto"}
-      style={{ width: MAX_FIELD_WIDTH * getPanelWidth() + "px", height: MAX_FIELD_HEIGHT * getPanelHeight() + "px" }}>
+      style={{ gridTemplateColumns: `repeat(${MAX_FIELD_WIDTH}, ${getPanelWidth()}px)`, gridTemplateRows: `repeat(${MAX_FIELD_HEIGHT}, ${getPanelHeight()}px)` }}>
       {props.field.map((row, rowIndex) =>
         row.map((panel, colIndex) => (
           <Panel key={`${rowIndex}-${colIndex}`} value={panel} onClick={() => props.onPanelClick(rowIndex, colIndex)} />

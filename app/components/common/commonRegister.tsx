@@ -5,7 +5,7 @@ import { getPlayerList } from "@/app/components/challenge/utils"
 import { getUmpireList, getCompetitionList } from "@/app/components/common/utils"
 
 type CommonRegisterProps = {
-  type: "player" | "umpire" | "competition"
+  type: "player" | "umpire" | "course" | "competition"
   setSuccessMessage: React.Dispatch<React.SetStateAction<string | null>>
   setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>
   setCommonDataList: React.Dispatch<React.SetStateAction<SelectPlayer[] | SelectUmpire[] | SelectCompetition[]>>
@@ -22,10 +22,10 @@ const CommonRegister = ({ type, setSuccessMessage, setErrorMessage, setCommonDat
     { label: "name", dispName: "名前", value: name, setValue: setName },
     ...(type === "player"
       ? [
-          { label: "furigana", dispName: "ふりがな", value: furigana, setValue: setFurigana },
-          { label: "zekken", dispName: "ゼッケン番号", value: zekken, setValue: setZekken },
-          { label: "qr", dispName: "QRコード", value: qr, setValue: setQr },
-        ]
+        { label: "furigana", dispName: "ふりがな", value: furigana, setValue: setFurigana },
+        { label: "zekken", dispName: "ゼッケン番号", value: zekken, setValue: setZekken },
+        { label: "qr", dispName: "QRコード", value: qr, setValue: setQr },
+      ]
       : []),
   ]
 

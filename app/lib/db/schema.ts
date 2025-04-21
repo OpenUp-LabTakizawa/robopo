@@ -151,3 +151,11 @@ export type SelectUmpireWithCompetition = {
   competitionId: number | null
   competitionName: string[] | null
 }
+
+export type SelectCourseWithCompetition = {
+  id: number
+  name: string
+  createdAt: Date | null
+  competitionId: number | null
+  competitionName: string[] | null
+}
