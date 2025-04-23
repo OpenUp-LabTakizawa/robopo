@@ -1,5 +1,4 @@
-import { getCourseList } from "@/app/components/course/listUtils"
-import { getPlayerList } from "@/app/components/common/utils"
+import { getPlayerList, getCourseList } from "@/app/components/common/utils"
 import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 import { View } from "@/app/(nolinkheader)/challenge/view"
 

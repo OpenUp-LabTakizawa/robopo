@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { type CourseSummary, isCompletedCourse } from "@/app/components/summary/utils"
-import { getCourseList } from "@/app/components/course/listUtils"
+import { getCourseList } from "@/app/components/common/utils"
 import { deserializePoint, PointValue } from "@/app/components/course/utils"
 import { calcPoint } from "@/app/components/challenge/utils"
 import { type SelectCourse } from "@/app/lib/db/schema"

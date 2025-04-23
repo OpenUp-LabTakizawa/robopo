@@ -4,29 +4,6 @@ import type { SelectCourse } from "@/app/lib/db/schema"
 import { deleteCourseById } from "@/app/lib/db/queries/queries"
 import { BASE_URL } from "@/app/lib/const"
 
-// コース一覧情報を取得する関数
-export async function getCourseList(): Promise<{
-  selectCourses: SelectCourse[]
-}> {
-  console.log("fetch in getCourseList BASE_URL: ", BASE_URL)
-  return fetch(`${BASE_URL}/api/course/list`, { cache: "no-store" })
-    .then((res) => {
-      if (!res.ok) {
-        return { selectCourses: [] }
-      }
-      return res.json()
-    })
-    .then((data) => {
-      // ここの形式が色々変わるみたいな気がする。
-      // console.log("data: ", data)
-      return { selectCourses: data.getCourses }
-    })
-    .catch((err) => {
-      console.error("error: ", err)
-      return { selectCourses: [] } //エラーが発生した場合、空の配列を返す
-    })
-}
-
 // IDを指定してDBからコースを取得する関数
 export const getCourse = async (id: number): Promise<SelectCourse | null> => {
   return fetch(`${BASE_URL}/api/course?id=${id}`, { cache: "no-store" })

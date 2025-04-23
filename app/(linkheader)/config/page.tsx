@@ -1,5 +1,4 @@
-import { getCompetitionList, getUmpireList } from "@/app/components/common/utils"
-import { getCourseList } from "@/app/components/course/listUtils"
+import { getCompetitionList, getUmpireList, getCourseList } from "@/app/components/common/utils"
 import { SelectCompetition, SelectCourse, SelectUmpire } from "@/app/lib/db/schema"
 import View from "@/app/(linkheader)/config/view"
 
