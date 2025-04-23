@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   const { name } = reqbody
   const competitionData = {
     name: name,
-    isOpen: false,
+    step: 0,
   }
   try {
     const result = await createCompetition(competitionData)

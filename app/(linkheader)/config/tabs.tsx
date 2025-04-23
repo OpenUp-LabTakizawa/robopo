@@ -115,7 +115,7 @@ export const CompetitionListTab = ({
         className="btn btn-primary text-default max-w-fit m-1"
         value="open"
         disabled={
-          competitionId === null || loading || competitionList?.find((c) => c.id === competitionId)?.isOpen === true
+          competitionId === null || loading || competitionList?.find((c) => c.id === competitionId)?.step === 1
         }
         onClick={(e) => handleButtonClick(e)}>
         開催
@@ -124,7 +124,7 @@ export const CompetitionListTab = ({
         className="btn btn-primary text-default max-w-fit m-1"
         value="close"
         disabled={
-          competitionId === null || loading || competitionList?.find((c) => c.id === competitionId)?.isOpen === false
+          competitionId === null || loading || competitionList?.find((c) => c.id === competitionId)?.step !== 1
         }
         onClick={(e) => handleButtonClick(e)}>
         停止
