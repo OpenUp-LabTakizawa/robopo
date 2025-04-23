@@ -1,5 +1,5 @@
 import { getUmpireWithCompetition, groupByUmpire } from "@/app/lib/db/queries/queries"
-import type { SelectUmpire, SelectUmpireWithCompetition } from "@/app/lib/db/schema"
+import type { SelectUmpireWithCompetition } from "@/app/lib/db/schema"
 import { View } from "@/app/components/common/view"
 
 export const revalidate = 0

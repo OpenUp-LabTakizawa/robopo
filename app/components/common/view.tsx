@@ -29,7 +29,6 @@ export const View = ({ type, initialCommonDataList }: ViewProps) => {
   const [commonDataList, setCommonDataList] = useState<SelectPlayerWithCompetition[] | SelectUmpireWithCompetition[] | SelectCourseWithCompetition[] | SelectPlayer[] | SelectUmpire[]>(
     initialCommonDataList
   )
-  // const [commonId, setCommonId] = useState<number[] | null>(null)
   // 配列をクエリ文字列に変換する関数
   const createQueryParams = (ids: number[] | null) => {
     if (!ids || ids.length === 0) return ""
@@ -50,7 +49,7 @@ export const View = ({ type, initialCommonDataList }: ViewProps) => {
           <p className="flex m-3">選択した{commonString}を</p>
           {type === "course" &&
             <Link
-              href={`/course/assign/${createQueryParams(commonId)}`}
+              href={`/course/edit?${commonId?.map((id) => `id=${id}`).join("&")}`}
               className={
                 "flex btn mx-auto m-3 " +
                 (commonId?.length !== 1 ? "pointer-events-none btn-disabled" : "btn-primary")

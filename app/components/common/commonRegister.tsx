@@ -1,7 +1,6 @@
 "use client"
 import { useCallback, useState } from "react"
 import type { SelectPlayer, SelectUmpire, SelectCompetition } from "@/app/lib/db/schema"
-// import { getPlayerList } from "@/app/components/challenge/utils"
 import { getPlayerList, getUmpireList, getCompetitionList } from "@/app/components/common/utils"
 
 type CommonRegisterProps = {
