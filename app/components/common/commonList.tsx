@@ -55,7 +55,7 @@ const TableComponent = ({
         <>
           <td>{(common as SelectCompetition).id}</td>
           <td>{(common as SelectCompetition).name}</td>
-          <td>{(common as SelectCompetition).isOpen ? "開催中" : "未開催"}</td>
+          <td>{(common as SelectCompetition).step === 0 ? "開催前" : (common as SelectCompetition).step === 1 ? "開催中" : "終了済"}</td>
         </>
       )}
       {type === "assign" && (

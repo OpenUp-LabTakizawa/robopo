@@ -1,9 +1,10 @@
 import { boolean, integer, pgTable, serial, text, timestamp, primaryKey } from "drizzle-orm/pg-core"
 
+// step 0:prepare, 1:open, 2:close
 export const competition = pgTable("competition", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  isOpen: boolean("isopen").default(false).notNull(),
+  step: integer("step").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 })
 

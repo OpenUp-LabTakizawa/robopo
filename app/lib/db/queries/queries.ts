@@ -320,12 +320,12 @@ export const getChallengeCount = async (competitionId: number, courseId: number,
 
 // competitionのIDを指定して開催にする関数
 export const openCompetitionById = async (id: number) => {
-  const result = await db.update(competition).set({ isOpen: true }).where(eq(competition.id, id))
+  const result = await db.update(competition).set({ step: 1 }).where(eq(competition.id, id))
 }
 
 // competitionのIDを指定して非開催にする関数
 export const closeCompetitionById = async (id: number) => {
-  const result = await db.update(competition).set({ isOpen: false }).where(eq(competition.id, id))
+  const result = await db.update(competition).set({ step: 2 }).where(eq(competition.id, id))
 }
 
 // umpireCourseをそれぞれの大会・コース・採点者のnameを取得して返す関数
