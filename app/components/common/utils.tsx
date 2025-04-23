@@ -1,8 +1,16 @@
 "use server"
 
-import { competition, umpire, SelectCompetition, SelectUmpire, SelectUmpireCourse, umpireCourse, SelectCourse, course } from "@/app/lib/db/schema"
+import { competition, umpire, SelectCompetition, SelectUmpire, SelectUmpireCourse, umpireCourse, SelectCourse, course, SelectPlayer, player } from "@/app/lib/db/schema"
 import { BASE_URL } from "@/app/lib/const"
 import { db } from "@/app/lib/db/db"
+
+// 選手一覧情報を取得する関数
+export async function getPlayerList(): Promise<{
+  players: SelectPlayer[]
+}> {
+  const players: SelectPlayer[] = await db.select().from(player)
+  return { players }
+}
 
 // 採点者一覧情報を取得する関数
 export async function getUmpireList(): Promise<{

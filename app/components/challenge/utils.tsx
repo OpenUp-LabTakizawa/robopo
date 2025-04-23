@@ -1,28 +1,4 @@
-import { SelectPlayer } from "@/app/lib/db/schema"
-import { BASE_URL } from "@/app/lib/const"
 import { PointState } from "@/app/components/course/utils"
-
-// 選手一覧情報を取得する関数
-export async function getPlayerList(): Promise<{
-  players: SelectPlayer[]
-}> {
-  return fetch(`${BASE_URL}/api/player`, { cache: "no-store" })
-    .then((res) => {
-      if (!res.ok) {
-        return { players: [] }
-      }
-      return res.json()
-    })
-    .then((data) => {
-      // ここの形式が色々変わるみたいな気がする。
-      // console.log("data: ", data)
-      return { players: data.players }
-    })
-    .catch((err) => {
-      console.error("error: ", err)
-      return { players: [] } //エラーが発生した場合、空の配列を返す
-    })
-}
 
 // 進んだmissionの数によって獲得したポイントを計算する
 // pointStateは start, goal, mission...の順でポイントが入ってる。
