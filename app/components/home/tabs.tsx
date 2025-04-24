@@ -12,17 +12,19 @@ const TabButton = ({ name, link }: { name: string; link: string }) => {
 }
 
 type ChallengeTabProps = {
-  // competitionList: SelectCompetition[]
   competitionList: { competitions: SelectCompetition[] }
   umpireList: { umpires: SelectUmpire[] }
   rawAssignList: { assigns: SelectUmpireCourse[] }
 }
 
+type SummaryTabProps = {
+  competitionList: { competitions: SelectCompetition[] }
+}
+
 export const ChallengeTab = ({ competitionList, umpireList, rawAssignList }: ChallengeTabProps): React.JSX.Element => {
   const [competitionId, setCompetitionId] = useState(0)
   const [umpireId, setUmpireId] = useState(0)
-  // const [competitionList, setCompetitionList] = useState<SelectCompetition[]>(initCompetitionList)
-  const disableCondiion = !competitionId || !umpireId || competitionId === 0 || umpireId === 0
+  const disableCondition = !competitionId || !umpireId || competitionId === 0 || umpireId === 0
 
   // 大会選択後割当済の採点者を表示する
   const filteredUmpires = useMemo(() => {
@@ -37,13 +39,12 @@ export const ChallengeTab = ({ competitionList, umpireList, rawAssignList }: Cha
   return (
     <div>
       <select
-        className="select select-bordered m-3"
+        className="select select-bordered m-3 w-50"
         onChange={(event) => setCompetitionId(Number(event.target.value))}
         value={competitionId || 0}>
         <option value={0} disabled>
           大会を選んでください
         </option>
-        {/* {competitionList?.competitions?.map((competition) => ( */}
         {competitionList?.competitions?.map((competition) => (
           <option key={competition.id} value={competition.id}>
             {competition.name}
@@ -52,7 +53,7 @@ export const ChallengeTab = ({ competitionList, umpireList, rawAssignList }: Cha
       </select>
 
       <select
-        className="select select-bordered m-3"
+        className="select select-bordered m-3 w-50"
         onChange={(event) => setUmpireId(Number(event.target.value))}
         value={umpireId || 0}
         disabled={!competitionId}>
@@ -71,9 +72,9 @@ export const ChallengeTab = ({ competitionList, umpireList, rawAssignList }: Cha
       </select>
 
       <Link
-        href={disableCondiion ? "" : `/challenge/${competitionId}/${umpireId}`}
+        href={disableCondition ? "" : `/challenge/${competitionId}/${umpireId}`}
         className={
-          "btn min-w-40 min-h-20 text-2xl max-w-fit m-3" + (disableCondiion ? " btn-disabled" : " btn-primary")
+          "btn min-w-40 min-h-20 text-2xl max-w-fit m-3" + (disableCondition ? " btn-disabled" : " btn-primary")
         }>
         採点
       </Link>
@@ -81,31 +82,22 @@ export const ChallengeTab = ({ competitionList, umpireList, rawAssignList }: Cha
   )
 }
 
-export const SummaryTab = (): React.JSX.Element => {
-  const [competitionId, setCompetitionId] = useState(1)
+export const SummaryTab = ({ competitionList }: SummaryTabProps): React.JSX.Element => {
+  const [competitionId, setCompetitionId] = useState(0)
   return (
     <div>
       <select
-        className="select select-bordered m-3"
+        className="select select-bordered m-3 w-50"
         onChange={(event) => setCompetitionId(Number(event.target.value))}
-        value={competitionId ? competitionId : 0}>
+        value={competitionId || 0}>
         <option value={0} disabled>
           大会を選んでください
         </option>
-        <option value="1">PreOpen</option>
-        {/* {competitionList ? (
-          competitionList.selectompetition.map(
-            (competition) =>
-            competition.id !== -1 &&
-            competition.id !== -2 && (
-              <option key={competition.id} value={competition.id}>
-              {competition.name}
-              </option>
-              )
-              )
-              ) : (
-                <option>コースがありません</option>
-                )} */}
+        {competitionList?.competitions?.map((competition) => (
+          <option key={competition.id} value={competition.id}>
+            {competition.name}
+          </option>
+        ))}
       </select>
       <TabButton name="集計結果" link={`/summary?competitionId=${competitionId}`} />
     </div>

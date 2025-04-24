@@ -18,7 +18,10 @@ const CommonRegister = ({ type, setSuccessMessage, setErrorMessage, setCommonDat
   const [qr, setQr] = useState("")
 
   const formItems = [
-    { label: "name", dispName: "名前", value: name, setValue: setName },
+    (type === "competition"
+      ? { label: "name", dispName: "大会名", value: name, setValue: setName }
+      : { label: "name", dispName: "名前", value: name, setValue: setName }
+    ),
     ...(type === "player"
       ? [
         { label: "furigana", dispName: "ふりがな", value: furigana, setValue: setFurigana },

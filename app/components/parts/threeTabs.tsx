@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 
 type ThreeTabsProps = {
   tab1Title: string
@@ -41,48 +41,45 @@ export const ThreeTabs = ({ tab1Title, tab1, tab2Title, tab2, tab3Title, tab3 }:
     }
   }, [])
 
+  // タブのタイトルと内容を配列化
+  const tabs = [
+    { title: tab1Title, content: tab1 },
+    { title: tab2Title, content: tab2 },
+    { title: tab3Title, content: tab3 },
+  ]
+
   return (
     <>
       {/* 768px以上の場合は3行で表示 */}
       {threeCols && (
         <div className="flex flex-row justify-center w-full m-5">
-          <div className="w-1/3">
-            <h1 className="text-2xl m-3">{tab1Title}</h1>
-            {tab1}
-          </div>
-          <div className="w-1/3">
-            <h1 className="text-2xl m-3">{tab2Title}</h1>
-            {tab2}
-          </div>
-          <div className="w-1/3">
-            <h1 className="text-2xl m-3">{tab3Title}</h1>
-            {tab3}
-          </div>
+          {tabs.map(({ title, content }, idx) => (
+            <div className="w-1/3" key={title}>
+              <h1 className="text-2xl m-3">{title}</h1>
+              {content}
+            </div>
+          ))}
         </div>
       )}
 
       {/* 768px未満の場合は1行で表示 */}
       {!threeCols && (
         <div role="tablist" className="tabs tabs-lifted m-5">
-          <input
-            type="radio"
-            name="tabs"
-            role="tab"
-            className="tab whitespace-nowrap"
-            aria-label={tab1Title}
-            defaultChecked
-          />
-          <div role="tabpanel" className="tab-content bg-base-100 border border-base-300 rounded-box p-6">
-            {tab1}
-          </div>
-          <input type="radio" name="tabs" role="tab" className="tab whitespace-nowrap" aria-label={tab2Title} />
-          <div role="tabpanel" className="tab-content bg-base-100 border border-base-300 rounded-box p-6">
-            {tab2}
-          </div>
-          <input type="radio" name="tabs" role="tab" className="tab whitespace-nowrap" aria-label={tab3Title} />
-          <div role="tabpanel" className="tab-content bg-base-100 border border-base-300 rounded-box p-6">
-            {tab3}
-          </div>
+          {tabs.map(({ title, content }, idx) => (
+            <React.Fragment key={title}>
+              <input
+                type="radio"
+                name="tabs"
+                role="tab"
+                className="tab whitespace-nowrap"
+                aria-label={title}
+                defaultChecked={idx === 0}
+              />
+              <div role="tabpanel" className="tab-content bg-base-100 border border-base-300 rounded-box p-6">
+                {content}
+              </div>
+            </React.Fragment>
+          ))}
         </div>
       )}
     </>
