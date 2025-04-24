@@ -12,7 +12,7 @@ export const View = ({ assignList }: AssignListProps) => {
   return (
     <>
       <CommonRadioList
-        props={{ type: "player", commonDataList: assignList }}
+        props={{ type: "assign", commonDataList: assignList }}
         commonId={commonId}
         setCommonId={setCommonId}
       />

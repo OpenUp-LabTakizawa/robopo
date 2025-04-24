@@ -47,9 +47,7 @@ export const challenge = pgTable("challenge", {
   playerId: integer("player_id")
     .notNull()
     .references(() => player.id, { onDelete: "cascade" }),
-  umpireId: integer("umpire_id")
-    .notNull()
-    .references(() => umpire.id, { onDelete: "cascade" }),
+  umpireId: integer("umpire_id").references(() => umpire.id),
   createdAt: timestamp("created_at").defaultNow(),
 })
 

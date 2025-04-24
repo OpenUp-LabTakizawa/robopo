@@ -94,7 +94,7 @@ export const CommonRadioList = ({ props: { type, commonDataList }, commonId, set
     <>
       {type !== "competition" && (
         <h2 className="text-center text-xl font-semibold">
-          {type === "player" ? "選手" : type === "umpire" ? "採点者" : type === "course" ? "コース" : null}一覧
+          {type === "player" ? "選手" : type === "umpire" ? "採点者" : type === "course" ? "コース" : type === "assign" ? "割当" : null}一覧
         </h2>
       )}
       <div className="w-full">
@@ -140,7 +140,9 @@ export const CommonRadioList = ({ props: { type, commonDataList }, commonId, set
                         ? "採点者"
                         : type === "competition"
                           ? "大会"
-                          : "割当"}
+                          : type === "assign"
+                            ? "割当"
+                            : null}
                     が登録されていません。
                   </td>
                 </tr>
