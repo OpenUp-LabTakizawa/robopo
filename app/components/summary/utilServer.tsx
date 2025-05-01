@@ -1,4 +1,3 @@
-import type { CourseSummary } from "@/app/components/summary/utils"
 import { deserializePoint } from "@/app/components/course/utils"
 import { calcPoint } from "@/app/components/challenge/utils"
 import { getCourseById, getCourseSummaryByPlayerId } from "@/app/lib/db/queries/queries"

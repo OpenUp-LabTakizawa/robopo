@@ -164,7 +164,7 @@ export default async function SummaryPlayer(props: { params: Promise<{ ids: numb
           </tbody>
         </table>
       </div>
-      <Link href="/summary" className="btn btn-primary min-w-28 max-w-fit mx-auto m-5">
+      <Link href={`/summary/` + ids[0]} className="btn btn-primary min-w-28 max-w-fit mx-auto m-5">
         集計結果一覧へ戻る
       </Link>
       <Link href="/" className="btn btn-primary min-w-28 max-w-fit mx-auto ml-3">

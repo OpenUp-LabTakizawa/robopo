@@ -83,6 +83,7 @@ export const getCompetitionById = async (id: number) => {
 // firstTCourseCountはresult1とresult2から最大のものを取得し、
 // それまで(created_atとidを昇順に並べた際の古いもの)のresult1とresult2の個数を最大のものが出るまで足している。
 // 完走してない時もその時点で最大のresultまでの回数が出るので、完走したかどうかで表示非表示を変える必要がある。
+// firstTCourseTimeは、firstTCourseCountで取得したもののcreated_atを取得している。
 export const getCourseSummary = async (competitionId: number, courseId: number): Promise<CourseSummary[]> => {
   const result = await db
     .select({
@@ -119,7 +120,43 @@ export const getCourseSummary = async (competitionId: number, courseId: number):
             )
           )
         )`.as("firstTCourseCount"),
+      firstTCourseTime: sql`
+        (
+          SELECT created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo' FROM (
+            SELECT
+              ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
+              created_at,
+              GREATEST(result1, COALESCE(result2, 0)) AS result
+            FROM challenge
+            WHERE
+              player_id = ${player.id}
+              AND course_id = ${courseId}
+              AND (result1 IS NOT NULL OR result2 IS NOT NULL)
+          ) AS RankedAttemptsWithDate
+          WHERE attempt_number = (
+            SELECT MIN(attempt_number) FROM (
+              SELECT
+                ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
+                GREATEST(result1, COALESCE(result2, 0)) AS result
+              FROM challenge
+              WHERE
+                player_id = ${player.id}
+                AND course_id = ${courseId}
+                AND competition_id = ${competitionId}
+            ) AS Attempts
+            WHERE result = (
+              SELECT MAX(GREATEST(result1, COALESCE(result2, 0)))
+              FROM challenge
+              WHERE
+                player_id = ${player.id}
+                AND course_id = ${courseId}
+                AND competition_id = ${competitionId}
+            )
+          )
+        )
+      `.as("firstTCourseTime"),
       tCourseCount:
+        // 単純にresult1とresult2の個数を足している。
         sql`SUM(CASE WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END) ELSE 0 END)`.as(
           "tCourseCount"
         ),

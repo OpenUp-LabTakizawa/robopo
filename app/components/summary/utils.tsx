@@ -7,6 +7,7 @@ export type CourseSummary = {
   playerFurigana: string | null
   playerZekken: string | null
   firstTCourseCount: number | null
+  firstTCourseTime: string | null
   tCourseCount: number | null
   tCourseMaxResult: number | null
   sensorMaxResult: number | null
