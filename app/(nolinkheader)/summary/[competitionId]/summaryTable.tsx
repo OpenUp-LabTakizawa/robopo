@@ -96,9 +96,9 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
 
   const renderSortIcon = (key: string) => {
     if (sortKey === key) {
-      return sortOrder === "asc" ? "▲" : "▼"
+      return sortOrder === "asc" ? <span className="text-blue-500">▲</span> : <span className="text-red-500">▼</span> // sortOrder === "asc" ? "▲" : "▼"
     }
-    return ""
+    return "▲"
   }
 
   const itemTitle = (title1: string, title2?: string, key?: keyof CourseSummary) => {
