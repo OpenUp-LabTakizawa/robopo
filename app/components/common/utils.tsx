@@ -1,5 +1,7 @@
 "use server"
 
+// サーバ上で動かす関数類
+
 import {
   competition,
   course,
@@ -15,6 +17,8 @@ import {
 } from "@/app/lib/db/schema"
 import { db } from "@/app/lib/db/db"
 import { eq } from "drizzle-orm"
+import { signIn } from "@/auth"
+import { AuthError } from "next-auth"
 
 // 選手一覧情報を取得する関数
 export async function getPlayerList(): Promise<{
@@ -78,4 +82,38 @@ export async function getCompetitionCourseList(competitionId: number): Promise<{
     .where(eq(competitionCourse.competitionId, competitionId))
 
   return { selectCourses }
+}
+
+// signInのformState
+export type FormState =
+  | {
+    errors?: {
+      username?: string[]
+      password?: string[]
+    }
+    message?: string
+  }
+  | undefined
+
+// サーバアクションのサインイン
+export async function signInAction(state: FormState, formData: FormData) {
+  "use server"
+  try {
+    await signIn("credentials", { redirectTo: "/", username: formData.get("username"), password: formData.get("password") })
+    return {
+      success: true,
+      message: "サインインに成功しました",
+    }
+  } catch (error) {
+    // Redirectエラーは無視する
+    // これはNextAuthの仕様で、サインイン後にリダイレクトするために発生するエラー
+    if (error instanceof Error && error.message === "NEXT_REDIRECT") { throw error }
+    // それ以外のエラーはサインイン失敗とする
+    if (error instanceof AuthError) {
+      return {
+        success: false,
+        message: "サインインに失敗しました",
+      }
+    }
+  }
 }

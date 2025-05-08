@@ -15,6 +15,7 @@ import {
   SelectPlayerWithCompetition,
   SelectUmpireWithCompetition,
   SelectCourseWithCompetition,
+  users,
 } from "@/app/lib/db/schema"
 import { eq, sql, and, or } from "drizzle-orm"
 
@@ -538,4 +539,14 @@ export function groupByCourse(
     }
   }
   return Array.from(courseMap.values())
+}
+
+// signInの時に、userが存在するか確認する関数
+export const getUserByName = async (name: string) => {
+  const result = await db
+    .select()
+    .from(users)
+    .where(eq(users.name, name))
+    .limit(1)
+  return result[0]
 }

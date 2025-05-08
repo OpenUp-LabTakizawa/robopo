@@ -9,11 +9,28 @@ function getCommonString(type: inputType): string {
   return type === "player" ? "選手" : type === "umpire" ? "採点者" : "コース"
 }
 
+export const ModalBackdrop = () => {
+  const router = useRouter()
+  return (
+    <form method="dialog" className="modal-backdrop" onClick={() => router.back()}>
+      <button className="cursor-default">close</button>
+    </form>
+  )
+}
+
+export const ModalBackButton = () => {
+  const router = useRouter()
+  return (
+    <button className="flex btn btn-accent m-3" onClick={() => router.back()}>
+      戻る
+    </button>
+  )
+}
+
 export const DeleteModal = ({ type, ids }: { type: inputType; ids: number[] }) => {
   const [loading, setLoading] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const router = useRouter()
   const commonString: string = getCommonString(type)
   const handleDelete = async () => {
     try {
@@ -59,16 +76,13 @@ export const DeleteModal = ({ type, ids }: { type: inputType; ids: number[] }) =
           戻る
         </button>
       </div>
-      <form method="dialog" className="modal-backdrop" onClick={() => router.back()}>
-        <button className="cursor-default">close</button>
-      </form>
+      <ModalBackdrop />
     </dialog>
   )
 }
 
 export const AssignModal = (params: { type: inputType, ids: number[], competitionList: { competitions: SelectCompetition[] } }) => {
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
   const { type, ids, competitionList } = params
   const [competitionId, setCompetitionId] = useState<number | null>(null)
   const commonString: string = getCommonString(type)
@@ -165,9 +179,7 @@ export const AssignModal = (params: { type: inputType, ids: number[], competitio
           戻る
         </button>
       </div>
-      <form method="dialog" className="modal-backdrop" onClick={() => router.back()}>
-        <button className="cursor-default">close</button>
-      </form>
+      <ModalBackdrop />
     </dialog>
   )
 }
