@@ -11,17 +11,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  auth
 }: Readonly<{
   children: React.ReactNode
+  auth: React.ReactNode
 }>) {
   return (
     <html lang="ja" className={inter.className}>
       <body className="font-zenKakuGothicNew">
         <main className="mx-auto text-xs sm:px-12 lg:text-base w-screen h-screen">
           {children}
-          {/* <ScrollToTop /> */}
+          {auth}
         </main>
-        {/* <Footer /> */}
       </body>
     </html>
   )
