@@ -19,6 +19,9 @@ import { db } from "@/app/lib/db/db"
 import { eq } from "drizzle-orm"
 import { signIn } from "@/auth"
 import { AuthError } from "next-auth"
+import { useFormState } from "react-dom"
+import { redirect } from "next/navigation"
+import { Router } from "next/router"
 
 // 選手一覧情報を取得する関数
 export async function getPlayerList(): Promise<{
@@ -99,7 +102,8 @@ export type FormState =
 export async function signInAction(state: FormState, formData: FormData) {
   "use server"
   try {
-    await signIn("credentials", { redirectTo: "/", username: formData.get("username"), password: formData.get("password") })
+    // redirectがうまく走らない為、サインイン後にclient側でリダイレクトする
+    await signIn("credentials", { redirect: false, username: formData.get("username"), password: formData.get("password") })
     return {
       success: true,
       message: "サインインに成功しました",
@@ -107,6 +111,7 @@ export async function signInAction(state: FormState, formData: FormData) {
   } catch (error) {
     // Redirectエラーは無視する
     // これはNextAuthの仕様で、サインイン後にリダイレクトするために発生するエラー
+    console.log("error: ", error)
     if (error instanceof Error && error.message === "NEXT_REDIRECT") { throw error }
     // それ以外のエラーはサインイン失敗とする
     if (error instanceof AuthError) {

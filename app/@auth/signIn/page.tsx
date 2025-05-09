@@ -1,11 +1,20 @@
 "use client"
 
-import { useActionState } from "react"
+import { useActionState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { ModalBackdrop, ModalBackButton } from "@/app/components/common/commonModal"
 import { signInAction } from "@/app/components/common/utils"
 
 export default function SignIn() {
+    const searchParams = useSearchParams()
+    const callbackUrl = searchParams.get("callbackUrl") || "/"
     const [state, action] = useActionState(signInAction, undefined)
+
+    useEffect(() => {
+        if (state?.success) {
+            window.location.replace(callbackUrl)
+        }
+    }, [state?.success])
 
     return (
         <dialog id="signIn-modal" className="modal modal-open">
