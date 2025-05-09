@@ -6,7 +6,7 @@ import { useSession, signOut } from "next-auth/react"
 
 const DropdownMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
 
   return (
     <nav className="dropdown dropdown-end lg:hidden fixed right-[5%] z-50 space-y-2">
@@ -50,12 +50,12 @@ const DropdownMenu = () => {
             <div>
               <NavLinks setIsMenuOpen={setIsMenuOpen} />
               {/* サインイン直後、更新されないらしく、ここだけサインアウトにならない。手動で強制的に更新するとサインアウトになるが。 */}
-              {session ? (
+              {status === "authenticated" ? (
                 <button
                   //? Close hamburger menu
                   onClick={() => {
                     setIsMenuOpen && setIsMenuOpen(false)
-                    signOut()
+                    signOut({ redirect: true, redirectTo: "/" })
                   }}
                   className="flex mt-10 w-[fit-content] hover:bg-slate-500 hover:text-zinc/60 text-white px-3 py-1 rounded-md text-sm font-medium cursor-pointer text-[1.1rem]"
                 >

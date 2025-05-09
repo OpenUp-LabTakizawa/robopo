@@ -8,7 +8,7 @@ import { auth } from "@/auth"
 export const Header = async () => {
   const session = await auth()
   return (
-    (<header className="flex flex-row h-24 md:h-14 items-center relative">
+    <header className="flex flex-row h-24 md:h-14 items-center relative">
       {/* Logo & DropdownMenu */}
       <div className="flex items-center w-auto">
         {/* Logo */}
@@ -27,7 +27,7 @@ export const Header = async () => {
           </Link>
         </div>
         {/* メニューボタン (スマホ表示) */}
-        <SessionProvider>
+        <SessionProvider session={session}>
           <DropdownMenu />
         </SessionProvider>
       </div>
@@ -44,6 +44,6 @@ export const Header = async () => {
           Home
         </Link>
       </div>
-    </header>)
+    </header>
   )
 }
