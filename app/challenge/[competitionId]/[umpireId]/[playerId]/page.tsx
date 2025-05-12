@@ -1,6 +1,6 @@
 import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 import { getCourseIdByCompetitionIdAndUmpireId, getCourseById, getPlayerById } from "@/app/lib/db/queries/queries"
-import { View } from "@/app/(nolinkheader)/challenge/[competitionId]/[umpireId]/[playerId]/view"
+import { View } from "@/app/challenge/[competitionId]/[umpireId]/[playerId]/view"
 
 export default async function Challenge(props: {
   params: Promise<{ competitionId: number; umpireId: number; playerId: number }>

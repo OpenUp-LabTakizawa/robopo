@@ -12,7 +12,7 @@ import { deserializeMission, deserializePoint, missionStatePair } from "@/app/co
 import { isCompletedCourse } from "@/app/components/summary/utils"
 import { sumIpponPoint } from "@/app/components/summary/utilServer"
 import { calcPoint } from "@/app/components/challenge/utils"
-import { TCourseTable } from "@/app/(nolinkheader)/summary/[...ids]/tCourseTable"
+import { TCourseTable } from "@/app/summary/[...ids]/tCourseTable"
 
 export const revalidate = 0
 

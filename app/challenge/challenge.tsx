@@ -13,7 +13,7 @@ import {
   IPPON_BASHI_SIZE,
 } from "@/app/components/course/utils"
 import { Field } from "@/app/components/course/field"
-import { ChallengeModal, CourseOutModal, RetryModal } from "@/app/(nolinkheader)/challenge/challengeModal"
+import { ChallengeModal, CourseOutModal, RetryModal } from "@/app/challenge/challengeModal"
 import { calcPoint, resultSubmit } from "@/app/components/challenge/utils"
 import { IpponBashiUI } from "@/app/components/challenge/ipponBashi"
 import NextSound from "@/app/lib/sound/02_next.mp3"
@@ -216,7 +216,7 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
               {isSuccess ? (
                 // チャレンジ終了後、画面読み込み直して初期状態に戻る
                 (<button className="btn btn-accent mx-auto text-2xl" onClick={() => window.location.reload()}>コース一覧に戻る
-                                    </button>)
+                </button>)
               ) : (
                 <button
                   className="btn btn-accent mx-auto text-2xl m-3"

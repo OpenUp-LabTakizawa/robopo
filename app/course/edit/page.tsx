@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
-import CourseEdit from "@/app/(linkheader)/course/edit/courseEdit"
-import MissionEdit from "@/app/(linkheader)/course/edit/missionEdit"
+import CourseEdit from "@/app/course/edit/courseEdit"
+import MissionEdit from "@/app/course/edit/missionEdit"
 import {
   initializeField,
   deserializeField,

@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react"
 import { ThreeTabs } from "@/app/components/parts/threeTabs"
-import { AssignTab, CompetitionListTab, NewCompetitionTab } from "@/app/(linkheader)/config/tabs"
+import { AssignTab, CompetitionListTab, NewCompetitionTab } from "@/app/config/tabs"
 import { SelectCompetition, SelectCourse, SelectUmpire } from "@/app/lib/db/schema"
 
 type ViewProps = {
