@@ -1,13 +1,12 @@
 "use client"
 
 import { useActionState, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
 import { ModalBackdrop, ModalBackButton } from "@/app/components/common/commonModal"
 import { signInAction } from "@/app/components/common/utils"
 
 export default function SignIn() {
-    const searchParams = useSearchParams()
-    const callbackUrl = searchParams.get("callbackUrl") || "/"
+    const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams()
+    const callbackUrl = params.get("callbackUrl") || "/"
     const [state, action] = useActionState(signInAction, undefined)
 
     useEffect(() => {
