@@ -1,6 +1,6 @@
 "use client"
 import { type SelectCourse, type SelectPlayer } from "@/app/lib/db/schema"
-import Challenge from "@/app/(nolinkheader)/challenge/challenge"
+import Challenge from "@/app/challenge/challenge"
 import { SensorCourse } from "@/app/components/challenge/sensorCourse"
 import { useBeforeUnload } from "@/app/components/beforeUnload/useBeforeUnload"
 

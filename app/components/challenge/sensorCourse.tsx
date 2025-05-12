@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { resultSubmit } from "@/app/components/challenge/utils"
-import { ChallengeModal } from "@/app/(nolinkheader)/challenge/challengeModal"
+import { ChallengeModal } from "@/app/challenge/challengeModal"
 
 type SensorCourseProps = {
   compeId: number

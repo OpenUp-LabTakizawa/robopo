@@ -1,6 +1,6 @@
 import { getCompetitionList, getUmpireList, getCourseList } from "@/app/components/common/utils"
 import { SelectCompetition, SelectCourse, SelectUmpire } from "@/app/lib/db/schema"
-import View from "@/app/(linkheader)/config/view"
+import View from "@/app/config/view"
 
 export const revalidate = 0
 

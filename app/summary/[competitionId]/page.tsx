@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { SelectCourse } from "@/app/lib/db/schema"
 import { getCompetitionCourseList } from "@/app/components/common/utils"
-import { SummaryTable } from "@/app/(nolinkheader)/summary/[competitionId]/summaryTable"
+import { SummaryTable } from "@/app/summary/[competitionId]/summaryTable"
 import { deserializePoint, PointValue } from "@/app/components/course/utils"
 import { getCourseById } from "@/app/lib/db/queries/queries"
 
