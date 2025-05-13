@@ -15,6 +15,7 @@ import {
   SelectCourse,
   SelectPlayer,
   SelectCompetitionCourse,
+  competitionPlayer,
 } from "@/app/lib/db/schema"
 import { db } from "@/app/lib/db/db"
 import { eq } from "drizzle-orm"
@@ -92,6 +93,28 @@ export async function getCompetitionCourseAssignList(): Promise<{
 }> {
   const competitionCourseList: SelectCompetitionCourse[] = await db.select().from(competitionCourse)
   return { competitionCourseList }
+}
+
+// 大会IDから参加選手を取得する
+export async function getCompetionPlayerList(competitionId: number): Promise<{
+  players: SelectPlayer[]
+}> {
+  const players: SelectPlayer[] = await db
+    .select({
+      id: player.id,
+      name: player.name,
+      furigana: player.furigana,
+      zekken: player.zekken,
+      qr: player.qr,
+      createdAt: player.createdAt,
+    })
+    .from(player)
+    .innerJoin(competitionPlayer,
+      eq(player.id, competitionPlayer.playerId),
+    )
+    .where(eq(competitionPlayer.competitionId, competitionId))
+
+  return { players }
 }
 
 // signInのformState

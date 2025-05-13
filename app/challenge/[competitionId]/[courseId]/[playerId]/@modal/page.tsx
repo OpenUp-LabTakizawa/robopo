@@ -1,5 +1,5 @@
 import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
-import { getCourseIdByCompetitionIdAndUmpireId, getCourseById, getPlayerById } from "@/app/lib/db/queries/queries"
+import { getCourseById, getPlayerById } from "@/app/lib/db/queries/queries"
 import { Modal } from "./modal"
 
 export default async function Confirm(props: {

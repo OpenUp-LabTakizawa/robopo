@@ -18,7 +18,10 @@ export const View = ({ courseData, initialPlayerDataList, competitionId, courseI
 
   return (
     <div className="flex flex-col justify-center items-center overflow-y-auto w-full">
-      <h2 className="text-xl">選択中コース名: {courseData.name}</h2>
+      <div className="w-full" >
+        <h2 className="text-xl ml-5 self-start">選択中コース名:</h2>
+      </div>
+      <h2 className="text-xl">{courseData.name}</h2>
       <CommonRadioList
         props={{ type: "player", commonDataList: playerDataList }}
         commonId={playerId}
