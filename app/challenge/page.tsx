@@ -3,7 +3,7 @@ import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 import { View } from "@/app/challenge/view"
 
 export default async function Challenge() {
-  const courseDataList: { selectCourses: SelectCourse[] } = await getCourseList()
+  const courseDataList: { courses: SelectCourse[] } = await getCourseList()
   const initialPlayerDataList: { players: SelectPlayer[] } = await getPlayerList()
 
   return <View courseDataList={courseDataList} initialPlayerDataList={initialPlayerDataList} />

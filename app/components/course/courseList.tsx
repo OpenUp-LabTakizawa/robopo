@@ -2,7 +2,7 @@ import type { SelectCourse } from "@/app/lib/db/schema"
 import React from "react"
 
 type CourseListProps = {
-  courseData: { selectCourses: SelectCourse[] }
+  courseData: { courses: SelectCourse[] }
   inputType: "checkbox" | "radio"
   handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   checkedIds: number[]
@@ -45,7 +45,7 @@ export const CourseList = ({ courseData, inputType, handleInputChange, checkedId
             </tr>
           ) : null}
           {courseData ? (
-            courseData.selectCourses.map((courses: SelectCourse) => (
+            courseData.courses.map((courses: SelectCourse) => (
               <tr
                 key={courses.id}
                 className="hover cursor-pointer"
@@ -70,12 +70,12 @@ export const CourseList = ({ courseData, inputType, handleInputChange, checkedId
                 <td suppressHydrationWarning>
                   {courses.createdAt
                     ? new Date(courses.createdAt).toLocaleString("ja-JP", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
                     : "N/A"}
                 </td>
               </tr>

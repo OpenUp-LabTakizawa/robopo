@@ -1,24 +1,22 @@
 import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 import { getCourseIdByCompetitionIdAndUmpireId, getCourseById, getPlayerById } from "@/app/lib/db/queries/queries"
-import { View } from "@/app/challenge/[competitionId]/[umpireId]/[playerId]/view"
+import { View } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/view"
 
 export default async function Challenge(props: {
-  params: Promise<{ competitionId: number; umpireId: number; playerId: number }>
+  params: Promise<{ competitionId: number; courseId: number; playerId: number }>
 }) {
   const params = await props.params
 
-  const { competitionId, umpireId, playerId } = params
+  const { competitionId, courseId, playerId } = params
 
-  // 割り当てられているcourseIdを取得
-  const courseId = await getCourseIdByCompetitionIdAndUmpireId(competitionId, umpireId)
   // courseIdからcourseDataを取得
-  const courseData: SelectCourse | null = await getCourseById(courseId[0].courseId)
+  const courseData: SelectCourse | null = await getCourseById(courseId)
   // playerIdからplayerDataを取得
   const playerData: SelectPlayer | null = await getPlayerById(playerId)
 
   return (
     (courseData && playerData && (
-      <View courseData={courseData} playerData={playerData} competitionId={competitionId} umpireId={umpireId} />
+      <View courseData={courseData} playerData={playerData} competitionId={competitionId} courseId={courseId} />
     )) || (
       <div className="flex flex-col justify-center items-center overflow-y-auto w-full">
         <h2>コースを割り当てられていません。</h2>

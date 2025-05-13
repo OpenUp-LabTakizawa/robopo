@@ -361,6 +361,11 @@ export const openCompetitionById = async (id: number) => {
   const result = await db.update(competition).set({ step: 1 }).where(eq(competition.id, id))
 }
 
+// competitionのIDを指定して開催前にする関数
+export const returnCompetitionById = async (id: number) => {
+  const result = await db.update(competition).set({ step: 0 }).where(eq(competition.id, id))
+}
+
 // competitionのIDを指定して非開催にする関数
 export const closeCompetitionById = async (id: number) => {
   const result = await db.update(competition).set({ step: 2 }).where(eq(competition.id, id))

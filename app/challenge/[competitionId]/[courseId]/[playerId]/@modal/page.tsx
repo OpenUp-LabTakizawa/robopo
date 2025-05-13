@@ -3,16 +3,14 @@ import { getCourseIdByCompetitionIdAndUmpireId, getCourseById, getPlayerById } f
 import { Modal } from "./modal"
 
 export default async function Confirm(props: {
-  params: Promise<{ competitionId: number; umpireId: number; playerId: number }>
+  params: Promise<{ competitionId: number; courseId: number; playerId: number }>
 }) {
   const params = await props.params
 
-  const { competitionId, umpireId, playerId } = params
+  const { courseId, playerId } = params
 
-  // 割り当てられているcourseIdを取得
-  const courseId = await getCourseIdByCompetitionIdAndUmpireId(competitionId, umpireId)
   // courseIdからcourseDataを取得
-  const courseData: SelectCourse | null = await getCourseById(courseId[0].courseId)
+  const courseData: SelectCourse | null = await getCourseById(courseId)
   // playerIdからplayerDataを取得
   const playerData: SelectPlayer | null = await getPlayerById(playerId)
 

@@ -6,7 +6,7 @@ export const revalidate = 0
 
 export default async function Config() {
   const initialCompetitionList: { competitions: SelectCompetition[] } = await getCompetitionList()
-  const courseList: { selectCourses: SelectCourse[] } = await getCourseList()
+  const courseList: { courses: SelectCourse[] } = await getCourseList()
   const umpireList: { umpires: SelectUmpire[] } = await getUmpireList()
 
   return <View initialCompetitionList={initialCompetitionList} courseList={courseList} umpireList={umpireList} />
