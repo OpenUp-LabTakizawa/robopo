@@ -11,8 +11,8 @@ export default async function Summary(props: { params: Promise<{ competitionId: 
   const params = await props.params
   const competitionId = params.competitionId
 
-  const { selectCourses } = await getCompetitionCourseList(competitionId)
-  const courseList: { selectCourses: SelectCourse[] } = { selectCourses: selectCourses }
+  const { competitionCourses } = await getCompetitionCourseList(competitionId)
+  const courseList: { courses: SelectCourse[] } = { courses: competitionCourses }
   const ipponBashiCourse = await getCourseById(-1)
   if (!ipponBashiCourse) {
     throw new Error("一本橋コースが見つかりません")

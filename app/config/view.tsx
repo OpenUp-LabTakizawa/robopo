@@ -6,7 +6,7 @@ import { SelectCompetition, SelectCourse, SelectUmpire } from "@/app/lib/db/sche
 
 type ViewProps = {
   initialCompetitionList: { competitions: SelectCompetition[] }
-  courseList: { selectCourses: SelectCourse[] }
+  courseList: { courses: SelectCourse[] }
   umpireList: { umpires: SelectUmpire[] }
 }
 

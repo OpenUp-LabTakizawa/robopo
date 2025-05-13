@@ -14,14 +14,13 @@ import {
   SelectUmpireCourse,
   SelectCourse,
   SelectPlayer,
+  SelectCompetitionCourse,
 } from "@/app/lib/db/schema"
 import { db } from "@/app/lib/db/db"
 import { eq } from "drizzle-orm"
 import { signIn } from "@/auth"
 import { AuthError } from "next-auth"
-import { useFormState } from "react-dom"
-import { redirect } from "next/navigation"
-import { Router } from "next/router"
+
 
 // 選手一覧情報を取得する関数
 export async function getPlayerList(): Promise<{
@@ -57,17 +56,17 @@ export async function getRawAssignList(): Promise<{
 
 // コース一覧情報を取得する関数
 export async function getCourseList(): Promise<{
-  selectCourses: SelectCourse[]
+  courses: SelectCourse[]
 }> {
-  const selectCourses: SelectCourse[] = await db.select().from(course)
-  return { selectCourses }
+  const courses: SelectCourse[] = await db.select().from(course)
+  return { courses }
 }
 
-// 大会IDからコース一覧を取得する関数
+// 大会IDからコースを取得する関数
 export async function getCompetitionCourseList(competitionId: number): Promise<{
-  selectCourses: SelectCourse[]
+  competitionCourses: SelectCourse[]
 }> {
-  const selectCourses = await db
+  const competitionCourses = await db
     .select({
       id: course.id,
       name: course.name,
@@ -84,7 +83,15 @@ export async function getCompetitionCourseList(competitionId: number): Promise<{
     )
     .where(eq(competitionCourse.competitionId, competitionId))
 
-  return { selectCourses }
+  return { competitionCourses }
+}
+
+// 大会とその使用コースの一覧を取得する
+export async function getCompetitionCourseAssignList(): Promise<{
+  competitionCourseList: SelectCompetitionCourse[]
+}> {
+  const competitionCourseList: SelectCompetitionCourse[] = await db.select().from(competitionCourse)
+  return { competitionCourseList }
 }
 
 // signInのformState

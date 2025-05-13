@@ -8,13 +8,13 @@ type ViewProps = {
   courseData: SelectCourse
   playerData: SelectPlayer
   competitionId: number
-  umpireId: number
+  courseId: number
 }
 
-export const View = ({ courseData, playerData, competitionId, umpireId }: ViewProps) => {
+export const View = ({ courseData, playerData, competitionId, courseId }: ViewProps) => {
   useBeforeUnload(true)
-  const courseId = courseData.id
   const playerId = playerData.id
+  const umpireId = 1 // 一旦1
 
   return (
     <div className="flex flex-col justify-center items-center overflow-y-auto w-full pt-10">

@@ -1,14 +1,14 @@
 "use client"
 import Link from "next/link"
 import React, { useMemo, useState } from "react"
-import type { SelectCompetition, SelectUmpire, SelectUmpireCourse } from "@/app/lib/db/schema"
+import type { SelectCompetition, SelectCompetitionCourse, SelectCourse } from "@/app/lib/db/schema"
 
 const ContentButton = ({ name, link, disabled }: { name: string; link: string; disabled: boolean }) => {
   return (
     <Link
       href={disabled ? "" : link}
       className={
-        "btn min-w-40 min-h-20 text-2xl max-w-fit m-3" + (disabled ? " btn-disabled" : " btn-primary")
+        "btn min-w-40 min-h-20 text-2xl max-w-fit m-3" + (disabled ? " btn-disabled hidden" : " btn-primary")
       }>
       {name}
     </Link>
@@ -17,69 +17,85 @@ const ContentButton = ({ name, link, disabled }: { name: string; link: string; d
 
 type ChallengeTabProps = {
   competitionList: { competitions: SelectCompetition[] }
-  umpireList: { umpires: SelectUmpire[] }
-  rawAssignList: { assigns: SelectUmpireCourse[] }
+  courseList: { courses: SelectCourse[] }
+  competitionCourseList: { competitionCourseList: SelectCompetitionCourse[] }
 }
 
 type SummaryTabProps = {
   competitionList: { competitions: SelectCompetition[] }
 }
 
-export const ChallengeTab = ({ competitionList, umpireList, rawAssignList }: ChallengeTabProps): React.JSX.Element => {
-  const [competitionId, setCompetitionId] = useState(0)
-  const [umpireId, setUmpireId] = useState(0)
-  const disableCondition = !competitionId || !umpireId || competitionId === 0 || umpireId === 0
+export const ChallengeTab = ({ competitionList, courseList, competitionCourseList }: ChallengeTabProps): React.JSX.Element => {
+  const competition = (competitionList => {
+    // 開催中大会が1つの場合
+    if (competitionList?.competitions?.filter((competition) => competition.step === 1).length === 1) {
+      return competitionList?.competitions?.filter((competition) => competition.step === 1)[0]
+    } else return { id: 0 }
+  })(competitionList)
 
-  // 大会選択後割当済の採点者を表示する
-  const filteredUmpires = useMemo(() => {
+  const [competitionId, setCompetitionId] = useState(competition.id)
+  const disableCondition = !competitionId || competitionId === 0
+
+  // 大会選択後割当済のコースを表示する
+  const filteredCourses = useMemo(() => {
     if (competitionId === 0) return []
-    const assignedUmpireIds = rawAssignList.assigns
-      .filter((assign) => assign.competitionId === competitionId)
-      .map((assign) => assign.umpireId)
+    const assignedCourseIds = competitionCourseList.competitionCourseList
+      .filter((course) => course.competitionId === competitionId)
+      .map((course) => course.courseId)
 
-    return umpireList.umpires.filter((umpire) => assignedUmpireIds.includes(umpire.id))
-  }, [competitionId, rawAssignList, umpireList])
+    return courseList.courses.filter((course) => assignedCourseIds.includes(course.id))
+  }, [competitionId, competitionCourseList, courseList])
 
   return (
     <div>
-      <select
-        className="select select-bordered m-3 w-50"
-        onChange={(event) => setCompetitionId(Number(event.target.value))}
-        value={competitionId || 0}>
-        <option value={0} disabled>
-          大会を選んでください
-        </option>
-        {competitionList?.competitions?.map((competition) => (
-          <option key={competition.id} value={competition.id} hidden={competition.step !== 1}>
-            {competition.name}
+      {competitionList?.competitions?.filter((competition) => competition.step === 1).length === 1 ? (
+        <div className="flex flex-col justify-center overflow-y-auto w-full">
+          <h2 className="text-xl">開催中大会: {competitionList?.competitions?.filter((competition) => competition.step === 1)[0].name}</h2>
+        </div>
+      ) : (
+        <select
+          className="select select-bordered m-3 w-50"
+          onChange={(event) => setCompetitionId(Number(event.target.value))}
+          value={competitionId || 0}>
+          <option value={0} disabled>
+            大会を選んでください
           </option>
-        ))}
-      </select>
-
-      <select
-        className="select select-bordered m-3 w-50"
-        onChange={(event) => setUmpireId(Number(event.target.value))}
-        value={umpireId || 0}
-        disabled={!competitionId}>
-        <option value={0} disabled>
-          採点者を選んでください
-        </option>
-        {filteredUmpires.length > 0 ? (
-          filteredUmpires.map((umpire) => (
-            <option key={umpire.id} value={umpire.id}>
-              {umpire.name}
+          {competitionList?.competitions?.map((competition) => (
+            <option key={competition.id} value={competition.id} hidden={competition.step !== 1}>
+              {competition.name}
             </option>
-          ))
-        ) : (
-          <option>採点者未割り当てです</option>
-        )}
-      </select>
+          ))}
+        </select>
+      )}
 
-      <ContentButton
-        name="採点"
-        link={`/challenge/${competitionId}/${umpireId}`}
-        disabled={disableCondition}
-      />
+      {filteredCourses.length > 0 ? (
+        <div className="flex flex-col justify-center overflow-y-auto w-full">
+          {filteredCourses.map((course) => (
+            <ContentButton
+              name={course.name}
+              key={course.id}
+              link={`/challenge/${competitionId}/${course.id}`}
+              disabled={disableCondition}
+            />
+          ))}
+
+          <ContentButton
+            name="THE一本橋"
+            link={`/challenge/${competitionId}/-1`}
+            disabled={disableCondition}
+          />
+
+          <ContentButton
+            name="センサーコース"
+            link={`/challenge/${competitionId}/-2`}
+            disabled={disableCondition}
+          />
+        </div>
+      ) : (
+        <>
+          <br />コース未割り当てです<br />
+        </>
+      )}
     </div>
   )
 }

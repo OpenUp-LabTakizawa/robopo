@@ -19,7 +19,7 @@ type NewCompetitionTabProps = {
 type AssignTabProps = {
   competitionId: number | null
   competitionList: SelectCompetition[]
-  courseList: { selectCourses: SelectCourse[] }
+  courseList: { courses: SelectCourse[] }
   umpireList: { umpires: SelectUmpire[] }
 }
 
@@ -122,6 +122,15 @@ export const CompetitionListTab = ({
       </button>
       <button
         className="btn btn-primary text-default max-w-fit m-1"
+        value="return"
+        disabled={
+          competitionId === null || loading || competitionList?.find((c) => c.id === competitionId)?.step !== 1
+        }
+        onClick={(e) => handleButtonClick(e)}>
+        開催前に戻す
+      </button>
+      <button
+        className="btn btn-primary text-default max-w-fit m-1"
         value="close"
         disabled={
           competitionId === null || loading || competitionList?.find((c) => c.id === competitionId)?.step !== 1
@@ -214,7 +223,7 @@ export const AssignTab = ({ competitionId, competitionList, courseList, umpireLi
         <p>選択中大会:</p>
         <p>{competitionList?.find((c) => c.id === competitionId)?.name}</p>
         <p>選択中コース:</p>
-        <p>{courseList.selectCourses?.find((c) => c.id === courseId)?.name}</p>
+        <p>{courseList.courses?.find((c) => c.id === courseId)?.name}</p>
         <p>選択中採点者:</p>
         <p>{umpireList.umpires?.find((u) => u.id === umpireId)?.name}</p>
       </div>
@@ -230,7 +239,7 @@ export const AssignTab = ({ competitionId, competitionList, courseList, umpireLi
             コースを選んでください
           </option>
           {courseList ? (
-            courseList.selectCourses.map((course) => (
+            courseList.courses.map((course) => (
               <option key={course.id} value={course.id}>
                 {course.name}
               </option>

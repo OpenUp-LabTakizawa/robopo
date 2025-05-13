@@ -11,7 +11,7 @@ import { SensorCourse } from "@/app/components/challenge/sensorCourse"
 import StartSound from "@/app/lib/sound/01_start.mp3"
 
 type ViewProps = {
-  courseDataList: { selectCourses: SelectCourse[] }
+  courseDataList: { courses: SelectCourse[] }
   initialPlayerDataList: { players: SelectPlayer[] }
 }
 
@@ -72,7 +72,7 @@ export const View = ({ courseDataList, initialPlayerDataList }: ViewProps) => {
           <div className="grid gap-6 items-center justify-center px-4 py-6 sm:px-6 lg:px-8 text-center">
             <h2>以下の内容でチャレンジを開始します。</h2>
             <p className="text-2xl">
-              コース: {courseDataList.selectCourses.find((course) => course.id === courseId)?.name}
+              コース: {courseDataList.courses.find((course) => course.id === courseId)?.name}
             </p>
             <p className="text-2xl">選手: {playerDataList.find((player) => player.id === playerId)?.name}</p>
           </div>
@@ -100,9 +100,9 @@ export const View = ({ courseDataList, initialPlayerDataList }: ViewProps) => {
 
       {step === 4 && courseId !== null && courseId !== -2 && playerId !== null && (
         <Challenge
-          field={courseDataList.selectCourses.find((course) => course.id === courseId)?.field}
-          mission={courseDataList.selectCourses.find((course) => course.id === courseId)?.mission}
-          point={courseDataList.selectCourses.find((course) => course.id === courseId)?.point}
+          field={courseDataList.courses.find((course) => course.id === courseId)?.field}
+          mission={courseDataList.courses.find((course) => course.id === courseId)?.mission}
+          point={courseDataList.courses.find((course) => course.id === courseId)?.point}
           compeId={compeId}
           courseId={courseId}
           playerId={playerId}

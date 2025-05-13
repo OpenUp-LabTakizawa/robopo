@@ -4,7 +4,7 @@ import type { SelectCourse } from "@/app/lib/db/schema"
 import { CourseList } from "@/app/components/course/courseList"
 
 type ChallengeListProps = {
-  courseDataList: { selectCourses: SelectCourse[] }
+  courseDataList: { courses: SelectCourse[] }
   setStep: React.Dispatch<React.SetStateAction<number>>
   courseId: number | null
   setCourseId: React.Dispatch<React.SetStateAction<number | null>>

@@ -8,14 +8,14 @@ import { type SelectCourse } from "@/app/lib/db/schema"
 
 type Props = {
   id: number
-  courseList: { selectCourses: SelectCourse[] }
+  courseList: { courses: SelectCourse[] }
   ipponBashiPoint: PointValue[]
 }
 
 export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
   const competitionId: number = id
-  const courseData: { selectCourses: SelectCourse[] } = courseList
-  const initialCourseId = courseData.selectCourses
+  const courseData: { courses: SelectCourse[] } = courseList
+  const initialCourseId = courseData.courses
     .filter((course) => course.id > 0)
     .reduce((mincourse, currentCourse) => (currentCourse.id < mincourse.id ? currentCourse : mincourse)).id
 
@@ -29,7 +29,7 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const selectedCourse = courseData.selectCourses?.find((course) => course.id === courseId)
+        const selectedCourse = courseData.courses?.find((course) => course.id === courseId)
         if (selectedCourse) {
           const point = await deserializePoint(selectedCourse.point)
           setPointData(point)
@@ -135,7 +135,7 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
             コースを選んでください
           </option>
           {courseData ? (
-            courseData.selectCourses?.map(
+            courseData.courses?.map(
               (course) =>
                 course.id !== -1 &&
                 course.id !== -2 && (
