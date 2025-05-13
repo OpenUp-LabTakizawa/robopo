@@ -90,6 +90,7 @@ const NavLinks = ({ propClass, setIsMenuOpen }: PropsType) => {
     { label: "コース作成", href: "/course" },
     { label: "選手登録", href: "/player" },
     { label: "採点者登録", href: "/umpire" },
+    { label: "大会設定", href: "/config" },
   ]
 
   return (
