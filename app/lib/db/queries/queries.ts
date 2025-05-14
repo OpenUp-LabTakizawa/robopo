@@ -363,7 +363,29 @@ export const openCompetitionById = async (id: number) => {
 
 // competitionのIDを指定して開催前にする関数
 export const returnCompetitionById = async (id: number) => {
-  const result = await db.update(competition).set({ step: 0 }).where(eq(competition.id, id))
+  // 1) Check the current step to enforce valid state transition
+  const existing = await db
+    .select({ step: competition.step })
+    .from(competition)
+    .where(eq(competition.id, id))
+    .get()
+
+  if (!existing) {
+    throw new Error(`Competition with id ${id} not found`)
+  }
+  if (existing.step !== 1) {
+    throw new Error(
+      `Invalid state transition: cannot return competition from step ${existing.step} to before state`
+    )
+  }
+
+  // 2) Perform the permitted update
+  const result = await db
+    .update(competition)
+    .set({ step: 0 })
+    .where(eq(competition.id, id))
+
+  return result
 }
 
 // competitionのIDを指定して非開催にする関数
