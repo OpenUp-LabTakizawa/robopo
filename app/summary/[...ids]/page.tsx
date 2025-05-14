@@ -8,7 +8,7 @@ import {
   getPlayerById,
   getChallengeCount,
 } from "@/app/lib/db/queries/queries"
-import { deserializeMission, deserializePoint, missionStatePair } from "@/app/components/course/utils"
+import { deserializeMission, deserializePoint, missionStatePair, RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import { isCompletedCourse } from "@/app/components/summary/utils"
 import { sumIpponPoint } from "@/app/components/summary/utilServer"
 import { calcPoint } from "@/app/components/challenge/utils"
@@ -26,12 +26,12 @@ export default async function SummaryPlayer(props: { params: Promise<{ ids: numb
   const firstTCourseCount = await getFirstCount(ids[0], ids[1], ids[2])
   const maxResult: { maxResult: number }[] = await getMaxResult(ids[0], ids[1], ids[2])
 
-  const resultIpponArray = await getCourseSummaryByPlayerId(ids[0], -1, ids[2])
-  const firstIpponCount = await getFirstCount(ids[0], -1, ids[2])
-  const maxIpponResult: { maxResult: number }[] = await getMaxResult(ids[0], -1, ids[2])
+  const resultIpponArray = await getCourseSummaryByPlayerId(ids[0], RESERVED_COURSE_IDS.IPPON, ids[2])
+  const firstIpponCount = await getFirstCount(ids[0], RESERVED_COURSE_IDS.IPPON, ids[2])
+  const maxIpponResult: { maxResult: number }[] = await getMaxResult(ids[0], RESERVED_COURSE_IDS.IPPON, ids[2])
 
-  const resultSensorArray = await getCourseSummaryByPlayerId(ids[0], -2, ids[2])
-  const maxSensorResult: { maxResult: number }[] = await getMaxResult(ids[0], -2, ids[2])
+  const resultSensorArray = await getCourseSummaryByPlayerId(ids[0], RESERVED_COURSE_IDS.SENSOR, ids[2])
+  const maxSensorResult: { maxResult: number }[] = await getMaxResult(ids[0], RESERVED_COURSE_IDS.SENSOR, ids[2])
 
   const challengeCount = await getChallengeCount(ids[0], ids[1], ids[2])
 
@@ -41,7 +41,7 @@ export default async function SummaryPlayer(props: { params: Promise<{ ids: numb
   const point = deserializePoint(course?.point || "")
 
   // 一本橋のデータを取得する
-  const ipponBashi = await getCourseById(-1)
+  const ipponBashi = await getCourseById(RESERVED_COURSE_IDS.IPPON)
   const ipponPoint = deserializePoint(ipponBashi?.point || "")
 
   // 一本橋コースで得た総得点

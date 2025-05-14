@@ -1,11 +1,11 @@
-import { deserializePoint } from "@/app/components/course/utils"
+import { deserializePoint, RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import { calcPoint } from "@/app/components/challenge/utils"
 import { getCourseById, getCourseSummaryByPlayerId } from "@/app/lib/db/queries/queries"
 
 // THE 一本橋コースの総得点を計算する
 export const sumIpponPoint = async (compeId: number, playerId: number): Promise<number> => {
-  const resultIpponArray = await getCourseSummaryByPlayerId(compeId, -1, playerId)
-  const course = await getCourseById(-1)
+  const resultIpponArray = await getCourseSummaryByPlayerId(compeId, RESERVED_COURSE_IDS.IPPON, playerId)
+  const course = await getCourseById(RESERVED_COURSE_IDS.IPPON)
   const pointState = deserializePoint(course?.point || "")
 
   const sum = resultIpponArray.reduce((sum, result) => {

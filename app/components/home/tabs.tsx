@@ -2,6 +2,7 @@
 import Link from "next/link"
 import React, { useMemo, useState } from "react"
 import type { SelectCompetition, SelectCompetitionCourse, SelectCourse } from "@/app/lib/db/schema"
+import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 
 const ContentButton = ({ name, link, disabled }: { name: string; link: string; disabled: boolean }) => {
   return (
@@ -81,13 +82,13 @@ export const ChallengeTab = ({ competitionList, courseList, competitionCourseLis
 
           <ContentButton
             name="THE一本橋"
-            link={`/challenge/${competitionId}/-1`}
+            link={`/challenge/${competitionId}/${RESERVED_COURSE_IDS.IPPON}`}
             disabled={disableCondition}
           />
 
           <ContentButton
             name="センサーコース"
-            link={`/challenge/${competitionId}/-2`}
+            link={`/challenge/${competitionId}/${RESERVED_COURSE_IDS.SENSOR}`}
             disabled={disableCondition}
           />
         </div>

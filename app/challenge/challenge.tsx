@@ -11,6 +11,7 @@ import {
   findStart,
   getRobotPosition,
   IPPON_BASHI_SIZE,
+  RESERVED_COURSE_IDS,
 } from "@/app/components/course/utils"
 import { Field } from "@/app/components/course/field"
 import { ChallengeModal, CourseOutModal, RetryModal } from "@/app/challenge/challengeModal"
@@ -144,7 +145,7 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
     }
 
     return (<>
-      {courseId === -1 ? (
+      {courseId === RESERVED_COURSE_IDS.IPPON ? (
         <div className="relative flex flex-col justify-items-center w-full h-[calc(100vh-100px)]">
           <div className="grid justify-items-center w-full">
             <p className="text-xl font-bold">THE 一本橋</p>

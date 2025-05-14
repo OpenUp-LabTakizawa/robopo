@@ -2,7 +2,7 @@ import Link from "next/link"
 import { SelectCourse } from "@/app/lib/db/schema"
 import { getCompetitionCourseList } from "@/app/components/common/utils"
 import { SummaryTable } from "@/app/summary/[competitionId]/summaryTable"
-import { deserializePoint, PointValue } from "@/app/components/course/utils"
+import { deserializePoint, RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import { getCourseById } from "@/app/lib/db/queries/queries"
 
 export const revalidate = 0
@@ -13,7 +13,7 @@ export default async function Summary(props: { params: Promise<{ competitionId: 
 
   const { competitionCourses } = await getCompetitionCourseList(competitionId)
   const courseList: { courses: SelectCourse[] } = { courses: competitionCourses }
-  const ipponBashiCourse = await getCourseById(-1)
+  const ipponBashiCourse = await getCourseById(RESERVED_COURSE_IDS.IPPON)
   if (!ipponBashiCourse) {
     throw new Error("一本橋コースが見つかりません")
   }
