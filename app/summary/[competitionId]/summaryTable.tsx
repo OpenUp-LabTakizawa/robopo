@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { type CourseSummary, isCompletedCourse } from "@/app/components/summary/utils"
-import { deserializePoint, PointValue } from "@/app/components/course/utils"
+import { deserializePoint, PointValue, RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import { calcPoint } from "@/app/components/challenge/utils"
 import { type SelectCourse } from "@/app/lib/db/schema"
 
@@ -137,8 +137,8 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
           {courseData ? (
             courseData.courses?.map(
               (course) =>
-                course.id !== -1 &&
-                course.id !== -2 && (
+                course.id !== RESERVED_COURSE_IDS.IPPON &&
+                course.id !== RESERVED_COURSE_IDS.SENSOR && (
                   <option key={course.id} value={course.id}>
                     {course.name}
                   </option>
@@ -198,13 +198,13 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
                       : "-"}
                   </td>
                   {/* センサーコース以外 */}
-                  {courseId !== -2 && (
+                  {courseId !== RESERVED_COURSE_IDS.SENSOR && (
                     <td className="border border-gray-400 p-2">
                       {player.tCourseMaxResult ? calcPoint(pointData, player.tCourseMaxResult) : "-"}
                     </td>
                   )}
                   {/* センサーコースはmaxResultにそのまま最高得点が入ってる */}
-                  {courseId === -2 && (
+                  {courseId === RESERVED_COURSE_IDS.SENSOR && (
                     <td className="border border-gray-400 p-2">
                       {player.sensorMaxResult ? player.sensorMaxResult : "-"}
                     </td>

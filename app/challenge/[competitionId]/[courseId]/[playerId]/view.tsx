@@ -1,6 +1,7 @@
 "use client"
 import { type SelectCourse, type SelectPlayer } from "@/app/lib/db/schema"
 import Challenge from "@/app/challenge/challenge"
+import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import { SensorCourse } from "@/app/components/challenge/sensorCourse"
 import { useBeforeUnload } from "@/app/components/beforeUnload/useBeforeUnload"
 
@@ -19,7 +20,7 @@ export const View = ({ courseData, playerData, competitionId, courseId }: ViewPr
   return (
     <div className="flex flex-col justify-center items-center overflow-y-auto w-full pt-10">
       {/* ベーシックコースとTHE一本橋 */}
-      {courseId !== null && courseId !== -2 && playerId !== null && (
+      {courseId !== null && courseId !== RESERVED_COURSE_IDS.SENSOR && playerId !== null && (
         <Challenge
           field={courseData.field}
           mission={courseData.mission}
@@ -32,8 +33,8 @@ export const View = ({ courseData, playerData, competitionId, courseId }: ViewPr
       )}
 
       {/* センサーコース */}
-      {courseId === -2 && playerId !== null && (
-        <SensorCourse compeId={competitionId} courseId={-2} playerId={playerId} umpireId={umpireId} />
+      {courseId === RESERVED_COURSE_IDS.SENSOR && playerId !== null && (
+        <SensorCourse compeId={competitionId} courseId={RESERVED_COURSE_IDS.SENSOR} playerId={playerId} umpireId={umpireId} />
       )}
     </div>
   )

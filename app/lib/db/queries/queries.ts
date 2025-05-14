@@ -1,4 +1,5 @@
 import { CourseSummary } from "@/app/components/summary/utils"
+import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import { db } from "@/app/lib/db/db"
 import {
   course,
@@ -166,17 +167,17 @@ export const getCourseSummary = async (competitionId: number, courseId: number):
           "tCourseMaxResult"
         ),
       sensorMaxResult:
-        sql`MAX(CASE WHEN ${challenge.courseId} = -2 THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`.as(
+        sql`MAX(CASE WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.SENSOR} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`.as(
           "sensorMaxResult"
         ),
       ipponMaxResult:
-        sql`MAX(CASE WHEN ${challenge.courseId} = -1 THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0))ELSE NULL END)`.as(
+        sql`MAX(CASE WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.IPPON} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0))ELSE NULL END)`.as(
           "ipponMaxResult"
         ),
       challengeCount: sql`SUM(CASE
             WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-            WHEN ${challenge.courseId} = -1 THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-            WHEN ${challenge.courseId} = -2 THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
+            WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.IPPON} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
+            WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.SENSOR} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
             ELSE 0
           END)`.as("challengeCount"),
     })
@@ -255,17 +256,17 @@ export const getPlayerResult = async (competitionId: number, courseId: number, p
           "tCourseMaxResult"
         ),
       ipponMaxResult:
-        sql`MAX(CASE WHEN ${challenge.courseId} = -1 THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0))ELSE NULL END)`.as(
+        sql`MAX(CASE WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.IPPON} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0))ELSE NULL END)`.as(
           "ipponMaxResult"
         ),
       sensorMaxResult:
-        sql`MAX(CASE WHEN ${challenge.courseId} = -2 THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`.as(
+        sql`MAX(CASE WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.SENSOR} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`.as(
           "sensorMaxResult"
         ),
       challengeCount: sql`SUM(CASE
             WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-            WHEN ${challenge.courseId} = -1 THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-            WHEN ${challenge.courseId} = -2 THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
+            WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.IPPON} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
+            WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.SENSOR} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
             ELSE 0
           END)`.as("challengeCount"),
     })
@@ -350,7 +351,7 @@ export const getChallengeCount = async (competitionId: number, courseId: number,
       and(
         eq(challenge.competitionId, competitionId),
         eq(challenge.playerId, playerId),
-        or(eq(challenge.courseId, courseId), eq(challenge.courseId, -1), eq(challenge.courseId, -2))
+        or(eq(challenge.courseId, courseId), eq(challenge.courseId, RESERVED_COURSE_IDS.IPPON), eq(challenge.courseId, RESERVED_COURSE_IDS.SENSOR))
       )
     )
   return result as { challengeCount: number }[]

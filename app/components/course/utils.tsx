@@ -13,6 +13,11 @@ const PANEL_HEIGHT: number = 85
 const BASHI_PANEL_WIDTH: number = 85
 const BASHI_PANEL_HEIGHT: number = 85
 
+export const RESERVED_COURSE_IDS = {
+  IPPON: -1,
+  SENSOR: -2,
+} as const
+
 // パネルの幅を返す関数
 export const getPanelWidth = (type?: string): number => {
   if (type === "ipponBashi") return BASHI_PANEL_WIDTH
