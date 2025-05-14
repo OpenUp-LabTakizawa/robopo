@@ -1,0 +1,30 @@
+---
+sidebar_position: 5
+---
+
+# チャレンジ・採点システム
+
+import { GithubLink } from "@site/src/components/variables.tsx"
+
+この章では チャレンジ[^1]とその採点について解説する。
+
+## 採点 URL について
+
+採点者が採点するページ URL には、大会[competitionID]、採点者[umpireID]、コース[courseID]、選手[playerId]が含まれている。
+現時点で採点者[umpireID]とコース[courseID]が 1 対 1 で対応せさているので大会[competitionID]、採点者[umpireID]、選手[playerId]であり、URL
+
+`[RootURL]/challenge/[competitionId]/[UmpireId]/`
+
+で選手一覧を表示し、
+
+`[RootURL]/challenge/[competitionId]/[UmpireId]/[playerId]`
+
+で採点するようにしている。
+
+実際、採点や集計に関しては、コース、選手さえ保存できれば、要件は満たすのでそのように持っていくべきかもしれない。
+過去分の結果を置いておくのであれば大会もデータに保持しておいた方が良い。
+採点者はこだわらないならば消していい。
+
+## 採点システム
+
+[^1]: ロボットをコース上でスタートさせミッション通りにゴールを目指すこと、その試技を指す。
