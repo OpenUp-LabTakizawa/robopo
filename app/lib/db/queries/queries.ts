@@ -368,14 +368,14 @@ export const returnCompetitionById = async (id: number) => {
     .select({ step: competition.step })
     .from(competition)
     .where(eq(competition.id, id))
-    .get()
+    .limit(1)
 
   if (!existing) {
     throw new Error(`Competition with id ${id} not found`)
   }
-  if (existing.step !== 1) {
+  if (existing[0]?.step !== 1) {
     throw new Error(
-      `Invalid state transition: cannot return competition from step ${existing.step} to before state`
+      `Invalid state transition: cannot return competition from step ${existing[0]?.step} to before state`
     )
   }
 
