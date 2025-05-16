@@ -9,7 +9,7 @@ const ContentButton = ({ name, link, disabled }: { name: string; link: string; d
     <Link
       href={disabled ? "" : link}
       className={
-        "btn min-w-40 min-h-20 text-2xl max-w-fit m-3" + (disabled ? " btn-disabled hidden" : " btn-primary")
+        "btn min-w-40 min-h-20 text-2xl max-w-fit m-3" + (disabled ? " btn-disabled" : " btn-primary")
       }>
       {name}
     </Link>
