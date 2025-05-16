@@ -3,7 +3,7 @@ import { db } from "@/app/lib/db/db"
 import { competition, SelectCompetition } from "@/app/lib/db/schema"
 import { createCompetition } from "@/app/lib/db/queries/insert"
 import { deleteCompetitionById } from "@/app/lib/db/queries/queries"
-import { getCompetitionList } from "@/app/components/common/utils"
+import { getCompetitionList } from "@/app/components/server/db"
 
 export const revalidate = 0
 

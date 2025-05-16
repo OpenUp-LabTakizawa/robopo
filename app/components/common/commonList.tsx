@@ -108,7 +108,7 @@ export const CommonRadioList = ({ props: { type, commonDataList }, commonId, set
                   </label>
                 </th>
                 {itemNames(type).map((name) => (
-                  <th key={name}>{name}</th>
+                  <th key={name} hidden={type === "player" && name === "参加大会"}>{name}</th>
                 ))}
               </tr>
             </thead>

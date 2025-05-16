@@ -1,7 +1,8 @@
 "use client"
 import Link from "next/link"
 import React, { useMemo, useState } from "react"
-import type { SelectCompetition, SelectUmpire, SelectUmpireCourse } from "@/app/lib/db/schema"
+import type { SelectCompetition, SelectCompetitionCourse, SelectCourse } from "@/app/lib/db/schema"
+import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 
 const ContentButton = ({ name, link, disabled }: { name: string; link: string; disabled: boolean }) => {
   return (
@@ -17,69 +18,79 @@ const ContentButton = ({ name, link, disabled }: { name: string; link: string; d
 
 type ChallengeTabProps = {
   competitionList: { competitions: SelectCompetition[] }
-  umpireList: { umpires: SelectUmpire[] }
-  rawAssignList: { assigns: SelectUmpireCourse[] }
+  courseList: { courses: SelectCourse[] }
+  competitionCourseList: { competitionCourseList: SelectCompetitionCourse[] }
 }
 
 type SummaryTabProps = {
   competitionList: { competitions: SelectCompetition[] }
 }
 
-export const ChallengeTab = ({ competitionList, umpireList, rawAssignList }: ChallengeTabProps): React.JSX.Element => {
-  const [competitionId, setCompetitionId] = useState(0)
-  const [umpireId, setUmpireId] = useState(0)
-  const disableCondition = !competitionId || !umpireId || competitionId === 0 || umpireId === 0
+export const ChallengeTab = ({ competitionList, courseList, competitionCourseList }: ChallengeTabProps): React.JSX.Element => {
+  // 1) Move all “step === 1” filtering into a single memoized array,
+  //    so you don’t repeat .filter() three times or use an inline IIFE:
+  const activeCompetitions = useMemo(
+    () => competitionList.competitions.filter(c => c.step === 1),
+    [competitionList.competitions]
+  )
+  const singleCompetition = activeCompetitions.length === 1
+    ? activeCompetitions[0]
+    : null
 
-  // 大会選択後割当済の採点者を表示する
-  const filteredUmpires = useMemo(() => {
+  // 2) Initialize state from the singleCompetition (if any):
+  const [competitionId, setCompetitionId] = useState(
+    singleCompetition?.id ?? 0
+  )
+  const disableCondition = competitionId === 0
+
+  // 3) Memoize filteredCourses as before:
+  const filteredCourses = useMemo(() => {
     if (competitionId === 0) return []
-    const assignedUmpireIds = rawAssignList.assigns
-      .filter((assign) => assign.competitionId === competitionId)
-      .map((assign) => assign.umpireId)
-
-    return umpireList.umpires.filter((umpire) => assignedUmpireIds.includes(umpire.id))
-  }, [competitionId, rawAssignList, umpireList])
+    const assigned = competitionCourseList.competitionCourseList
+      .filter(cc => cc.competitionId === competitionId)
+      .map(cc => cc.courseId)
+    return courseList.courses.filter(c => assigned.includes(c.id))
+  }, [competitionId, competitionCourseList, courseList.courses])
 
   return (
     <div>
-      <select
-        className="select select-bordered m-3 w-50"
-        onChange={(event) => setCompetitionId(Number(event.target.value))}
-        value={competitionId || 0}>
-        <option value={0} disabled>
-          大会を選んでください
-        </option>
-        {competitionList?.competitions?.map((competition) => (
-          <option key={competition.id} value={competition.id} hidden={competition.step !== 1}>
-            {competition.name}
-          </option>
-        ))}
-      </select>
-
-      <select
-        className="select select-bordered m-3 w-50"
-        onChange={(event) => setUmpireId(Number(event.target.value))}
-        value={umpireId || 0}
-        disabled={!competitionId}>
-        <option value={0} disabled>
-          採点者を選んでください
-        </option>
-        {filteredUmpires.length > 0 ? (
-          filteredUmpires.map((umpire) => (
-            <option key={umpire.id} value={umpire.id}>
-              {umpire.name}
+      {/* 4) Flatten the competition UI into two clear branches */}
+      {singleCompetition ? (
+        <div className="flex flex-col ...">
+          <h2 className="text-xl">開催中大会: {singleCompetition.name}</h2>
+        </div>
+      ) : (
+        <select
+          className="select select-bordered m-3 w-50"
+          value={competitionId}
+          onChange={e => setCompetitionId(Number(e.target.value))}
+        >
+          <option value={0} disabled>大会を選んでください</option>
+          {activeCompetitions.map(c => (
+            <option key={c.id} value={c.id}>
+              {c.name}
             </option>
-          ))
-        ) : (
-          <option>採点者未割り当てです</option>
-        )}
-      </select>
+          ))}
+        </select>
+      )}
 
-      <ContentButton
-        name="採点"
-        link={`/challenge/${competitionId}/${umpireId}`}
-        disabled={disableCondition}
-      />
+      {/* 5) Same for courses: a clear conditional */}
+      {filteredCourses.length > 0 ? (
+        <div className="flex flex-col ...">
+          {filteredCourses.map(course => (
+            <ContentButton
+              key={course.id}
+              name={course.name}
+              link={`/challenge/${competitionId}/${course.id}`}
+              disabled={disableCondition}
+            />
+          ))}
+          <ContentButton name="THE一本橋" link={`/challenge/${competitionId}/${RESERVED_COURSE_IDS.IPPON}`} disabled={disableCondition} />
+          <ContentButton name="センサーコース" link={`/challenge/${competitionId}/${RESERVED_COURSE_IDS.SENSOR}`} disabled={disableCondition} />
+        </div>
+      ) : (
+        <p className="m-3">コース未割り当てです</p>
+      )}
     </div>
   )
 }

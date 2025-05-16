@@ -1,11 +1,18 @@
 "use client"
 import { useRouter } from "next/navigation"
 import { useEffect, useId } from "react"
-import { remove } from "lodash-es"
 
 let isForceRouting = false
 const activeIds: string[] = []
 let lastKnownHref: string
+
+const remove = (array: string[], iteratee: (item: string) => boolean) => {
+  const toRemove: number[] = []
+  const result = array.filter((item, i) => iteratee(item) && toRemove.push(i))
+
+  toRemove.reverse().forEach(i => array.splice(i, 1))
+  return result
+}
 
 export const useBeforeUnload = (isActive = true) => {
   const id = useId()

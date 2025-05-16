@@ -1,4 +1,5 @@
 import { CourseSummary } from "@/app/components/summary/utils"
+import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import { db } from "@/app/lib/db/db"
 import {
   course,
@@ -15,6 +16,7 @@ import {
   SelectPlayerWithCompetition,
   SelectUmpireWithCompetition,
   SelectCourseWithCompetition,
+  users,
 } from "@/app/lib/db/schema"
 import { eq, sql, and, or } from "drizzle-orm"
 
@@ -165,17 +167,17 @@ export const getCourseSummary = async (competitionId: number, courseId: number):
           "tCourseMaxResult"
         ),
       sensorMaxResult:
-        sql`MAX(CASE WHEN ${challenge.courseId} = -2 THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`.as(
+        sql`MAX(CASE WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.SENSOR} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`.as(
           "sensorMaxResult"
         ),
       ipponMaxResult:
-        sql`MAX(CASE WHEN ${challenge.courseId} = -1 THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0))ELSE NULL END)`.as(
+        sql`MAX(CASE WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.IPPON} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0))ELSE NULL END)`.as(
           "ipponMaxResult"
         ),
       challengeCount: sql`SUM(CASE
             WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-            WHEN ${challenge.courseId} = -1 THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-            WHEN ${challenge.courseId} = -2 THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
+            WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.IPPON} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
+            WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.SENSOR} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
             ELSE 0
           END)`.as("challengeCount"),
     })
@@ -254,17 +256,17 @@ export const getPlayerResult = async (competitionId: number, courseId: number, p
           "tCourseMaxResult"
         ),
       ipponMaxResult:
-        sql`MAX(CASE WHEN ${challenge.courseId} = -1 THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0))ELSE NULL END)`.as(
+        sql`MAX(CASE WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.IPPON} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0))ELSE NULL END)`.as(
           "ipponMaxResult"
         ),
       sensorMaxResult:
-        sql`MAX(CASE WHEN ${challenge.courseId} = -2 THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`.as(
+        sql`MAX(CASE WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.SENSOR} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`.as(
           "sensorMaxResult"
         ),
       challengeCount: sql`SUM(CASE
             WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-            WHEN ${challenge.courseId} = -1 THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-            WHEN ${challenge.courseId} = -2 THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
+            WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.IPPON} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
+            WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.SENSOR} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
             ELSE 0
           END)`.as("challengeCount"),
     })
@@ -349,7 +351,7 @@ export const getChallengeCount = async (competitionId: number, courseId: number,
       and(
         eq(challenge.competitionId, competitionId),
         eq(challenge.playerId, playerId),
-        or(eq(challenge.courseId, courseId), eq(challenge.courseId, -1), eq(challenge.courseId, -2))
+        or(eq(challenge.courseId, courseId), eq(challenge.courseId, RESERVED_COURSE_IDS.IPPON), eq(challenge.courseId, RESERVED_COURSE_IDS.SENSOR))
       )
     )
   return result as { challengeCount: number }[]
@@ -358,6 +360,33 @@ export const getChallengeCount = async (competitionId: number, courseId: number,
 // competitionのIDを指定して開催にする関数
 export const openCompetitionById = async (id: number) => {
   const result = await db.update(competition).set({ step: 1 }).where(eq(competition.id, id))
+}
+
+// competitionのIDを指定して開催前にする関数
+export const returnCompetitionById = async (id: number) => {
+  // 1) Check the current step to enforce valid state transition
+  const existing = await db
+    .select({ step: competition.step })
+    .from(competition)
+    .where(eq(competition.id, id))
+    .limit(1)
+
+  if (!existing) {
+    throw new Error(`Competition with id ${id} not found`)
+  }
+  if (existing[0]?.step !== 1) {
+    throw new Error(
+      `Invalid state transition: cannot return competition from step ${existing[0]?.step} to before state`
+    )
+  }
+
+  // 2) Perform the permitted update
+  const result = await db
+    .update(competition)
+    .set({ step: 0 })
+    .where(eq(competition.id, id))
+
+  return result
 }
 
 // competitionのIDを指定して非開催にする関数
@@ -538,4 +567,14 @@ export function groupByCourse(
     }
   }
   return Array.from(courseMap.values())
+}
+
+// signInの時に、userが存在するか確認する関数
+export const getUserByName = async (name: string) => {
+  const result = await db
+    .select()
+    .from(users)
+    .where(eq(users.name, name))
+    .limit(1)
+  return result[0]
 }
