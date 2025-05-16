@@ -27,140 +27,69 @@ type SummaryTabProps = {
 }
 
 export const ChallengeTab = ({ competitionList, courseList, competitionCourseList }: ChallengeTabProps): React.JSX.Element => {
-// 1) Move all “step === 1” filtering into a single memoized array,
-//    so you don’t repeat .filter() three times or use an inline IIFE:
-const activeCompetitions = useMemo(
-  () => competitionList.competitions.filter(c => c.step === 1),
-  [competitionList.competitions]
-)
-const singleCompetition = activeCompetitions.length === 1 
-  ? activeCompetitions[0] 
-  : null
+  // 1) Move all “step === 1” filtering into a single memoized array,
+  //    so you don’t repeat .filter() three times or use an inline IIFE:
+  const activeCompetitions = useMemo(
+    () => competitionList.competitions.filter(c => c.step === 1),
+    [competitionList.competitions]
+  )
+  const singleCompetition = activeCompetitions.length === 1
+    ? activeCompetitions[0]
+    : null
 
-// 2) Initialize state from the singleCompetition (if any):
-const [competitionId, setCompetitionId] = useState(
-  singleCompetition?.id ?? 0
-)
-const disableCondition = competitionId === 0
+  // 2) Initialize state from the singleCompetition (if any):
+  const [competitionId, setCompetitionId] = useState(
+    singleCompetition?.id ?? 0
+  )
+  const disableCondition = competitionId === 0
 
-// 3) Memoize filteredCourses as before:
-const filteredCourses = useMemo(() => {
-  if (competitionId === 0) return []
-  const assigned = competitionCourseList.competitionCourseList
-    .filter(cc => cc.competitionId === competitionId)
-    .map(cc => cc.courseId)
-  return courseList.courses.filter(c => assigned.includes(c.id))
-}, [competitionId, competitionCourseList, courseList.courses])
-
-return (
-  <div>
-    {/* 4) Flatten the competition UI into two clear branches */}
-    {singleCompetition ? (
-      <div className="flex flex-col ...">
-        <h2>開催中大会: {singleCompetition.name}</h2>
-      </div>
-    ) : (
-      <select
-        className="select select-bordered m-3 w-50"
-        value={competitionId}
-        onChange={e => setCompetitionId(Number(e.target.value))}
-      >
-        <option value={0} disabled>大会を選んでください</option>
-        {activeCompetitions.map(c => (
-          <option key={c.id} value={c.id}>
-            {c.name}
-          </option>
-        ))}
-      </select>
-    )}
-
-    {/* 5) Same for courses: a clear conditional */}
-    {filteredCourses.length > 0 ? (
-      <div className="flex flex-col ...">
-        {filteredCourses.map(course => (
-          <ContentButton
-            key={course.id}
-            name={course.name}
-            link={`/challenge/${competitionId}/${course.id}`}
-            disabled={disableCondition}
-          />
-        ))}
-        <ContentButton name="THE一本橋" link={`/challenge/${competitionId}/-1`} disabled={disableCondition}/>
-        <ContentButton name="センサーコース" link={`/challenge/${competitionId}/-2`} disabled={disableCondition}/>
-      </div>
-    ) : (
-      <p className="m-3">コース未割り当てです</p>
-    )}
-  </div>
-)
-    // 開催中大会が1つの場合
-    if (competitionList?.competitions?.filter((competition) => competition.step === 1).length === 1) {
-      return competitionList?.competitions?.filter((competition) => competition.step === 1)[0]
-    } else return { id: 0 }
-  })(competitionList)
-
-  const [competitionId, setCompetitionId] = useState(competition.id)
-  const disableCondition = !competitionId || competitionId === 0
-
-  // 大会選択後割当済のコースを表示する
+  // 3) Memoize filteredCourses as before:
   const filteredCourses = useMemo(() => {
     if (competitionId === 0) return []
-    const assignedCourseIds = competitionCourseList.competitionCourseList
-      .filter((course) => course.competitionId === competitionId)
-      .map((course) => course.courseId)
-
-    return courseList.courses.filter((course) => assignedCourseIds.includes(course.id))
-  }, [competitionId, competitionCourseList, courseList])
+    const assigned = competitionCourseList.competitionCourseList
+      .filter(cc => cc.competitionId === competitionId)
+      .map(cc => cc.courseId)
+    return courseList.courses.filter(c => assigned.includes(c.id))
+  }, [competitionId, competitionCourseList, courseList.courses])
 
   return (
     <div>
-      {competitionList?.competitions?.filter((competition) => competition.step === 1).length === 1 ? (
-        <div className="flex flex-col justify-center overflow-y-auto w-full">
-          <h2 className="text-xl">開催中大会: {competitionList?.competitions?.filter((competition) => competition.step === 1)[0].name}</h2>
+      {/* 4) Flatten the competition UI into two clear branches */}
+      {singleCompetition ? (
+        <div className="flex flex-col ...">
+          <h2 className="text-xl">開催中大会: {singleCompetition.name}</h2>
         </div>
       ) : (
         <select
           className="select select-bordered m-3 w-50"
-          onChange={(event) => setCompetitionId(Number(event.target.value))}
-          value={competitionId || 0}>
-          <option value={0} disabled>
-            大会を選んでください
-          </option>
-          {competitionList?.competitions?.map((competition) => (
-            <option key={competition.id} value={competition.id} hidden={competition.step !== 1}>
-              {competition.name}
+          value={competitionId}
+          onChange={e => setCompetitionId(Number(e.target.value))}
+        >
+          <option value={0} disabled>大会を選んでください</option>
+          {activeCompetitions.map(c => (
+            <option key={c.id} value={c.id}>
+              {c.name}
             </option>
           ))}
         </select>
       )}
 
+      {/* 5) Same for courses: a clear conditional */}
       {filteredCourses.length > 0 ? (
-        <div className="flex flex-col justify-center overflow-y-auto w-full">
-          {filteredCourses.map((course) => (
+        <div className="flex flex-col ...">
+          {filteredCourses.map(course => (
             <ContentButton
-              name={course.name}
               key={course.id}
+              name={course.name}
               link={`/challenge/${competitionId}/${course.id}`}
               disabled={disableCondition}
             />
           ))}
-
-          <ContentButton
-            name="THE一本橋"
-            link={`/challenge/${competitionId}/${RESERVED_COURSE_IDS.IPPON}`}
-            disabled={disableCondition}
-          />
-
-          <ContentButton
-            name="センサーコース"
-            link={`/challenge/${competitionId}/${RESERVED_COURSE_IDS.SENSOR}`}
-            disabled={disableCondition}
-          />
+          <ContentButton name="THE一本橋" link={`/challenge/${competitionId}/${RESERVED_COURSE_IDS.IPPON}`} disabled={disableCondition} />
+          <ContentButton name="センサーコース" link={`/challenge/${competitionId}/${RESERVED_COURSE_IDS.SENSOR}`} disabled={disableCondition} />
         </div>
       ) : (
-        <>
-          <br />コース未割り当てです<br />
-        </>
+        <p className="m-3">コース未割り当てです</p>
       )}
     </div>
   )
