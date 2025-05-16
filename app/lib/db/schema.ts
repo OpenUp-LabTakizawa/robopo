@@ -108,7 +108,7 @@ export const competitionUmpire = pgTable("competition_umpire", {
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
+  name: text("name").notNull().unique(),
   password: text("password").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 })
