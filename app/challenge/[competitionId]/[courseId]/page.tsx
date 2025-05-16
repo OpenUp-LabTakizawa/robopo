@@ -1,4 +1,4 @@
-import { getCompetionPlayerList } from "@/app/components/server/db"
+import { getCompetitionPlayerList } from "@/app/components/server/db"
 import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 import { getCourseById } from "@/app/lib/db/queries/queries"
 import { View } from "@/app/challenge/[competitionId]/[courseId]/view"
@@ -6,7 +6,7 @@ import { View } from "@/app/challenge/[competitionId]/[courseId]/view"
 export default async function Challenge(props: { params: Promise<{ competitionId: number; courseId: number }> }) {
   const params = await props.params;
   const { competitionId, courseId } = params
-  const initialPlayerDataList: { players: SelectPlayer[] } = await getCompetionPlayerList(competitionId)
+  const initialPlayerDataList: { players: SelectPlayer[] } = await getCompetitionPlayerList(competitionId)
 
   // courseIdからcourseDataを取得
   const courseData: SelectCourse | null = await getCourseById(courseId)

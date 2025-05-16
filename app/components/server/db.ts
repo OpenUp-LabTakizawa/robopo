@@ -81,7 +81,7 @@ export async function getCompetitionCourseAssignList(): Promise<{
 }
 
 // 大会IDから参加選手を取得する
-export async function getCompetionPlayerList(competitionId: number): Promise<{
+export async function getCompetitionPlayerList(competitionId: number): Promise<{
   players: SelectPlayer[]
 }> {
   const players: SelectPlayer[] = await db
