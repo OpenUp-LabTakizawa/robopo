@@ -33,7 +33,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                         email: null,
                         image: null,
                     }
-                    if (passwordMatch) return authUser
+                    if (passwordMatch) {
                 }
                 console.error("Invalid credentials")
                 // 認証に失敗した場合はnullを返す
