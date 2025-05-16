@@ -1,4 +1,4 @@
-import { getCompetitionList } from "@/app/components/common/utils"
+import { getCompetitionList } from "@/app/components/server/db"
 import { SelectCompetition } from "@/app/lib/db/schema"
 import { AssignModal } from "@/app/components/common/commonModal"
 

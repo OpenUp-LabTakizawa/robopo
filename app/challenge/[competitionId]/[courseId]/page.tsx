@@ -1,4 +1,4 @@
-import { getCompetionPlayerList } from "@/app/components/common/utils"
+import { getCompetionPlayerList } from "@/app/components/server/db"
 import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 import { getCourseById } from "@/app/lib/db/queries/queries"
 import { View } from "@/app/challenge/[competitionId]/[courseId]/view"

@@ -1,17 +1,13 @@
 "use server"
 
-// サーバ上で動かす関数類
-
 import {
   competition,
   course,
   umpire,
   player,
   competitionCourse,
-  umpireCourse,
   SelectCompetition,
   SelectUmpire,
-  SelectUmpireCourse,
   SelectCourse,
   SelectPlayer,
   SelectCompetitionCourse,
@@ -19,9 +15,6 @@ import {
 } from "@/app/lib/db/schema"
 import { db } from "@/app/lib/db/db"
 import { eq } from "drizzle-orm"
-import { signIn } from "@/auth"
-import { AuthError } from "next-auth"
-
 
 // 選手一覧情報を取得する関数
 export async function getPlayerList(): Promise<{
@@ -45,14 +38,6 @@ export async function getCompetitionList(): Promise<{
 }> {
   const competitions: SelectCompetition[] = await db.select().from(competition)
   return { competitions }
-}
-
-// コース・採点者割当一覧を取得する関数
-export async function getRawAssignList(): Promise<{
-  assigns: SelectUmpireCourse[]
-}> {
-  const assigns: SelectUmpireCourse[] = await db.select().from(umpireCourse)
-  return { assigns }
 }
 
 // コース一覧情報を取得する関数
@@ -115,40 +100,4 @@ export async function getCompetionPlayerList(competitionId: number): Promise<{
     .where(eq(competitionPlayer.competitionId, competitionId))
 
   return { players }
-}
-
-// signInのformState
-export type FormState =
-  | {
-    errors?: {
-      username?: string[]
-      password?: string[]
-    }
-    message?: string
-  }
-  | undefined
-
-// サーバアクションのサインイン
-export async function signInAction(state: FormState, formData: FormData) {
-  "use server"
-  try {
-    // redirectがうまく走らない為、サインイン後にclient側でリダイレクトする
-    await signIn("credentials", { redirect: false, username: formData.get("username"), password: formData.get("password") })
-    return {
-      success: true,
-      message: "サインインに成功しました",
-    }
-  } catch (error) {
-    // Redirectエラーは無視する
-    // これはNextAuthの仕様で、サインイン後にリダイレクトするために発生するエラー
-    console.log("error: ", error)
-    if (error instanceof Error && error.message === "NEXT_REDIRECT") { throw error }
-    // それ以外のエラーはサインイン失敗とする
-    if (error instanceof AuthError) {
-      return {
-        success: false,
-        message: "サインインに失敗しました",
-      }
-    }
-  }
 }

@@ -1,6 +1,6 @@
 import { auth } from "@/auth"
 import { SelectCompetition, SelectCourse, SelectCompetitionCourse } from "@/app/lib/db/schema"
-import { getCompetitionList, getCourseList, getCompetitionCourseAssignList } from "@/app/components/common/utils"
+import { getCompetitionList, getCourseList, getCompetitionCourseAssignList } from "@/app/components/server/db"
 import { ChallengeTab, SummaryTab, ManageTab } from "@/app/components/home/tabs"
 import { ThreeTabs } from "@/app/components/parts/threeTabs"
 

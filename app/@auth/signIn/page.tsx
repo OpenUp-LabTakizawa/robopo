@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect } from "react"
 import { ModalBackdrop, ModalBackButton } from "@/app/components/common/commonModal"
-import { signInAction } from "@/app/components/common/utils"
+import { signInAction } from "@/app/components/server/auth"
 
 export default function SignIn() {
     const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams()

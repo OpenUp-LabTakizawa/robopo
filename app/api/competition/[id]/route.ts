@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { openCompetitionById, returnCompetitionById,closeCompetitionById } from "@/app/lib/db/queries/queries"
-import { getCompetitionList } from "@/app/components/common/utils"
+import { getCompetitionList } from "@/app/components/server/db"
 
 export const revalidate = 0
 
