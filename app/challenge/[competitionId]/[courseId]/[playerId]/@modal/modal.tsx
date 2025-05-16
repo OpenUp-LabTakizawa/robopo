@@ -1,7 +1,6 @@
 "use client"
 
 import { type RefObject, useRef, useEffect, useState } from "react"
-import useSound from "use-sound"
 import StartSound from "@/app/lib/sound/01_start.mp3"
 import { type SelectCourse, type SelectPlayer } from "@/app/lib/db/schema"
 import { useRouter } from "next/navigation"
@@ -13,7 +12,8 @@ type ViewProps = {
 
 export const Modal = ({ courseData, playerData }: ViewProps) => {
   const playerId = playerData.id
-  const [startSound] = useSound(StartSound, { volume: 0.4 })
+  const startSound = new Audio(StartSound)
+  startSound.volume = 0.4
   const router = useRouter()
   const [modalOpen, setModalOpen] = useState<boolean>(true)
   const dialogRef: RefObject<HTMLDialogElement | null> = useRef<HTMLDialogElement | null>(null)
@@ -27,7 +27,7 @@ export const Modal = ({ courseData, playerData }: ViewProps) => {
     if (!dialogRef.current?.open) {
       dialogRef.current?.showModal()
     }
-  })
+  }, [])
 
   if (!modalOpen) return null
   return (
@@ -46,7 +46,7 @@ export const Modal = ({ courseData, playerData }: ViewProps) => {
           <button
             className="rounded-full flex justify-center items-center font-bold relative mt-10 mb-10 w-48 h-48 text-3xl bg-linear-to-r from-green-400 to-green-600 text-white"
             onClick={() => {
-              startSound()
+              startSound && startSound.play()
               modalClose()
             }}>
             <span>スタート</span>

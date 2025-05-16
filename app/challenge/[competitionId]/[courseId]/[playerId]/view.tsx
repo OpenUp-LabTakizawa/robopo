@@ -18,9 +18,9 @@ export const View = ({ courseData, playerData, competitionId, courseId }: ViewPr
   const umpireId = 1 // 一旦1
 
   return (
-    <div className="flex flex-col justify-center items-center overflow-y-auto w-full pt-10">
+    <div className="flex flex-col justify-center items-center overflow-y-auto w-full pt-10 sm:pt-px">
       {/* ベーシックコースとTHE一本橋 */}
-      {courseId !== null && courseId !== RESERVED_COURSE_IDS.SENSOR && playerId !== null && (
+      {Number(courseId) !== null && Number(courseId) !== RESERVED_COURSE_IDS.SENSOR && playerId !== null && (
         <Challenge
           field={courseData.field}
           mission={courseData.mission}
@@ -33,8 +33,8 @@ export const View = ({ courseData, playerData, competitionId, courseId }: ViewPr
       )}
 
       {/* センサーコース */}
-      {courseId === RESERVED_COURSE_IDS.SENSOR && playerId !== null && (
-        <SensorCourse compeId={competitionId} courseId={RESERVED_COURSE_IDS.SENSOR} playerId={playerId} umpireId={umpireId} />
+      {Number(courseId) === RESERVED_COURSE_IDS.SENSOR && playerId !== null && (
+        <SensorCourse compeId={competitionId} courseId={courseId} playerId={playerId} umpireId={umpireId} />
       )}
     </div>
   )

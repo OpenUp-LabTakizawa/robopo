@@ -1,5 +1,4 @@
 import { useState } from "react"
-import useSound from "use-sound"
 import {
   MissionString,
   PointState,
@@ -61,9 +60,11 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
 
     const [strictMode, setStrictMode] = useState<boolean>(false)
 
-    const [nextSound] = useSound(NextSound, { volume: 0.4 })
-    const [backSound] = useSound(BackSound, { volume: 0.2 })
-    const [goalSound] = useSound(GoalSound)
+    const nextSound = new Audio(NextSound)
+    nextSound.volume = 0.4
+    const backSound = new Audio(BackSound)
+    backSound.volume = 0.2
+    const goalSound = new Audio(GoalSound)
 
     // クリックされたpanelの情報を入れる
     const handleNext = (row: number, col: number) => {
@@ -83,11 +84,11 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
           if (nowMission === missionPair.length - 1) {
             setIsGoal(true)
             setModalOpen(1)
-            goalSound()
+            goalSound.play()
           } else {
             // goal以外の時は次のミッションに進む
             setNowMission(nowMission + 1)
-            nextSound()
+            nextSound.play()
           }
           // 一回目か
           if (!isRetry) {
@@ -129,7 +130,7 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
         if (isGoal) {
           setIsGoal(false)
         }
-        backSound()
+        backSound.play()
       }
     }
 
@@ -145,7 +146,7 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
     }
 
     return (<>
-      {courseId === RESERVED_COURSE_IDS.IPPON ? (
+      {Number(courseId) === RESERVED_COURSE_IDS.IPPON ? (
         <div className="relative flex flex-col justify-items-center w-full h-[calc(100vh-100px)]">
           <div className="grid justify-items-center w-full">
             <p className="text-xl font-bold">THE 一本橋</p>
