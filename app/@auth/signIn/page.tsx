@@ -6,7 +6,21 @@ import { signInAction } from "@/app/components/server/auth"
 
 export default function SignIn() {
     const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams()
-    const callbackUrl = params.get("callbackUrl") || "/"
+    const rawCallbackUrl = params.get("callbackUrl") || "/"
+    // クロスサイトスクリプティング&フィッシング攻撃対策
+    const getSafeCallbackUrl = (cb: string) => {
+        try {
+            const url = new URL(cb, window.location.origin)
+            if (url.origin === window.location.origin && url.pathname.startsWith("/")) {
+                return url.pathname + url.search + url.hash
+            }
+        } catch (e) {
+            console.error("Invalid callback URL:", e)
+        }
+        return "/"
+    }
+
+    const callbackUrl = getSafeCallbackUrl(rawCallbackUrl)
     const [state, action] = useActionState(signInAction, undefined)
 
     useEffect(() => {

@@ -66,4 +66,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     pages: {
         signIn: "/signIn",
     },
+    trustHost: true, //netlifyで動かすために必要
 })
