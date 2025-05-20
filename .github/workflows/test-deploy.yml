@@ -1,4 +1,7 @@
 name: Test deployment
+permissions:
+  contents: read # to download the repository
+  pull-requests: write # to comment on the pull request
 
 on:
   pull_request:

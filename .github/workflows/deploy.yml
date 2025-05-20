@@ -1,4 +1,7 @@
 name: Deploy to GitHub Pages
+permissions:
+  contents: read # to download the repository
+  pull-requests: write # to comment on the pull request
 
 on:
   push:
