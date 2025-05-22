@@ -17,7 +17,7 @@ type UmpireProps = {
 
 type CourseProps = {
   type: "course"
-  initialCommonDataList: SelectUmpireWithCompetition[]
+  initialCommonDataList: SelectCourseWithCompetition[]
 }
 
 type ViewProps = PlayerProps | UmpireProps | CourseProps
@@ -49,7 +49,7 @@ export const View = ({ type, initialCommonDataList }: ViewProps) => {
           <p className="flex m-3">選択した{commonString}を</p>
           {type === "course" &&
             <Link
-              href={`/course/edit?${commonId?.map((id) => `id=${id}`).join("&")}`}
+              href={`/course/edit/${createQueryParams(commonId)}`}
               className={
                 "flex btn mx-auto m-3 " +
                 (commonId?.length !== 1 ? "pointer-events-none btn-disabled" : "btn-primary")
