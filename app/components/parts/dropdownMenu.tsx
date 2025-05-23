@@ -84,7 +84,6 @@ type PropsType = {
 
 const NavLinks = ({ propClass, setIsMenuOpen }: PropsType) => {
   const currentPath = usePathname()
-
   const links = [
     { label: "HOME", href: "/" },
     { label: "コース作成", href: "/course" },

@@ -3,7 +3,7 @@ import { type SelectCourse, type SelectPlayer } from "@/app/lib/db/schema"
 import Challenge from "@/app/challenge/challenge"
 import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import { SensorCourse } from "@/app/components/challenge/sensorCourse"
-import { useBeforeUnload } from "@/app/components/beforeUnload/useBeforeUnload"
+import { useNavigationGuard } from "next-navigation-guard"
 
 type ViewProps = {
   courseData: SelectCourse
@@ -13,9 +13,12 @@ type ViewProps = {
 }
 
 export const View = ({ courseData, playerData, competitionId, courseId }: ViewProps) => {
-  useBeforeUnload(true)
   const playerId = playerData.id
   const umpireId = 1 // 一旦1
+  const navGuard = useNavigationGuard({
+    enabled: true,
+    confirm: () => window.confirm("このページを離れると編集中のデータは失われます。よろしいですか？"),
+  })
 
   return (
     <div className="flex flex-col justify-center items-center overflow-y-auto w-full pt-10 sm:pt-px">

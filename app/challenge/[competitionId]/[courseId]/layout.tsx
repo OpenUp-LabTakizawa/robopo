@@ -9,15 +9,12 @@ export const metadata: Metadata = {
 
 export default function Layout({
   children,
-  modal,
 }: Readonly<{
   children: React.ReactNode
-  modal: React.ReactNode
 }>) {
   return (
     <NavigationGuardProvider>
       {children}
-      {modal}
     </NavigationGuardProvider>
   )
 }
