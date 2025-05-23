@@ -66,5 +66,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     pages: {
         signIn: "/signIn",
     },
-    trustHost: true, //netlifyで動かすために必要
+    trustHost: process.env.NETLIFY === "true" //netlifyで動かす場合
+    || process.env.TRUST_HOST === "true", // localhostその他で動かす場合
 })
