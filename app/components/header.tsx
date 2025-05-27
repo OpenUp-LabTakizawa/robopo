@@ -39,7 +39,7 @@ export const Header = async () => {
       </h1>
       {/* サインインorサインアウトボタン & HOMEボタン (PC表示) */}
       <div className="hidden lg:inline-block ml-auto">
-        {session ? <SignOut /> : <Link href="/signIn" className="btn btn-primary p-2 text-xl">Sign in</Link>}
+        {session?.user ? <SignOut /> : <Link href="/signIn" className="btn btn-primary p-2 text-xl">Sign in</Link>}
         <Link href="/" className="btn btn-primary p-2 text-xl ml-5">
           Home
         </Link>

@@ -14,7 +14,7 @@ export default async function Home() {
   const competitionCourseList: { competitionCourseList: SelectCompetitionCourse[] } = await getCompetitionCourseAssignList()
 
   return (
-    session ?
+    session?.user ?
       <ThreeTabs
         tab1Title="採点"
         tab1={<ChallengeTab key="challenge" competitionList={competitionList} courseList={courseList} competitionCourseList={competitionCourseList} />}
