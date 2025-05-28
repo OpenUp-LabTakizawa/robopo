@@ -11,6 +11,8 @@ import {
   checkValidity,
 } from "@/app/components/course/utils"
 import { useCourseEdit } from "@/app/course/edit/courseEditContext"
+import { useState } from "react"
+import Link from "next/link"
 
 type ValidationModalProps = {
   setModalOpen: React.Dispatch<React.SetStateAction<number>>
@@ -57,10 +59,13 @@ export const BackModal = () => {
 }
 
 // コースを保存するmodal
-export const SaveModal = () => {
+export const SaveModal = ({ courseId }: { courseId: number | null }) => {
   const { name, setName, field, mission, point } = useCourseEdit()
   const router = useRouter()
-  const handleClick = async () => {
+  const [isSuccess, setIsSuccess] = useState<boolean>(false)
+  const { pending } = useFormStatus()
+
+  const handleClick = async (id: number | null) => {
     if (name.trim() === "") {
       alert("コース名を入力してください")
       return
@@ -74,7 +79,8 @@ export const SaveModal = () => {
       missionValid: true,
       point: serializePoint(point),
     }
-    const res = await fetch("/api/course", {
+
+    const res = await fetch(id ? `/api/course?id=${id}` : "/api/course", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -82,26 +88,12 @@ export const SaveModal = () => {
       body: JSON.stringify(courseData),
     })
     if (res.ok) {
+      setIsSuccess(true)
       alert("コースを保存しました")
     } else {
+      setIsSuccess(false)
       alert("コースの保存に失敗しました")
     }
-  }
-
-  const YesButton = () => {
-    const { pending } = useFormStatus()
-
-    return (
-      <button
-        type="button"
-        className="btn btn-accent"
-        disabled={pending}
-        onClick={() => {
-          handleClick()
-        }}>
-        {pending ? <span className="loading loading-spinner"></span> : "はい"}
-      </button>
-    )
   }
 
   const handleClickNo = () => {
@@ -122,11 +114,39 @@ export const SaveModal = () => {
               onChange={(e) => setName(e.target.value)}
             />
           </label>
-          <p>保存しますか?</p>
+          {isSuccess ? <p>コース一覧に戻りますか?</p> : <p>保存しますか?</p>}
           <div className="modal-action">
-            <YesButton />
-            <button type="button" className="btn" onClick={handleClickNo}>
-              いいえ
+            {isSuccess ? (
+              <Link href="/course" className="btn btn-accent">
+                はい
+              </Link>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  className="btn btn-accent"
+                  disabled={pending}
+                  onClick={() => {
+                    handleClick(null)
+                  }}>
+                  {pending ? <span className="loading loading-spinner"></span> : "新規保存"}
+                </button>
+                {courseId && (
+                  <button
+                    type="button"
+                    className="btn btn-accent"
+                    disabled={pending}
+                    onClick={() => {
+                      handleClick(courseId)
+                    }}>
+                    {pending ? <span className="loading loading-spinner"></span> : "上書き保存"}
+                  </button>
+                )}
+              </>
+            )}
+
+            <button type="button" disabled={pending} className="btn" onClick={handleClickNo}>
+              {pending ? <span className="loading loading-spinner"></span> : "いいえ"}
             </button>
           </div>
         </form>

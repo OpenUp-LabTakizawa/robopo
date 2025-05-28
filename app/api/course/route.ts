@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createCourse } from "@/app/lib/db/queries/insert"
+import { updateCourse } from "@/app/lib/db/queries/update"
 import { getCourseById } from "@/app/lib/db/queries/queries"
 import { deleteById } from "@/app/api/delete"
 
 export const revalidate = 0
 
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams
+export async function GET(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams
   const rawId = searchParams.get("id")
   const id = rawId ? parseInt(rawId) : 0
 
@@ -21,6 +22,9 @@ export async function GET(request: NextRequest) {
 export async function POST(req: NextRequest) {
   const reqbody = await req.json()
   const { name, field, fieldvalid, mission, missionvalid, point } = reqbody
+  const searchParams = req.nextUrl.searchParams
+  const rawId = searchParams.get("id")
+  const id = rawId ? parseInt(rawId) : null
   const courseData = {
     name: name,
     field: field,
@@ -29,19 +33,39 @@ export async function POST(req: NextRequest) {
     missionValid: missionvalid,
     point: point,
   }
-  try {
-    const result = await createCourse(courseData)
-    return NextResponse.json({ success: true, data: result }, { status: 200 })
-  } catch (error) {
-    console.log("error: ", error)
-    return NextResponse.json(
-      {
-        success: false,
-        message: "An error occurred while creating the course.",
-        error: error,
-      },
-      { status: 500 }
-    )
+
+  if (id !== null) {
+    // 更新の場合
+    try {
+      const result = await updateCourse(id, courseData)
+      return NextResponse.json({ success: true, data: result }, { status: 200 })
+    } catch (error) {
+      console.log("error: ", error)
+      return NextResponse.json(
+        {
+          success: false,
+          message: "An error occurred while updating the course.",
+          error: error,
+        },
+        { status: 500 }
+      )
+    }
+  } else {
+    // 新規作成の場合
+    try {
+      const result = await createCourse(courseData)
+      return NextResponse.json({ success: true, data: result }, { status: 200 })
+    } catch (error) {
+      console.log("error: ", error)
+      return NextResponse.json(
+        {
+          success: false,
+          message: "An error occurred while creating the course.",
+          error: error,
+        },
+        { status: 500 }
+      )
+    }
   }
 }
 
