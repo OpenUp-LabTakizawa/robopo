@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
 import Link from "next/link"
 import CourseEdit from "@/app/course/edit/courseEdit"
 import MissionEdit from "@/app/course/edit/missionEdit"
@@ -16,23 +15,21 @@ import { validationModal } from "@/app/components/course/modals"
 
 export const EditorPage = (props: { params: Promise<{ courseId: number | null }> }) => {
   // Extract courseId from params for use in JSX
-  const router = useRouter()
   const [courseId, setCourseId] = useState<number | null>(null);
   const { name, setName, field, setField, mission, setMission, point, setPoint } = useCourseEdit()
   const [modalOpen, setModalOpen] = useState(0)
 
   useEffect(() => {
-    async function fetchCourseData() {
-      const params = await props.params
-      const { courseId } = params
+    const fetchCourseData = async () => {
+      const { courseId } = await props.params
       if (courseId) {
         setCourseId(courseId)
         const course = await getCourse(courseId)
         if (course) {
-          if (course.field) setField(deserializeField(course.field))
-          if (course.mission) setMission(deserializeMission(course.mission))
-          if (course.point) setPoint(deserializePoint(course.point))
-          if (course.name) setName(course.name)
+          if (course.field) { setField(deserializeField(course.field)) }
+          if (course.mission) { setMission(deserializeMission(course.mission)) }
+          if (course.point) { setPoint(deserializePoint(course.point)) }
+          if (course.name) { setName(course.name) }
         }
       }
     }
@@ -60,13 +57,17 @@ export const EditorPage = (props: { params: Promise<{ courseId: number | null }>
             有効性チェック
           </button>
           <Link
-            href={`/course/edit/${courseId ?? ""}/save/`}
+            href={
+              courseId ? `/course/edit/${courseId}/save/` : `/course/edit/save/`
+            }
             className="btn btn-primary min-w-28 max-w-fit"
           >
             コースを保存
           </Link>
           <Link
-            href={`/course/edit/${courseId ?? ""}/back/`}
+            href={
+              courseId ? `/course/edit/${courseId}/back/` : `/course/edit/back/`
+            }
             className="btn btn-primary min-w-28 max-w-fit"
           >
             一覧に戻る
