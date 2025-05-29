@@ -16,6 +16,7 @@ import { Field } from "@/app/components/course/field"
 import { ChallengeModal, CourseOutModal, RetryModal } from "@/app/challenge/challengeModal"
 import { calcPoint, resultSubmit } from "@/app/components/challenge/utils"
 import { IpponBashiUI } from "@/app/components/challenge/ipponBashi"
+import { useAudioContext, SoundControlUI } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/audioContext"
 import NextSound from "@/app/lib/sound/02_next.mp3"
 import BackSound from "@/app/lib/sound/03_back.mp3"
 import GoalSound from "@/app/lib/sound/04_goal.mp3"
@@ -60,6 +61,7 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
 
     const [strictMode, setStrictMode] = useState<boolean>(false)
 
+    const { soundOn, setSoundOn } = useAudioContext()
     const nextSound = new Audio(NextSound)
     nextSound.volume = 0.4
     const backSound = new Audio(BackSound)
@@ -84,11 +86,11 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
           if (nowMission === missionPair.length - 1) {
             setIsGoal(true)
             setModalOpen(1)
-            goalSound.play()
+            soundOn && goalSound.play()
           } else {
             // goal以外の時は次のミッションに進む
             setNowMission(nowMission + 1)
-            nextSound.play()
+            soundOn && nextSound.play()
           }
           // 一回目か
           if (!isRetry) {
@@ -130,7 +132,7 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
         if (isGoal) {
           setIsGoal(false)
         }
-        backSound.play()
+        soundOn && backSound.play()
       }
     }
 
@@ -274,6 +276,7 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
           <p className="text-3xl font-bold text-orange-600">
             {isGoal ? "クリア" : "現在"}: {pointCount}ポイント
           </p>
+          <SoundControlUI soundOn={soundOn} setSoundOn={setSoundOn} />
           <div className="grid grid-cols-2 gap-4 p-4">
             <button
               type="button"
