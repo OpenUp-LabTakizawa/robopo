@@ -10,7 +10,9 @@ export type AudioContextType = {
 
 const dummy: AudioContextType = {
     soundOn: false,
-    setSoundOn: () => { },
+    setSoundOn: () => {
+        throw new Error("setSoundOn called outside of AudioContext provider");
+    },
 }
 
 const AudioContext = createContext<AudioContextType>(dummy)
