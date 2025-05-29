@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import {
   MissionString,
   PointState,
@@ -63,14 +63,14 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
 
     const { soundOn, setSoundOn } = useAudioContext()
     const nextSound = useMemo(() => {
-        const audio = new Audio(NextSound)
-        audio.volume = 0.4
-        return audio
+      const audio = new Audio(NextSound)
+      audio.volume = 0.4
+      return audio
     }, [])
     const backSound = useMemo(() => {
-        const audio = new Audio(BackSound)
-        audio.volume = 0.4
-        return audio
+      const audio = new Audio(BackSound)
+      audio.volume = 0.4
+      return audio
     }, [])
     backSound.volume = 0.2
     const goalSound = new Audio(GoalSound)
