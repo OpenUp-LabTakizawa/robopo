@@ -48,7 +48,16 @@ export const SoundControlUI = ({
                 <SpeakerXMarkIcon className="w-8 h-8 text-red-500" />
             )}
             <span className="text-lg">効果音: {soundOn ? "ON" : "OFF"}</span>
-            <input type="checkbox" checked={soundOn} onChange={(e) => setSoundOn(e.target.checked)} className="toggle toggle-success" />
+            <label className="flex items-center gap-1">
+                <input
+                    id="sound-toggle"
+                    type="checkbox"
+                    checked={soundOn}
+                    onChange={(e) => setSoundOn(e.target.checked)}
+                    className="toggle toggle-success"
+                />
+                <span className="sr-only">効果音のオン・オフ切り替え</span>
+            </label>
         </div>
     )
 }
