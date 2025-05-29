@@ -62,9 +62,16 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
     const [strictMode, setStrictMode] = useState<boolean>(false)
 
     const { soundOn, setSoundOn } = useAudioContext()
-    const nextSound = new Audio(NextSound)
-    nextSound.volume = 0.4
-    const backSound = new Audio(BackSound)
+    const nextSound = useMemo(() => {
+        const audio = new Audio(NextSound)
+        audio.volume = 0.4
+        return audio
+    }, [])
+    const backSound = useMemo(() => {
+        const audio = new Audio(BackSound)
+        audio.volume = 0.4
+        return audio
+    }, [])
     backSound.volume = 0.2
     const goalSound = new Audio(GoalSound)
 
