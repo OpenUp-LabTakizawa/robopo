@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 ---
 
 import { GithubLink } from "@site/src/components/variables.tsx"
@@ -78,6 +78,31 @@ erDiagram
     timestamp created_at "作成日時"
   }
 
+  competition_player {
+	integer id PK "ID"
+	integer competition_id
+	integer player_id
+  }
+
+  competition_course {
+	integer id PK "ID"
+	integer competition_id
+	integer course_id
+  }
+
+  competition_umpire {
+	integer id PK "ID"
+	integer competition_id
+	integer umpire_id
+  }
+
+  competition ||--o{ competition_player : "competition_id:id"
+  competition ||--o{ competition_course : "competition_id:id"
+  competition ||--o{ competition_umpire : "competition_id:id"
+  player ||--o{ competition_player : "player_id:id"
+  course ||--o{ competition_course : "course_id:id"
+  umpire ||--o{ competition_umpire : "umpire_id:id"
+
 ```
 
 ## 各テーブル詳細
@@ -117,7 +142,7 @@ erDiagram
 
 - [url]/course で新規登録・削除・更新
 - [url]/course/edit で編集
-- field, mission, point に入るデータについては[別の章](./03-course-and-mission.mdx)で解説する。
+- field, mission, point に入るデータについては[別の章](./04-course-and-mission.mdx)で解説する。
 
 ### umpire
 
@@ -170,6 +195,47 @@ erDiagram
 
 - 採点者-コースが 1 対 1 になる想定で準備した table。
 - 採点者を特定する必要がなければ要らない気がする。
+
+### competition_player
+
+| data_type | column_name    | key | description |
+| --------- | -------------- | --- | ----------- |
+| integer   | id             | PK  | "ID"        |
+| integer   | competition_id |     | "大会 ID"   |
+| integer   | player_id      |     | "選手 ID"   |
+| timestamp | created_at     |     | "作成日時"  |
+
+- [url]/player で新規登録・削除・編集
+- 選手を大会に登録するための table。
+- 選手は大会に複数登録できる。
+
+### competition_course
+
+| data_type | column_name    | key | description |
+| --------- | -------------- | --- | ----------- |
+| integer   | id             | PK  | "ID"        |
+| integer   | competition_id |     | "大会 ID"   |
+| integer   | course_id      |     | "コース ID" |
+| timestamp | created_at     |     | "作成日時"  |
+
+- [url]/config でコースを大会に割当。
+- コースを大会に登録するための table。
+- コースは大会に複数登録できるようにしているが、実際には 1 つの大会に 1 つのコースしか登録しない想定。
+  途中で大会のコースが変更となってもそれまでのコースでの結果を残しておけるようにする。
+- 一本橋とセンサーコースはどの大会でもあるようなので、ここで割当の必要はない。
+
+### competition_umpire
+
+| data_type | column_name    | key | description |
+| --------- | -------------- | --- | ----------- |
+| integer   | id             | PK  | "ID"        |
+| integer   | competition_id |     | "大会 ID"   |
+| integer   | umpire_id      |     | "採点者 ID" |
+| timestamp | created_at     |     | "作成日時"  |
+
+- [url]/umpire で新規登録・削除・編集
+- 採点者を大会に登録するための table。
+- 採点者は大会に複数登録できる。
 
 ## DB 初期設定
 
