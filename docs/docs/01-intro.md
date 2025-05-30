@@ -44,7 +44,7 @@ OpenUp ラボ滝沢構成員
 
 (Organization の Github にする予定)
 
-[https://github.com/kazutan1230/robopo](https://github.com/kazutan1230/robopo)
+[https://github.com/openup-labtakizawa/robopo](https://github.com/openup-labtakizawa/robopo)
 
 ご参考願う。
 

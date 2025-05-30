@@ -2,7 +2,7 @@ import React from "react"
 import Link from "@docusaurus/Link"
 
 // ROBOPO のあるGithubリポジトリのURL
-const robopoGithubUrl = "https://github.com/kazutan1230/robopo/"
+const robopoGithubUrl = "https://github.com/openup-labtakizawa/robopo/"
 
 interface GithubLinkProps {
   filePath: string
