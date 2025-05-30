@@ -36,8 +36,8 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="https://github.com/openup-labtakizawa/robopo/tree/docusaurus">
-            <img role="img" src="img/github-mark.png" alt="ROBOPO Githubへ" width="20" height="20" />
-            ROBOPO Githubへ
+            <img role="img" src="img/github-mark.png" alt="ROBOPO GitHubへ" width="20" height="20" />
+            ROBOPO GitHubへ
           </Link>
         </div>
       </div>
