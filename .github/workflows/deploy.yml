@@ -1,9 +1,5 @@
 name: Deploy to GitHub Pages
 
-permissions:
-  contents: read # to download the repository
-  pull-requests: write # to comment on the pull request
-
 on:
   push:
     branches: main
@@ -20,6 +16,10 @@ jobs:
   build:
     name: Build Docusaurus
     runs-on: ubuntu-latest
+    permissions:
+      contents: read # to download the repository
+      pull-requests: write # to comment on the pull request
+
     steps:
       - uses: actions/checkout@v4
         with:
