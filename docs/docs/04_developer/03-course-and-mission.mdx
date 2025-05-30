@@ -19,35 +19,6 @@ import { GithubLink } from "@site/src/components/variables.tsx"
 
 まず、ベーシックコース、THE 一本橋を表現するための描画モデルから解説する。
 
-## 関連ファイル
-
-### コース・ミッションモデル
-
-- <GithubLink filePath="app/components/course/utils.tsx" />
-
-### エディター関連
-
-- <GithubLink filePath="app/components/course/courseList.tsx" />
-- <GithubLink filePath="app/components/course/listUtils.tsx" />
-- <GithubLink filePath="app/components/course/missionList.tsx" />
-- <GithubLink filePath="app/components/course/missionUI.tsx" />
-- <GithubLink filePath="app/components/course/modals.tsx" />
-- <GithubLink filePath="app/components/course/selectPanel.tsx" />
-- <GithubLink filePath="app/components/course/utils.tsx" />
-
-### コースの描画・UI
-
-- <GithubLink filePath="app/components/course/field.tsx" />
-- <GithubLink filePath="app/components/course/nextArrow.tsx" />
-- <GithubLink filePath="app/components/course/panel.tsx" />
-- <GithubLink filePath="app/components/course/robot.tsx" />
-- <GithubLink filePath="app/components/course/utils.tsx" />
-
-### THE 一本橋・センサーコース
-
-- <GithubLink filePath="app/components/challenge/ipponBashi.tsx" />
-- <GithubLink filePath="app/components/challenge/sensorCourse.tsx" />
-
 ## 描画モデル
 
 field.tsx で定義された碁盤の目フィールド上に panel.tsx で定義されたパネルや robot.tsx によるロボット、nextArrow.tsx による次の動きを配置することでロボサバの場面を表現する。
@@ -217,6 +188,67 @@ start 時のポイントはこれまでのところ、必要は無いが、将�
 
 他に、fieldvalid, missionvalid はコースとミッションが有効かどうかを示す boolean 型フラグである。こちらの実装はできていない。
 
+## コースデータの保存と読込
+
+### 保存
+
+コース新規作成又は編集して保存する際には、<GithubLink filePath="app/api/course/course/route.tsx" />の API に POST リクエストを送信し、
+API 経由で<GithubLink filePath="app/lib/db/insert.ts" />の`createCourse`関数を使って DB に追加する。
+
+現段階では上書き保存の機能がない。編集しても新規で保存することになる。insert の代わりに update すればいいと思っている。
+
+実際に保存を行うのは<GithubLink filePath="app/components/course/modals.tsx" />の`saveModal`からである。
+
+```tsx title="app/components/course/modals.tsx 一部"
+const courseData = {
+  name: name,
+  field: serializeField(field),
+  fieldValid: true,
+  mission: serializeMission(mission),
+  missionValid: true,
+  point: serializePoint(point),
+}
+```
+
+ここでは上記の`courseData`の形にして json でリクエストを送信している。`serializeField`、`serializeMission`、`serializePoint`はそれぞれ、
+FieldState 型、missionState 型、PointState 型を String 型に変換している。
+前節の[DB データ例](#実際の-db-データ例)でみたように文字列として保存される。
+
+### 読込
+
+コースを読み込む場合はコースの ID を指定して、<GithubLink filePath="app/(linkheader)/course/edit/page.tsx" />
+
+```tsx title="app/(linkheader)/course/edit/page.tsx 一部"
+const course = await getCourse(id)
+if (course) {
+  if (course.field) setField(deserializeField(course.field))
+  if (course.mission) setMission(deserializeMission(course.mission))
+  if (course.point) setPoint(deserializePoint(course.point))
+  if (course.name) setName(course.name)
+}
+```
+
+もしくは、<GithubLink filePath="app/(nolinkheader)/challenge/[competitionId]/[umpireId]/[playerId]/page.tsx" />
+
+```tsx title="app/(nolinkheader)/challenge/[competitionId]/[umpireId]/[playerId]/page.tsx 一部"
+const courseData: SelectCourse | null = await getCourseById(courseId[0].courseId)
+```
+
+`deserializeField`、`deserializeMission`、`deserializePoint`は前節の逆で、String 型からそれぞれ FieldState 型、missionState 型、PointState 型に変換している。
+
+## コースの有効性確認
+
+コースの有効性確認は大まかに
+
+- start から goal が route で繋がっているか。
+- start からミッションを順にクリアした際に route から外れないか。
+- ミッションを最後までクリアした際に goal に robot が存在するか。
+
+を全て満たしているか否かを判定している。
+
+<GithubLink filePath="app/components/course/utils.tsx" />
+のcheckValidity関数で実施している。
+
 ## THE 一本橋
 
 THE 一本橋のコース描画は、<GithubLink filePath="app/components/challenge/ipponBashi.tsx" />である。
@@ -253,6 +285,35 @@ UPDATE course SET field = 'route;route;route;route;start', mission = 'u;null;mf;
 ミッションのルールからコース自体の描画の必要性が乏しいため、
 コースの描画は行わない。
 トンネル停止と壁停止のミッションの得点を選択して入れる機能のみを付けている。
+
+## 関連ファイル
+
+### コース・ミッションモデル
+
+- <GithubLink filePath="app/components/course/utils.tsx" />
+
+### エディター関連
+
+- <GithubLink filePath="app/components/course/courseList.tsx" />
+- <GithubLink filePath="app/components/course/listUtils.tsx" />
+- <GithubLink filePath="app/components/course/missionList.tsx" />
+- <GithubLink filePath="app/components/course/missionUI.tsx" />
+- <GithubLink filePath="app/components/course/modals.tsx" />
+- <GithubLink filePath="app/components/course/selectPanel.tsx" />
+- <GithubLink filePath="app/components/course/utils.tsx" />
+
+### コースの描画・UI
+
+- <GithubLink filePath="app/components/course/field.tsx" />
+- <GithubLink filePath="app/components/course/nextArrow.tsx" />
+- <GithubLink filePath="app/components/course/panel.tsx" />
+- <GithubLink filePath="app/components/course/robot.tsx" />
+- <GithubLink filePath="app/components/course/utils.tsx" />
+
+### THE 一本橋・センサーコース
+
+- <GithubLink filePath="app/components/challenge/ipponBashi.tsx" />
+- <GithubLink filePath="app/components/challenge/sensorCourse.tsx" />
 
 [^1]:
     後になってから、向きは回転座標系にして、右回転を正の回転、左回転を負の回転としたモデルの方が汎用性あると気付いた。
