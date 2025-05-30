@@ -1,0 +1,18 @@
+{
+  "title": {
+    "message": "ROBOPOマニュアル",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "ROBOPO Logo",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.目次": {
+    "message": "目次",
+    "description": "Navbar item with label 目次"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  }
+}

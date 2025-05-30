@@ -1,0 +1,18 @@
+---
+sidebar_position: 2
+---
+
+import Drawio from "@theme/Drawio"
+import systemStructure from "!!raw-loader!/static/drawioData/systemStructure.drawio"
+
+# システム構成
+
+<figure>
+  <Drawio content={systemStructure} title={"システム構成"} />
+  <figcaption className="text--center">システム構成</figcaption>
+</figure>
+
+2024 年 11 月こどもテックキャラバン時には上記のように Github 上にコードを上げて、Vercel でのホスティング。Neon というサービスの DB を利用した。
+この形にこだわる必要はないと考えている。AWS に移行できるはず。[^1]
+
+[^1]: この形になったのは費用面で無料だったからである。Vercel の DB ではないのはアカウントに 1 つしか作れなくて他の開発で使っていたため。

@@ -1,0 +1,259 @@
+---
+sidebar_position: 3
+---
+
+# コースとミッションの概念とモデル
+
+import fieldAndPanel from "./img/fieldAndPanel.webp"
+import descCourse from "./img/descCourse.webp"
+import mission1 from "./img/mission1.JPG"
+import mission2 from "./img/mission2.JPG"
+import { GithubLink } from "@site/src/components/variables.tsx"
+
+この章では コースとミッションの概念とモデルについて解説する。
+コースはロボットが移動するためのフィールドを表現したものであり、ミッションはコース上でロボットが行うべきタスクを表現したものである。
+ロボサバのコースは、ベーシックコース、THE 一本橋、センサーコースと 3 つに区分でき、本アプリケーションでもそれぞれに適した形で表現している。
+前者 2 つの UI は似ている部分があるが、センサーコースは大きく異なっている。
+
+アプリケーション上でコースを表現するにあたって参考にしたのは[オセロゲームのアプリ開発](https://qiita.com/Ryukuu0919/items/329aac4d738d328a6929)である。
+
+まず、ベーシックコース、THE 一本橋を表現するための描画モデルから解説する。
+
+## 関連ファイル
+
+### コース・ミッションモデル
+
+- <GithubLink filePath="app/components/course/utils.tsx" />
+
+### エディター関連
+
+- <GithubLink filePath="app/components/course/courseList.tsx" />
+- <GithubLink filePath="app/components/course/listUtils.tsx" />
+- <GithubLink filePath="app/components/course/missionList.tsx" />
+- <GithubLink filePath="app/components/course/missionUI.tsx" />
+- <GithubLink filePath="app/components/course/modals.tsx" />
+- <GithubLink filePath="app/components/course/selectPanel.tsx" />
+- <GithubLink filePath="app/components/course/utils.tsx" />
+
+### コースの描画・UI
+
+- <GithubLink filePath="app/components/course/field.tsx" />
+- <GithubLink filePath="app/components/course/nextArrow.tsx" />
+- <GithubLink filePath="app/components/course/panel.tsx" />
+- <GithubLink filePath="app/components/course/robot.tsx" />
+- <GithubLink filePath="app/components/course/utils.tsx" />
+
+### THE 一本橋・センサーコース
+
+- <GithubLink filePath="app/components/challenge/ipponBashi.tsx" />
+- <GithubLink filePath="app/components/challenge/sensorCourse.tsx" />
+
+## 描画モデル
+
+field.tsx で定義された碁盤の目フィールド上に panel.tsx で定義されたパネルや robot.tsx によるロボット、nextArrow.tsx による次の動きを配置することでロボサバの場面を表現する。
+
+<img role="img" src={fieldAndPanel} alt="Field and panel" width="600" />
+
+フィールドの定数とパネルの定数は<GithubLink filePath="app/components/course/utils.tsx" />の冒頭部分で定義されている。
+
+```tsx title="utils.tsx"
+// コース作成の最大サイズ
+export const MAX_FIELD_WIDTH: number = 3
+export const MAX_FIELD_HEIGHT: number = 3
+
+// 一本橋のサイズ
+export const IPPON_BASHI_SIZE: number = 5
+
+// デフォルトのパネルサイズ
+const PANEL_WIDTH: number = 85
+const PANEL_HEIGHT: number = 85
+
+// THE 一本橋のパネルサイズ
+const BASHI_PANEL_WIDTH: number = 85
+const BASHI_PANEL_HEIGHT: number = 85
+
+// パネルの幅を返す関数
+export const getPanelWidth = (type?: string): number => {
+  if (type === "ipponBashi") return BASHI_PANEL_WIDTH
+  else return PANEL_WIDTH
+}
+
+// パネルの高さを返す関数
+export const getPanelHeight = (type?: string): number => {
+  if (type === "ipponBashi") return BASHI_PANEL_HEIGHT
+  else return PANEL_HEIGHT
+}
+
+// Panelの種類
+export type PanelValue = "start" | "goal" | "route" | null
+export const PanelString: { [key in Exclude<PanelValue, null>]: string } = {
+  start: "スタート",
+  goal: "ゴール",
+  route: "",
+}
+~~~
+```
+
+ベーシックコースと THE 一本橋の定数がデフォルトで同じにしているため、高さと幅を返す関数は冗長と言える。
+今後もずっと同じで良いならまとめても良いだろう。
+
+`MAX_FIELD_WIDTH` と `MAX_FIELD_HEIGHT` を増加させれば、より大きなコースを表現できるが、
+実際に 4,5,6,7,8,...と増やしてみるとうまく描画できない場合も見られるため注意。
+(恐らく、描画の際の割り算がうまくいかない場所があるのだろうと予想している。)
+
+パネルの種類は `PanelValue` で定義されており、3 種類+null、 `PanelString` はパネルの表示テキストを定義している。
+
+<img role="img" src={descCourse} alt="Field and panel" width="600" />
+
+上図左のように、フィールドの場所(`FieldState`)に`PanelValue`(start, route, goal, null)を定めて、コースを保存している。
+上図右のように座標系が置かれている。
+
+描画自体は、<GithubLink filePath="app/components/course/field.tsx" />で行われている。
+
+```tsx title="field.tsx"
+~~~
+  <Panel key={`${rowIndex}-${colIndex}`} value={panel} onClick={() => props.onPanelClick(rowIndex, colIndex)} />
+~~~
+  <Robot row={props.botPosition.row} col={props.botPosition.col} direction={props.botDirection} />
+  <NextArrow
+    row={props.botPosition.row}
+    col={props.botPosition.col}
+    direction={props.botDirection}
+    nextMissionPair={props.nextMissionPair}
+    duration={1.5}
+  />
+~~~
+```
+
+ここでの(row, col)の座標が先の右図の座標系に対応している。
+
+## ミッションの概念
+
+ロボサバにはコースに課せられるミッションがあり、
+それを順番通りにロボットがクリアすることでポイントが加算され、
+ゴールへの到達で更にゴールポイントが加算される。
+
+以下はこどもテックキャラバンで使用されているロボサバ大会のルールを示した資料の一部抜粋である。
+
+<img role="img" src={mission1} alt="MissionDesc1" width="340" />
+<img role="img" src={mission2} alt="MissionDesc2" width="340" />
+
+資料から、ミッションは以下の種類に分けられる。
+
+- 前進 〇パネル
+- 後進 〇パネル
+- 右回転 〇度
+- 左回転 〇度
+
+また、ロボットと次の動きを示す矢印には座標だけではなく向きの情報も必要である。
+これを ROBOPO では、以下のように MissionValue と表現する。[^1]<GithubLink filePath="app/components/course/utils.tsx" />
+
+```tsx title="utils.tsx"
+~~~
+// Missionの種類 u:up上向き r:right右向き d:down下向き l:left左向き
+// mf:move_forward前進 mb:move_backward後退 tr:turn_right右転 tl:turn_left左転
+export type MissionValue = "u" | "r" | "d" | "l" | "mf" | "mb" | "tr" | "tl" | "" | number | null
+export const MissionString: { [key in Exclude<MissionValue, null>]: string | null } = {
+  u: "上向き",
+  r: "右向き",
+  d: "下向き",
+  l: "左向き",
+  mf: "前進",
+  mb: "後進",
+  tr: "右回転",
+  tl: "左回転",
+  "": "空",
+}
+~~~
+```
+
+この`mf, mb`に数字が続くことで、前進 〇パネル、後進 〇パネルを表し、
+また、`tr, tl`に数字が続くことで、右回転 〇度、左回転 〇度を表す。
+
+## 実際の DB データ例
+
+```sql title="DBデータ例"
+robopo=> select * from course where name='testA';
+ id | name  |                      field                       | fieldvalid |            mission             | missionvalid |     point      |         created_at
+----+-------+--------------------------------------------------+------------+--------------------------------+--------------+----------------+----------------------------
+ 64 | testA | null,route,goal;null,route,null;start,route,null | f          | r;r;mf;1;tl;90;mf;2;tr;90;mf;1 | f            | 0;10;2;2;2;3;1 | 2024-09-24 03:50:03.374605
+```
+
+上はコースを DB から取得した結果である。まず、field`null,route,goal;null,route,null;start,route,null`に着目し解説する。
+これを[描画モデル](#描画モデル)の節で言及した(0,0), (0,1), (0,2), (1,0), (1,1)...の順に置くと、
+
+```plaintext
+null,route,goal
+null,route,null
+start,route,null
+```
+
+となる。再度下に図を出すと、左の図のコースを表したものになっている。
+
+<img role="img" src={descCourse} alt="Field and panel" width="600" />
+
+次に mission`r;r;mf;1;tl;90;mf;2;tr;90;mf;1`に着目し解説する。
+このデータは、;で区切られた配列であり、以下の意味で読み取る。
+
+```plaintext
+startでの向き; goalでの向き; 1つ目のmissionのmissionValue: 1つ目のmissionのパネル数or角度; 2つ目のmissionのmissionValue: 2つ目のmissionのパネル数or角度; ...
+```
+
+そのため、`r;r;mf;1;tl;90;mf;2;tr;90;mf;1`は以下の意味になる。
+
+```plaintext
+startでの向き: r右; goalでの向き: r右; 1つ目のmission: 前進1パネル; 2つ目のmission: 左回転90度; 3つ目のmission: 前進2パネル; 4つ目のmission: 右回転90度; 5つ目のmission: 前進1パネル
+```
+
+3 番目の`mf`と 4 番目の`1`で「前進 1 パネル」を表し、5 番目の`tl`と 6 番目の`90`で「左回転 90 度」を表している。
+
+更に、point`0;10;2;2;2;3;1`に着目すると、以下の意味で読み取る。
+
+```plaintext
+start時のポイント(ハンデを想定); コースクリア時のgoalポイント; 1つ目のmissionのポイント; 2つ目のmissionのポイント; ...
+```
+
+start 時のポイントはこれまでのところ、必要は無いが、将来的にハンデを設定する際に使用できるようにしている。
+
+他に、fieldvalid, missionvalid はコースとミッションが有効かどうかを示す boolean 型フラグである。こちらの実装はできていない。
+
+## THE 一本橋
+
+THE 一本橋のコース描画は、<GithubLink filePath="app/components/challenge/ipponBashi.tsx" />である。
+基本の描画はベーシックコースと同じである。
+
+<GithubLink filePath="app/components/course/utils.tsx" />
+で定義された`IPPON_BASHI_SIZE`を変更することで任意の長さの一本橋を描画できる。
+
+```tsx title="utils.tsx"
+// 一本橋のサイズ
+export const IPPON_BASHI_SIZE: number = 5
+```
+
+ただし、ミッションやポイントに関しては、DB の`courseID=-1`で定義しているため、そちらの変更が必要である。
+
+```sql title="DBデータ例"
+robopo=> select * from course where id=-1;
+ id |    name    |             field             | fieldvalid |                        mission                        | missionvalid |         point          |         created_at
+----+------------+-------------------------------+------------+-------------------------------------------------------+--------------+------------------------+----------------------------
+ -1 | THE 一本橋 | route;route;route;route;start | t          | u;null;mf;1;mf;1;mf;1;mf;1;tr;180;mf;1;mf;1;mf;1;mf;1 | t            | 0;20;1;1;1;1;0;2;2;2;2 | 2024-10-04 09:18:53.416168
+```
+
+field と mission,point を長さに合わせて UPDATE する。
+
+```sql title="DB UPDATE例"
+-- THE 一本橋のコースを更新する
+UPDATE course SET field = 'route;route;route;route;start', mission = 'u;null;mf;1;mf;1;mf;1;mf;1;tr;180;mf;1;mf;1;mf;1;mf;1', point = '0;20;1;1;1;1;0;2;2;2;2' WHERE id = -1;
+```
+
+## センサーコース
+
+センサーコースのモジュールは、<GithubLink filePath="app/components/challenge/sensorCourse.tsx" />である。
+実際のセンサーコースのチャレンジを筆者が見たことが無いのもあるが、
+ミッションのルールからコース自体の描画の必要性が乏しいため、
+コースの描画は行わない。
+トンネル停止と壁停止のミッションの得点を選択して入れる機能のみを付けている。
+
+[^1]:
+    後になってから、向きは回転座標系にして、右回転を正の回転、左回転を負の回転としたモデルの方が汎用性あると気付いた。
+    なので、総とっかえした方が良いと筆者は考える。

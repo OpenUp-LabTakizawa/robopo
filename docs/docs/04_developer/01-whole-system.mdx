@@ -1,0 +1,102 @@
+---
+sidebar_position: 1
+---
+
+# システム全般
+
+この章ではアプリケーション全体に関わる情報を記載する。
+
+## ディレクトリ構成
+
+ディレクトリ構成とそのディレクトリで行われている主な処理の説明は以下。
+
+<details>
+  <summary>ディレクトリ構成図</summary>
+
+```
+/
+├─ app // システム本体のコード
+│ ├─ (linkheader) // header のあるページ
+│ │ ├─ config // 大会管理
+│ │ ├─ course // コース一覧
+│ │ ├─ player // 選手一覧
+│ │ ├─ umpire // 採点者一覧
+│ │ ├─ layout.tsx
+│ │ └─ page.tsx // トップページ
+│ ├─ (nolinkheader) // header のないページ
+│ │ ├─ challenge // チャレンジ・採点
+│ │ └─ summary // ポイント集計・表示
+│ ├─ api // api
+│ ├─ components // 各ページの部品
+│ │ ├─ beforeUnload // 採点中画面の再読み込み機能
+│ │ ├─ challenge // 採点機能
+│ │ ├─ common // 一覧表示、登録など汎用的機能
+│ │ ├─ course // コースに関わる機能
+│ │ ├─ home // トップページの表示機能
+│ │ ├─ parts // アプリケーション全体で使用する部品
+│ │ ├─ summary // 集計に関わる機能
+│ │ ├─ header.tsx // ヘッダー
+│ │ └─ nolinkheader.tsx // リンクのないヘッダー
+│ ├─ lib // ライブラリ
+│ │ ├─ db // DB 関連ファイル
+│ │ ├─ sound // 音声データ、useSound 関連ファイル
+│ │ ├─ audio.d.ts
+│ │ └─ const.tsx
+│ ├─ favicon.ico
+│ ├─ globals.css
+│ └─ layout.tsx
+├─ docs // 本手引書の関連ファイル
+├─ node_modules
+├─ public // logo や画像データ
+├─ drizzle.config.ts
+├─ next-env.d.ts
+├─ package.json
+├─ postcss.config.mjs
+├─ README.md
+├─ next.config.mjs
+├─ package-lock.json
+└─ tsconfig.json
+```
+
+</details>
+
+## 使用するソフトウェアやライブラリ、サービス
+
+- コーディング
+  - [TypeScript](https://www.typescriptlang.org/)
+  - [JavaScript](https://developer.mozilla.org/ja/docs/Web/JavaScript)
+  - [HTML](https://developer.mozilla.org/ja/docs/Learn_web_development/Getting_started/Your_first_website/Creating_the_content)
+- JavaScript 実行環境
+  - [Node.js](https://nodejs.org/ja)
+- ライブラリ
+  - [React](https://ja.react.dev/)
+- Web アプリケーションフレームワーク
+  - [Next.js](https://nextjs.org/)
+- CSS フレームワーク
+  - [Tailwind CSS](https://tailwindcss.com/)
+    - [daisyUI](https://daisyui.com/)
+- Web ホスティングサービス
+  - [Vercel](https://vercel.com/home)
+- DB
+  - [Neon Serverless Postgres](https://neon.tech/)
+- ORM
+  - [Drizzle ORM](https://orm.drizzle.team/)
+- ドキュメント生成
+  - [Docusaurus](https://docusaurus.io/)
+
+## サイトマップ
+
+<div id="iframe-container" style={{ position: "relative", width: "100%", paddingBottom: "66.67%" }}>
+  <iframe
+    src="https://embed.figma.com/board/0LapcdJ1g1p4zpxN4I4q43/SiteMap(ROBOPO)?node-id=0-1&embed-host=share"
+    frameborder="0"
+    scrolling="no"
+    style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+    }}
+    allowFullScreen></iframe>
+</div>

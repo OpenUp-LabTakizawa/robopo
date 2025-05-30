@@ -1,0 +1,50 @@
+---
+sidebar_position: 2
+---
+
+import CourseCount from "@site/src/components/Docs/"
+import { GithubLink } from "@site/src/components/variables.tsx"
+
+# 採点
+
+この章では採点の仕方について解説する。
+
+ルールやコースに関しては、ロボサバ公式サイトの[大会基本ルール](https://robosava.jp/competition/rule/basic-rule.html)が参考になる[^1]。
+
+前章で各採点者に URL が発行されているので、基本的に各採点者はその URL(選手一覧)と採点中の画面しか使わないで済むようにできている。
+
+:::note
+以下を採点者に伝えておくとよい。
+
+- トップページに行くボタンはあるため、もし選手一覧のページが分からなくなった場合は、発行した URL を開くこと。
+- 結果を送信することでチャレンジ回数がカウントされるので、チャレンジをした場合は必ず結果を送信こと。
+  :::
+
+## ベーシックコース
+
+<CourseCount index={1} />
+
+## THE 一本橋
+
+選手選択と確認画面はベーシックコースと同じ。
+
+<CourseCount index={2} />
+
+## センサーコース[^2]
+
+選手選択と確認画面はベーシックコースと同じ。
+
+<CourseCount index={3} />
+
+[^1]: こどもテックキャラバン大会では必ずしもこれに従うとは限らない。
+[^2]:
+    センサーコースは開発者自身、実際の様子を見たことがあるわけでは無いため、
+    以下の Youtube 動画を参考に機能実装した。
+
+    <iframe
+      src="https://www.youtube.com/embed/wyidjftd4OE?si=wWRWmZZ0gxsYcPKA"
+      title="YouTube video player"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerPolicy="strict-origin-when-cross-origin"
+      allowFullScreen></iframe>

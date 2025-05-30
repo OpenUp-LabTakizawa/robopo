@@ -1,0 +1,33 @@
+.features {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+div.featureImg {
+  margin-top: auto;
+}
+
+img.featureImg {
+  max-height: 400px;
+}
+
+.featureCol {
+  display: flex;
+  flex-direction: column;
+}
+
+/** In mobile view */
+@media screen and (max-width: 996px) {
+  .featureCol {
+    max-width: 50%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .featureCol {
+    max-width: none;
+    min-width: 320px;
+  }
+}
