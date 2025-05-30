@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { useRouter } from "next/navigation"
 import { resultSubmit } from "@/app/components/challenge/utils"
 import { ChallengeModal } from "@/app/challenge/challengeModal"
 
@@ -7,9 +8,10 @@ type SensorCourseProps = {
   courseId: number
   playerId: number
   umpireId: number
+  setIsenabled: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const SensorCourse = ({ compeId, courseId, playerId, umpireId }: SensorCourseProps) => {
+export const SensorCourse = ({ compeId, courseId, playerId, umpireId, setIsenabled }: SensorCourseProps) => {
   const [result1, setResult1] = useState<number>(0) // 進んだmission
   const [tunnelPoint, setTunnelPoint] = useState<number>(0)
   const [wallPoint, setWallPoint] = useState<number>(0)
@@ -19,6 +21,7 @@ export const SensorCourse = ({ compeId, courseId, playerId, umpireId }: SensorCo
   const [modalOpen, setModalOpen] = useState<number>(0)
   const [pointCount, setPointCount] = useState<number>(0)
   const [isRetry, setIsRetry] = useState<boolean>(false)
+  const router = useRouter()
 
   // 壁停止のポイント配列を20, 10, 5, 3, 0, -5で作成
   const wallPointArray = [20, 10, 5, 3, 0, -5]
@@ -159,7 +162,9 @@ export const SensorCourse = ({ compeId, courseId, playerId, umpireId }: SensorCo
               umpireId,
               setMessage,
               setIsSuccess,
-              setLoading
+              setLoading,
+              router,
+              setIsenabled
             )
           }
           handleRetry={handleRetry}

@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation"
 import { PointState } from "@/app/components/course/utils"
 
 // 進んだmissionの数によって獲得したポイントを計算する
@@ -24,9 +25,12 @@ export const resultSubmit = async (
   umpireId: number,
   setMessage: React.Dispatch<React.SetStateAction<string>>,
   setIsSuccess: React.Dispatch<React.SetStateAction<boolean>>,
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  router: ReturnType<typeof useRouter>,
+  setIsenabled: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   setLoading(true)
+  setIsenabled(false)
 
   const requestBody = {
     result1: result1,
@@ -49,6 +53,7 @@ export const resultSubmit = async (
     if (response.ok) {
       setMessage("チャレンジの送信に成功しました")
       setIsSuccess(true)
+      router.push("/")
     } else {
       setMessage("チャレンジの送信に失敗しました")
     }
@@ -56,6 +61,7 @@ export const resultSubmit = async (
     console.log("error: ", error)
     setMessage("送信中にエラーが発生しました")
   } finally {
+    setIsenabled(true)
     setLoading(false)
   }
 }

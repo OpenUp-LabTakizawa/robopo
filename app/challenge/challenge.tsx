@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react"
+import { useRouter } from "next/navigation"
 import {
   MissionString,
   PointState,
@@ -29,9 +30,11 @@ type ChallengeProps = {
   courseId: number
   playerId: number
   umpireId: number
+  setIsenabled: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireId }: ChallengeProps) => {
+const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireId, setIsenabled }: ChallengeProps) => {
+  const router = useRouter()
   if (
     field !== null &&
     field !== undefined &&
@@ -317,7 +320,9 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
               umpireId,
               setMessage,
               setIsSuccess,
-              setLoading
+              setLoading,
+              router,
+              setIsenabled
             )
           }
           handleRetry={handleRetry}
@@ -348,7 +353,9 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
               umpireId,
               setMessage,
               setIsSuccess,
-              setLoading
+              setLoading,
+              router,
+              setIsenabled
             )
           }
           handleRetry={handleRetry}

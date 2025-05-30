@@ -1,9 +1,11 @@
 "use client"
+
+import { useState } from "react"
+import { useNavigationGuard } from "next-navigation-guard"
 import { type SelectCourse, type SelectPlayer } from "@/app/lib/db/schema"
 import Challenge from "@/app/challenge/challenge"
 import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import { SensorCourse } from "@/app/components/challenge/sensorCourse"
-import { useNavigationGuard } from "next-navigation-guard"
 
 type ViewProps = {
   courseData: SelectCourse
@@ -15,8 +17,9 @@ type ViewProps = {
 export const View = ({ courseData, playerData, competitionId, courseId }: ViewProps) => {
   const playerId = playerData.id
   const umpireId = 1 // 一旦1
+  const [isEnabled, setIsenabled] = useState(true)
   const navGuard = useNavigationGuard({
-    enabled: true,
+    enabled: isEnabled,
     confirm: () => window.confirm("このページを離れると編集中のデータは失われます。よろしいですか？"),
   })
 
@@ -32,12 +35,19 @@ export const View = ({ courseData, playerData, competitionId, courseId }: ViewPr
           courseId={courseId}
           playerId={playerId}
           umpireId={umpireId}
+          setIsenabled={setIsenabled}
         />
       )}
 
       {/* センサーコース */}
       {Number(courseId) === RESERVED_COURSE_IDS.SENSOR && playerId !== null && (
-        <SensorCourse compeId={competitionId} courseId={courseId} playerId={playerId} umpireId={umpireId} />
+        <SensorCourse
+          compeId={competitionId}
+          courseId={courseId}
+          playerId={playerId}
+          umpireId={umpireId}
+          setIsenabled={setIsenabled}
+        />
       )}
     </div>
   )
