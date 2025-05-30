@@ -1,7 +1,7 @@
 import React from "react"
 import Link from "@docusaurus/Link"
 
-// ROBOPO のあるGithubリポジトリのURL
+// ROBOPO のあるGitHubリポジトリのURL
 const robopoGithubUrl = "https://github.com/openup-labtakizawa/robopo/"
 
 interface GithubLinkProps {
