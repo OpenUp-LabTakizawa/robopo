@@ -17,7 +17,7 @@ type ViewProps = {
 export const View = ({ courseData, playerData, competitionId, courseId }: ViewProps) => {
   const playerId = playerData.id
   const umpireId = 1 // 一旦1
-  const [isEnabled, setIsenabled] = useState(true)
+  const [isEnabled, setIsEnabled] = useState(true)
   const navGuard = useNavigationGuard({
     enabled: isEnabled,
     confirm: () => window.confirm("このページを離れると編集中のデータは失われます。よろしいですか？"),
@@ -35,7 +35,7 @@ export const View = ({ courseData, playerData, competitionId, courseId }: ViewPr
           courseId={courseId}
           playerId={playerId}
           umpireId={umpireId}
-          setIsenabled={setIsenabled}
+          setIsEnabled={setIsEnabled}
         />
       )}
 
@@ -46,7 +46,7 @@ export const View = ({ courseData, playerData, competitionId, courseId }: ViewPr
           courseId={courseId}
           playerId={playerId}
           umpireId={umpireId}
-          setIsenabled={setIsenabled}
+          setIsEnabled={setIsEnabled}
         />
       )}
     </div>

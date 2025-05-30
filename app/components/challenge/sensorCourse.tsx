@@ -8,10 +8,10 @@ type SensorCourseProps = {
   courseId: number
   playerId: number
   umpireId: number
-  setIsenabled: React.Dispatch<React.SetStateAction<boolean>>
+  setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const SensorCourse = ({ compeId, courseId, playerId, umpireId, setIsenabled }: SensorCourseProps) => {
+export const SensorCourse = ({ compeId, courseId, playerId, umpireId, setIsEnabled }: SensorCourseProps) => {
   const [result1, setResult1] = useState<number>(0) // 進んだmission
   const [tunnelPoint, setTunnelPoint] = useState<number>(0)
   const [wallPoint, setWallPoint] = useState<number>(0)
@@ -164,7 +164,7 @@ export const SensorCourse = ({ compeId, courseId, playerId, umpireId, setIsenabl
               setIsSuccess,
               setLoading,
               router,
-              setIsenabled
+              setIsEnabled
             )
           }
           handleRetry={handleRetry}

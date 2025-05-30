@@ -27,10 +27,10 @@ export const resultSubmit = async (
   setIsSuccess: React.Dispatch<React.SetStateAction<boolean>>,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
   router: ReturnType<typeof useRouter>,
-  setIsenabled: React.Dispatch<React.SetStateAction<boolean>>
+  setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   setLoading(true)
-  setIsenabled(false)
+  setIsEnabled(false)
 
   const requestBody = {
     result1: result1,
@@ -61,7 +61,7 @@ export const resultSubmit = async (
     console.log("error: ", error)
     setMessage("送信中にエラーが発生しました")
   } finally {
-    setIsenabled(true)
+    setIsEnabled(true)
     setLoading(false)
   }
 }

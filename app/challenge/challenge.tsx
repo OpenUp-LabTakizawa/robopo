@@ -30,10 +30,10 @@ type ChallengeProps = {
   courseId: number
   playerId: number
   umpireId: number
-  setIsenabled: React.Dispatch<React.SetStateAction<boolean>>
+  setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireId, setIsenabled }: ChallengeProps) => {
+const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireId, setIsEnabled }: ChallengeProps) => {
   const router = useRouter()
   if (
     field !== null &&
@@ -322,7 +322,7 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
               setIsSuccess,
               setLoading,
               router,
-              setIsenabled
+              setIsEnabled
             )
           }
           handleRetry={handleRetry}
@@ -355,7 +355,7 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
               setIsSuccess,
               setLoading,
               router,
-              setIsenabled
+              setIsEnabled
             )
           }
           handleRetry={handleRetry}
