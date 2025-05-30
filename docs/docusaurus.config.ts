@@ -53,7 +53,7 @@ const config: Config = {
           sidebarPath: "./sidebars.ts",
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: "https://github.com/openup-labtakizawa/robopo/tree/docusaurus",
+          editUrl: "https://github.com/openup-labtakizawa/robopo",
         },
         theme: {
           customCss: "./src/css/custom.css",
@@ -80,7 +80,7 @@ const config: Config = {
           label: "目次",
         },
         {
-          href: "https://github.com/openup-labtakizawa/robopo/tree/docusaurus",
+          href: "https://github.com/openup-labtakizawa/robopo",
           label: "GitHub",
           position: "right",
         },
@@ -103,7 +103,7 @@ const config: Config = {
           items: [
             {
               label: "GitHub",
-              href: "https://github.com/openup-labtakizawa/robopo/tree/docusaurus",
+              href: "https://github.com/openup-labtakizawa/robopo",
             },
           ],
         },
