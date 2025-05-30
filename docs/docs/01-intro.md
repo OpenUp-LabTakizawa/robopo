@@ -30,7 +30,7 @@ OpenUp ラボ滝沢構成員
 
   Web 開発についての知識。
 
-  あるとよい技術的知識 →Github, Node.js, Typescript, AWS
+  あるとよい技術的知識 →GitHub, Node.js, TypeScript, AWS
 
 ## アプリケーション本体・ソースコードについて
 
@@ -40,9 +40,9 @@ OpenUp ラボ滝沢構成員
 
 [https://robopo.vercel.app/](https://robopo.vercel.app/)
 
-また、code 自体も以下 Github から取得することが可能である。
+また、code 自体も以下 GitHub から取得することが可能である。
 
-(Organization の Github にする予定)
+(Organization の GitHub にする予定)
 
 [https://github.com/openup-labtakizawa/robopo](https://github.com/openup-labtakizawa/robopo)
 
