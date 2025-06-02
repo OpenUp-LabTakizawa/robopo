@@ -15,7 +15,7 @@ export const ReloadButton = () => {
 export const HomeButton = () => {
     const router = useRouter()
     return (
-        <button className="btn btn-primary min-w-28 max-w-fit mx-auto mt-5" onClick={() => router.push("/")}>
+        <button className="btn btn-primary min-w-28 max-w-fit mx-auto m-5" onClick={() => router.push("/")}>
             <HomeIcon className="w-6 h-6" />
             ホーム
         </button>
