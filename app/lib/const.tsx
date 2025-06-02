@@ -13,6 +13,7 @@ import {
 import { JSX } from "react"
 
 export const BASE_URL: string =
+  process.env.NEXT_PUBLIC_BASE_URL ||
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
   "http://localhost:3000"
 
