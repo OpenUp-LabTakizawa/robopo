@@ -46,9 +46,9 @@ export const ThreeTabs = ({ tab1Title, tab1, tab1Icon, tab2Title, tab2, tab2Icon
 
   // タブのタイトルと内容を配列化
   const tabs = [
-    { title: tab1Title, content: tab1, icon: tab1Icon ? tab1Icon : null },
-    { title: tab2Title, content: tab2, icon: tab2Icon ? tab2Icon : null },
-    { title: tab3Title, content: tab3, icon: tab3Icon ? tab3Icon : null },
+    { title: tab1Title, content: tab1, icon: tab1Icon || null },
+    { title: tab2Title, content: tab2, icon: tab2Icon || null },
+    { title: tab3Title, content: tab3, icon: tab3Icon || null },
   ]
 
   return (
