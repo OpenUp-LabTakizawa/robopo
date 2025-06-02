@@ -76,13 +76,13 @@ export const ThreeTabs = ({ tab1Title, tab1, tab1Icon, tab2Title, tab2, tab2Icon
                 role="tab"
                 id={"tab" + idx}
                 className="tab whitespace-nowrap"
-                // aria-label={title}
+                aria-labelledby={"tab-label" + idx}
                 defaultChecked={idx === 0}
               />
               <div role="tabpanel" className="tab-content bg-base-100 border border-base-300 rounded-box p-6">
                 {content}
               </div>
-              <label htmlFor={"tab" + idx} className="flex tab items-center gap-2">
+              <label id={"tab-label" + idx} htmlFor={"tab" + idx} className="flex tab items-center">
                 {icon}
                 {title}
               </label>

@@ -23,13 +23,13 @@ export default async function Home() {
       <ThreeTabs
         tab1Title="採点"
         tab1={<ChallengeTab key="challenge" competitionList={competitionList} courseList={courseList} competitionCourseList={competitionCourseList} />}
-        tab1Icon={<ClipboardDocumentCheckIcon className="h-8 w-8" />}
+        tab1Icon={<ClipboardDocumentCheckIcon className="h-3 w-3 md:h-8 md:w-8" />}
         tab2Title="集計結果"
         tab2={<SummaryTab key="summary" competitionList={competitionList} />}
-        tab2Icon={<CalculatorIcon className="h-8 w-8" />}
+        tab2Icon={<CalculatorIcon className="h-3 w-3 md:h-8 md:w-8" />}
         tab3Title="大会管理"
         tab3={<ManageTab key="manage" />}
-        tab3Icon={<TrophyIcon className="h-8 w-8" />}
+        tab3Icon={<TrophyIcon className="h-3 w-3 md:h-8 md:w-8" />}
       />
       :
       <div role="tablist" className="tabs tabs-lifted m-5">
