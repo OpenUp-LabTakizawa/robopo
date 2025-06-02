@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { useRouter } from "next/navigation"
 import { resultSubmit } from "@/app/components/challenge/utils"
 import { ChallengeModal } from "@/app/challenge/challengeModal"
+import { SendIcon } from "@/app/lib/const"
 
 type SensorCourseProps = {
   compeId: number
@@ -141,7 +142,7 @@ export const SensorCourse = ({ compeId, courseId, playerId, umpireId, setIsEnabl
         </div>
         <div className="flex justify-center w-full">
           <button type="button" className="btn btn-accent mx-auto m-3" onClick={() => setModalOpen(1)}>
-            結果送信
+            結果送信<SendIcon />
           </button>
           <button type="button" className="btn btn-primary mx-auto m-3" onClick={handleRetry} disabled={isRetry}>
             やり直し

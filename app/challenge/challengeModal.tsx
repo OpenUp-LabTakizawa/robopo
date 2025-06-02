@@ -1,4 +1,4 @@
-import { BackLabelWithIcon } from "@/app/lib/const"
+import { BackLabelWithIcon, SendIcon } from "@/app/lib/const"
 
 type ChallengeModalProps = {
   setModalOpen: React.Dispatch<React.SetStateAction<number>>
@@ -47,7 +47,7 @@ export const ChallengeModal = ({
             {result2Point !== null && <p className="text-2xl">2回目: {result2Point}ポイント</p>}
             <div className="modal-action flex-col">
               <button className="btn btn-accent m-3" onClick={handleSubmit}>
-                {loading ? <span className="loading loading-spinner"></span> : "結果を送信してチャレンジを終わる"}
+                {loading ? <span className="loading loading-spinner"></span> : <>結果を送信してチャレンジを終わる<SendIcon /></>}
               </button>
               {result2Point === null && !isGoal && (
                 <button className="btn btn-accent m-3" onClick={thisHandleRetry} disabled={loading}>
@@ -144,7 +144,7 @@ export const CourseOutModal = ({
             )}
             <div className="modal-action flex-col">
               <button className="btn btn-accent m-3" onClick={handleSubmit}>
-                {loading ? <span className="loading loading-spinner"></span> : "結果送信"}
+                {loading ? <span className="loading loading-spinner"></span> : <>結果送信<SendIcon /></>}
               </button>
               {result2Point === null && (
                 <button className="btn btn-accent m-3" onClick={thisHandleRetry} disabled={loading}>

@@ -6,7 +6,8 @@ import {
   UserIcon,
   UserCircleIcon,
   Cog6ToothIcon,
-  ArrowUturnLeftIcon
+  ArrowUturnLeftIcon,
+  ArrowUpCircleIcon
 } from "@heroicons/react/24/outline"
 import { JSX } from "react"
 
@@ -48,5 +49,11 @@ const BACK_CONST = {
 export const BackLabelWithIcon = (): JSX.Element => {
   return (
     <>{BACK_CONST.label}{BACK_CONST.icon}</>
+  )
+}
+
+export const SendIcon = (): JSX.Element => {
+  return (
+    <ArrowUpCircleIcon className="w-6 h-6" />
   )
 }
