@@ -3,6 +3,7 @@ import Link from "next/link"
 import { useState } from "react"
 import type { SelectAssignList } from "@/app/lib/db/schema"
 import { CommonRadioList } from "@/app/components/common/commonList"
+import { BackLabelWithIcon } from "@/app/lib/const"
 
 type AssignListProps = {
   assignList: SelectAssignList[]
@@ -17,7 +18,7 @@ export const View = ({ assignList }: AssignListProps) => {
         setCommonId={setCommonId}
       />
       <Link href="/config/" className="btn btn-primary mx-auto m-3">
-        戻る
+        <BackLabelWithIcon />
       </Link>
     </>
   )

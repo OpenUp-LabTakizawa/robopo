@@ -1,5 +1,7 @@
 "use client"
 
+import { useState } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useFormStatus } from "react-dom"
 import {
@@ -11,8 +13,7 @@ import {
   checkValidity,
 } from "@/app/components/course/utils"
 import { useCourseEdit } from "@/app/course/edit/courseEditContext"
-import { useState } from "react"
-import Link from "next/link"
+import { BackLabelWithIcon } from "@/app/lib/const"
 
 type ValidationModalProps = {
   setModalOpen: React.Dispatch<React.SetStateAction<number>>
@@ -180,7 +181,7 @@ export const validationModal = ({ setModalOpen, field, mission }: ValidationModa
                 はい
               </button>
               <button className="btn" onClick={handleCancel}>
-                編集に戻る
+                編集に<BackLabelWithIcon />
               </button>
             </div>
           </>

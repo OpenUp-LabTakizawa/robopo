@@ -6,7 +6,9 @@ import {
   UserIcon,
   UserCircleIcon,
   Cog6ToothIcon,
+  ArrowUturnLeftIcon
 } from "@heroicons/react/24/outline"
+import { JSX } from "react"
 
 export const BASE_URL: string =
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
@@ -36,3 +38,15 @@ export const COMPETITION_MANAGEMENT_LIST = [
   { label: "採点者登録", href: "/umpire", icon: <UserCircleIcon className="w-6 h-6" /> },
   { label: "大会設定", href: "/config", icon: <Cog6ToothIcon className="w-6 h-6" /> },
 ]
+
+const BACK_CONST = {
+  label: "戻る",
+  href: "",
+  icon: <ArrowUturnLeftIcon className="w-6 h-6" />
+}
+
+export const BackLabelWithIcon = (): JSX.Element => {
+  return (
+    <>{BACK_CONST.label}{BACK_CONST.icon}</>
+  )
+}

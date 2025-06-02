@@ -12,6 +12,7 @@ import {
 } from "@/app/components/course/utils"
 import { getCourse } from "@/app/components/course/listUtils"
 import { validationModal } from "@/app/components/course/modals"
+import { BackLabelWithIcon } from "@/app/lib/const"
 
 export const EditorPage = (props: { params: Promise<{ courseId: number | null }> }) => {
   // Extract courseId from params for use in JSX
@@ -70,7 +71,7 @@ export const EditorPage = (props: { params: Promise<{ courseId: number | null }>
             }
             className="btn btn-primary min-w-28 max-w-fit"
           >
-            一覧に戻る
+            一覧に<BackLabelWithIcon />
           </Link>
         </div>
       </div>

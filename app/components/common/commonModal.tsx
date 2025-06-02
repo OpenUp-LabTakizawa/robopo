@@ -2,6 +2,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { SelectCompetition } from "@/app/lib/db/schema"
+import { BackLabelWithIcon } from "@/app/lib/const"
 
 type inputType = "player" | "umpire" | "course"
 
@@ -22,7 +23,7 @@ export const ModalBackButton = () => {
   const router = useRouter()
   return (
     <button className="flex btn btn-accent m-3" onClick={() => router.back()}>
-      戻る
+      <BackLabelWithIcon />
     </button>
   )
 }
@@ -73,7 +74,7 @@ export const DeleteModal = ({ type, ids }: { type: inputType; ids: number[] }) =
             window.location.href = "/" + type
           }}
           disabled={loading}>
-          戻る
+          <BackLabelWithIcon />
         </button>
       </div>
       <ModalBackdrop />
@@ -176,7 +177,7 @@ export const AssignModal = (params: { type: inputType, ids: number[], competitio
             window.location.href = "/" + type
           }}
           disabled={loading}>
-          戻る
+          <BackLabelWithIcon />
         </button>
       </div>
       <ModalBackdrop />

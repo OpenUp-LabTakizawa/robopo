@@ -4,6 +4,7 @@ import { type RefObject, useRef, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { type SelectCourse, type SelectPlayer } from "@/app/lib/db/schema"
 import { useAudioContext, SoundControlUI } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/audioContext"
+import { BackLabelWithIcon } from "@/app/lib/const"
 import StartSound from "@/app/lib/sound/01_start.mp3"
 
 type ViewProps = {
@@ -60,7 +61,7 @@ export const Modal = ({ courseData, playerData }: ViewProps) => {
             onClick={() => {
               router.back()
             }}>
-            選手選択に戻る
+            選手選択に<BackLabelWithIcon />
           </button>
         </div>
       </div>

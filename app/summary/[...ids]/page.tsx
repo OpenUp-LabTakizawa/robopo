@@ -14,6 +14,7 @@ import { sumIpponPoint } from "@/app/components/summary/utilServer"
 import { calcPoint } from "@/app/components/challenge/utils"
 import { TCourseTable } from "@/app/summary/[...ids]/tCourseTable"
 import { HomeButton } from "@/app/components/parts/buttons"
+import { BackLabelWithIcon } from "@/app/lib/const"
 
 export const revalidate = 0
 
@@ -166,7 +167,7 @@ export default async function SummaryPlayer(props: { params: Promise<{ ids: numb
         </table>
       </div>
       <Link href={`/summary/` + ids[0]} className="btn btn-primary min-w-28 max-w-fit mx-auto m-5">
-        集計結果一覧へ戻る
+        集計結果一覧へ<BackLabelWithIcon />
       </Link>
       <HomeButton />
     </>

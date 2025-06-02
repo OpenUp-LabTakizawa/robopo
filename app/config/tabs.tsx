@@ -4,6 +4,7 @@ import Link from "next/link"
 import { CommonRadioList } from "@/app/components/common/commonList"
 import type { SelectCompetition, SelectPlayer, SelectUmpire, SelectCourse } from "@/app/lib/db/schema"
 import CommonRegister from "@/app/components/common/commonRegister"
+import { BackLabelWithIcon } from "@/app/lib/const"
 
 type CompetitionListTabProps = {
   competitionId: number | null
@@ -94,7 +95,7 @@ export const CompetitionListTab = ({
             </button>
           )}
           <button className="btn btn-accent m-3" onClick={handleClick} disabled={loading}>
-            戻る
+            <BackLabelWithIcon />
           </button>
         </div>
         <form method="dialog" className="modal-backdrop" onClick={handleClick}>

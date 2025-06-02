@@ -1,3 +1,5 @@
+import { BackLabelWithIcon } from "@/app/lib/const"
+
 type ChallengeModalProps = {
   setModalOpen: React.Dispatch<React.SetStateAction<number>>
   handleSubmit: () => void
@@ -35,7 +37,7 @@ export const ChallengeModal = ({
           <>
             <p>{message}</p>
             <button className="btn btn-accent mx-auto text-2xl" onClick={() => window.location.reload()}>
-              コース一覧に戻る
+              コース一覧に<BackLabelWithIcon />
             </button>
           </>
         ) : (
@@ -53,7 +55,7 @@ export const ChallengeModal = ({
                 </button>
               )}
               <button className="btn btn-neutral m-3" onClick={handleClick} disabled={loading}>
-                チャレンジに戻る
+                チャレンジに<BackLabelWithIcon />
               </button>
             </div>
           </>
@@ -84,7 +86,7 @@ export const RetryModal = ({ setModalOpen, handleRetry, result1Point }: RetryMod
             再チャレンジする
           </button>
           <button className="btn btn-neutral" onClick={() => setModalOpen(0)}>
-            戻る
+            <BackLabelWithIcon />
           </button>
         </div>
       </div>
@@ -127,7 +129,7 @@ export const CourseOutModal = ({
           <>
             <p>{message}</p>
             <button className="btn btn-accent mx-auto text-2xl" onClick={() => window.location.reload()}>
-              コース一覧に戻る
+              コース一覧に<BackLabelWithIcon />
             </button>
           </>
         ) : (
@@ -150,7 +152,7 @@ export const CourseOutModal = ({
                 </button>
               )}
               <button className="btn btn-neutral m-3" onClick={() => setModalOpen(0)} disabled={loading}>
-                チャレンジに戻る
+                チャレンジに<BackLabelWithIcon />
               </button>
             </div>
           </>
