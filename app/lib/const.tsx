@@ -16,13 +16,19 @@ export const BASE_URL: string =
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
   "http://localhost:3000"
 
-export const HOME_CONST = {
+export interface NavItem {
+  label: string
+  href: string
+  icon: JSX.Element
+}
+
+export const HOME_CONST: NavItem = {
   label: "ホーム",
   href: "/",
   icon: <HomeIcon className="w-6 h-6" />
 }
 
-export const SIGN_IN_CONST = {
+export const SIGN_IN_CONST: NavItem = {
   label: "サインイン",
   href: "/signIn",
   icon: <ArrowRightEndOnRectangleIcon className="w-6 h-6" />
