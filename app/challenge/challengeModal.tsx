@@ -1,4 +1,8 @@
-import { BackLabelWithIcon, SendIcon } from "@/app/lib/const"
+import {
+  BackLabelWithIcon,
+  SendIcon,
+  RETRY_CONST,
+} from "@/app/lib/const"
 
 type ChallengeModalProps = {
   setModalOpen: React.Dispatch<React.SetStateAction<number>>
@@ -50,9 +54,7 @@ export const ChallengeModal = ({
                 {loading ? <span className="loading loading-spinner"></span> : <>結果を送信してチャレンジを終わる<SendIcon /></>}
               </button>
               {result2Point === null && !isGoal && (
-                <button className="btn btn-accent m-3" onClick={thisHandleRetry} disabled={loading}>
-                  2回目のチャレンジへ
-                </button>
+                <RetryButton handleRetry={thisHandleRetry} loading={loading} />
               )}
               <button className="btn btn-neutral m-3" onClick={handleClick} disabled={loading}>
                 チャレンジに<BackLabelWithIcon />
@@ -83,7 +85,7 @@ export const RetryModal = ({ setModalOpen, handleRetry, result1Point }: RetryMod
         <p>1回目: {result1Point}ポイント</p>
         <div className="modal-action">
           <button className="btn btn-accent" onClick={thisHandleRetry}>
-            再チャレンジする
+            再チャレンジする{RETRY_CONST.icon}
           </button>
           <button className="btn btn-neutral" onClick={() => setModalOpen(0)}>
             <BackLabelWithIcon />
@@ -147,9 +149,7 @@ export const CourseOutModal = ({
                 {loading ? <span className="loading loading-spinner"></span> : <>結果送信<SendIcon /></>}
               </button>
               {result2Point === null && (
-                <button className="btn btn-accent m-3" onClick={thisHandleRetry} disabled={loading}>
-                  2回目のチャレンジへ
-                </button>
+                <RetryButton handleRetry={thisHandleRetry} loading={loading} />
               )}
               <button className="btn btn-neutral m-3" onClick={() => setModalOpen(0)} disabled={loading}>
                 チャレンジに<BackLabelWithIcon />
@@ -160,4 +160,17 @@ export const CourseOutModal = ({
       </div>
     </dialog>
   )
+}
+
+const RetryButton = ({
+  handleRetry,
+  loading
+}: {
+  handleRetry: () => void,
+  loading: boolean
+}) => {
+  return (
+    <button className="btn btn-accent m-3" onClick={handleRetry} disabled={loading}>
+      {RETRY_CONST.label}{RETRY_CONST.icon}
+    </button>)
 }

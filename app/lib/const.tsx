@@ -7,7 +7,8 @@ import {
   UserCircleIcon,
   Cog6ToothIcon,
   ArrowUturnLeftIcon,
-  ArrowUpCircleIcon
+  ArrowUpCircleIcon,
+  PlayIcon
 } from "@heroicons/react/24/outline"
 import { JSX } from "react"
 
@@ -40,9 +41,13 @@ export const COMPETITION_MANAGEMENT_LIST = [
   { label: "大会設定", href: "/config", icon: <Cog6ToothIcon className="w-6 h-6" /> },
 ]
 
+export const RETRY_CONST = {
+  label: "2回目のチャレンジへ",
+  icon: <PlayIcon className="w-6 h-6" />
+}
+
 const BACK_CONST = {
   label: "戻る",
-  href: "",
   icon: <ArrowUturnLeftIcon className="w-6 h-6" />
 }
 
