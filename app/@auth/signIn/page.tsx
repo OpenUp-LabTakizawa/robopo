@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
+import { SIGN_IN_CONST } from "@/app/lib/const"
 import { ModalBackdrop, ModalBackButton } from "@/app/components/common/commonModal"
 import { signInAction } from "@/app/components/server/auth"
 
@@ -57,7 +58,7 @@ export default function SignIn() {
                         />
                     </label>
                     <div className="flex flex-row">
-                        <input className="flex btn btn-accent m-3 items-justify-center" type="submit" value={"サインイン"} />
+                        <input className="flex btn btn-accent m-3 items-justify-center" type="submit" value={SIGN_IN_CONST.label} />
                         <ModalBackButton />
                         <div className="flex m-3 text-red-500">{state?.message}</div>
                     </div>

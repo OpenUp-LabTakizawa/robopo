@@ -3,14 +3,17 @@ import Link from "next/link"
 import React, { useMemo, useState } from "react"
 import type { SelectCompetition, SelectCompetitionCourse, SelectCourse } from "@/app/lib/db/schema"
 import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
+import { COMPETITION_MANAGEMENT_LIST } from "@/app/lib/const"
+import { CalculatorIcon } from "@heroicons/react/24/outline"
 
-const ContentButton = ({ name, link, disabled }: { name: string; link: string; disabled: boolean }) => {
+const ContentButton = ({ name, link, icon, disabled }: { name: string, link: string, icon?: React.JSX.Element, disabled: boolean }) => {
   return (
     <Link
       href={disabled ? "" : link}
       className={
-        "btn min-w-40 min-h-20 text-2xl max-w-fit m-3" + (disabled ? " btn-disabled" : " btn-primary")
+        "flex btn min-w-40 min-h-20 text-2xl max-w-fit m-3" + (disabled ? " btn-disabled" : " btn-primary")
       }>
+      {icon}
       {name}
     </Link>
   )
@@ -113,7 +116,7 @@ export const SummaryTab = ({ competitionList }: SummaryTabProps): React.JSX.Elem
           </option>
         ))}
       </select>
-      <ContentButton name="集計結果" link={`/summary/${competitionId}`} disabled={disableCondition} />
+      <ContentButton name="集計結果" link={`/summary/${competitionId}`} icon={<CalculatorIcon className="w-6 h-6" />} disabled={disableCondition} />
     </div>
   )
 }
@@ -121,10 +124,15 @@ export const SummaryTab = ({ competitionList }: SummaryTabProps): React.JSX.Elem
 export const ManageTab = (): React.JSX.Element => {
   return (
     <div className="grid sm:grid-cols-2 md:flex md:flex-col justify-center">
-      <ContentButton name="コース作成" link={`/course`} disabled={false} />
-      <ContentButton name="選手登録" link={`/player`} disabled={false} />
-      <ContentButton name="採点者登録" link={`/umpire`} disabled={false} />
-      <ContentButton name="大会設定" link={`/config`} disabled={false} />
+      {COMPETITION_MANAGEMENT_LIST.map((btn) => (
+        <ContentButton
+          key={btn.href}
+          name={btn.label}
+          link={btn.href}
+          icon={btn.icon}
+          disabled={false}
+        />
+      ))}
     </div>
   )
 }

@@ -1,9 +1,9 @@
-import Link from "next/link"
 import { SelectCourse } from "@/app/lib/db/schema"
 import { getCompetitionCourseList } from "@/app/components/server/db"
 import { SummaryTable } from "@/app/summary/[competitionId]/summaryTable"
 import { deserializePoint, RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import { getCourseById } from "@/app/lib/db/queries/queries"
+import { HomeButton } from "@/app/components/parts/buttons"
 
 export const revalidate = 0
 
@@ -22,9 +22,7 @@ export default async function Summary(props: { params: Promise<{ competitionId: 
   return (
     <div className="h-full w-full">
       <SummaryTable id={competitionId} courseList={courseList} ipponBashiPoint={ipponBashiPoint} />
-      <Link href="/" className="btn btn-primary min-w-28 max-w-fit mx-auto mt-10">
-        トップへ戻る
-      </Link>
+      <HomeButton />
     </div>
   )
 }

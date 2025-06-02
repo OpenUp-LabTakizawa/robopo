@@ -3,6 +3,8 @@ import React, { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useSession, signOut } from "next-auth/react"
+import { HOME_CONST, SIGN_IN_CONST, SIGN_OUT_CONST } from "@/app/lib/const"
+import { COMPETITION_MANAGEMENT_LIST } from "@/app/lib/const"
 
 const DropdownMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -59,15 +61,17 @@ const DropdownMenu = () => {
                   }}
                   className="flex mt-10 w-[fit-content] hover:bg-slate-500 hover:text-zinc/60 text-white px-3 py-1 rounded-md text-sm font-medium cursor-pointer text-[1.1rem]"
                 >
-                  サインアウト
+                  {SIGN_OUT_CONST.icon}
+                  {SIGN_OUT_CONST.label}
                 </button>
               ) : (
                 <Link
                   onClick={() => { setIsMenuOpen && setIsMenuOpen(false) }}
-                  href="/signIn"
+                  href={SIGN_IN_CONST.href}
                   className="flex mt-10 w-[fit-content] hover:bg-slate-500 hover:text-zinc/60 text-white px-3 py-1 rounded-md text-sm font-medium cursor-pointer text-[1.1rem]"
                 >
-                  サインイン
+                  {SIGN_IN_CONST.icon}
+                  {SIGN_IN_CONST.label}
                 </Link>)}
             </div>
           </div>
@@ -85,12 +89,9 @@ type PropsType = {
 const NavLinks = ({ propClass, setIsMenuOpen }: PropsType) => {
   const currentPath = usePathname()
   const links = [
-    { label: "HOME", href: "/" },
-    { label: "コース作成", href: "/course" },
-    { label: "選手登録", href: "/player" },
-    { label: "採点者登録", href: "/umpire" },
-    { label: "大会設定", href: "/config" },
+    HOME_CONST,
   ]
+  links.push(...COMPETITION_MANAGEMENT_LIST)
 
   return (
     <div
@@ -101,12 +102,13 @@ const NavLinks = ({ propClass, setIsMenuOpen }: PropsType) => {
           //? Close hamburger menu
           onClick={() => setIsMenuOpen && setIsMenuOpen(false)}
           href={link.href}
-          className={`w-[fit-content] hover:bg-slate-500 hover:text-zinc/60 px-3 py-1 rounded-md text-sm font-medium cursor-pointer text-[1.1rem]
+          className={`flex w-[fit-content] hover:bg-slate-500 hover:text-zinc/60 px-3 py-1 rounded-md text-sm font-medium cursor-pointer text-[1.1rem]
           ${currentPath === link.href
               ? "bg-slate-700 cursor-default shadow-1 text-lime-300/70 hover:text-lime-300/80"
               : ""
             }`}
           key={link.label}>
+          {link.icon}
           {link.label}
         </Link>
       ))}

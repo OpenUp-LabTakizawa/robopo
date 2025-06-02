@@ -1,3 +1,38 @@
+import {
+  HomeIcon,
+  ArrowRightEndOnRectangleIcon,
+  ArrowRightStartOnRectangleIcon,
+  WrenchIcon,
+  UserIcon,
+  UserCircleIcon,
+  Cog6ToothIcon,
+} from "@heroicons/react/24/outline"
+
 export const BASE_URL: string =
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
   "http://localhost:3000"
+
+export const HOME_CONST = {
+  label: "ホーム",
+  href: "/",
+  icon: <HomeIcon className="w-6 h-6" />
+}
+
+export const SIGN_IN_CONST = {
+  label: "サインイン",
+  href: "/signIn",
+  icon: <ArrowRightEndOnRectangleIcon className="w-6 h-6" />
+}
+
+export const SIGN_OUT_CONST = {
+  label: "サインアウト",
+  href: "/signOut",
+  icon: <ArrowRightStartOnRectangleIcon className="w-6 h-6" />
+}
+
+export const COMPETITION_MANAGEMENT_LIST = [
+  { label: "コース作成", href: "/course", icon: <WrenchIcon className="w-6 h-6" /> },
+  { label: "選手登録", href: "/player", icon: <UserIcon className="w-6 h-6" /> },
+  { label: "採点者登録", href: "/umpire", icon: <UserCircleIcon className="w-6 h-6" /> },
+  { label: "大会設定", href: "/config", icon: <Cog6ToothIcon className="w-6 h-6" /> },
+]

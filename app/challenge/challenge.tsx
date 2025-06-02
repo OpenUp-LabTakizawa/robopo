@@ -18,6 +18,7 @@ import { ChallengeModal, CourseOutModal, RetryModal } from "@/app/challenge/chal
 import { calcPoint, resultSubmit } from "@/app/components/challenge/utils"
 import { IpponBashiUI } from "@/app/components/challenge/ipponBashi"
 import { useAudioContext, SoundControlUI } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/audioContext"
+import { ReloadButton } from "@/app/components/parts/buttons"
 import NextSound from "@/app/lib/sound/02_next.mp3"
 import BackSound from "@/app/lib/sound/03_back.mp3"
 import GoalSound from "@/app/lib/sound/04_goal.mp3"
@@ -371,9 +372,7 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
     return (
       <>
         <div>エラーです。</div>
-        <button className="btn btn-accent mx-auto text-2xl" onClick={() => window.location.reload()}>
-          再読み込み
-        </button>
+        <ReloadButton />
       </>
     )
   }
