@@ -22,13 +22,13 @@
     "bcryptjs": "^3.0.2",
     "daisyui": "^5.0.43",
     "drizzle-kit": "^0.31.1",
-    "drizzle-orm": "^0.44.0",
+    "drizzle-orm": "^0.44.1",
     "next-auth": "^5.0.0-beta.28",
     "next-navigation-guard": "^0.1.2",
     "postcss": "^8.5.4",
     "tailwindcss": "^4.1.8",
     "typescript": "^5.8.3",
-    "zod": "^3.25.46"
+    "zod": "^3.25.47"
   },
   "overrides": {
     "@esbuild-kit/core-utils": {
