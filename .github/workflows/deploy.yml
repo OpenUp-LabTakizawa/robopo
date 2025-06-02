@@ -16,6 +16,7 @@ jobs:
   build:
     name: Build Docusaurus
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'openup-labtakizawa'
     permissions:
       contents: read # to download the repository
       pull-requests: write # to comment on the pull request
