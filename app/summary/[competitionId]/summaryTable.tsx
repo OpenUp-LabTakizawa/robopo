@@ -53,42 +53,54 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
     setSortKey(key)
     setSortOrder(order)
     const sortedData = [...courseSummary].sort((a, b) => {
-      // 日時keyのときはDate.parseで比較
-      if (key === "firstTCourseTime") {
-        // a[key] / b[key]は「YYYY/MM/DD hh:mm:ss」等の文字列
-        const getTimeVal = (v: CourseSummary | null) => {
-          if (!v || v["firstTCourseTime"] === "-" || !isCompletedCourse(pointData, v["tCourseMaxResult"])) {
+      const getVal = (item: CourseSummary) => {
+        const value = item[key]
+
+        // 日時keyのときはDate.parseで比較
+        if (key === "firstTCourseTime") {
+          // a[key] / b[key]は「YYYY/MM/DD hh:mm:ss」等の文字列
+          if (
+            !value ||
+            value === "-" ||
+            !isCompletedCourse(pointData, item["tCourseMaxResult"])
+          ) {
             return order === "asc" ? Infinity : -Infinity
           }
-          const t = Date.parse(v["firstTCourseTime"] as string)
+          const t = Date.parse(value as string)
           return isNaN(t) ? (order === "asc" ? Infinity : -Infinity) : t
         }
-        const aTime = getTimeVal(a)
-        const bTime = getTimeVal(b)
-        return order === "asc" ? aTime - bTime : bTime - aTime
+
+        if (key === "playerFurigana") {
+          return typeof value === "string" ? value : ""
+        }
+
+        if (key === "playerZekken") {
+          const num = Number(value)
+          return !isNaN(num) ? num : typeof value === "string" ? value : ""
+        }
+
+        if (key === "firstTCourseCount") {
+          if (!isCompletedCourse(pointData, item["tCourseMaxResult"])) {
+            return order === "asc" ? Infinity : -Infinity
+          }
+        }
+
+        return typeof value === "number"
+          ? value
+          : value === null
+            ? 0
+            : Number(value)
       }
 
-      const aValue: number | string =
-        key === "playerFurigana" || key === "playerZekken"
-          ? a[key] === null
-            ? "" // 何も入ってない時に何入れるかは考える余地あり。
-            : a[key]
-          : a[key] === null
-            ? 0
-            : +a[key]
-      const bValue: number | string =
-        key === "playerFurigana" || key === "playerZekken"
-          ? b[key] === null
-            ? "" // 何も入ってない時に何入れるかは考える余地あり。
-            : b[key]
-          : b[key] === null
-            ? 0
-            : +b[key]
+      const aVal = getVal(a)
+      const bVal = getVal(b)
 
-      if (order === "asc") {
-        return aValue > bValue ? 1 : -1
+      if (aVal < bVal) {
+        return order === "asc" ? -1 : 1
+      } else if (aVal > bVal) {
+        return order === "asc" ? 1 : -1
       } else {
-        return aValue < bValue ? 1 : -1
+        return 0
       }
     })
     setCourseSummary(sortedData)
@@ -212,9 +224,9 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
                   <td className="border border-gray-400 p-2">
                     {player.sensorMaxResult ? player.sensorMaxResult : "-"}
                   </td>
-                  <td className="border border-gray-400 p-2">{player.sumIpponPoint ? player.sumIpponPoint : "-"}</td>
+                  <td className="border border-gray-400 p-2">{player.sumIpponPoint}</td>
                   <td className="border border-gray-400 p-2">
-                    {player.ipponMaxResult ? calcPoint(ipponBashiPoint, player.ipponMaxResult) : "-"}
+                    {player.ipponMaxResult || player.ipponMaxResult === 0 ? calcPoint(ipponBashiPoint, player.ipponMaxResult) : "-"}
                   </td>
                   <td className="border border-gray-400 p-2">{player.totalPoint ? player.totalPoint : "-"}</td>
                   <td className="border border-gray-400 p-2">{player.pointRank}</td>
