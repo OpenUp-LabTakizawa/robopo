@@ -228,7 +228,7 @@ type PlayerRowProps = {
 const PlayerRow = ({ player, competitionId, courseId, pointData, ipponBashiPoint }: PlayerRowProps) => {
   const completed = isCompletedCourse(pointData, player.tCourseMaxResult)
   return (
-    <tr key={player.playerId}>
+    <tr>
       {/* 名前 */}
       <th className="border border-gray-400 p-2">
         <Link
