@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { type CourseSummary, isCompletedCourse } from "@/app/components/summary/utils"
-import { deserializePoint, PointValue, RESERVED_COURSE_IDS } from "@/app/components/course/utils"
+import { deserializePoint, PointState, PointValue, RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import { calcPoint } from "@/app/components/challenge/utils"
 import { type SelectCourse } from "@/app/lib/db/schema"
 
@@ -194,63 +194,14 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
               </tr>
             ) : courseSummary.length > 0 ? (
               courseSummary?.map((player) => (
-                <tr key={player.playerId}>
-                  {/* 名前 */}
-                  <th className="border border-gray-400 p-2">
-                    <Link
-                      href={`/summary/${competitionId}/${courseId}/${player.playerId}`}
-                      className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 sm:whitespace-nowrap">
-                      {player.playerName ? player.playerName : "-"}
-                    </Link>
-                  </th>
-                  {/* ふりがな */}
-                  <td className="border border-gray-400 p-2 sm:whitespace-nowrap">
-                    {player.playerFurigana ? player.playerFurigana : "-"}
-                  </td>
-                  {/* ゼッケン */}
-                  <td className="border border-gray-400 p-2">{player.playerZekken ? player.playerZekken : "-"}</td>
-                  {/* ベーシックコース完走時刻 */}
-                  <td className="border border-gray-400 p-2">
-                    {isCompletedCourse(pointData, player.tCourseMaxResult) ? player.firstTCourseTime : "-"}
-                  </td>
-                  {/* 完走は何回で達成? */}
-                  <td className="border border-gray-400 p-2">
-                    {isCompletedCourse(pointData, player.tCourseMaxResult) && player.firstTCourseCount
-                      ? player.firstTCourseCount
-                      : "-"}
-                  </td>
-                  {/* センサーコース以外 */}
-                  {courseId !== RESERVED_COURSE_IDS.SENSOR && (
-                    // ベーシックコースの最高得点
-                    <td className="border border-gray-400 p-2">
-                      {player.tCourseMaxResult || player.tCourseMaxResult === 0 ? calcPoint(pointData, player.tCourseMaxResult) : "-"}
-                    </td>
-                  )}
-                  {/* センサーコースはmaxResultにそのまま最高得点が入ってる */}
-                  {courseId === RESERVED_COURSE_IDS.SENSOR && (
-                    <td className="border border-gray-400 p-2">
-                      {player.sensorMaxResult ? player.sensorMaxResult : "-"}
-                    </td>
-                  )}
-                  {/* センサーコースの最高得点 */}
-                  <td className="border border-gray-400 p-2">
-                    {player.sensorMaxResult ? player.sensorMaxResult : "-"}
-                  </td>
-                  {/* 一本橋の合計得点 */}
-                  <td className="border border-gray-400 p-2">{player.sumIpponPoint ? player.sumIpponPoint : "-"}</td>
-                  {/* 一本橋の最高得点 */}
-                  <td className="border border-gray-400 p-2">
-                    {player.ipponMaxResult || player.ipponMaxResult === 0 ? calcPoint(ipponBashiPoint, player.ipponMaxResult) : "-"}
-                  </td>
-                  {/* 全てのチャレンジの総得点 */}
-                  <td className="border border-gray-400 p-2">{player.totalPoint ? player.totalPoint : "-"}</td>
-                  {/* 総得点の順位 */}
-                  <td className="border border-gray-400 p-2">{player.pointRank}</td>
-                  {/* チャレンジ回数 */}
-                  <td className="border border-gray-400 p-2">{player.challengeCount}</td>
-                  {/* 回数の順位 */}
-                  <td className="border border-gray-400 p-2">{player.challengeRank}</td>
-                </tr>
+                <PlayerRow
+                  key={player.playerId}
+                  player={player}
+                  competitionId={Number(competitionId)}
+                  courseId={Number(courseId)}
+                  pointData={pointData}
+                  ipponBashiPoint={ipponBashiPoint}
+                />
               ))
             ) : (
               <tr>
@@ -263,5 +214,80 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
         </table>
       </div>
     </div>
+  )
+}
+
+type PlayerRowProps = {
+  player: CourseSummary
+  competitionId: number
+  courseId: number
+  pointData: PointState
+  ipponBashiPoint: PointValue[]
+}
+
+const PlayerRow = ({ player, competitionId, courseId, pointData, ipponBashiPoint }: PlayerRowProps) => {
+  const completed = isCompletedCourse(pointData, player.tCourseMaxResult)
+  return (
+    <tr key={player.playerId}>
+      {/* 名前 */}
+      <th className="border border-gray-400 p-2">
+        <Link
+          href={`/summary/${competitionId}/${courseId}/${player.playerId}`}
+          className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 sm:whitespace-nowrap">
+          {player.playerName ?? "-"}
+        </Link>
+      </th>
+      {/* ふりがな */}
+      <td className="border border-gray-400 p-2 sm:whitespace-nowrap">
+        {player.playerFurigana ?? "-"}
+      </td>
+      {/* ゼッケン */}
+      <td className="border border-gray-400 p-2">{player.playerZekken ?? "-"}</td>
+      {/* ベーシックコース完走時刻 */}
+      <td className="border border-gray-400 p-2">
+        {completed ? player.firstTCourseTime : "-"}
+      </td>
+      {/* 完走は何回で達成? */}
+      <td className="border border-gray-400 p-2">
+        {completed && player.firstTCourseCount
+          ? player.firstTCourseCount
+          : "-"}
+      </td>
+      {/* センサーコース以外 */}
+      {courseId !== RESERVED_COURSE_IDS.SENSOR ? (
+        // ベーシックコースの最高得点
+        <td className="border border-gray-400 p-2">
+          {player.tCourseMaxResult || player.tCourseMaxResult === 0
+            ? calcPoint(pointData, player.tCourseMaxResult)
+            : "-"}
+        </td>
+      )
+        // {/* センサーコースはmaxResultにそのまま最高得点が入ってる */}
+        : (
+          <td className="border border-gray-400 p-2">
+            {player.sensorMaxResult ?? "-"}
+          </td>
+        )}
+      {/* センサーコースの最高得点 */}
+      <td className="border border-gray-400 p-2">
+        {player.sensorMaxResult ?? "-"}
+      </td>
+      {/* 一本橋の合計得点 */}
+      <td className="border border-gray-400 p-2">{player.sumIpponPoint ?? "-"}</td>
+      {/* 一本橋の最高得点 */}
+      <td className="border border-gray-400 p-2">
+        {player.ipponMaxResult || player.ipponMaxResult === 0
+          ? calcPoint(ipponBashiPoint, player.ipponMaxResult)
+          : "-"}
+      </td>
+      {/* 全てのチャレンジの総得点 */}
+      <td className="border border-gray-400 p-2">{player.totalPoint ?? "-"}</td>
+      {/* 総得点の順位 */}
+      <td className="border border-gray-400 p-2">{player.pointRank}</td>
+      {/* チャレンジ回数 */}
+      <td className="border border-gray-400 p-2">{player.challengeCount}</td>
+      {/* 回数の順位 */}
+      <td className="border border-gray-400 p-2">{player.challengeRank}</td>
+    </tr>
   )
 }
