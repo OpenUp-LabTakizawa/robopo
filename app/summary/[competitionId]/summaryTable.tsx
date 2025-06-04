@@ -81,7 +81,7 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
           case "firstTCourseTime":
             return parseDateValue(value, item["tCourseMaxResult"])
           case "playerFurigana":
-            return typeof value === "string" ? value : ""
+            return typeof value === "string" ? value.toString() : ""
           case "playerZekken":
             return parseZekken(value)
           case "firstTCourseCount":
@@ -97,7 +97,10 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
       const aVal = getVal(a)
       const bVal = getVal(b)
 
-      if (aVal < bVal) {
+      if (key === "playerFurigana" && typeof aVal === "string" && typeof bVal === "string") {
+        return order === "asc" ? aVal.localeCompare(bVal, "ja")
+          : bVal.localeCompare(aVal, "ja")
+      } else if (aVal < bVal) {
         return order === "asc" ? -1 : 1
       } else if (aVal > bVal) {
         return order === "asc" ? 1 : -1
