@@ -253,21 +253,12 @@ const PlayerRow = ({ player, competitionId, courseId, pointData, ipponBashiPoint
           ? player.firstTCourseCount
           : "-"}
       </td>
-      {/* センサーコース以外 */}
-      {courseId !== RESERVED_COURSE_IDS.SENSOR ? (
-        // ベーシックコースの最高得点
-        <td className="border border-gray-400 p-2">
-          {player.tCourseMaxResult || player.tCourseMaxResult === 0
-            ? calcPoint(pointData, player.tCourseMaxResult)
-            : "-"}
-        </td>
-      )
-        // {/* センサーコースはmaxResultにそのまま最高得点が入ってる */}
-        : (
-          <td className="border border-gray-400 p-2">
-            {player.sensorMaxResult ?? "-"}
-          </td>
-        )}
+      {/* ベーシックコースの最高得点 */}
+      <td className="border border-gray-400 p-2">
+        {player.tCourseMaxResult || player.tCourseMaxResult === 0
+          ? calcPoint(pointData, player.tCourseMaxResult)
+          : "-"}
+      </td>
       {/* センサーコースの最高得点 */}
       <td className="border border-gray-400 p-2">
         {player.sensorMaxResult ?? "-"}
