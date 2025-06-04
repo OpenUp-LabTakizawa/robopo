@@ -52,44 +52,46 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
     const order = sortKey === key && sortOrder === "asc" ? "desc" : "asc"
     setSortKey(key)
     setSortOrder(order)
+    const parseDateValue = (value: any, tCourseMaxResult: any): number => {
+      if (
+        !value ||
+        value === "-" ||
+        !isCompletedCourse(pointData, tCourseMaxResult)
+      ) {
+        return order === "asc" ? Infinity : -Infinity
+      }
+      const t = Date.parse(value as string)
+      return isNaN(t) ? (order === "asc" ? Infinity : -Infinity) : t
+    }
+
+    const parseZekken = (value: any): number | string => {
+      const num = Number(value)
+      return !isNaN(num) ? num : typeof value === "string" ? value : ""
+    }
+
+    const parseNumberFallback = (value: any): number => {
+      return typeof value === "number" ? value : value === null ? 0 : Number(value)
+    }
+
     const sortedData = [...courseSummary].sort((a, b) => {
       const getVal = (item: CourseSummary) => {
         const value = item[key]
 
-        // 日時keyのときはDate.parseで比較
-        if (key === "firstTCourseTime") {
-          // a[key] / b[key]は「YYYY/MM/DD hh:mm:ss」等の文字列
-          if (
-            !value ||
-            value === "-" ||
-            !isCompletedCourse(pointData, item["tCourseMaxResult"])
-          ) {
-            return order === "asc" ? Infinity : -Infinity
-          }
-          const t = Date.parse(value as string)
-          return isNaN(t) ? (order === "asc" ? Infinity : -Infinity) : t
+        switch (key) {
+          case "firstTCourseTime":
+            return parseDateValue(value, item["tCourseMaxResult"])
+          case "playerFurigana":
+            return typeof value === "string" ? value : ""
+          case "playerZekken":
+            return parseZekken(value)
+          case "firstTCourseCount":
+            if (!isCompletedCourse(pointData, item["tCourseMaxResult"])) {
+              return order === "asc" ? Infinity : -Infinity
+            }
+            return parseNumberFallback(value)
+          default:
+            return parseNumberFallback(value)
         }
-
-        if (key === "playerFurigana") {
-          return typeof value === "string" ? value : ""
-        }
-
-        if (key === "playerZekken") {
-          const num = Number(value)
-          return !isNaN(num) ? num : typeof value === "string" ? value : ""
-        }
-
-        if (key === "firstTCourseCount") {
-          if (!isCompletedCourse(pointData, item["tCourseMaxResult"])) {
-            return order === "asc" ? Infinity : -Infinity
-          }
-        }
-
-        return typeof value === "number"
-          ? value
-          : value === null
-            ? 0
-            : Number(value)
       }
 
       const aVal = getVal(a)
