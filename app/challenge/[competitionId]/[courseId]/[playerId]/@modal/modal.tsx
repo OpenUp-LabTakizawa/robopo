@@ -2,6 +2,7 @@
 
 import { type RefObject, useRef, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { PlayIcon } from "@heroicons/react/24/outline"
 import { type SelectCourse, type SelectPlayer } from "@/app/lib/db/schema"
 import { useAudioContext, SoundControlUI } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/audioContext"
 import { BackLabelWithIcon } from "@/app/lib/const"
@@ -35,24 +36,23 @@ export const Modal = ({ courseData, playerData }: ViewProps) => {
   if (!modalOpen) return null
   return (
     <dialog ref={dialogRef} className="modal" open={modalOpen}>
-      <div className="modal-box flex flex-col justify-center">
-        <div className="flex flex-col justify-center items-center overflow-y-auto w-full pt-10">
+      <div className="modal-box flex flex-col mt-auto mb-0">
+        <div className="flex flex-col items-center overflow-y-auto w-full">
           {courseData !== null && playerId !== null && (
-            <div className="grid gap-6 items-start justify-center sm:px-6 lg:px-8 text-start">
+            <div className="grid gap-6 items-start">
               <h2 className="text-lg">チャレンジを開始しますか?</h2>
               <p className="text-2xl">コース: {courseData.name}</p>
               <p className="text-2xl">選手: {playerData?.name}</p>
             </div>
           )}
-
-          {/* ここにコースプレビューを入れる */}
           <button
-            className="rounded-full flex justify-center items-center font-bold relative mt-10 mb-10 w-48 h-48 text-3xl bg-linear-to-r from-green-400 to-green-600 text-white"
+            className="btn btn-accent min-w-28 max-w-fit text-3xl mx-auto m-5"
             onClick={() => {
               soundOn && startSound && startSound.play()
               modalClose()
             }}>
             <span>スタート</span>
+            <PlayIcon className="w-6 h-6" />
           </button>
           <SoundControlUI soundOn={soundOn} setSoundOn={setSoundOn} />
           <button
