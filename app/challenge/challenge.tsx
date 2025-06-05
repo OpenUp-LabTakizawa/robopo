@@ -210,6 +210,7 @@ const Challenge = ({ field, mission, point, compeId, courseId, playerId, umpireI
                   再挑戦
                 </button>
               </div>
+              <SoundControlUI soundOn={soundOn} setSoundOn={setSoundOn} />
             </div>
           </div>
           <div className="absolute flex top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
