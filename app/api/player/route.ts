@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server"
-import { db } from "@/app/lib/db/db"
-import { player, SelectPlayer } from "@/app/lib/db/schema"
-import { createPlayer } from "@/app/lib/db/queries/insert"
 import { deleteById } from "@/app/api/delete"
+import { db } from "@/app/lib/db/db"
+import { createPlayer } from "@/app/lib/db/queries/insert"
+import { type SelectPlayer, player } from "@/app/lib/db/schema"
+import { type NextRequest, NextResponse } from "next/server"
 
 export const revalidate = 0
 
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
         message: "An error occurred while creating the player.",
         error: error,
       },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

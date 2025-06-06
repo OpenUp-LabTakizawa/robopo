@@ -1,5 +1,5 @@
-import { useRouter } from "next/navigation"
-import { PointState } from "@/app/components/course/utils"
+import type { PointState } from "@/app/components/course/utils"
+import type { useRouter } from "next/navigation"
 
 // 進んだmissionの数によって獲得したポイントを計算する
 // pointStateは start, goal, mission...の順でポイントが入ってる。
@@ -27,7 +27,7 @@ export const resultSubmit = async (
   setIsSuccess: React.Dispatch<React.SetStateAction<boolean>>,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
   router: ReturnType<typeof useRouter>,
-  setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>
+  setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>,
 ) => {
   setLoading(true)
   setIsEnabled(false)

@@ -1,4 +1,9 @@
-import { getPanelWidth, getPanelHeight, PanelValue, PanelString } from "@/app/components/course/utils"
+import {
+  PanelString,
+  type PanelValue,
+  getPanelHeight,
+  getPanelWidth,
+} from "@/app/components/course/utils"
 
 type PanelProps = {
   value: PanelValue
@@ -20,11 +25,20 @@ export const Panel = ({ value, type, onClick }: PanelProps) => {
     <div
       onClick={onClick}
       className={`${panelStyle} bg-white`}
-      style={{ width: `${panelWidth}` + "px", height: `${panelHeight}` + "px" }}>
+      style={{ width: `${panelWidth}` + "px", height: `${panelHeight}` + "px" }}
+    >
       {hasRole && (
         <div
-          className={routeStyle + textStyle + " flex justify-center items-center font-bold rounded-sm"}
-          style={{ width: `${panelWidth - 10}` + "px", height: `${panelWidth - 10}` + "px" }}>
+          className={
+            routeStyle +
+            textStyle +
+            " flex justify-center items-center font-bold rounded-sm"
+          }
+          style={{
+            width: `${panelWidth - 10}` + "px",
+            height: `${panelWidth - 10}` + "px",
+          }}
+        >
           {PanelString[value]}
         </div>
       )}

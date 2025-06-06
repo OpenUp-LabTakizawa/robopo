@@ -1,5 +1,9 @@
-import { NextRequest, NextResponse } from "next/server"
-import { deletePlayerById, deleteUmpireById, deleteCourseById } from "@/app/lib/db/queries/queries"
+import {
+  deleteCourseById,
+  deletePlayerById,
+  deleteUmpireById,
+} from "@/app/lib/db/queries/queries"
+import { type NextRequest, NextResponse } from "next/server"
 
 export async function deleteById(req: NextRequest, mode: string) {
   // modeは"player"か"umpire"か"course"のいずれか
@@ -21,18 +25,19 @@ export async function deleteById(req: NextRequest, mode: string) {
         }
       })
       await Promise.all(deletePromises)
-      return NextResponse.json({ success: true, message: mode + " deleted successfully." }, { status: 200 })
-    } else {
-      if (mode === "player") {
-        const result = await deletePlayerById(id)
-        return NextResponse.json({ success: true, data: result }, { status: 200 })
-      } else if (mode === "umpire") {
-        const result = await deleteUmpireById(id)
-        return NextResponse.json({ success: true, data: result }, { status: 200 })
-      } else if (mode === "course") {
-        const result = await deleteCourseById(id)
-        return NextResponse.json({ success: true, data: result }, { status: 200 })
-      }
+      return NextResponse.json(
+        { success: true, message: mode + " deleted successfully." },
+        { status: 200 },
+      )
+    } else if (mode === "player") {
+      const result = await deletePlayerById(id)
+      return NextResponse.json({ success: true, data: result }, { status: 200 })
+    } else if (mode === "umpire") {
+      const result = await deleteUmpireById(id)
+      return NextResponse.json({ success: true, data: result }, { status: 200 })
+    } else if (mode === "course") {
+      const result = await deleteCourseById(id)
+      return NextResponse.json({ success: true, data: result }, { status: 200 })
     }
   } catch (error) {
     console.log("error: ", error)
@@ -42,7 +47,7 @@ export async function deleteById(req: NextRequest, mode: string) {
         message: "An error occurred while creating the player.",
         error: error,
       },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

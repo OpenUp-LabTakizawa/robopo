@@ -1,23 +1,34 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import Link from "next/link"
-import CourseEdit from "@/app/course/edit/courseEdit"
-import MissionEdit from "@/app/course/edit/missionEdit"
-import { useCourseEdit } from "@/app/course/edit/courseEditContext"
+import { getCourse } from "@/app/components/course/listUtils"
+import { validationModal } from "@/app/components/course/modals"
 import {
   deserializeField,
   deserializeMission,
   deserializePoint,
 } from "@/app/components/course/utils"
-import { getCourse } from "@/app/components/course/listUtils"
-import { validationModal } from "@/app/components/course/modals"
+import CourseEdit from "@/app/course/edit/courseEdit"
+import { useCourseEdit } from "@/app/course/edit/courseEditContext"
+import MissionEdit from "@/app/course/edit/missionEdit"
 import { BackLabelWithIcon } from "@/app/lib/const"
+import Link from "next/link"
+import { useEffect, useState } from "react"
 
-export const EditorPage = (props: { params: Promise<{ courseId: number | null }> }) => {
+export const EditorPage = (props: {
+  params: Promise<{ courseId: number | null }>
+}) => {
   // Extract courseId from params for use in JSX
-  const [courseId, setCourseId] = useState<number | null>(null);
-  const { name, setName, field, setField, mission, setMission, point, setPoint } = useCourseEdit()
+  const [courseId, setCourseId] = useState<number | null>(null)
+  const {
+    name,
+    setName,
+    field,
+    setField,
+    mission,
+    setMission,
+    point,
+    setPoint,
+  } = useCourseEdit()
   const [modalOpen, setModalOpen] = useState(0)
 
   useEffect(() => {
@@ -27,10 +38,18 @@ export const EditorPage = (props: { params: Promise<{ courseId: number | null }>
         setCourseId(courseId)
         const course = await getCourse(courseId)
         if (course) {
-          if (course.field) { setField(deserializeField(course.field)) }
-          if (course.mission) { setMission(deserializeMission(course.mission)) }
-          if (course.point) { setPoint(deserializePoint(course.point)) }
-          if (course.name) { setName(course.name) }
+          if (course.field) {
+            setField(deserializeField(course.field))
+          }
+          if (course.mission) {
+            setMission(deserializeMission(course.mission))
+          }
+          if (course.point) {
+            setPoint(deserializePoint(course.point))
+          }
+          if (course.name) {
+            setName(course.name)
+          }
         }
       }
     }
@@ -41,7 +60,6 @@ export const EditorPage = (props: { params: Promise<{ courseId: number | null }>
     setModalOpen(id)
   }
 
-
   return (
     <>
       <div className="h-full w-full">
@@ -50,11 +68,19 @@ export const EditorPage = (props: { params: Promise<{ courseId: number | null }>
             <CourseEdit field={field} setField={setField} />
           </div>
           <div className="sm:w-full sm:mx-4 sm:justify-self-start">
-            <MissionEdit mission={mission} setMission={setMission} point={point} setPoint={setPoint} />
+            <MissionEdit
+              mission={mission}
+              setMission={setMission}
+              point={point}
+              setPoint={setPoint}
+            />
           </div>
         </div>
         <div className="flex p-4 mt-0 gap-4 justify-center">
-          <button className="btn btn-primary min-w-28 max-w-fit" onClick={() => handleButtonClick(3)}>
+          <button
+            className="btn btn-primary min-w-28 max-w-fit"
+            onClick={() => handleButtonClick(3)}
+          >
             有効性チェック
           </button>
           <Link
@@ -71,7 +97,8 @@ export const EditorPage = (props: { params: Promise<{ courseId: number | null }>
             }
             className="btn btn-primary min-w-28 max-w-fit"
           >
-            一覧に<BackLabelWithIcon />
+            一覧に
+            <BackLabelWithIcon />
           </Link>
         </div>
       </div>

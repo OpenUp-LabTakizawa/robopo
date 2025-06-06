@@ -1,7 +1,11 @@
-import { useState } from "react"
-import { FieldState, PanelValue, putPanel } from "@/app/components/course/utils"
-import { SelectPanel } from "@/app/components/course/selectPanel"
 import { Field } from "@/app/components/course/field"
+import { SelectPanel } from "@/app/components/course/selectPanel"
+import {
+  type FieldState,
+  type PanelValue,
+  putPanel,
+} from "@/app/components/course/utils"
+import { useState } from "react"
 
 type CourseEditProps = {
   field: FieldState

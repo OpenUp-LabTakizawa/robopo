@@ -1,6 +1,6 @@
-import type { ReactNode } from "react"
-import clsx from "clsx"
 import Heading from "@theme/Heading"
+import clsx from "clsx"
+import type { ReactNode } from "react"
 import styles from "./styles.module.css"
 
 type FeatureItem = {
@@ -17,7 +17,8 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: "集計結果表示",
-    src: require("@site/static/img/screen/07_pointlist_mosaic_resize.webp").default,
+    src: require("@site/static/img/screen/07_pointlist_mosaic_resize.webp")
+      .default,
     description: <>競技の結果を一覧で表示します。</>,
   },
   {

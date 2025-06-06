@@ -1,9 +1,14 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
-import { MissionValue, MissionString, PointValue, panelOrDegree } from "@/app/components/course/utils"
-import { isCompletedCourse } from "@/app/components/summary/utils"
 import { calcPoint } from "@/app/components/challenge/utils"
+import {
+  MissionString,
+  type MissionValue,
+  type PointValue,
+  panelOrDegree,
+} from "@/app/components/course/utils"
+import { isCompletedCourse } from "@/app/components/summary/utils"
+import React, { useState, useEffect } from "react"
 
 type TCourseTableProps = {
   missionPair: MissionValue[][]
@@ -13,7 +18,13 @@ type TCourseTableProps = {
   maxResult: { maxResult: number }[]
 }
 
-export const TCourseTable = ({ missionPair, point, resultArray, firstTCourseCount, maxResult }: TCourseTableProps) => {
+export const TCourseTable = ({
+  missionPair,
+  point,
+  resultArray,
+  firstTCourseCount,
+  maxResult,
+}: TCourseTableProps) => {
   // 現在のタブを管理(最初は0ページ)
   const [currentTab, setCurrentTab] = useState(0)
   const [itemsPerTab, setItemsPerPage] = useState(5)
@@ -54,14 +65,21 @@ export const TCourseTable = ({ missionPair, point, resultArray, firstTCourseCoun
 
   // 総列数
   const totalColumns = resultArray.reduce((count, result) => {
-    return count + (result.results1 !== null ? 1 : 0) + (result.results2 !== null ? 1 : 0)
+    return (
+      count +
+      (result.results1 !== null ? 1 : 0) +
+      (result.results2 !== null ? 1 : 0)
+    )
   }, 0)
 
   const totalPages = Math.ceil(totalColumns / itemsPerTab)
   const startIndex = currentTab * itemsPerTab
   const endIndex = startIndex + itemsPerTab
 
-  const visibleResults: { result: { results1: number; results2: number | null }; type: string }[] = []
+  const visibleResults: {
+    result: { results1: number; results2: number | null }
+    type: string
+  }[] = []
   let columnCount = 0
   for (let i = 0; i < resultArray.length; i++) {
     if (columnCount >= startIndex && columnCount < endIndex) {
@@ -83,7 +101,8 @@ export const TCourseTable = ({ missionPair, point, resultArray, firstTCourseCoun
         <button
           className="join-item btn btn-square"
           disabled={currentTab === 0}
-          onClick={() => setCurrentTab(currentTab - 1)}>
+          onClick={() => setCurrentTab(currentTab - 1)}
+        >
           «
         </button>
         {Array.from({ length: totalPages }).map((_, index) => (
@@ -101,7 +120,8 @@ export const TCourseTable = ({ missionPair, point, resultArray, firstTCourseCoun
         <button
           className="join-item btn btn-square"
           disabled={currentTab === totalPages - 1}
-          onClick={() => setCurrentTab(currentTab + 1)}>
+          onClick={() => setCurrentTab(currentTab + 1)}
+        >
           »
         </button>
       </div>
@@ -114,7 +134,10 @@ export const TCourseTable = ({ missionPair, point, resultArray, firstTCourseCoun
         <table className="table table-pin-rows">
           <tbody>
             <tr>
-              <td colSpan={3} className="border border-gray-400 p-2 text-center"></td>
+              <td
+                colSpan={3}
+                className="border border-gray-400 p-2 text-center"
+              ></td>
               {visibleResults.map((_, index: number) => (
                 <React.Fragment key={index}>
                   <td className="border border-gray-400 min-w-9 p-2 text-center">
@@ -122,11 +145,13 @@ export const TCourseTable = ({ missionPair, point, resultArray, firstTCourseCoun
                   </td>
                 </React.Fragment>
               ))}
-              {Array.from({ length: itemsPerTab - visibleResults.length }).map((_, index: number) => (
-                <React.Fragment key={index}>
-                  <td className="min-w-9"></td>
-                </React.Fragment>
-              ))}
+              {Array.from({ length: itemsPerTab - visibleResults.length }).map(
+                (_, index: number) => (
+                  <React.Fragment key={index}>
+                    <td className="min-w-9"></td>
+                  </React.Fragment>
+                ),
+              )}
             </tr>
             {missionPair.map((pair, index: number) => (
               <tr key={index}>
@@ -136,40 +161,62 @@ export const TCourseTable = ({ missionPair, point, resultArray, firstTCourseCoun
                   {pair[1] !== null && [pair[1]]}
                   {pair[0] !== null && panelOrDegree(pair[0])}
                 </th>
-                <td className="border border-gray-400 p-2">{point[index + 2]}</td>
+                <td className="border border-gray-400 p-2">
+                  {point[index + 2]}
+                </td>
                 {visibleResults.map((result, visibleIndex: number) => (
                   <React.Fragment key={visibleIndex}>
                     <td className="border border-gray-400 min-w-9 p-2 text-center">
-                      {result.type === "results1" && result.result.results1 > index ? "○" : ""}
-                      {result.type === "results2" && result.result.results2! > index ? "○" : ""}
+                      {result.type === "results1" &&
+                      result.result.results1 > index
+                        ? "○"
+                        : ""}
+                      {result.type === "results2" &&
+                      result.result.results2! > index
+                        ? "○"
+                        : ""}
                     </td>
                   </React.Fragment>
                 ))}
               </tr>
             ))}
             <tr>
-              <td colSpan={2} className="border border-gray-400 p-2 text-center">
+              <td
+                colSpan={2}
+                className="border border-gray-400 p-2 text-center"
+              >
                 Goal(六足)
               </td>
               <td className="border border-gray-400 p-2">{point[1]}</td>
               {visibleResults.map((result, index2: number) => (
                 <React.Fragment key={index2}>
                   <td className="border border-gray-400 min-w-9 p-2 text-center">
-                    {result.type === "results1" && isCompletedCourse(point, result.result.results1) ? "○" : ""}
-                    {result.type === "results2" && isCompletedCourse(point, result.result.results2) ? "○" : ""}
+                    {result.type === "results1" &&
+                    isCompletedCourse(point, result.result.results1)
+                      ? "○"
+                      : ""}
+                    {result.type === "results2" &&
+                    isCompletedCourse(point, result.result.results2)
+                      ? "○"
+                      : ""}
                   </td>
                 </React.Fragment>
               ))}
             </tr>
             <tr>
-              <td colSpan={3} className="border bg-cyan-50 border-gray-400 min-w-9 p-2 text-center">
+              <td
+                colSpan={3}
+                className="border bg-cyan-50 border-gray-400 min-w-9 p-2 text-center"
+              >
                 コースポイント
               </td>
               {visibleResults.map((result, visibleIndex: number) => (
                 <React.Fragment key={visibleIndex}>
                   <td className="border border-gray-400 min-w-9 p-2 text-center">
-                    {result.type === "results1" && calcPoint(point, result.result.results1)}
-                    {result.type === "results2" && calcPoint(point, result.result.results2)}
+                    {result.type === "results1" &&
+                      calcPoint(point, result.result.results1)}
+                    {result.type === "results2" &&
+                      calcPoint(point, result.result.results2)}
                   </td>
                 </React.Fragment>
               ))}
@@ -182,15 +229,22 @@ export const TCourseTable = ({ missionPair, point, resultArray, firstTCourseCoun
         <table className="table table-pin-rows">
           <tbody>
             <tr>
-              <td className="border bg-cyan-50 border-gray-400 p-2 text-center">成功までの回数</td>
+              <td className="border bg-cyan-50 border-gray-400 p-2 text-center">
+                成功までの回数
+              </td>
               <td className="border border-gray-400 p-2">
-                {maxResult.length > 0 && isCompletedCourse(point, maxResult[0].maxResult)
+                {maxResult.length > 0 &&
+                isCompletedCourse(point, maxResult[0].maxResult)
                   ? firstTCourseCount[0].firstCount
                   : "-"}
               </td>
-              <td className="border bg-cyan-50 border-gray-400 p-2 text-center">MAXポイント</td>
+              <td className="border bg-cyan-50 border-gray-400 p-2 text-center">
+                MAXポイント
+              </td>
               <td className="border border-gray-400 p-2">
-                {maxResult.length > 0 ? calcPoint(point, maxResult[0].maxResult) : "-"}
+                {maxResult.length > 0
+                  ? calcPoint(point, maxResult[0].maxResult)
+                  : "-"}
               </td>
             </tr>
           </tbody>

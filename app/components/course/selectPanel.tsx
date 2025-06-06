@@ -1,4 +1,9 @@
-import { PanelValue, isStart, isGoal, FieldState } from "@/app/components/course/utils"
+import {
+  type FieldState,
+  type PanelValue,
+  isGoal,
+  isStart,
+} from "@/app/components/course/utils"
 
 type SelectPanelProps = {
   field: FieldState

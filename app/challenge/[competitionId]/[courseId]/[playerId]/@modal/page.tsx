@@ -1,5 +1,5 @@
-import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 import { getCourseById, getPlayerById } from "@/app/lib/db/queries/queries"
+import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 import { Modal } from "./modal"
 
 export default async function Confirm(props: {
@@ -15,7 +15,9 @@ export default async function Confirm(props: {
   const playerData: SelectPlayer | null = await getPlayerById(playerId)
 
   return (
-    (courseData && playerData && <Modal courseData={courseData} playerData={playerData} />) || (
+    (courseData && playerData && (
+      <Modal courseData={courseData} playerData={playerData} />
+    )) || (
       <div className="flex flex-col justify-center items-center overflow-y-auto w-full">
         <h2>コースを割り当てられていません。</h2>
       </div>

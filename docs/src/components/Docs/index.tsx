@@ -1,7 +1,7 @@
-import type { ReactNode } from "react"
 import clsx from "clsx"
-import styles from "./styles.module.css"
+import type { ReactNode } from "react"
 import React from "react"
+import styles from "./styles.module.css"
 
 type FeatureItem = {
   description: string
@@ -29,11 +29,13 @@ const FeatureList: FeatureItem[] = [
 
 const DetailFeatureList: FeatureItem[] = [
   {
-    description: "①選手一覧の中から採点する選手をタップして選択。確認へボタンをタップ。",
+    description:
+      "①選手一覧の中から採点する選手をタップして選択。確認へボタンをタップ。",
     src: require("@site/static/img/screen/01_playername.webp").default,
   },
   {
-    description: "②コースと選手を確認して、合っていればスタート、誤りがあれば選手選択に戻る。",
+    description:
+      "②コースと選手を確認して、合っていればスタート、誤りがあれば選手選択に戻る。",
     src: require("@site/static/img/screen/02_confirm.webp").default,
   },
   {
@@ -42,7 +44,8 @@ const DetailFeatureList: FeatureItem[] = [
     src: require("@site/static/img/screen/03_challenge_resize.webp").default,
   },
   {
-    description: "④ゴールまで進んだら結果送信ボタンを押す。間違った場合はチャレンジに戻る。",
+    description:
+      "④ゴールまで進んだら結果送信ボタンを押す。間違った場合はチャレンジに戻る。",
     src: require("@site/static/img/screen/05_succsess.webp").default,
   },
   {
@@ -77,19 +80,23 @@ const DetailFeatureListIpponBashi: FeatureItem[] = [
 
 const DetailFeatureListSensor: FeatureItem[] = [
   {
-    description: "①開始時の状態。\nやり直しボタンを押すと1回目の得点を保存して、2回目のチャレンジになる。",
+    description:
+      "①開始時の状態。\nやり直しボタンを押すと1回目の得点を保存して、2回目のチャレンジになる。",
     src: require("@site/static/img/screen/16_sensor01.webp").default,
   },
   {
-    description: "②トンネル停止クリアで「トンネルで停止」又は「10P」をタップする。チェックと現在ポイントが更新される。",
+    description:
+      "②トンネル停止クリアで「トンネルで停止」又は「10P」をタップする。チェックと現在ポイントが更新される。",
     src: require("@site/static/img/screen/16_sensor02.webp").default,
   },
   {
-    description: "③ギリギリ停止クリアで停止ゾーンのポイントをタップする。チェックと現在ポイントが更新される。",
+    description:
+      "③ギリギリ停止クリアで停止ゾーンのポイントをタップする。チェックと現在ポイントが更新される。",
     src: require("@site/static/img/screen/16_sensor04.webp").default,
   },
   {
-    description: "④壁にぶつかると「-5P」をタップする。チェックと現在ポイントが更新される。",
+    description:
+      "④壁にぶつかると「-5P」をタップする。チェックと現在ポイントが更新される。",
     src: require("@site/static/img/screen/16_sensor03.webp").default,
   },
   {
@@ -98,7 +105,8 @@ const DetailFeatureListSensor: FeatureItem[] = [
     src: require("@site/static/img/screen/16_sensor05.webp").default,
   },
   {
-    description: "⑥2回目のチャレンジ時に結果送信ボタンを押すと1回目と2回目の結果を両方送信する。",
+    description:
+      "⑥2回目のチャレンジ時に結果送信ボタンを押すと1回目と2回目の結果を両方送信する。",
     src: require("@site/static/img/screen/16_sensor06.webp").default,
   },
 ]
@@ -145,7 +153,9 @@ function FeatureCol({ items }: { items: FeatureItem[] }) {
   )
 }
 
-export default function CourseCount({ index }: Readonly<{ index: number }>): ReactNode {
+export default function CourseCount({
+  index,
+}: Readonly<{ index: number }>): ReactNode {
   return (
     <section className={styles.features}>
       <div className="row">

@@ -1,9 +1,9 @@
 "use client"
-import Link from "next/link"
-import { useState } from "react"
-import type { SelectAssignList } from "@/app/lib/db/schema"
 import { CommonRadioList } from "@/app/components/common/commonList"
 import { BackLabelWithIcon } from "@/app/lib/const"
+import type { SelectAssignList } from "@/app/lib/db/schema"
+import Link from "next/link"
+import { useState } from "react"
 
 type AssignListProps = {
   assignList: SelectAssignList[]

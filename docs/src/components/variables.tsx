@@ -1,4 +1,3 @@
-import React from "react"
 import Link from "@docusaurus/Link"
 
 // ROBOPO のあるGitHubリポジトリのURL
@@ -10,7 +9,11 @@ interface GithubLinkProps {
 
 export function GithubLink({ filePath }: GithubLinkProps) {
   return (
-    <Link to={`${robopoGithubUrl}blob/main/${filePath}`} target="_blank" rel="noopener noreferrer">
+    <Link
+      to={`${robopoGithubUrl}blob/main/${filePath}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       {filePath}
     </Link>
   )

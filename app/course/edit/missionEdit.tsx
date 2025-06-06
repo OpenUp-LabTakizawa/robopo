@@ -1,7 +1,7 @@
-import { useState } from "react"
-import { MissionUI } from "@/app/components/course/missionUI"
 import { MissionList } from "@/app/components/course/missionList"
-import { MissionState, PointState } from "@/app/components/course/utils"
+import { MissionUI } from "@/app/components/course/missionUI"
+import type { MissionState, PointState } from "@/app/components/course/utils"
+import { useState } from "react"
 
 type MissionEditProps = {
   mission: MissionState
@@ -10,7 +10,12 @@ type MissionEditProps = {
   setPoint: React.Dispatch<React.SetStateAction<PointState>>
 }
 
-export default function MissionEdit({ mission, setMission, point, setPoint }: MissionEditProps) {
+export default function MissionEdit({
+  mission,
+  setMission,
+  point,
+  setPoint,
+}: MissionEditProps) {
   const [radio, setRadio] = useState<number | null>(null)
 
   // ラジオボタンを押した時の動作
@@ -23,7 +28,12 @@ export default function MissionEdit({ mission, setMission, point, setPoint }: Mi
     <div className="container mx-auto">
       <div className="card bg-base-100 w-full min-w-72 shadow-xl">
         <div className="card-body">
-          <MissionList mission={mission} point={point} radio={radio} setRadio={setRadio} />
+          <MissionList
+            mission={mission}
+            point={point}
+            radio={radio}
+            setRadio={setRadio}
+          />
         </div>
       </div>
       <div className="card bg-base-100 w-full min-w-72 shadow-xl">

@@ -1,4 +1,9 @@
-import { getPanelWidth, getPanelHeight, getNextPosition, type MissionValue } from "@/app/components/course/utils"
+import {
+  type MissionValue,
+  getNextPosition,
+  getPanelHeight,
+  getPanelWidth,
+} from "@/app/components/course/utils"
 
 type ArrowProps = {
   row: number
@@ -27,16 +32,32 @@ type TurnArrowProps = {
   type?: string
 }
 
-export const NextArrow = ({ row, col, direction, nextMissionPair, duration = 1, type }: ArrowProps) => {
+export const NextArrow = ({
+  row,
+  col,
+  direction,
+  nextMissionPair,
+  duration = 1,
+  type,
+}: ArrowProps) => {
   if (nextMissionPair[0] === "mf" || nextMissionPair[0] === "mb") {
     const [nextRow, nextCol, nextDirection] = getNextPosition(
       row,
       col,
       direction,
       nextMissionPair[0],
-      nextMissionPair[1]
+      nextMissionPair[1],
     )
-    return <NextMoveArrow row={row} col={col} nextRow={nextRow} nextCol={nextCol} duration={duration} type={type} />
+    return (
+      <NextMoveArrow
+        row={row}
+        col={col}
+        nextRow={nextRow}
+        nextCol={nextCol}
+        duration={duration}
+        type={type}
+      />
+    )
   } else {
     return (
       <NextTurnArrow
@@ -184,7 +205,7 @@ const NextTurnArrow = ({
   let finDeg: number
   let clipDeg: number
 
-  let initArr: number = 0
+  let initArr = 0
   // 矢印の頭の描画位置initArrは右回転時left: 100% 左回転時: 0%
   // 左回転の時は座標系を180度rotateしてする負方向が回転の方向になる
   if (nextMissionPair[0] === "tr") {

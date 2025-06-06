@@ -1,7 +1,11 @@
-import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/app/lib/db/db"
-import { competitionPlayer, competitionCourse, competitionUmpire } from "@/app/lib/db/schema"
-import { eq, and } from "drizzle-orm"
+import {
+  competitionCourse,
+  competitionPlayer,
+  competitionUmpire,
+} from "@/app/lib/db/schema"
+import { and, eq } from "drizzle-orm"
+import { type NextRequest, NextResponse } from "next/server"
 
 // 各種idとcompetitionIdを与えてそのcompetitionIdに割り当ての無いものを割り当てていく関数
 export async function assignById(req: NextRequest, mode: string) {
@@ -17,35 +21,51 @@ export async function assignById(req: NextRequest, mode: string) {
     for (const pid of ids) {
       const existing = await db
         .select()
-        .from(mode === "player" ? competitionPlayer : mode === "course" ? competitionCourse : competitionUmpire)
+        .from(
+          mode === "player"
+            ? competitionPlayer
+            : mode === "course"
+              ? competitionCourse
+              : competitionUmpire,
+        )
         .where(
           and(
             eq(
               mode === "player"
                 ? competitionPlayer.competitionId
                 : mode === "course"
-                ? competitionCourse.competitionId
-                : competitionUmpire.competitionId,
-              competitionId
+                  ? competitionCourse.competitionId
+                  : competitionUmpire.competitionId,
+              competitionId,
             ),
             eq(
               mode === "player"
                 ? competitionPlayer.playerId
                 : mode === "course"
-                ? competitionCourse.courseId
-                : competitionUmpire.umpireId,
-              pid
-            )
-          )
+                  ? competitionCourse.courseId
+                  : competitionUmpire.umpireId,
+              pid,
+            ),
+          ),
         )
 
       if (existing.length === 0) {
         // 割り当てが無い場合、割り当てを追加
         await db
-          .insert(mode === "player" ? competitionPlayer : mode === "course" ? competitionCourse : competitionUmpire)
+          .insert(
+            mode === "player"
+              ? competitionPlayer
+              : mode === "course"
+                ? competitionCourse
+                : competitionUmpire,
+          )
           .values({
             competitionId: competitionId,
-            [mode === "player" ? "playerId" : mode === "course" ? "courseId" : "umpireId"]: pid,
+            [mode === "player"
+              ? "playerId"
+              : mode === "course"
+                ? "courseId"
+                : "umpireId"]: pid,
           })
       }
     }
@@ -58,7 +78,7 @@ export async function assignById(req: NextRequest, mode: string) {
         message: "An error occurred while assigning.",
         error: error,
       },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }
@@ -77,51 +97,63 @@ export async function unassignById(req: NextRequest, mode: string) {
     for (const pid of ids) {
       const existing = await db
         .select()
-        .from(mode === "player" ? competitionPlayer : mode === "course" ? competitionCourse : competitionUmpire)
+        .from(
+          mode === "player"
+            ? competitionPlayer
+            : mode === "course"
+              ? competitionCourse
+              : competitionUmpire,
+        )
         .where(
           and(
             eq(
               mode === "player"
                 ? competitionPlayer.competitionId
                 : mode === "course"
-                ? competitionCourse.competitionId
-                : competitionUmpire.competitionId,
-              competitionId
+                  ? competitionCourse.competitionId
+                  : competitionUmpire.competitionId,
+              competitionId,
             ),
             eq(
               mode === "player"
                 ? competitionPlayer.playerId
                 : mode === "course"
-                ? competitionCourse.courseId
-                : competitionUmpire.umpireId,
-              pid
-            )
-          )
+                  ? competitionCourse.courseId
+                  : competitionUmpire.umpireId,
+              pid,
+            ),
+          ),
         )
 
       if (existing.length > 0) {
         // 割り当てがある場合、割り当てを解除
         await db
-          .delete(mode === "player" ? competitionPlayer : mode === "course" ? competitionCourse : competitionUmpire)
+          .delete(
+            mode === "player"
+              ? competitionPlayer
+              : mode === "course"
+                ? competitionCourse
+                : competitionUmpire,
+          )
           .where(
             and(
               eq(
                 mode === "player"
                   ? competitionPlayer.competitionId
                   : mode === "course"
-                  ? competitionCourse.competitionId
-                  : competitionUmpire.competitionId,
-                competitionId
+                    ? competitionCourse.competitionId
+                    : competitionUmpire.competitionId,
+                competitionId,
               ),
               eq(
                 mode === "player"
                   ? competitionPlayer.playerId
                   : mode === "course"
-                  ? competitionCourse.courseId
-                  : competitionUmpire.umpireId,
-                pid
-              )
-            )
+                    ? competitionCourse.courseId
+                    : competitionUmpire.umpireId,
+                pid,
+              ),
+            ),
           )
       }
     }
@@ -134,7 +166,7 @@ export async function unassignById(req: NextRequest, mode: string) {
         message: "An error occurred while unassigning.",
         error: error,
       },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

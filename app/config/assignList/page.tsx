@@ -1,6 +1,6 @@
-import { SelectAssignList } from "@/app/lib/db/schema"
-import { getAssignList } from "@/app/lib/db/queries/queries"
 import { View } from "@/app/config/assignList/view"
+import { getAssignList } from "@/app/lib/db/queries/queries"
+import type { SelectAssignList } from "@/app/lib/db/schema"
 
 export const revalidate = 0
 

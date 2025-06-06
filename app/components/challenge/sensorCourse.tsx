@@ -1,8 +1,9 @@
-import React, { useState } from "react"
-import { useRouter } from "next/navigation"
-import { resultSubmit } from "@/app/components/challenge/utils"
 import { ChallengeModal } from "@/app/challenge/challengeModal"
+import { resultSubmit } from "@/app/components/challenge/utils"
 import { SendIcon } from "@/app/lib/const"
+import { useRouter } from "next/navigation"
+import type React from "react"
+import { useState } from "react"
 
 type SensorCourseProps = {
   compeId: number
@@ -12,7 +13,13 @@ type SensorCourseProps = {
   setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const SensorCourse = ({ compeId, courseId, playerId, umpireId, setIsEnabled }: SensorCourseProps) => {
+export const SensorCourse = ({
+  compeId,
+  courseId,
+  playerId,
+  umpireId,
+  setIsEnabled,
+}: SensorCourseProps) => {
   const [result1, setResult1] = useState<number>(0) // 進んだmission
   const [tunnelPoint, setTunnelPoint] = useState<number>(0)
   const [wallPoint, setWallPoint] = useState<number>(0)
@@ -31,7 +38,7 @@ export const SensorCourse = ({ compeId, courseId, playerId, umpireId, setIsEnabl
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // トンネル停止
     if (e.target.id === "tunnelradio") {
-      const value = parseInt(e.target.value)
+      const value = Number.parseInt(e.target.value)
       setTunnelPoint(value)
       setPointCount(wallPoint + value)
     } else if (e.target.id === "tunnelcheckbox") {
@@ -46,7 +53,7 @@ export const SensorCourse = ({ compeId, courseId, playerId, umpireId, setIsEnabl
 
     // 壁停止
     if (e.target.id === "wallradio") {
-      const value = parseInt(e.target.value)
+      const value = Number.parseInt(e.target.value)
       setWallPoint(value)
       setPointCount(tunnelPoint + value)
     }
@@ -62,15 +69,19 @@ export const SensorCourse = ({ compeId, courseId, playerId, umpireId, setIsEnabl
   }
 
   return (
-    (<div className="relative flex flex-col justify-items-center w-full h-[calc(100vh-100px)]">
+    <div className="relative flex flex-col justify-items-center w-full h-[calc(100vh-100px)]">
       <div className="grid justify-items-center w-full">
         <p className="text-xl font-bold">センサーコース</p>
       </div>
       <div className="flex flex-col">
         <div className="stats shadow-sm">
           <div className="stat">
-            <div className="stat-title text-3xl font-bold text-orange-600">現在:</div>
-            <div className="stat-value text-3xl font-bold text-orange-600">{pointCount}ポイント</div>
+            <div className="stat-title text-3xl font-bold text-orange-600">
+              現在:
+            </div>
+            <div className="stat-value text-3xl font-bold text-orange-600">
+              {pointCount}ポイント
+            </div>
           </div>
         </div>
         <div className="flex flex-row w-full">
@@ -141,17 +152,27 @@ export const SensorCourse = ({ compeId, courseId, playerId, umpireId, setIsEnabl
           </div>
         </div>
         <div className="flex justify-center w-full">
-          <button type="button" className="btn btn-accent mx-auto m-3" onClick={() => setModalOpen(1)}>
-            結果送信<SendIcon />
+          <button
+            type="button"
+            className="btn btn-accent mx-auto m-3"
+            onClick={() => setModalOpen(1)}
+          >
+            結果送信
+            <SendIcon />
           </button>
-          <button type="button" className="btn btn-primary mx-auto m-3" onClick={handleRetry} disabled={isRetry}>
+          <button
+            type="button"
+            className="btn btn-primary mx-auto m-3"
+            onClick={handleRetry}
+            disabled={isRetry}
+          >
             やり直し
           </button>
         </div>
       </div>
       {modalOpen === 1 && (
         // センサーコースはresultにそのまま得点を入れる。
-        (<ChallengeModal
+        <ChallengeModal
           setModalOpen={setModalOpen}
           handleSubmit={() =>
             resultSubmit(
@@ -165,7 +186,7 @@ export const SensorCourse = ({ compeId, courseId, playerId, umpireId, setIsEnabl
               setIsSuccess,
               setLoading,
               router,
-              setIsEnabled
+              setIsEnabled,
             )
           }
           handleRetry={handleRetry}
@@ -175,8 +196,8 @@ export const SensorCourse = ({ compeId, courseId, playerId, umpireId, setIsEnabl
           result1Point={isRetry ? result1 : pointCount}
           result2Point={isRetry ? pointCount : null}
           isGoal={false}
-        />)
+        />
       )}
-    </div>)
-  );
+    </div>
+  )
 }

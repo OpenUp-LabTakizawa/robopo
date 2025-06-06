@@ -1,7 +1,7 @@
-import { insertUmpireCourse } from "@/app/lib/db/queries/insert"
-import { umpireCourse, SelectUmpireCourse } from "@/app/lib/db/schema"
 import { db } from "@/app/lib/db/db"
-import { NextRequest, NextResponse } from "next/server"
+import { insertUmpireCourse } from "@/app/lib/db/queries/insert"
+import { type SelectUmpireCourse, umpireCourse } from "@/app/lib/db/schema"
+import { type NextRequest, NextResponse } from "next/server"
 
 export const revalidate = 0
 
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
         message: "An error occurred while creating the course.",
         error: error,
       },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

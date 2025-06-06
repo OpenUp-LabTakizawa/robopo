@@ -1,12 +1,12 @@
-"use client"
+use client"
 
-import { type RefObject, useRef, useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { PlayIcon } from "@heroicons/react/24/outline"
-import { type SelectCourse, type SelectPlayer } from "@/app/lib/db/schema"
-import { useAudioContext, SoundControlUI } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/audioContext"
+import { SoundControlUI, useAudioContext } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/audioContext"
 import { BackLabelWithIcon } from "@/app/lib/const"
+import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 import StartSound from "@/app/lib/sound/01_start.mp3"
+import { PlayIcon } from "@heroicons/react/24/outline"
+import { useRouter } from "next/navigation"
+import { type RefObject, useEffect, useRef, useState } from "react"
 
 type ViewProps = {
   courseData: SelectCourse

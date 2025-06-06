@@ -1,5 +1,5 @@
-import type { Metadata } from "next"
 import { AudioProvider } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/audioContext"
+import type { Metadata } from "next"
 import "@/app/globals.css"
 
 export const metadata: Metadata = {

@@ -1,5 +1,5 @@
-import { PointState } from "@/app/components/course/utils"
 import { calcPoint } from "@/app/components/challenge/utils"
+import type { PointState } from "@/app/components/course/utils"
 
 export type CourseSummary = {
   playerId: number | null
@@ -20,7 +20,10 @@ export type CourseSummary = {
 }
 
 // コース完走判定関数
-export const isCompletedCourse = (pointData: PointState, result: number | null): boolean => {
+export const isCompletedCourse = (
+  pointData: PointState,
+  result: number | null,
+): boolean => {
   const resultPoint = calcPoint(pointData, result)
   // pointDataを全て足し合わせる。
   let totalPoint = 0

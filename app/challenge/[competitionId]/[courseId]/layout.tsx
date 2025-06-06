@@ -12,9 +12,5 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return (
-    <NavigationGuardProvider>
-      {children}
-    </NavigationGuardProvider>
-  )
+  return <NavigationGuardProvider>{children}</NavigationGuardProvider>
 }

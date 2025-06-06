@@ -1,19 +1,23 @@
 "use client"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { SelectCompetition } from "@/app/lib/db/schema"
 import { BackLabelWithIcon } from "@/app/lib/const"
+import type { SelectCompetition } from "@/app/lib/db/schema"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
-type inputType = "player" | "umpire" | "course"
+type InputType = "player" | "umpire" | "course"
 
-function getCommonString(type: inputType): string {
+function getCommonString(type: InputType): string {
   return type === "player" ? "選手" : type === "umpire" ? "採点者" : "コース"
 }
 
 export const ModalBackdrop = () => {
   const router = useRouter()
   return (
-    <form method="dialog" className="modal-backdrop" onClick={() => router.back()}>
+    <form
+      method="dialog"
+      className="modal-backdrop"
+      onClick={() => router.back()}
+    >
       <button className="cursor-default">close</button>
     </form>
   )
@@ -28,7 +32,10 @@ export const ModalBackButton = () => {
   )
 }
 
-export const DeleteModal = ({ type, ids }: { type: inputType; ids: number[] }) => {
+export const DeleteModal = ({
+  type,
+  ids,
+}: { type: InputType; ids: number[] }) => {
   const [loading, setLoading] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -61,10 +68,18 @@ export const DeleteModal = ({ type, ids }: { type: inputType; ids: number[] }) =
   return (
     <dialog id="challenge-modal" className="modal modal-open">
       <div className="modal-box">
-        {successMessage ? successMessage : <p>選択した{commonString}を削除しますか?</p>}
+        {successMessage ? (
+          successMessage
+        ) : (
+          <p>選択した{commonString}を削除しますか?</p>
+        )}
         {errorMessage ? errorMessage : <br />}
         {!successMessage && (
-          <button className="btn btn-accent m-3" onClick={handleDelete} disabled={loading}>
+          <button
+            className="btn btn-accent m-3"
+            onClick={handleDelete}
+            disabled={loading}
+          >
             はい
           </button>
         )}
@@ -73,7 +88,8 @@ export const DeleteModal = ({ type, ids }: { type: inputType; ids: number[] }) =
           onClick={() => {
             window.location.href = "/" + type
           }}
-          disabled={loading}>
+          disabled={loading}
+        >
           <BackLabelWithIcon />
         </button>
       </div>
@@ -82,7 +98,11 @@ export const DeleteModal = ({ type, ids }: { type: inputType; ids: number[] }) =
   )
 }
 
-export const AssignModal = (params: { type: inputType, ids: number[], competitionList: { competitions: SelectCompetition[] } }) => {
+export const AssignModal = (params: {
+  type: InputType
+  ids: number[]
+  competitionList: { competitions: SelectCompetition[] }
+}) => {
   const [loading, setLoading] = useState(false)
   const { type, ids, competitionList } = params
   const [competitionId, setCompetitionId] = useState<number | null>(null)
@@ -138,8 +158,7 @@ export const AssignModal = (params: { type: inputType, ids: number[], competitio
         console.error("Error unassigning player:", errorData)
         alert(commonString + "の割当て解除に失敗しました。")
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.log("error: ", error)
     } finally {
       setLoading(false)
@@ -153,8 +172,9 @@ export const AssignModal = (params: { type: inputType, ids: number[], competitio
           <select
             className="select select-bordered m-3"
             onChange={(event) => setCompetitionId(Number(event.target.value))}
-            value={competitionId || 0}>
-            <option value={0} disabled>
+            value={competitionId || 0}
+          >
+            <option value={0} disabled={true}>
               大会を選んでください
             </option>
             {competitionList?.competitions?.map((competition) => (
@@ -163,20 +183,36 @@ export const AssignModal = (params: { type: inputType, ids: number[], competitio
               </option>
             ))}
           </select>
-
         </div>
-        <button className="btn btn-accent m-3" onClick={handleAssign} disabled={loading}>
-          {loading ? <span className="loading loading-spinner"></span> : "大会を割り当てる"}
+        <button
+          className="btn btn-accent m-3"
+          onClick={handleAssign}
+          disabled={loading}
+        >
+          {loading ? (
+            <span className="loading loading-spinner"></span>
+          ) : (
+            "大会を割り当てる"
+          )}
         </button>
-        <button className="btn btn-accent m-3" onClick={handleUnassign} disabled={loading}>
-          {loading ? <span className="loading loading-spinner"></span> : "大会割り当て解除"}
+        <button
+          className="btn btn-accent m-3"
+          onClick={handleUnassign}
+          disabled={loading}
+        >
+          {loading ? (
+            <span className="loading loading-spinner"></span>
+          ) : (
+            "大会割り当て解除"
+          )}
         </button>
         <button
           className="btn btn-accent m-3"
           onClick={() => {
             window.location.href = "/" + type
           }}
-          disabled={loading}>
+          disabled={loading}
+        >
           <BackLabelWithIcon />
         </button>
       </div>

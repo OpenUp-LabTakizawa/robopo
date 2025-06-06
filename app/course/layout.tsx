@@ -1,6 +1,6 @@
+import { CourseEditProvider } from "@/app/course/edit/courseEditContext"
 import type { Metadata } from "next"
 import { NavigationGuardProvider } from "next-navigation-guard"
-import { CourseEditProvider } from "@/app/course/edit/courseEditContext"
 import "@/app/globals.css"
 
 export const metadata: Metadata = {

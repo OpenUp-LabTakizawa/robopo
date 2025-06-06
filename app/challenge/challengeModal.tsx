@@ -1,8 +1,4 @@
-import {
-  BackLabelWithIcon,
-  SendIcon,
-  RETRY_CONST,
-} from "@/app/lib/const"
+import { BackLabelWithIcon, RETRY_CONST, SendIcon } from "@/app/lib/const"
 
 type ChallengeModalProps = {
   setModalOpen: React.Dispatch<React.SetStateAction<number>>
@@ -35,29 +31,51 @@ export const ChallengeModal = ({
     setModalOpen(0)
   }
   return (
-    <dialog id="challenge-modal" className="modal modal-open" onClose={() => setModalOpen(0)}>
+    <dialog
+      id="challenge-modal"
+      className="modal modal-open"
+      onClose={() => setModalOpen(0)}
+    >
       <div className="modal-box">
         {isSuccess ? (
           <>
             <p>{message}</p>
-            <button className="btn btn-accent mx-auto text-2xl" onClick={() => window.location.reload()}>
-              コース一覧に<BackLabelWithIcon />
+            <button
+              className="btn btn-accent mx-auto text-2xl"
+              onClick={() => window.location.reload()}
+            >
+              コース一覧に
+              <BackLabelWithIcon />
             </button>
           </>
         ) : (
           <>
             <p className="text-2xl">チャレンジを終了しますか?</p>
             <p className="text-2xl">1回目: {result1Point}ポイント</p>
-            {result2Point !== null && <p className="text-2xl">2回目: {result2Point}ポイント</p>}
+            {result2Point !== null && (
+              <p className="text-2xl">2回目: {result2Point}ポイント</p>
+            )}
             <div className="modal-action flex-col">
               <button className="btn btn-accent m-3" onClick={handleSubmit}>
-                {loading ? <span className="loading loading-spinner"></span> : <>結果を送信してチャレンジを終わる<SendIcon /></>}
+                {loading ? (
+                  <span className="loading loading-spinner"></span>
+                ) : (
+                  <>
+                    結果を送信してチャレンジを終わる
+                    <SendIcon />
+                  </>
+                )}
               </button>
               {result2Point === null && !isGoal && (
                 <RetryButton handleRetry={thisHandleRetry} loading={loading} />
               )}
-              <button className="btn btn-neutral m-3" onClick={handleClick} disabled={loading}>
-                チャレンジに<BackLabelWithIcon />
+              <button
+                className="btn btn-neutral m-3"
+                onClick={handleClick}
+                disabled={loading}
+              >
+                チャレンジに
+                <BackLabelWithIcon />
               </button>
             </div>
           </>
@@ -73,13 +91,21 @@ type RetryModalProps = {
   result1Point: number | null
 }
 
-export const RetryModal = ({ setModalOpen, handleRetry, result1Point }: RetryModalProps) => {
+export const RetryModal = ({
+  setModalOpen,
+  handleRetry,
+  result1Point,
+}: RetryModalProps) => {
   const thisHandleRetry = () => {
     handleRetry()
     setModalOpen(0)
   }
   return (
-    <dialog id="retry-modal" className="modal modal-open" onClose={() => setModalOpen(0)}>
+    <dialog
+      id="retry-modal"
+      className="modal modal-open"
+      onClose={() => setModalOpen(0)}
+    >
       <div className="modal-box">
         <p>1回目のポイントを保存して再チャレンジしますか?</p>
         <p>1回目: {result1Point}ポイント</p>
@@ -125,13 +151,21 @@ export const CourseOutModal = ({
     setModalOpen(0)
   }
   return (
-    <dialog id="course-out-modal" className="modal modal-open" onClose={() => setModalOpen(0)}>
+    <dialog
+      id="course-out-modal"
+      className="modal modal-open"
+      onClose={() => setModalOpen(0)}
+    >
       <div className="modal-box">
         {isSuccess ? (
           <>
             <p>{message}</p>
-            <button className="btn btn-accent mx-auto text-2xl" onClick={() => window.location.reload()}>
-              コース一覧に<BackLabelWithIcon />
+            <button
+              className="btn btn-accent mx-auto text-2xl"
+              onClick={() => window.location.reload()}
+            >
+              コース一覧に
+              <BackLabelWithIcon />
             </button>
           </>
         ) : (
@@ -146,13 +180,25 @@ export const CourseOutModal = ({
             )}
             <div className="modal-action flex-col">
               <button className="btn btn-accent m-3" onClick={handleSubmit}>
-                {loading ? <span className="loading loading-spinner"></span> : <>結果送信<SendIcon /></>}
+                {loading ? (
+                  <span className="loading loading-spinner"></span>
+                ) : (
+                  <>
+                    結果送信
+                    <SendIcon />
+                  </>
+                )}
               </button>
               {result2Point === null && (
                 <RetryButton handleRetry={thisHandleRetry} loading={loading} />
               )}
-              <button className="btn btn-neutral m-3" onClick={() => setModalOpen(0)} disabled={loading}>
-                チャレンジに<BackLabelWithIcon />
+              <button
+                className="btn btn-neutral m-3"
+                onClick={() => setModalOpen(0)}
+                disabled={loading}
+              >
+                チャレンジに
+                <BackLabelWithIcon />
               </button>
             </div>
           </>
@@ -164,13 +210,19 @@ export const CourseOutModal = ({
 
 const RetryButton = ({
   handleRetry,
-  loading
+  loading,
 }: {
-  handleRetry: () => void,
+  handleRetry: () => void
   loading: boolean
 }) => {
   return (
-    <button className="btn btn-accent m-3" onClick={handleRetry} disabled={loading}>
-      {RETRY_CONST.label}{RETRY_CONST.icon}
-    </button>)
+    <button
+      className="btn btn-accent m-3"
+      onClick={handleRetry}
+      disabled={loading}
+    >
+      {RETRY_CONST.label}
+      {RETRY_CONST.icon}
+    </button>
+  )
 }

@@ -1,23 +1,23 @@
 import { db } from "@/app/lib/db/db"
 import {
-  InsertCompetition,
-  InsertCourse,
-  InsertPlayer,
-  InsertUmpire,
-  InsertChallenge,
-  InsertUmpireCourse,
-  InsertCompetitionCourse,
-  InsertCompetitionPlayer,
-  InsertCompetitionUmpire,
-  competition,
-  course,
-  player,
-  umpire,
+  type InsertChallenge,
+  type InsertCompetition,
+  type InsertCompetitionCourse,
+  type InsertCompetitionPlayer,
+  type InsertCompetitionUmpire,
+  type InsertCourse,
+  type InsertPlayer,
+  type InsertUmpire,
+  type InsertUmpireCourse,
   challenge,
-  umpireCourse,
+  competition,
   competitionCourse,
   competitionPlayer,
   competitionUmpire,
+  course,
+  player,
+  umpire,
+  umpireCourse,
 } from "@/app/lib/db/schema"
 
 export async function createCompetition(data: Omit<InsertCompetition, "id">) {
@@ -50,17 +50,23 @@ export async function insertUmpireCourse(data: Omit<InsertUmpireCourse, "id">) {
   return result
 }
 
-export async function insertCompetitionCourse(data: Omit<InsertCompetitionCourse, "id">) {
+export async function insertCompetitionCourse(
+  data: Omit<InsertCompetitionCourse, "id">,
+) {
   const result = await db.insert(competitionCourse).values(data)
   return result
 }
 
-export async function insertCompetitionPlayer(data: Omit<InsertCompetitionPlayer, "id">) {
+export async function insertCompetitionPlayer(
+  data: Omit<InsertCompetitionPlayer, "id">,
+) {
   const result = await db.insert(competitionPlayer).values(data)
   return result
 }
 
-export async function insertCompetitionUmpire(data: Omit<InsertCompetitionUmpire, "id">) {
+export async function insertCompetitionUmpire(
+  data: Omit<InsertCompetitionUmpire, "id">,
+) {
   const result = await db.insert(competitionUmpire).values(data)
   return result
 }

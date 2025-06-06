@@ -1,5 +1,5 @@
 import { db } from "@/app/lib/db/db"
-import { course, SelectCourse } from "@/app/lib/db/schema"
+import { type SelectCourse, course } from "@/app/lib/db/schema"
 
 export const revalidate = 0
 

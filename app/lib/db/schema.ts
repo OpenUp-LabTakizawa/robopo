@@ -1,4 +1,12 @@
-import { boolean, integer, pgTable, serial, text, timestamp, primaryKey } from "drizzle-orm/pg-core"
+import {
+  boolean,
+  integer,
+  pgTable,
+  primaryKey,
+  serial,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core"
 
 // step 0:prepare, 1:open, 2:close
 export const competition = pgTable("competition", {
@@ -68,9 +76,12 @@ export const umpireCourse = pgTable(
   (table) => {
     return {
       pk: primaryKey({ columns: [table.competitionId, table.umpireId] }),
-      pkWithCustomName: primaryKey({ name: "pk_umpire_course", columns: [table.competitionId, table.umpireId] }),
+      pkWithCustomName: primaryKey({
+        name: "pk_umpire_course",
+        columns: [table.competitionId, table.umpireId],
+      }),
     }
-  }
+  },
 )
 
 export const competitionCourse = pgTable("competition_course", {
@@ -140,7 +151,12 @@ export type SelectCompetitionPlayer = typeof competitionPlayer.$inferSelect
 export type InsertCompetitionUmpire = typeof competitionUmpire.$inferInsert
 export type SelectCompetitionUmpire = typeof competitionUmpire.$inferSelect
 
-export type SelectAssignList = { id: number; competition: string | null; course: string | null; umpire: string | null }
+export type SelectAssignList = {
+  id: number
+  competition: string | null
+  course: string | null
+  umpire: string | null
+}
 
 export type SelectPlayerWithCompetition = {
   id: number

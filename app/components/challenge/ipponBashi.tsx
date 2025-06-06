@@ -1,16 +1,16 @@
-import React from "react"
-import {
-  getPanelWidth,
-  getPanelHeight,
-  FieldState,
-  MissionValue,
-  IPPON_BASHI_SIZE,
-} from "@/app/components/course/utils"
+import { NextArrow } from "@/app/components/course/nextArrow"
 import { Panel } from "@/app/components/course/panel"
 import { Robot } from "@/app/components/course/robot"
-import { NextArrow } from "@/app/components/course/nextArrow"
+import {
+  type FieldState,
+  IPPON_BASHI_SIZE,
+  type MissionValue,
+  getPanelHeight,
+  getPanelWidth,
+} from "@/app/components/course/utils"
+import type React from "react"
 
-type IpponBashiUIProps = {
+type IpponBashiUiProps = {
   botPosition: { row: number; col: number }
   botDirection: MissionValue
   nextMissionPair: MissionValue[]
@@ -23,7 +23,7 @@ export const IpponBashiUI = ({
   botDirection,
   nextMissionPair,
   onPanelClick,
-}: IpponBashiUIProps): React.JSX.Element => {
+}: IpponBashiUiProps): React.JSX.Element => {
   const type: string = "ipponBashi"
   // 一本橋の大きさ 幅1パネル 長さ5パネル 1パネル毎の大きさ60×60
   const width: number = 1
@@ -43,7 +43,12 @@ export const IpponBashiUI = ({
   }
 
   return (
-    <div className={"relative grid grid-cols-" + width + " grid-rows-" + length + " mx-auto"} style={ipponBashiStyle}>
+    <div
+      className={
+        "relative grid grid-cols-" + width + " grid-rows-" + length + " mx-auto"
+      }
+      style={ipponBashiStyle}
+    >
       {field.map((row, rowIndex) =>
         row.map((panel, colIndex) => (
           <Panel
@@ -52,10 +57,15 @@ export const IpponBashiUI = ({
             type={type}
             onClick={() => onPanelClick(rowIndex, colIndex)}
           />
-        ))
+        )),
       )}
       <>
-        <Robot row={botPosition.row} col={botPosition.col} direction={botDirection} type={type} />
+        <Robot
+          row={botPosition.row}
+          col={botPosition.col}
+          direction={botDirection}
+          type={type}
+        />
         <NextArrow
           row={botPosition.row}
           col={botPosition.col}

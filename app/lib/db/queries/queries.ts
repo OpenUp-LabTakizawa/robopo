@@ -1,83 +1,120 @@
-import { CourseSummary } from "@/app/components/summary/utils"
 import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
+import type { CourseSummary } from "@/app/components/summary/utils"
 import { db } from "@/app/lib/db/db"
 import {
-  course,
-  SelectCourse,
-  player,
+  type SelectAssignList,
+  type SelectCourse,
+  type SelectCourseWithCompetition,
+  type SelectPlayerWithCompetition,
+  type SelectUmpireWithCompetition,
   challenge,
   competition,
-  umpire,
-  umpireCourse,
-  SelectAssignList,
+  competitionCourse,
   competitionPlayer,
   competitionUmpire,
-  competitionCourse,
-  SelectPlayerWithCompetition,
-  SelectUmpireWithCompetition,
-  SelectCourseWithCompetition,
+  course,
+  player,
+  umpire,
+  umpireCourse,
   users,
 } from "@/app/lib/db/schema"
-import { eq, sql, and, or } from "drizzle-orm"
+import { and, eq, or, sql } from "drizzle-orm"
 
 // IDを指定してDBからコースを削除する関数
 // @/app/lib/db/queries/delete.tsを作成して移動させる方がいいかもしれない。
 export const deleteCourseById = async (id: number) => {
-  const result = await db.delete(course).where(eq(course.id, id)).returning({ deleatedId: course.id })
+  const result = await db
+    .delete(course)
+    .where(eq(course.id, id))
+    .returning({ deleatedId: course.id })
   return result
 }
 
 // コースをIDから取得する関数
-export const getCourseById = async (id: number): Promise<SelectCourse | null> => {
-  const result = await db.select().from(course).where(eq(course.id, id)).limit(1)
+export const getCourseById = async (
+  id: number,
+): Promise<SelectCourse | null> => {
+  const result = await db
+    .select()
+    .from(course)
+    .where(eq(course.id, id))
+    .limit(1)
 
   return result.length > 0 ? result[0] : null
 }
 
 // IDを指定してDBからPlayerを削除する関数
 export const deletePlayerById = async (id: number) => {
-  const result = await db.delete(player).where(eq(player.id, id)).returning({ deleatedId: player.id })
+  const result = await db
+    .delete(player)
+    .where(eq(player.id, id))
+    .returning({ deleatedId: player.id })
   return result
 }
 
 // QRからPlayerを取得する関数
 export const getPlayerByQR = async (qr: string) => {
-  const result = await db.select().from(player).where(eq(player.qr, qr)).limit(1)
+  const result = await db
+    .select()
+    .from(player)
+    .where(eq(player.qr, qr))
+    .limit(1)
   return result.length > 0 ? result[0] : null
 }
 // IDからPlayerを取得する関数
 export const getPlayerById = async (id: number) => {
-  const result = await db.select().from(player).where(eq(player.id, id)).limit(1)
+  const result = await db
+    .select()
+    .from(player)
+    .where(eq(player.id, id))
+    .limit(1)
   return result.length > 0 ? result[0] : null
 }
 
 // IDを指定してDBからChallengeを削除する関数
 export const deleteChallengeById = async (id: number) => {
-  const result = await db.delete(challenge).where(eq(challenge.id, id)).returning({ deleatedId: challenge.id })
+  const result = await db
+    .delete(challenge)
+    .where(eq(challenge.id, id))
+    .returning({ deleatedId: challenge.id })
   return result
 }
 
 // IDを指定してDBからUmpireを削除する関数
 export const deleteUmpireById = async (id: number) => {
-  const result = await db.delete(umpire).where(eq(umpire.id, id)).returning({ deleatedId: umpire.id })
+  const result = await db
+    .delete(umpire)
+    .where(eq(umpire.id, id))
+    .returning({ deleatedId: umpire.id })
   return result
 }
 
 // IDからUmpireを取得する関数
 export const getUmpireById = async (id: number) => {
-  const result = await db.select().from(umpire).where(eq(umpire.id, id)).limit(1)
+  const result = await db
+    .select()
+    .from(umpire)
+    .where(eq(umpire.id, id))
+    .limit(1)
   return result.length > 0 ? result[0] : null
 }
 
 // IDを指定してDBからCompetitionを削除する関数
 export const deleteCompetitionById = async (id: number) => {
-  const result = await db.delete(competition).where(eq(competition.id, id)).returning({ deleatedId: competition.id })
+  const result = await db
+    .delete(competition)
+    .where(eq(competition.id, id))
+    .returning({ deleatedId: competition.id })
   return result
 }
 
 // IDからCompetitionを取得する関数
 export const getCompetitionById = async (id: number) => {
-  const result = await db.select().from(competition).where(eq(competition.id, id)).limit(1)
+  const result = await db
+    .select()
+    .from(competition)
+    .where(eq(competition.id, id))
+    .limit(1)
   return result.length > 0 ? result[0] : null
 }
 
@@ -86,7 +123,10 @@ export const getCompetitionById = async (id: number) => {
 // それまで(created_atとidを昇順に並べた際の古いもの)のresult1とresult2の個数を最大のものが出るまで足している。
 // 完走してない時もその時点で最大のresultまでの回数が出るので、完走したかどうかで表示非表示を変える必要がある。
 // firstTCourseTimeは、firstTCourseCountで取得したもののcreated_atを取得している。
-export const getCourseSummary = async (competitionId: number, courseId: number): Promise<CourseSummary[]> => {
+export const getCourseSummary = async (
+  competitionId: number,
+  courseId: number,
+): Promise<CourseSummary[]> => {
   const result = await db
     .select({
       playerId: player.id,
@@ -160,19 +200,19 @@ export const getCourseSummary = async (competitionId: number, courseId: number):
       tCourseCount:
         // 単純にresult1とresult2の個数を足している。
         sql`SUM(CASE WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END) ELSE 0 END)`.as(
-          "tCourseCount"
+          "tCourseCount",
         ),
       tCourseMaxResult:
         sql`MAX(CASE WHEN ${challenge.courseId} = ${courseId} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`.as(
-          "tCourseMaxResult"
+          "tCourseMaxResult",
         ),
       sensorMaxResult:
         sql`MAX(CASE WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.SENSOR} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`.as(
-          "sensorMaxResult"
+          "sensorMaxResult",
         ),
       ipponMaxResult:
         sql`MAX(CASE WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.IPPON} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0))ELSE NULL END)`.as(
-          "ipponMaxResult"
+          "ipponMaxResult",
         ),
       challengeCount: sql`SUM(CASE
             WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
@@ -190,7 +230,11 @@ export const getCourseSummary = async (competitionId: number, courseId: number):
 }
 
 // competition_id, course_id, player_idから個人成績result配列を取得
-export const getCourseSummaryByPlayerId = async (competitionId: number, courseId: number, playerId: number) => {
+export const getCourseSummaryByPlayerId = async (
+  competitionId: number,
+  courseId: number,
+  playerId: number,
+) => {
   // 結果を配列で取得
   const result = await db
     .select({
@@ -202,8 +246,8 @@ export const getCourseSummaryByPlayerId = async (competitionId: number, courseId
       and(
         eq(challenge.competitionId, competitionId),
         eq(challenge.playerId, playerId),
-        eq(challenge.courseId, courseId)
-      )
+        eq(challenge.courseId, courseId),
+      ),
     )
     .orderBy(challenge.id)
     .groupBy(challenge.id)
@@ -212,10 +256,17 @@ export const getCourseSummaryByPlayerId = async (competitionId: number, courseId
 }
 
 // 個人成績を取得
-export const getPlayerResult = async (competitionId: number, courseId: number, playerId: number) => {
+export const getPlayerResult = async (
+  competitionId: number,
+  courseId: number,
+  playerId: number,
+) => {
   const result = await db
     .select({
-      maxResult: sql`MAX(GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)))`.as("maxResult"), // result1とresult2の最大値を取得
+      maxResult:
+        sql`MAX(GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)))`.as(
+          "maxResult",
+        ), // result1とresult2の最大値を取得
       firstCount: sql`
         (SELECT SUM(attempts_up_to_max) FROM (
           SELECT ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
@@ -249,19 +300,19 @@ export const getPlayerResult = async (competitionId: number, courseId: number, p
 
       tCourseCount:
         sql`SUM(CASE WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END) ELSE 0 END)`.as(
-          "tCourseCount"
+          "tCourseCount",
         ),
       tCourseMaxResult:
         sql`MAX(CASE WHEN ${challenge.courseId} = ${courseId} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`.as(
-          "tCourseMaxResult"
+          "tCourseMaxResult",
         ),
       ipponMaxResult:
         sql`MAX(CASE WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.IPPON} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0))ELSE NULL END)`.as(
-          "ipponMaxResult"
+          "ipponMaxResult",
         ),
       sensorMaxResult:
         sql`MAX(CASE WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.SENSOR} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`.as(
-          "sensorMaxResult"
+          "sensorMaxResult",
         ),
       challengeCount: sql`SUM(CASE
             WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
@@ -271,31 +322,47 @@ export const getPlayerResult = async (competitionId: number, courseId: number, p
           END)`.as("challengeCount"),
     })
     .from(challenge)
-    .where(and(eq(challenge.competitionId, competitionId), eq(challenge.playerId, playerId)))
+    .where(
+      and(
+        eq(challenge.competitionId, competitionId),
+        eq(challenge.playerId, playerId),
+      ),
+    )
     .groupBy(challenge.playerId) // グループ化
   return result as { maxResult: number }[]
 }
 
 // result1, result2の中で最大値を取得
-export const getMaxResult = async (competitionId: number, courseId: number, playerId: number) => {
+export const getMaxResult = async (
+  competitionId: number,
+  courseId: number,
+  playerId: number,
+) => {
   const result = await db
     .select({
-      maxResult: sql`MAX(GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)))`.as("maxResult"), // result1とresult2の最大値を取得
+      maxResult:
+        sql`MAX(GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)))`.as(
+          "maxResult",
+        ), // result1とresult2の最大値を取得
     })
     .from(challenge)
     .where(
       and(
         eq(challenge.competitionId, competitionId),
         eq(challenge.playerId, playerId),
-        eq(challenge.courseId, courseId)
-      )
+        eq(challenge.courseId, courseId),
+      ),
     )
     .groupBy(challenge.playerId) // グループ化
   return result as { maxResult: number }[]
 }
 
 // 最初に最大のresultを得るまでの回数(goalしているとは限らない)
-export const getFirstCount = async (competitionId: number, courseId: number, playerId: number) => {
+export const getFirstCount = async (
+  competitionId: number,
+  courseId: number,
+  playerId: number,
+) => {
   const result = await db
     .select({
       firstCount: sql`
@@ -334,32 +401,46 @@ export const getFirstCount = async (competitionId: number, courseId: number, pla
       and(
         eq(challenge.competitionId, competitionId),
         eq(challenge.playerId, playerId),
-        eq(challenge.courseId, courseId)
-      )
+        eq(challenge.courseId, courseId),
+      ),
     )
   return result as { firstCount: number }[]
 }
 
 // プレイヤー毎のチャレンジ回数
-export const getChallengeCount = async (competitionId: number, courseId: number, playerId: number) => {
+export const getChallengeCount = async (
+  competitionId: number,
+  courseId: number,
+  playerId: number,
+) => {
   const result = await db
     .select({
-      challengeCount: sql`SUM(CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)`.as("challengeCount"),
+      challengeCount:
+        sql`SUM(CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)`.as(
+          "challengeCount",
+        ),
     })
     .from(challenge)
     .where(
       and(
         eq(challenge.competitionId, competitionId),
         eq(challenge.playerId, playerId),
-        or(eq(challenge.courseId, courseId), eq(challenge.courseId, RESERVED_COURSE_IDS.IPPON), eq(challenge.courseId, RESERVED_COURSE_IDS.SENSOR))
-      )
+        or(
+          eq(challenge.courseId, courseId),
+          eq(challenge.courseId, RESERVED_COURSE_IDS.IPPON),
+          eq(challenge.courseId, RESERVED_COURSE_IDS.SENSOR),
+        ),
+      ),
     )
   return result as { challengeCount: number }[]
 }
 
 // competitionのIDを指定して開催にする関数
 export const openCompetitionById = async (id: number) => {
-  const result = await db.update(competition).set({ step: 1 }).where(eq(competition.id, id))
+  const result = await db
+    .update(competition)
+    .set({ step: 1 })
+    .where(eq(competition.id, id))
 }
 
 // competitionのIDを指定して開催前にする関数
@@ -376,7 +457,7 @@ export const returnCompetitionById = async (id: number) => {
   }
   if (existing[0]?.step !== 1) {
     throw new Error(
-      `Invalid state transition: cannot return competition from step ${existing[0]?.step} to before state`
+      `Invalid state transition: cannot return competition from step ${existing[0]?.step} to before state`,
     )
   }
 
@@ -391,7 +472,10 @@ export const returnCompetitionById = async (id: number) => {
 
 // competitionのIDを指定して非開催にする関数
 export const closeCompetitionById = async (id: number) => {
-  const result = await db.update(competition).set({ step: 2 }).where(eq(competition.id, id))
+  const result = await db
+    .update(competition)
+    .set({ step: 2 })
+    .where(eq(competition.id, id))
 }
 
 // umpireCourseをそれぞれの大会・コース・採点者のnameを取得して返す関数
@@ -411,11 +495,19 @@ export const getAssignList: () => Promise<SelectAssignList[]> = async () => {
 }
 
 // competitionIdとumpireIdを指定してumpireCourseからcourseIdを取得する関数
-export const getCourseIdByCompetitionIdAndUmpireId = async (competitionId: number, umpireId: number) => {
+export const getCourseIdByCompetitionIdAndUmpireId = async (
+  competitionId: number,
+  umpireId: number,
+) => {
   const result = await db
     .select({ courseId: umpireCourse.courseId })
     .from(umpireCourse)
-    .where(and(eq(umpireCourse.competitionId, competitionId), eq(umpireCourse.umpireId, umpireId)))
+    .where(
+      and(
+        eq(umpireCourse.competitionId, competitionId),
+        eq(umpireCourse.umpireId, umpireId),
+      ),
+    )
     .limit(1)
   return result
 }
@@ -447,7 +539,7 @@ export function groupByPlayer(
     zekken: string | null
     competitionId: number | null
     competitionName: string | null
-  }[]
+  }[],
 ): SelectPlayerWithCompetition[] {
   const playerMap = new Map<string, SelectPlayerWithCompetition>()
 
@@ -496,7 +588,7 @@ export function groupByUmpire(
     name: string
     competitionId: number | null
     competitionName: string | null
-  }[]
+  }[],
 ): SelectUmpireWithCompetition[] {
   const umpireMap = new Map<string, SelectUmpireWithCompetition>()
 
@@ -545,7 +637,7 @@ export function groupByCourse(
     createdAt: Date | null
     competitionId: number | null
     competitionName: string | null
-  }[]
+  }[],
 ): SelectCourseWithCompetition[] {
   const courseMap = new Map<string, SelectCourseWithCompetition>()
 

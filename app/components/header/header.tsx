@@ -1,9 +1,9 @@
 "use client"
-import Link from "next/link"
-import Image from "next/image"
-import { SessionProvider, signOut } from "next-auth/react"
-import { HOME_CONST, SIGN_IN_CONST, SIGN_OUT_CONST } from "@/app/lib/const"
 import DropdownMenu from "@/app/components/parts/dropdownMenu"
+import { HOME_CONST, SIGN_IN_CONST, SIGN_OUT_CONST } from "@/app/lib/const"
+import { SessionProvider, signOut } from "next-auth/react"
+import Image from "next/image"
+import Link from "next/link"
 
 type Props = {
   session: any
@@ -26,8 +26,9 @@ export const Header = ({ session }: Props) => {
                 height={50}
                 style={{
                   maxWidth: "100%",
-                  height: "auto"
-                }} />
+                  height: "auto",
+                }}
+              />
             </Link>
           </div>
           {/* メニューボタン (スマホ表示) */}
@@ -43,20 +44,28 @@ export const Header = ({ session }: Props) => {
         </h1>
         {/* サインインorサインアウトボタン & HOMEボタン (PC表示) */}
         <div className="hidden lg:inline-block ml-auto">
-          {session?.user ?
+          {session?.user ? (
             <button
               onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
-              type="button" className="btn btn-primary p-2 text-xl">
+              type="button"
+              className="btn btn-primary p-2 text-xl"
+            >
               {SIGN_OUT_CONST.icon}
               {SIGN_OUT_CONST.label}
             </button>
-            :
-            <Link href={SIGN_IN_CONST.href} className="btn btn-primary p-2 text-xl">
+          ) : (
+            <Link
+              href={SIGN_IN_CONST.href}
+              className="btn btn-primary p-2 text-xl"
+            >
               {SIGN_IN_CONST.icon}
               {SIGN_IN_CONST.label}
             </Link>
-          }
-          <Link href={HOME_CONST.href} className="btn btn-primary p-2 text-xl ml-5">
+          )}
+          <Link
+            href={HOME_CONST.href}
+            className="btn btn-primary p-2 text-xl ml-5"
+          >
             {HOME_CONST.icon}
             {HOME_CONST.label}
           </Link>

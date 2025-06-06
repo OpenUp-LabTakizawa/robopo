@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from "next/server"
-import { createCourse } from "@/app/lib/db/queries/insert"
-import { updateCourse } from "@/app/lib/db/queries/update"
-import { getCourseById } from "@/app/lib/db/queries/queries"
 import { deleteById } from "@/app/api/delete"
+import { createCourse } from "@/app/lib/db/queries/insert"
+import { getCourseById } from "@/app/lib/db/queries/queries"
+import { updateCourse } from "@/app/lib/db/queries/update"
+import { type NextRequest, NextResponse } from "next/server"
 
 export const revalidate = 0
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams
   const rawId = searchParams.get("id")
-  const id = rawId ? parseInt(rawId) : 0
+  const id = rawId ? Number.parseInt(rawId) : 0
 
   if (id !== 0) {
     const course = await getCourseById(id)
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
   const { name, field, fieldvalid, mission, missionvalid, point } = reqbody
   const searchParams = req.nextUrl.searchParams
   const rawId = searchParams.get("id")
-  const id = rawId ? parseInt(rawId) : null
+  const id = rawId ? Number.parseInt(rawId) : null
   const courseData = {
     name: name,
     field: field,
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
           message: "An error occurred while updating the course.",
           error: error,
         },
-        { status: 500 }
+        { status: 500 },
       )
     }
   } else {
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
           message: "An error occurred while creating the course.",
           error: error,
         },
-        { status: 500 }
+        { status: 500 },
       )
     }
   }

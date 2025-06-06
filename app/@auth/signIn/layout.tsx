@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 export default function Layout({
   children,
 }: // modal
-  Readonly<{
-    children: React.ReactNode
-  }>) {
+Readonly<{
+  children: React.ReactNode
+}>) {
   return <Suspense fallback={<PageLoading />}>{children}</Suspense>
 }

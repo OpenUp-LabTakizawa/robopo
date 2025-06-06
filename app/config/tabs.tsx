@@ -1,10 +1,15 @@
 "use client"
-import { useState } from "react"
-import Link from "next/link"
 import { CommonRadioList } from "@/app/components/common/commonList"
-import type { SelectCompetition, SelectPlayer, SelectUmpire, SelectCourse } from "@/app/lib/db/schema"
 import CommonRegister from "@/app/components/common/commonRegister"
 import { BackLabelWithIcon } from "@/app/lib/const"
+import type {
+  SelectCompetition,
+  SelectCourse,
+  SelectPlayer,
+  SelectUmpire,
+} from "@/app/lib/db/schema"
+import Link from "next/link"
+import { useState } from "react"
 
 type CompetitionListTabProps = {
   competitionId: number | null
@@ -35,19 +40,24 @@ export const CompetitionListTab = ({
   const [message, setMessage] = useState("")
   const [modalOpen, setModalOpen] = useState<boolean>(false)
 
-  const handleButtonClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleButtonClick = async (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
     const type = event.currentTarget.value
     const requestBody =
       type === "delete"
         ? {
-          type: type,
-          id: competitionId,
-        }
+            type: type,
+            id: competitionId,
+          }
         : {
-          type: type,
-        }
+            type: type,
+          }
 
-    const url = type === "delete" ? "/api/competition/" : "/api/competition/" + competitionId
+    const url =
+      type === "delete"
+        ? "/api/competition/"
+        : "/api/competition/" + competitionId
     try {
       setLoading(true)
       const response = await fetch(url, {
@@ -81,7 +91,11 @@ export const CompetitionListTab = ({
       setModalOpen(false)
     }
     return (
-      <dialog id="challenge-modal" className="modal modal-open" onClose={() => setModalOpen(false)}>
+      <dialog
+        id="challenge-modal"
+        className="modal modal-open"
+        onClose={() => setModalOpen(false)}
+      >
         <div className="modal-box">
           {isSuccess ? <p>{message}</p> : <p>選択した大会を削除しますか?</p>}
 
@@ -90,11 +104,16 @@ export const CompetitionListTab = ({
               className="btn btn-accent m-3"
               value="delete"
               onClick={(e) => handleButtonClick(e)}
-              disabled={loading}>
+              disabled={loading}
+            >
               はい
             </button>
           )}
-          <button className="btn btn-accent m-3" onClick={handleClick} disabled={loading}>
+          <button
+            className="btn btn-accent m-3"
+            onClick={handleClick}
+            disabled={loading}
+          >
             <BackLabelWithIcon />
           </button>
         </div>
@@ -116,27 +135,36 @@ export const CompetitionListTab = ({
         className="btn btn-primary text-default max-w-fit m-1"
         value="open"
         disabled={
-          competitionId === null || loading || competitionList?.find((c) => c.id === competitionId)?.step === 1
+          competitionId === null ||
+          loading ||
+          competitionList?.find((c) => c.id === competitionId)?.step === 1
         }
-        onClick={(e) => handleButtonClick(e)}>
+        onClick={(e) => handleButtonClick(e)}
+      >
         開催
       </button>
       <button
         className="btn btn-primary text-default max-w-fit m-1"
         value="return"
         disabled={
-          competitionId === null || loading || competitionList?.find((c) => c.id === competitionId)?.step !== 1
+          competitionId === null ||
+          loading ||
+          competitionList?.find((c) => c.id === competitionId)?.step !== 1
         }
-        onClick={(e) => handleButtonClick(e)}>
+        onClick={(e) => handleButtonClick(e)}
+      >
         開催前に戻す
       </button>
       <button
         className="btn btn-primary text-default max-w-fit m-1"
         value="close"
         disabled={
-          competitionId === null || loading || competitionList?.find((c) => c.id === competitionId)?.step !== 1
+          competitionId === null ||
+          loading ||
+          competitionList?.find((c) => c.id === competitionId)?.step !== 1
         }
-        onClick={(e) => handleButtonClick(e)}>
+        onClick={(e) => handleButtonClick(e)}
+      >
         停止
       </button>
       <button
@@ -145,7 +173,8 @@ export const CompetitionListTab = ({
         onClick={() => {
           setIsSuccess(false)
           setModalOpen(true)
-        }}>
+        }}
+      >
         削除
       </button>
       {isSuccess && <p>{message}</p>}
@@ -155,7 +184,9 @@ export const CompetitionListTab = ({
   )
 }
 
-export const NewCompetitionTab = ({ setCompetitionList }: NewCompetitionTabProps) => {
+export const NewCompetitionTab = ({
+  setCompetitionList,
+}: NewCompetitionTabProps) => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   return (
@@ -167,7 +198,9 @@ export const NewCompetitionTab = ({ setCompetitionList }: NewCompetitionTabProps
         setErrorMessage={setErrorMessage}
         setCommonDataList={
           setCompetitionList as React.Dispatch<
-            React.SetStateAction<SelectPlayer[] | SelectUmpire[] | SelectCompetition[]>
+            React.SetStateAction<
+              SelectPlayer[] | SelectUmpire[] | SelectCompetition[]
+            >
           >
         }
       />
@@ -177,7 +210,12 @@ export const NewCompetitionTab = ({ setCompetitionList }: NewCompetitionTabProps
   )
 }
 
-export const AssignTab = ({ competitionId, competitionList, courseList, umpireList }: AssignTabProps) => {
+export const AssignTab = ({
+  competitionId,
+  competitionList,
+  courseList,
+  umpireList,
+}: AssignTabProps) => {
   const [courseId, setCourseId] = useState<number | null>(null)
   const [umpireId, setUmpireId] = useState<number | null>(null)
   const [message, setMessage] = useState<string | null>(null)
@@ -229,14 +267,18 @@ export const AssignTab = ({ competitionId, competitionList, courseList, umpireLi
         <p>{umpireList.umpires?.find((u) => u.id === umpireId)?.name}</p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <label htmlFor="course" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="course"
+          className="block text-sm font-medium text-gray-700"
+        >
           コース
         </label>
         <select
           className="select select-bordered m-2"
           onChange={(event) => setCourseId(Number(event.target.value))}
-          value={courseId ? courseId : 0}>
-          <option value={0} disabled>
+          value={courseId ? courseId : 0}
+        >
+          <option value={0} disabled={true}>
             コースを選んでください
           </option>
           {courseList ? (
@@ -249,14 +291,18 @@ export const AssignTab = ({ competitionId, competitionList, courseList, umpireLi
             <option>コースがありません</option>
           )}
         </select>
-        <label htmlFor="course" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="course"
+          className="block text-sm font-medium text-gray-700"
+        >
           採点者
         </label>
         <select
           className="select select-bordered m-2"
           onChange={(event) => setUmpireId(Number(event.target.value))}
-          value={umpireId ? umpireId : 0}>
-          <option value={0} disabled>
+          value={umpireId ? umpireId : 0}
+        >
+          <option value={0} disabled={true}>
             採点者を選んでください
           </option>
           {umpireList ? (
@@ -271,8 +317,14 @@ export const AssignTab = ({ competitionId, competitionList, courseList, umpireLi
         </select>
         <button
           type="submit"
-          disabled={loading || competitionId === null || courseId === null || umpireId === null}
-          className="btn btn-primary mx-auto m-3">
+          disabled={
+            loading ||
+            competitionId === null ||
+            courseId === null ||
+            umpireId === null
+          }
+          className="btn btn-primary mx-auto m-3"
+        >
           {loading ? "割当中..." : "割り当てる"}
         </button>
       </form>

@@ -1,8 +1,8 @@
 "use server"
 
-import type { SelectCourse } from "@/app/lib/db/schema"
-import { deleteCourseById } from "@/app/lib/db/queries/queries"
 import { BASE_URL } from "@/app/lib/const"
+import { deleteCourseById } from "@/app/lib/db/queries/queries"
+import type { SelectCourse } from "@/app/lib/db/schema"
 
 // IDを指定してDBからコースを取得する関数
 export const getCourse = async (id: number): Promise<SelectCourse | null> => {
@@ -24,7 +24,7 @@ export const getCourse = async (id: number): Promise<SelectCourse | null> => {
 
 // コースを削除する関数
 export const deleteCourse = async (
-  formData: FormData
+  formData: FormData,
 ): Promise<{ success: boolean; deletedCount: number; message: string }> => {
   console.log("ids: ", formData)
 

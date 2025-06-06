@@ -13,7 +13,17 @@ type ThreeTabsProps = {
   tab3Icon?: React.JSX.Element
 }
 
-export const ThreeTabs = ({ tab1Title, tab1, tab1Icon, tab2Title, tab2, tab2Icon, tab3Title, tab3, tab3Icon }: ThreeTabsProps) => {
+export const ThreeTabs = ({
+  tab1Title,
+  tab1,
+  tab1Icon,
+  tab2Title,
+  tab2,
+  tab2Icon,
+  tab3Title,
+  tab3,
+  tab3Icon,
+}: ThreeTabsProps) => {
   const [threeCols, setThreeCols] = useState(false)
   useEffect(() => {
     // 768px以上のブレイクポイントに対応
@@ -58,7 +68,10 @@ export const ThreeTabs = ({ tab1Title, tab1, tab1Icon, tab2Title, tab2, tab2Icon
         <div className="flex flex-row justify-center w-full m-5">
           {tabs.map(({ title, content, icon }, idx) => (
             <div className="w-1/3" key={title}>
-              <h1 className="flex flex-row text-2xl m-3">{icon}{title}</h1>
+              <h1 className="flex flex-row text-2xl m-3">
+                {icon}
+                {title}
+              </h1>
               {content}
             </div>
           ))}
@@ -79,10 +92,17 @@ export const ThreeTabs = ({ tab1Title, tab1, tab1Icon, tab2Title, tab2, tab2Icon
                 aria-labelledby={"tab-label" + idx}
                 defaultChecked={idx === 0}
               />
-              <div role="tabpanel" className="tab-content bg-base-100 border border-base-300 rounded-box p-6">
+              <div
+                role="tabpanel"
+                className="tab-content bg-base-100 border border-base-300 rounded-box p-6"
+              >
                 {content}
               </div>
-              <label id={"tab-label" + idx} htmlFor={"tab" + idx} className="flex tab items-center">
+              <label
+                id={"tab-label" + idx}
+                htmlFor={"tab" + idx}
+                className="flex tab items-center"
+              >
                 {icon}
                 {title}
               </label>

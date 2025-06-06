@@ -1,6 +1,10 @@
-import Image from "next/image"
+import {
+  type MissionValue,
+  getPanelHeight,
+  getPanelWidth,
+} from "@/app/components/course/utils"
 import botImage from "@/public/robot.png"
-import { getPanelWidth, getPanelHeight, type MissionValue } from "@/app/components/course/utils"
+import Image from "next/image"
 
 type RobotProps = {
   row: number
@@ -39,8 +43,8 @@ export const Robot = ({ row, col, direction, type }: RobotProps) => {
   }
 
   return (
-    (<div style={botStyle}>
-      <Image src={botImage} alt="bot" fill sizes="100vw" />
-    </div>)
-  );
+    <div style={botStyle}>
+      <Image src={botImage} alt="bot" fill={true} sizes="100vw" />
+    </div>
+  )
 }

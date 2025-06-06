@@ -1,19 +1,19 @@
 "use server"
 
-import {
-  competition,
-  course,
-  umpire,
-  player,
-  competitionCourse,
-  SelectCompetition,
-  SelectUmpire,
-  SelectCourse,
-  SelectPlayer,
-  SelectCompetitionCourse,
-  competitionPlayer,
-} from "@/app/lib/db/schema"
 import { db } from "@/app/lib/db/db"
+import {
+  type SelectCompetition,
+  type SelectCompetitionCourse,
+  type SelectCourse,
+  type SelectPlayer,
+  type SelectUmpire,
+  competition,
+  competitionCourse,
+  competitionPlayer,
+  course,
+  player,
+  umpire,
+} from "@/app/lib/db/schema"
 import { eq } from "drizzle-orm"
 
 // 選手一覧情報を取得する関数
@@ -64,9 +64,7 @@ export async function getCompetitionCourseList(competitionId: number): Promise<{
       createdAt: course.createdAt,
     })
     .from(course)
-    .innerJoin(competitionCourse,
-      eq(course.id, competitionCourse.courseId),
-    )
+    .innerJoin(competitionCourse, eq(course.id, competitionCourse.courseId))
     .where(eq(competitionCourse.competitionId, competitionId))
 
   return { competitionCourses }
@@ -76,7 +74,9 @@ export async function getCompetitionCourseList(competitionId: number): Promise<{
 export async function getCompetitionCourseAssignList(): Promise<{
   competitionCourseList: SelectCompetitionCourse[]
 }> {
-  const competitionCourseList: SelectCompetitionCourse[] = await db.select().from(competitionCourse)
+  const competitionCourseList: SelectCompetitionCourse[] = await db
+    .select()
+    .from(competitionCourse)
   return { competitionCourseList }
 }
 
@@ -94,9 +94,7 @@ export async function getCompetitionPlayerList(competitionId: number): Promise<{
       createdAt: player.createdAt,
     })
     .from(player)
-    .innerJoin(competitionPlayer,
-      eq(player.id, competitionPlayer.playerId),
-    )
+    .innerJoin(competitionPlayer, eq(player.id, competitionPlayer.playerId))
     .where(eq(competitionPlayer.competitionId, competitionId))
 
   return { players }

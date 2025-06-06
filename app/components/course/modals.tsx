@@ -1,19 +1,19 @@
 "use client"
 
-import { useState } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useFormStatus } from "react-dom"
 import {
-  FieldState,
-  MissionState,
+  type FieldState,
+  type MissionState,
+  checkValidity,
   serializeField,
   serializeMission,
   serializePoint,
-  checkValidity,
 } from "@/app/components/course/utils"
 import { useCourseEdit } from "@/app/course/edit/courseEditContext"
 import { BackLabelWithIcon } from "@/app/lib/const"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { useFormStatus } from "react-dom"
 
 type ValidationModalProps = {
   setModalOpen: React.Dispatch<React.SetStateAction<number>>
@@ -35,7 +35,7 @@ export const BackModal = () => {
     router.back()
   }
   return (
-    <dialog id="fin-modal" className="modal modal-open" >
+    <dialog id="fin-modal" className="modal modal-open">
       <div className="modal-box">
         <p>保存しますか?保存していない編集内容は失われます。</p>
         <div className="modal-action">
@@ -44,7 +44,10 @@ export const BackModal = () => {
           </button>
           {/* router.push("/course")でもLinkでの遷移でも、どんだけ/course/@modal/page.tsx, /course/@modal/[...catchAll]/page.tsxでnull返すようにしてもmodalが閉じてくれることはない。
             仕方無しに、window.location.replace("/course")での遷移で手を打つ。 */}
-          <button className="btn" onClick={() => window.location.replace("/course")}>
+          <button
+            className="btn"
+            onClick={() => window.location.replace("/course")}
+          >
             保存せず終わる
           </button>
           <button className="btn" onClick={handleCancel}>
@@ -129,8 +132,13 @@ export const SaveModal = ({ courseId }: { courseId: number | null }) => {
                   disabled={pending}
                   onClick={() => {
                     handleClick(null)
-                  }}>
-                  {pending ? <span className="loading loading-spinner"></span> : "新規保存"}
+                  }}
+                >
+                  {pending ? (
+                    <span className="loading loading-spinner"></span>
+                  ) : (
+                    "新規保存"
+                  )}
                 </button>
                 {courseId && (
                   <button
@@ -139,15 +147,29 @@ export const SaveModal = ({ courseId }: { courseId: number | null }) => {
                     disabled={pending}
                     onClick={() => {
                       handleClick(courseId)
-                    }}>
-                    {pending ? <span className="loading loading-spinner"></span> : "上書き保存"}
+                    }}
+                  >
+                    {pending ? (
+                      <span className="loading loading-spinner"></span>
+                    ) : (
+                      "上書き保存"
+                    )}
                   </button>
                 )}
               </>
             )}
 
-            <button type="button" disabled={pending} className="btn" onClick={handleClickNo}>
-              {pending ? <span className="loading loading-spinner"></span> : "いいえ"}
+            <button
+              type="button"
+              disabled={pending}
+              className="btn"
+              onClick={handleClickNo}
+            >
+              {pending ? (
+                <span className="loading loading-spinner"></span>
+              ) : (
+                "いいえ"
+              )}
             </button>
           </div>
         </form>
@@ -160,7 +182,11 @@ export const SaveModal = ({ courseId }: { courseId: number | null }) => {
 }
 
 // コースを検証した結果を表示するmodal
-export const validationModal = ({ setModalOpen, field, mission }: ValidationModalProps) => {
+export const validationModal = ({
+  setModalOpen,
+  field,
+  mission,
+}: ValidationModalProps) => {
   const check = checkValidity(field, mission)
   const handleYes = () => {
     setModalOpen(2)
@@ -170,7 +196,11 @@ export const validationModal = ({ setModalOpen, field, mission }: ValidationModa
     setModalOpen(0)
   }
   return (
-    <dialog id="validation-modal" className="modal modal-open" onClose={() => setModalOpen(0)}>
+    <dialog
+      id="validation-modal"
+      className="modal modal-open"
+      onClose={() => setModalOpen(0)}
+    >
       <div className="modal-box">
         {check ? (
           <>
@@ -181,7 +211,8 @@ export const validationModal = ({ setModalOpen, field, mission }: ValidationModa
                 はい
               </button>
               <button className="btn" onClick={handleCancel}>
-                編集に<BackLabelWithIcon />
+                編集に
+                <BackLabelWithIcon />
               </button>
             </div>
           </>

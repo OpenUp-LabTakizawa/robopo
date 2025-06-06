@@ -1,8 +1,16 @@
 "use client"
-import { useState } from "react"
 import { ThreeTabs } from "@/app/components/parts/threeTabs"
-import { AssignTab, CompetitionListTab, NewCompetitionTab } from "@/app/config/tabs"
-import { SelectCompetition, SelectCourse, SelectUmpire } from "@/app/lib/db/schema"
+import {
+  AssignTab,
+  CompetitionListTab,
+  NewCompetitionTab,
+} from "@/app/config/tabs"
+import type {
+  SelectCompetition,
+  SelectCourse,
+  SelectUmpire,
+} from "@/app/lib/db/schema"
+import { useState } from "react"
 
 type ViewProps = {
   initialCompetitionList: { competitions: SelectCompetition[] }
@@ -10,9 +18,15 @@ type ViewProps = {
   umpireList: { umpires: SelectUmpire[] }
 }
 
-export default function View({ initialCompetitionList, courseList, umpireList }: ViewProps) {
+export default function View({
+  initialCompetitionList,
+  courseList,
+  umpireList,
+}: ViewProps) {
   const [competitionId, setCompetitionId] = useState<number | null>(null)
-  const [competitionList, setCompetitionList] = useState<SelectCompetition[]>(initialCompetitionList.competitions)
+  const [competitionList, setCompetitionList] = useState<SelectCompetition[]>(
+    initialCompetitionList.competitions,
+  )
 
   return (
     <ThreeTabs
