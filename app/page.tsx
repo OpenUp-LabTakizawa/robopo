@@ -32,22 +32,8 @@ export default async function Home() {
         tab3Icon={<TrophyIcon className="h-3 w-3 md:h-8 md:w-8" />}
       />
       :
-      <div role="tablist" className="tabs tabs-lifted m-5">
-        <input
-          type="radio"
-          name="tabs"
-          id="challenge-tab"
-          role="tab"
-          className="tab whitespace-nowrap"
-          defaultChecked={true}
-        />
-        <div role="tabpanel" className="tab-content bg-base-100 border border-base-300 rounded-box p-6">
-          <ChallengeTab key="challenge" competitionList={competitionList} courseList={courseList} competitionCourseList={competitionCourseList} />
-        </div>
-        <label htmlFor="challenge-tab" className="flex tab items-center gap-2">
-          <ClipboardDocumentCheckIcon className="h-6 w-6" />
-          採点
-        </label>
+      <div className="bg-base-100 border border-base-300 rounded-box p-6">
+        <ChallengeTab key="challenge" competitionList={competitionList} courseList={courseList} competitionCourseList={competitionCourseList} />
       </div>
   )
 }
