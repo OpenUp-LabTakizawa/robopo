@@ -38,11 +38,11 @@ export const Modal = ({ courseData, playerData }: ViewProps) => {
     <dialog ref={dialogRef} className="modal" open={modalOpen}>
       <div className="modal-box flex flex-col mt-auto mb-0">
         <div className="flex flex-col items-center overflow-y-auto w-full">
-          {courseData !== null && playerId !== null && (
+          {courseData !== null && playerData !== null && (
             <div className="grid gap-6 items-start">
               <h2 className="text-lg">チャレンジを開始しますか?</h2>
               <p className="text-2xl">コース: {courseData.name}</p>
-              <p className="text-2xl">選手: {playerData?.name}</p>
+              <p className="text-2xl">選手: {playerData.name}</p>
             </div>
           )}
           <button
