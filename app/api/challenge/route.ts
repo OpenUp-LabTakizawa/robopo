@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server"
 import { createChallenge } from "@/app/lib/db/queries/insert"
 
 export const revalidate = 0
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   const reqbody = await req.json()
-  const { result1, result2, competitionId, courseId, playerId, umpireId } = reqbody
+  const { result1, result2, competitionId, courseId, playerId, umpireId } =
+    reqbody
   const challengeData = {
     result1: result1,
     result2: result2,
@@ -16,16 +16,15 @@ export async function POST(req: NextRequest) {
   }
   try {
     const result = await createChallenge(challengeData)
-    return NextResponse.json({ success: true, data: result }, { status: 200 })
+    return Response.json({ success: true, data: result }, { status: 200 })
   } catch (error) {
-    console.log("error: ", error)
-    return NextResponse.json(
+    return Response.json(
       {
         success: false,
         message: "An error occurred while creating the challenge.",
         error: error,
       },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }
