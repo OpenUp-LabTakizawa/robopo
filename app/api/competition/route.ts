@@ -1,56 +1,54 @@
-import { NextRequest, NextResponse } from "next/server"
+import { getCompetitionList } from "@/app/components/server/db"
 import { db } from "@/app/lib/db/db"
-import { competition, SelectCompetition } from "@/app/lib/db/schema"
 import { createCompetition } from "@/app/lib/db/queries/insert"
 import { deleteCompetitionById } from "@/app/lib/db/queries/queries"
-import { getCompetitionList } from "@/app/components/server/db"
+import { type SelectCompetition, competition } from "@/app/lib/db/schema"
 
 export const revalidate = 0
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const competitions: SelectCompetition[] = await db.select().from(competition)
   return Response.json({ competitions })
 }
 
-export async function POST(req: NextRequest) {
-  const reqbody = await req.json()
-  const { name } = reqbody
+export async function POST(req: Request) {
+  const { name } = await req.json()
   const competitionData = {
     name: name,
     step: 0,
   }
   try {
     const result = await createCompetition(competitionData)
-    return NextResponse.json({ success: true, data: result }, { status: 200 })
+    return Response.json({ success: true, data: result }, { status: 200 })
   } catch (error) {
-    console.log("error: ", error)
-    return NextResponse.json(
+    return Response.json(
       {
         success: false,
         message: "An error occurred while creating the course.",
         error: error,
       },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }
 
-export async function DELETE(req: NextRequest) {
-  const reqbody = await req.json()
-  const { id } = reqbody
+export async function DELETE(req: Request) {
+  const { id } = await req.json()
   try {
     const result = await deleteCompetitionById(id)
     const newList = await getCompetitionList()
-    return NextResponse.json({ success: true, data: result, newList: newList }, { status: 200 })
+    return Response.json(
+      { success: true, data: result, newList: newList },
+      { status: 200 },
+    )
   } catch (error) {
-    console.log("error: ", error)
-    return NextResponse.json(
+    return Response.json(
       {
         success: false,
-        message: "An error occurred while creating the course.",
+        message: "An error occurred while deleting the course.",
         error: error,
       },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }
