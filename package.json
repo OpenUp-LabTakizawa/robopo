@@ -16,7 +16,6 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@heroicons/react": "^2.2.0",
-    "@neondatabase/serverless": "^1.0.1",
     "@tailwindcss/postcss": "^4.1.10",
     "@types/node": "^24.0.1",
     "@types/react": "^19.1.8",
@@ -28,6 +27,7 @@
     "next-auth": "^5.0.0-beta.28",
     "next-navigation-guard": "^0.1.2",
     "next-rspack": "canary",
+    "pg": "^8.16.0",
     "postcss": "^8.5.5",
     "tailwindcss": "^4.1.10",
     "typescript": "^5.8.3",

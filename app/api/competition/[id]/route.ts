@@ -4,7 +4,7 @@ import {
   openCompetitionById,
   returnCompetitionById,
 } from "@/app/lib/db/queries/queries"
-import type { NeonHttpQueryResult } from "drizzle-orm/neon-http"
+import type { QueryResult } from "pg"
 
 export const revalidate = 0
 
@@ -15,7 +15,7 @@ export async function POST(
   const { id } = await props.params
   const { type } = await req.json()
   const newList = await getCompetitionList()
-  let result: NeonHttpQueryResult<never> | null = null
+  let result: QueryResult<never> | null = null
 
   switch (type) {
     case "open":
