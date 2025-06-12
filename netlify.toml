@@ -1,0 +1,8 @@
+[functions]
+  node_bundler = "esbuild"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+  [plugins.inputs]
+    edge_functions = false
