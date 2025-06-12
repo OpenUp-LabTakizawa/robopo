@@ -1,11 +1,11 @@
 "use server"
 
-import type { SelectCourse } from "@/app/lib/db/schema"
-import { deleteCourseById } from "@/app/lib/db/queries/queries"
 import { BASE_URL } from "@/app/lib/const"
+import { deleteCourseById } from "@/app/lib/db/queries/queries"
+import type { SelectCourse } from "@/app/lib/db/schema"
 
 // IDを指定してDBからコースを取得する関数
-export const getCourse = async (id: number): Promise<SelectCourse | null> => {
+export async function getCourse(id: number): Promise<SelectCourse | null> {
   return fetch(`${BASE_URL}/api/course?id=${id}`, { cache: "no-store" })
     .then((res) => {
       if (!res.ok) {
@@ -16,18 +16,15 @@ export const getCourse = async (id: number): Promise<SelectCourse | null> => {
     .then((data) => {
       return data.getCourse ?? null
     })
-    .catch((err) => {
-      console.error("Error fetching course: ", err)
+    .catch(() => {
       return null // エラーが発生した場合、nullを返す
     })
 }
 
 // コースを削除する関数
-export const deleteCourse = async (
-  formData: FormData
-): Promise<{ success: boolean; deletedCount: number; message: string }> => {
-  console.log("ids: ", formData)
-
+export async function deleteCourse(
+  formData: FormData,
+): Promise<{ success: boolean; deletedCount: number; message: string }> {
   const ids = formData.getAll("selectedIds").map((id) => Number(id))
   let deletedCount = 0
 
@@ -38,9 +35,12 @@ export const deleteCourse = async (
       if (result.length > 0) {
         deletedCount += 1 //削除成功でカウントアップ
       }
-      console.log("result: ", result)
-    } catch (error) {
-      console.log("error: ", error)
+    } catch {
+      return {
+        success: false,
+        deletedCount,
+        message: "コースの削除に失敗しました",
+      }
     }
   }
   if (ids.length === 0) {
@@ -55,8 +55,6 @@ export const deleteCourse = async (
   return {
     success: isSuccess,
     deletedCount,
-    message: isSuccess
-      ? `削除に成功しました。${deletedCount}件のコースが削除されました`
-      : `削除に失敗しました。${deletedCount}件のコースが削除されました`,
+    message: `削除に${isSuccess ? "成功" : "失敗"}しました。${deletedCount}件のコースが削除されました`,
   }
 }
