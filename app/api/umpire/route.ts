@@ -1,39 +1,35 @@
-import { NextRequest, NextResponse } from "next/server"
-import { db } from "@/app/lib/db/db"
-import { umpire, SelectUmpire } from "@/app/lib/db/schema"
-import { createUmpire } from "@/app/lib/db/queries/insert"
 import { deleteById } from "@/app/api/delete"
+import { db } from "@/app/lib/db/db"
+import { createUmpire } from "@/app/lib/db/queries/insert"
+import { type SelectUmpire, umpire } from "@/app/lib/db/schema"
 
 export const revalidate = 0
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const umpires: SelectUmpire[] = await db.select().from(umpire)
   return Response.json({ umpires })
 }
 
-export async function POST(req: NextRequest) {
-  const reqbody = await req.json()
-  const { name } = reqbody
+export async function POST(req: Request) {
+  const { name } = await req.json()
   const umpireData = {
     name: name,
   }
   try {
     const result = await createUmpire(umpireData)
-    return NextResponse.json({ success: true, data: result }, { status: 200 })
+    return Response.json({ success: true, data: result }, { status: 200 })
   } catch (error) {
-    console.log("error: ", error)
-    return NextResponse.json(
+    return Response.json(
       {
         success: false,
         message: "An error occurred while creating the umpire.",
         error: error,
       },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }
 
-export async function DELETE(req: NextRequest) {
-  const result = await deleteById(req, "umpire")
-  return result
+export async function DELETE(req: Request) {
+  return await deleteById(req, "umpire")
 }
