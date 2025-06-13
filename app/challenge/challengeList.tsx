@@ -1,7 +1,8 @@
 "use client"
 
-import type { SelectCourse } from "@/app/lib/db/schema"
 import { CourseList } from "@/app/components/course/courseList"
+import type { SelectCourse } from "@/app/lib/db/schema"
+import type React from "react"
 
 type ChallengeListProps = {
   courseDataList: { courses: SelectCourse[] }
@@ -10,12 +11,17 @@ type ChallengeListProps = {
   setCourseId: React.Dispatch<React.SetStateAction<number | null>>
 }
 
-const ChallengeList = ({ courseDataList, setStep, courseId, setCourseId }: ChallengeListProps) => {
-  const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+export function ChallengeList({
+  courseDataList,
+  setStep,
+  courseId,
+  setCourseId,
+}: ChallengeListProps) {
+  function handleRadioChange(event: React.ChangeEvent<HTMLInputElement>) {
     setCourseId(Number(event.target.value))
   }
 
-  const handleNextButton = () => {
+  function handleNextButton() {
     setStep(1)
   }
 
@@ -26,7 +32,12 @@ const ChallengeList = ({ courseDataList, setStep, courseId, setCourseId }: Chall
           <p>コースを選んでください</p>
         </div>
         <div>
-          <button type="button" className="btn btn-primary" disabled={courseId === null} onClick={handleNextButton}>
+          <button
+            type="button"
+            className="btn btn-primary"
+            disabled={courseId === null}
+            onClick={handleNextButton}
+          >
             選手登録へ
           </button>
         </div>
@@ -41,5 +52,3 @@ const ChallengeList = ({ courseDataList, setStep, courseId, setCourseId }: Chall
     </>
   )
 }
-
-export default ChallengeList
