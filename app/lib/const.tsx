@@ -1,16 +1,16 @@
 import {
-  HomeIcon,
   ArrowRightEndOnRectangleIcon,
   ArrowRightStartOnRectangleIcon,
-  WrenchIcon,
-  UserIcon,
-  UserCircleIcon,
-  Cog6ToothIcon,
-  ArrowUturnLeftIcon,
   ArrowUpCircleIcon,
-  PlayIcon
+  ArrowUturnLeftIcon,
+  Cog6ToothIcon,
+  HomeIcon,
+  PlayIcon,
+  UserCircleIcon,
+  UserIcon,
+  WrenchIcon
 } from "@heroicons/react/24/outline"
-import { JSX } from "react"
+import type { JSX } from "react"
 
 export const BASE_URL: string =
   process.env.NEXT_PUBLIC_BASE_URL ||
