@@ -6,10 +6,11 @@ import { getCourseById, getCourseSummary } from "@/app/lib/db/queries/queries"
 
 export const revalidate = 0
 
-export async function GET(props: {
-  params: Promise<{ competitionId: number; courseId: number }>
-}) {
-  const { competitionId, courseId } = await props.params
+export async function GET(
+  _req: Request,
+  { params }: { params: Promise<{ competitionId: number; courseId: number }> },
+) {
+  const { competitionId, courseId } = await params
 
   // データ取得
   const courseSummary = await getCourseSummary(competitionId, courseId)
