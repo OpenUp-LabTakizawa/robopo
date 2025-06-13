@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useNavigationGuard } from "next-navigation-guard"
 import { type SelectCourse, type SelectPlayer } from "@/app/lib/db/schema"
-import Challenge from "@/app/challenge/challenge"
+import { Challenge } from "@/app/challenge/challenge"
 import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import { SensorCourse } from "@/app/components/challenge/sensorCourse"
 
