@@ -1,42 +1,58 @@
 "use client"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { SelectCompetition } from "@/app/lib/db/schema"
+
 import { BackLabelWithIcon } from "@/app/lib/const"
+import type { SelectCompetition } from "@/app/lib/db/schema"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
-type inputType = "player" | "umpire" | "course"
+type InputType = "player" | "umpire" | "course"
 
-function getCommonString(type: inputType): string {
+function getCommonString(type: InputType): string {
   return type === "player" ? "選手" : type === "umpire" ? "採点者" : "コース"
 }
 
-export const ModalBackdrop = () => {
+export function ModalBackdrop() {
   const router = useRouter()
   return (
-    <form method="dialog" className="modal-backdrop" onClick={() => router.back()}>
-      <button className="cursor-default">close</button>
+    <form
+      method="dialog"
+      className="modal-backdrop"
+      onClick={() => router.back()}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") {
+          router.back()
+        }
+      }}
+    >
+      <button type="button" className="cursor-default">
+        close
+      </button>
     </form>
   )
 }
 
-export const ModalBackButton = () => {
+export function ModalBackButton() {
   const router = useRouter()
   return (
-    <button className="flex btn btn-accent m-3" onClick={() => router.back()}>
+    <button
+      type="button"
+      className="flex btn btn-accent m-3"
+      onClick={() => router.back()}
+    >
       <BackLabelWithIcon />
     </button>
   )
 }
 
-export const DeleteModal = ({ type, ids }: { type: inputType; ids: number[] }) => {
+export function DeleteModal({ type, ids }: { type: InputType; ids: number[] }) {
   const [loading, setLoading] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const commonString: string = getCommonString(type)
-  const handleDelete = async () => {
+  async function handleDelete() {
     try {
       setLoading(true)
-      const url = "/api/" + type
+      const url = `/api/${type}`
       const response = await fetch(url, {
         method: "DELETE",
         headers: {
@@ -47,12 +63,10 @@ export const DeleteModal = ({ type, ids }: { type: inputType; ids: number[] }) =
 
       if (response.ok) {
         // 削除成功時の処理
-        setSuccessMessage(commonString + "を正常に削除しました")
+        setSuccessMessage(`${commonString}を正常に削除しました`)
       } else {
-        setErrorMessage(commonString + "を削除できませんでした")
+        setErrorMessage(`${commonString}を削除できませんでした`)
       }
-    } catch (error) {
-      console.log("error: ", error)
     } finally {
       setLoading(false)
     }
@@ -61,19 +75,30 @@ export const DeleteModal = ({ type, ids }: { type: inputType; ids: number[] }) =
   return (
     <dialog id="challenge-modal" className="modal modal-open">
       <div className="modal-box">
-        {successMessage ? successMessage : <p>選択した{commonString}を削除しますか?</p>}
+        {successMessage ? (
+          successMessage
+        ) : (
+          <p>選択した{commonString}を削除しますか?</p>
+        )}
         {errorMessage ? errorMessage : <br />}
         {!successMessage && (
-          <button className="btn btn-accent m-3" onClick={handleDelete} disabled={loading}>
+          <button
+            type="button"
+            className="btn btn-accent m-3"
+            onClick={handleDelete}
+            disabled={loading}
+          >
             はい
           </button>
         )}
         <button
+          type="button"
           className="btn btn-accent m-3"
           onClick={() => {
-            window.location.href = "/" + type
+            window.location.href = `/${type}`
           }}
-          disabled={loading}>
+          disabled={loading}
+        >
           <BackLabelWithIcon />
         </button>
       </div>
@@ -82,16 +107,20 @@ export const DeleteModal = ({ type, ids }: { type: inputType; ids: number[] }) =
   )
 }
 
-export const AssignModal = (params: { type: inputType, ids: number[], competitionList: { competitions: SelectCompetition[] } }) => {
+export function AssignModal(params: {
+  type: InputType
+  ids: number[]
+  competitionList: { competitions: SelectCompetition[] }
+}) {
   const [loading, setLoading] = useState(false)
   const { type, ids, competitionList } = params
   const [competitionId, setCompetitionId] = useState<number | null>(null)
   const commonString: string = getCommonString(type)
 
-  const handleAssign = async () => {
+  async function handleAssign() {
     try {
       setLoading(true)
-      const url = "/api/assign/" + type
+      const url = `/api/assign/${type}`
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -101,25 +130,20 @@ export const AssignModal = (params: { type: inputType, ids: number[], competitio
       })
 
       if (response.ok) {
-        const data = await response.json()
-        alert(commonString + "の割当てに成功しました。")
-        window.location.href = "/" + type
+        alert(`${commonString}の割当てに成功しました。`)
+        window.location.href = `/${type}`
       } else {
-        const errorData = await response.json()
-        console.error("Error assigning:", errorData)
-        alert(commonString + "の割当てに失敗しました。")
+        alert(`${commonString}の割当てに失敗しました。`)
       }
-    } catch (error) {
-      console.log("error: ", error)
     } finally {
       setLoading(false)
     }
   }
 
-  const handleUnassign = async () => {
+  async function handleUnassign() {
     try {
       setLoading(true)
-      const url = "/api/assign/" + type
+      const url = `/api/assign/${type}`
       const response = await fetch(url, {
         method: "DELETE",
         headers: {
@@ -129,18 +153,11 @@ export const AssignModal = (params: { type: inputType, ids: number[], competitio
       })
 
       if (response.ok) {
-        const data = await response.json()
-        console.log("Player unassigned successfully:", data)
-        alert(commonString + "の割当てを解除しました。")
-        window.location.href = "/" + type
+        alert(`${commonString}の割当てを解除しました。`)
+        window.location.href = `/${type}`
       } else {
-        const errorData = await response.json()
-        console.error("Error unassigning player:", errorData)
-        alert(commonString + "の割当て解除に失敗しました。")
+        alert(`${commonString}の割当て解除に失敗しました。`)
       }
-    }
-    catch (error) {
-      console.log("error: ", error)
     } finally {
       setLoading(false)
     }
@@ -153,8 +170,9 @@ export const AssignModal = (params: { type: inputType, ids: number[], competitio
           <select
             className="select select-bordered m-3"
             onChange={(event) => setCompetitionId(Number(event.target.value))}
-            value={competitionId || 0}>
-            <option value={0} disabled>
+            value={competitionId || 0}
+          >
+            <option value={0} disabled={true}>
               大会を選んでください
             </option>
             {competitionList?.competitions?.map((competition) => (
@@ -163,20 +181,39 @@ export const AssignModal = (params: { type: inputType, ids: number[], competitio
               </option>
             ))}
           </select>
-
         </div>
-        <button className="btn btn-accent m-3" onClick={handleAssign} disabled={loading}>
-          {loading ? <span className="loading loading-spinner"></span> : "大会を割り当てる"}
-        </button>
-        <button className="btn btn-accent m-3" onClick={handleUnassign} disabled={loading}>
-          {loading ? <span className="loading loading-spinner"></span> : "大会割り当て解除"}
+        <button
+          type="button"
+          className="btn btn-accent m-3"
+          onClick={handleAssign}
+          disabled={loading}
+        >
+          {loading ? (
+            <span className="loading loading-spinner" />
+          ) : (
+            "大会を割り当てる"
+          )}
         </button>
         <button
+          type="button"
+          className="btn btn-accent m-3"
+          onClick={handleUnassign}
+          disabled={loading}
+        >
+          {loading ? (
+            <span className="loading loading-spinner" />
+          ) : (
+            "大会割り当て解除"
+          )}
+        </button>
+        <button
+          type="button"
           className="btn btn-accent m-3"
           onClick={() => {
-            window.location.href = "/" + type
+            window.location.href = `/${type}`
           }}
-          disabled={loading}>
+          disabled={loading}
+        >
           <BackLabelWithIcon />
         </button>
       </div>
