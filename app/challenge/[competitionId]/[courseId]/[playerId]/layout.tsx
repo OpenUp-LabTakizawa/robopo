@@ -1,13 +1,10 @@
 import { AudioProvider } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/audioContext"
-import "@/app/globals.css"
+import type React from "react"
 
 export default function Layout({
   children,
   modal,
-}: Readonly<{
-  children: React.ReactNode
-  modal: React.ReactNode
-}>) {
+}: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
   return (
     <AudioProvider>
       {children}
