@@ -187,8 +187,8 @@ export function CourseOutModal({
         ) : (
           <>
             <p>コースアウトしました。</p>
-            <p>1回目: {result1Point === null ? 0 : result1Point}ポイント</p>
-            {result2Point === null && <p>2回目: 0ポイント</p>}
+            <p>1回目: {result2Point === null ? 0 : result1Point}ポイント</p>
+            {result2Point !== null && <p>2回目: 0ポイント</p>}
             <div className="modal-action flex-col">
               <button
                 type="button"
