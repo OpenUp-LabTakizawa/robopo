@@ -1,16 +1,33 @@
 "use client"
+
+import {
+  getCompetitionList,
+  getPlayerList,
+  getUmpireList,
+} from "@/app/components/server/db"
+import type {
+  SelectCompetition,
+  SelectPlayer,
+  SelectUmpire,
+} from "@/app/lib/db/schema"
 import { useCallback, useState } from "react"
-import type { SelectPlayer, SelectUmpire, SelectCompetition } from "@/app/lib/db/schema"
-import { getPlayerList, getUmpireList, getCompetitionList } from "@/app/components/server/db"
+import type React from "react"
 
 type CommonRegisterProps = {
   type: "player" | "umpire" | "course" | "competition"
   setSuccessMessage: React.Dispatch<React.SetStateAction<string | null>>
   setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>
-  setCommonDataList: React.Dispatch<React.SetStateAction<SelectPlayer[] | SelectUmpire[] | SelectCompetition[]>>
+  setCommonDataList: React.Dispatch<
+    React.SetStateAction<SelectPlayer[] | SelectUmpire[] | SelectCompetition[]>
+  >
 }
 
-const CommonRegister = ({ type, setSuccessMessage, setErrorMessage, setCommonDataList }: CommonRegisterProps) => {
+export function CommonRegister({
+  type,
+  setSuccessMessage,
+  setErrorMessage,
+  setCommonDataList,
+}: CommonRegisterProps) {
   const [loading, setLoading] = useState(false)
   const [name, setName] = useState("")
   const [furigana, setFurigana] = useState("")
@@ -18,30 +35,47 @@ const CommonRegister = ({ type, setSuccessMessage, setErrorMessage, setCommonDat
   const [qr, setQr] = useState("")
 
   const formItems = [
-    (type === "competition"
+    type === "competition"
       ? { label: "name", dispName: "大会名", value: name, setValue: setName }
-      : { label: "name", dispName: "名前", value: name, setValue: setName }
-    ),
+      : { label: "name", dispName: "名前", value: name, setValue: setName },
     ...(type === "player"
       ? [
-        { label: "furigana", dispName: "ふりがな", value: furigana, setValue: setFurigana },
-        { label: "zekken", dispName: "ゼッケン番号", value: zekken, setValue: setZekken },
-        { label: "qr", dispName: "QRコード", value: qr, setValue: setQr },
-      ]
+          {
+            label: "furigana",
+            dispName: "ふりがな",
+            value: furigana,
+            setValue: setFurigana,
+          },
+          {
+            label: "zekken",
+            dispName: "ゼッケン番号",
+            value: zekken,
+            setValue: setZekken,
+          },
+          { label: "qr", dispName: "QRコード", value: qr, setValue: setQr },
+        ]
       : []),
   ]
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
     setLoading(true)
     setErrorMessage(null)
     setSuccessMessage(null)
 
-    const commonData = { name, ...(type === "player" ? { furigana, zekken, qr } : {}) }
+    const commonData = {
+      name,
+      ...(type === "player" ? { furigana, zekken, qr } : {}),
+    }
 
     try {
       // APIにPOSTリクエストを送信
-      const url = type === "player" ? "/api/player" : type === "umpire" ? "/api/umpire" : "/api/competition"
+      const url =
+        type === "player"
+          ? "/api/player"
+          : type === "umpire"
+            ? "/api/umpire"
+            : "/api/competition"
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -53,31 +87,35 @@ const CommonRegister = ({ type, setSuccessMessage, setErrorMessage, setCommonDat
       const result = await response.json()
 
       if (response.ok) {
+        setName("")
         // 登録成功時の処理
         if (type === "player") {
           setSuccessMessage("プレイヤーが正常に登録されました")
-          setName("")
           setFurigana("")
           setZekken("")
           setQr("")
-          const newCommonDataList: { players: SelectPlayer[] } = await getPlayerList()
+          const newCommonDataList: { players: SelectPlayer[] } =
+            await getPlayerList()
           setCommonDataList(newCommonDataList.players)
         } else if (type === "umpire") {
           setSuccessMessage("採点者が正常に登録されました")
-          setName("")
-          const newCommonDataList: { umpires: SelectUmpire[] } = await getUmpireList()
-          type === "umpire" && setCommonDataList(newCommonDataList.umpires as SelectUmpire[])
+          const newCommonDataList: { umpires: SelectUmpire[] } =
+            await getUmpireList()
+          setCommonDataList(newCommonDataList.umpires as SelectUmpire[])
         } else {
           setSuccessMessage("大会が正常に登録されました")
-          setName("")
-          const newCommonDataList: { competitions: SelectCompetition[] } = await getCompetitionList()
-          type === "competition" && setCommonDataList(newCommonDataList.competitions as SelectCompetition[])
+          const newCommonDataList: { competitions: SelectCompetition[] } =
+            await getCompetitionList()
+          type === "competition" &&
+            setCommonDataList(
+              newCommonDataList.competitions as SelectCompetition[],
+            )
         }
       } else {
         // エラーメッセージを表示
         setErrorMessage(result.message || "登録中にエラーが発生しました")
       }
-    } catch (error) {
+    } catch {
       // ネットワークエラーやその他のエラーの処理
       setErrorMessage("エラーが発生しました。もう一度お試しください。")
     } finally {
@@ -99,7 +137,10 @@ const CommonRegister = ({ type, setSuccessMessage, setErrorMessage, setCommonDat
       setValue: React.Dispatch<React.SetStateAction<string>>
     }) => (
       <div>
-        <label htmlFor={label} className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor={label}
+          className="block text-sm font-medium text-gray-700"
+        >
           {dispName}
         </label>
         <input
@@ -107,21 +148,25 @@ const CommonRegister = ({ type, setSuccessMessage, setErrorMessage, setCommonDat
           id={label}
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          required
+          required={true}
           className="mt-1 p-2 border border-gray-300 rounded-md"
         />
       </div>
     ),
-    []
+    [],
   )
 
   return (
     <div className=" flex justify-center">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <button type="submit" disabled={loading} className="btn btn-primary mx-auto m-3">
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn btn-primary mx-auto m-3"
+        >
           {loading ? "登録中..." : "↓新規登録"}
         </button>
-        {formItems.map((item, index) => (
+        {formItems.map((item) => (
           <FormItem
             key={item.label}
             label={item.label}
@@ -134,5 +179,3 @@ const CommonRegister = ({ type, setSuccessMessage, setErrorMessage, setCommonDat
     </div>
   )
 }
-
-export default CommonRegister

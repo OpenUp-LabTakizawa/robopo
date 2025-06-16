@@ -3,7 +3,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { CommonRadioList } from "@/app/components/common/commonList"
 import type { SelectCompetition, SelectPlayer, SelectUmpire, SelectCourse } from "@/app/lib/db/schema"
-import CommonRegister from "@/app/components/common/commonRegister"
+import { CommonRegister } from "@/app/components/common/commonRegister"
 import { BackLabelWithIcon } from "@/app/lib/const"
 
 type CompetitionListTabProps = {
