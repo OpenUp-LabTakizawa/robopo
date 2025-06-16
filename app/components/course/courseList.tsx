@@ -1,5 +1,5 @@
 import type { SelectCourse } from "@/app/lib/db/schema"
-import React from "react"
+import type React from "react"
 
 type CourseListProps = {
   courseData: { courses: SelectCourse[] }
@@ -9,13 +9,19 @@ type CourseListProps = {
   loading: boolean
 }
 
-export const CourseList = ({ courseData, inputType, handleInputChange, checkedIds, loading }: CourseListProps) => {
+export function CourseList({
+  courseData,
+  inputType,
+  handleInputChange,
+  checkedIds,
+  loading,
+}: CourseListProps) {
   // リストの行をクリックして選択できるようにしておく。
-  const handleRowClick = (courseID: number) => {
+  function handleRowClick(courseId: number) {
     const fakeEvent = {
       target: {
-        value: courseID.toString(),
-        checked: !checkedIds.includes(courseID),
+        value: courseId.toString(),
+        checked: !checkedIds.includes(courseId),
       },
     } as React.ChangeEvent<HTMLInputElement>
     handleInputChange(fakeEvent)
@@ -40,7 +46,7 @@ export const CourseList = ({ courseData, inputType, handleInputChange, checkedId
           {loading ? (
             <tr>
               <td colSpan={4} className="text-center">
-                <span className="loading loading-spinner text-info"></span>
+                <span className="loading loading-spinner text-info" />
               </td>
             </tr>
           ) : null}
@@ -50,7 +56,13 @@ export const CourseList = ({ courseData, inputType, handleInputChange, checkedId
                 key={courses.id}
                 className="hover cursor-pointer"
                 onClick={() => handleRowClick(courses.id)}
-                hidden={courses.id < 0}>
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === "Space") {
+                    handleRowClick(courses.id)
+                  }
+                }}
+                hidden={courses.id < 0}
+              >
                 <th>
                   <label>
                     <input
@@ -60,22 +72,22 @@ export const CourseList = ({ courseData, inputType, handleInputChange, checkedId
                       value={courses.id}
                       checked={checkedIds.includes(courses.id)}
                       disabled={courses.id < 0}
-                      readOnly
+                      readOnly={true}
                     />
                   </label>
                 </th>
                 <td>{courses.id}</td>
                 <td>{courses.name}</td>
                 {/* SSRとCSRで時刻のズレでエラーが出るのでsuppressHydrationWarningする */}
-                <td suppressHydrationWarning>
+                <td suppressHydrationWarning={true}>
                   {courses.createdAt
                     ? new Date(courses.createdAt).toLocaleString("ja-JP", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
                     : "N/A"}
                 </td>
               </tr>

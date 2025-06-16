@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react"
 import {
-  MissionState,
+  type MissionState,
   MissionString,
-  MissionValue,
-  PointState,
+  type MissionValue,
+  type PointState,
   missionStatePair,
   panelOrDegree,
 } from "@/app/components/course/utils"
+import { useEffect, useState } from "react"
+import type React from "react"
 
 type MissionEditProps = {
   mission: MissionState
@@ -14,8 +15,15 @@ type MissionEditProps = {
   radio: number | null
   setRadio: React.Dispatch<React.SetStateAction<number | null>>
 }
-export const MissionList = ({ mission, point, radio, setRadio }: MissionEditProps) => {
-  const [statePair, setMissionStatePair] = useState<MissionValue[][]>(missionStatePair(mission))
+export function MissionList({
+  mission,
+  point,
+  radio,
+  setRadio,
+}: MissionEditProps) {
+  const [statePair, setMissionStatePair] = useState<MissionValue[][]>(
+    missionStatePair(mission),
+  )
 
   useEffect(() => {
     const newStatePair = missionStatePair(mission)
@@ -27,7 +35,7 @@ export const MissionList = ({ mission, point, radio, setRadio }: MissionEditProp
   // ラジオボタン value=-1 はmissionが設定されていない
   // ラジオボタン value=-2 はStart
   // ラジオボタン value=-3 はGoal
-  const handleRadioChange = (selectedIndex: number) => {
+  function handleRadioChange(selectedIndex: number) {
     setRadio(selectedIndex) // 選択されたインデックスを状態として保存
   }
 
@@ -39,7 +47,12 @@ export const MissionList = ({ mission, point, radio, setRadio }: MissionEditProp
           <thead>
             <tr>
               <th>
-                <input type="radio" name="radio-1" className="radio" disabled />
+                <input
+                  type="radio"
+                  name="radio-1"
+                  className="radio"
+                  disabled={true}
+                />
               </th>
               <th>順番</th>
               <th>ミッション</th>
@@ -47,12 +60,29 @@ export const MissionList = ({ mission, point, radio, setRadio }: MissionEditProp
             </tr>
           </thead>
           <tbody>
-            <tr className="hover cursor-pointer" onClick={() => handleRadioChange(-2)}>
+            <tr
+              className="hover cursor-pointer"
+              onClick={() => handleRadioChange(-2)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === "Space") {
+                  handleRadioChange(-2)
+                }
+              }}
+            >
               <th>
-                <input type="radio" name="radio-1" className="radio" value={-2} checked={radio === -2} readOnly />
+                <input
+                  type="radio"
+                  name="radio-1"
+                  className="radio"
+                  value={-2}
+                  checked={radio === -2}
+                  readOnly={true}
+                />
               </th>
               <td>Start</td>
-              {mission[0] === null || mission[0] === undefined || mission[0] === "" ? (
+              {mission[0] === null ||
+              mission[0] === undefined ||
+              mission[0] === "" ? (
                 <td>-</td>
               ) : (
                 <td>{MissionString[mission[0]]}</td>
@@ -61,7 +91,16 @@ export const MissionList = ({ mission, point, radio, setRadio }: MissionEditProp
             </tr>
             {statePair.length > 0 ? (
               statePair.map((mission, index) => (
-                <tr className="hover cursor-pointer" onClick={() => handleRadioChange(index)} key={index}>
+                <tr
+                  key={index}
+                  className="hover cursor-pointer"
+                  onClick={() => handleRadioChange(index)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === "Space") {
+                      handleRadioChange(index)
+                    }
+                  }}
+                >
                   <th>
                     <input
                       type="radio"
@@ -69,7 +108,7 @@ export const MissionList = ({ mission, point, radio, setRadio }: MissionEditProp
                       className="radio"
                       value={index}
                       checked={radio === index}
-                      readOnly
+                      readOnly={true}
                     />
                   </th>
                   <td>{index + 1}</td>
@@ -82,21 +121,53 @@ export const MissionList = ({ mission, point, radio, setRadio }: MissionEditProp
                 </tr>
               ))
             ) : (
-              <tr className="hover cursor-pointer" onClick={() => handleRadioChange(-1)}>
+              <tr
+                className="hover cursor-pointer"
+                onClick={() => handleRadioChange(-1)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === "Space") {
+                    handleRadioChange(-1)
+                  }
+                }}
+              >
                 <th>
-                  <input type="radio" name="radio-1" className="radio" value={-1} checked={radio === -1} readOnly />
+                  <input
+                    type="radio"
+                    name="radio-1"
+                    className="radio"
+                    value={-1}
+                    checked={radio === -1}
+                    readOnly={true}
+                  />
                 </th>
                 <td>-</td>
                 <td>ミッションを追加してください。</td>
                 <td>-</td>
               </tr>
             )}
-            <tr className="hover cursor-pointer" onClick={() => handleRadioChange(-3)}>
+            <tr
+              className="hover cursor-pointer"
+              onClick={() => handleRadioChange(-3)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === "Space") {
+                  handleRadioChange(-3)
+                }
+              }}
+            >
               <th>
-                <input type="radio" name="radio-1" className="radio" value={-3} checked={radio === -3} readOnly />
+                <input
+                  type="radio"
+                  name="radio-1"
+                  className="radio"
+                  value={-3}
+                  checked={radio === -3}
+                  readOnly={true}
+                />
               </th>
               <td>Goal</td>
-              {mission[1] === null || mission[1] === undefined || mission[1] === "" ? (
+              {mission[1] === null ||
+              mission[1] === undefined ||
+              mission[1] === "" ? (
                 <td>-</td>
               ) : (
                 <td>{MissionString[mission[1]]}</td>
