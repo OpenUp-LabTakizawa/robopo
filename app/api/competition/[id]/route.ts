@@ -15,7 +15,7 @@ export async function POST(
   const { id } = await props.params
   const { type } = await req.json()
   const newList = await getCompetitionList()
-  let result: QueryResult<unknown> | null = null
+  let result: QueryResult | null = null
 
   switch (type) {
     case "open":

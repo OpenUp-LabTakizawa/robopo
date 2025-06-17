@@ -9,7 +9,7 @@
     "lint": "biome check --write"
   },
   "dependencies": {
-    "next": "^15.4.0",
+    "next": "^15.4.0-canary.84",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
@@ -35,16 +35,14 @@
   },
   "overrides": {
     "@esbuild-kit/core-utils": {
-      "esbuild": "^0.25.5"
-    },
-    "@esbuild-kit/esm-loader": {
-      "esbuild": "^0.25.5"
-    },
-    "drizzle-kit": {
-      "esbuild": "^0.25.5"
+      "esbuild": "0.25.5"
     },
     "next-navigation-guard": {
-      "react": "^19.0.0"
+      "react": "^19.0.0",
+      "next": "^15.4.0-canary.84"
+    },
+    "next-auth": {
+      "next": "^15.4.0-canary.84"
     }
   }
 }

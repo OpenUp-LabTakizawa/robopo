@@ -1,3 +1,4 @@
+// biome-ignore lint/performance/noBarrelFile: Auth.js公式ドキュメントのやり方に従う。 https://authjs.dev/getting-started/session-management/protecting#nextjs-middleware
 export { auth as middleware } from "@/auth"
 
 export const config = {
@@ -8,4 +9,5 @@ export const config = {
     "/umpire/:path*",
     "/summary/:path*",
   ],
+  runtime: "nodejs",
 }

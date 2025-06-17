@@ -7,7 +7,11 @@ const mp3TestRegExp = /\.(mp3)$/
 
 const nextConfig: NextConfig = {
   env: {
+    // biome-ignore lint/style/useNamingConvention: Next.jsの環境変数なので、UPPER_SNAKE_CASEのままで良い。
     NEXT_PUBLIC_BASE_URL: process.env.URL ?? undefined,
+  },
+  experimental: {
+    nodeMiddleware: true,
   },
   webpack(config) {
     config.plugins.push(
@@ -26,4 +30,5 @@ const nextConfig: NextConfig = {
   },
 }
 
+// biome-ignore lint/style/noDefaultExport: Next.jsの設定ファイルなので、default exportを使用する。
 export default withRspack(nextConfig)
