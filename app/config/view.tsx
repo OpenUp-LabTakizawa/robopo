@@ -1,18 +1,22 @@
 "use client"
-import { useState } from "react"
 import { ThreeTabs } from "@/app/components/parts/threeTabs"
-import { AssignTab, CompetitionListTab, NewCompetitionTab } from "@/app/config/tabs"
-import { SelectCompetition, SelectCourse, SelectUmpire } from "@/app/lib/db/schema"
+import { CompetitionListTab, NewCompetitionTab } from "@/app/config/tabs"
+import type {
+  SelectCompetition,
+} from "@/app/lib/db/schema"
+import { useState } from "react"
 
 type ViewProps = {
   initialCompetitionList: { competitions: SelectCompetition[] }
-  courseList: { courses: SelectCourse[] }
-  umpireList: { umpires: SelectUmpire[] }
 }
 
-export default function View({ initialCompetitionList, courseList, umpireList }: ViewProps) {
+export function View({
+  initialCompetitionList,
+}: ViewProps) {
   const [competitionId, setCompetitionId] = useState<number | null>(null)
-  const [competitionList, setCompetitionList] = useState<SelectCompetition[]>(initialCompetitionList.competitions)
+  const [competitionList, setCompetitionList] = useState<SelectCompetition[]>(
+    initialCompetitionList.competitions,
+  )
 
   return (
     <ThreeTabs
@@ -27,15 +31,8 @@ export default function View({ initialCompetitionList, courseList, umpireList }:
       }
       tab2Title="大会登録"
       tab2={<NewCompetitionTab setCompetitionList={setCompetitionList} />}
-      tab3Title="コース・採点者割当"
-      tab3={
-        <AssignTab
-          competitionId={competitionId}
-          competitionList={competitionList}
-          courseList={courseList}
-          umpireList={umpireList}
-        />
-      }
+      tab3Title=""
+      tab3={null}
     />
   )
 }

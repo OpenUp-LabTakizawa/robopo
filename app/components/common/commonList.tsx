@@ -1,5 +1,5 @@
+import type React from "react"
 import type {
-  SelectAssignList,
   SelectCompetition,
   SelectCourseWithCompetition,
   SelectPlayer,
@@ -7,17 +7,15 @@ import type {
   SelectUmpire,
   SelectUmpireWithCompetition,
 } from "@/app/lib/db/schema"
-import type React from "react"
 
 type CommonListProps = {
-  type: "player" | "umpire" | "course" | "competition" | "assign"
+  type: "player" | "umpire" | "course" | "competition"
   commonDataList:
-    | SelectPlayer[]
-    | SelectUmpire[]
-    | SelectCompetition[]
-    | SelectAssignList[]
-    | SelectPlayerWithCompetition[]
-    | SelectUmpireWithCompetition[]
+  | SelectPlayer[]
+  | SelectUmpire[]
+  | SelectCompetition[]
+  | SelectPlayerWithCompetition[]
+  | SelectUmpireWithCompetition[]
 }
 
 type RadioListProps = {
@@ -38,12 +36,11 @@ function TableComponent({
 }: {
   type: CommonListProps["type"]
   common:
-    | SelectPlayer
-    | SelectUmpire
-    | SelectCompetition
-    | SelectAssignList
-    | SelectPlayerWithCompetition
-    | SelectUmpireWithCompetition
+  | SelectPlayer
+  | SelectUmpire
+  | SelectCompetition
+  | SelectPlayerWithCompetition
+  | SelectUmpireWithCompetition
 }) {
   return (
     <>
@@ -107,13 +104,6 @@ function TableComponent({
           </td>
         </>
       )}
-      {type === "assign" && (
-        <>
-          <td>{(common as SelectAssignList).competition}</td>
-          <td>{(common as SelectAssignList).course}</td>
-          <td>{(common as SelectAssignList).umpire}</td>
-        </>
-      )}
     </>
   )
 }
@@ -128,8 +118,6 @@ function itemNames(type: CommonListProps["type"]): string[] {
     itemNames.push("ID", "コース名", "作成日時", "使用大会")
   } else if (type === "competition") {
     itemNames.push("ID", "名前", "開催中")
-  } else if (type === "assign") {
-    itemNames.push("大会名", "コース名", "採点者名")
   }
   return itemNames
 }
@@ -153,9 +141,7 @@ export function CommonRadioList({
               ? "採点者"
               : type === "course"
                 ? "コース"
-                : type === "assign"
-                  ? "割当"
-                  : null}
+                : null}
           一覧
         </h2>
       )}
@@ -217,9 +203,7 @@ export function CommonRadioList({
                         ? "採点者"
                         : type === "competition"
                           ? "大会"
-                          : type === "assign"
-                            ? "割当"
-                            : null}
+                          : null}
                     が登録されていません。
                   </td>
                 </tr>

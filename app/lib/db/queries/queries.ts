@@ -1,11 +1,8 @@
+import { and, eq, or, sql } from "drizzle-orm"
 import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import type { CourseSummary } from "@/app/components/summary/utils"
 import { db } from "@/app/lib/db/db"
 import {
-  type SelectCourse,
-  type SelectCourseWithCompetition,
-  type SelectPlayerWithCompetition,
-  type SelectUmpireWithCompetition,
   challenge,
   competition,
   competitionCourse,
@@ -13,11 +10,13 @@ import {
   competitionUmpire,
   course,
   player,
+  type SelectCourse,
+  type SelectCourseWithCompetition,
+  type SelectPlayerWithCompetition,
+  type SelectUmpireWithCompetition,
   umpire,
-  umpireCourse,
   users,
 } from "@/app/lib/db/schema"
-import { and, eq, or, sql } from "drizzle-orm"
 
 // IDを指定してDBからコースを削除する関数
 // @/app/lib/db/queries/delete.tsを作成して移動させる方がいいかもしれない。
@@ -466,38 +465,6 @@ export async function closeCompetitionById(id: number) {
     .update(competition)
     .set({ step: 2 })
     .where(eq(competition.id, id))
-}
-
-// umpireCourseをそれぞれの大会・コース・採点者のnameを取得して返す関数
-export async function getAssignList() {
-  return await db
-    .select({
-      id: sql<number>`${umpireCourse.competitionId} * 10000 + ${umpireCourse.umpireId}`,
-      competition: competition.name,
-      course: course.name,
-      umpire: umpire.name,
-    })
-    .from(umpireCourse)
-    .leftJoin(competition, eq(umpireCourse.competitionId, competition.id))
-    .leftJoin(course, eq(umpireCourse.courseId, course.id))
-    .leftJoin(umpire, eq(umpireCourse.umpireId, umpire.id))
-}
-
-// competitionIdとumpireIdを指定してumpireCourseからcourseIdを取得する関数
-export async function getCourseIdByCompetitionIdAndUmpireId(
-  competitionId: number,
-  umpireId: number,
-) {
-  return await db
-    .select({ courseId: umpireCourse.courseId })
-    .from(umpireCourse)
-    .where(
-      and(
-        eq(umpireCourse.competitionId, competitionId),
-        eq(umpireCourse.umpireId, umpireId),
-      ),
-    )
-    .limit(1)
 }
 
 // playerと参加大会を表にする関数
