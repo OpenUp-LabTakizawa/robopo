@@ -1,11 +1,22 @@
 import { getUserByName } from "@/app/lib/db/queries/queries"
+import bcrypt from "bcryptjs"
+import type { User } from "next-auth"
 
 export async function POST(req: Request) {
-  const { name } = await req.json()
+  const { name, password } = await req.json()
 
   try {
     const result = await getUserByName(name)
-    return Response.json({ user: result }, { status: 200 })
+    const passwordMatch = await bcrypt.compare(password, result.password)
+    if (passwordMatch) {
+      const user: User = {
+        id: result.id.toString(),
+        name: result.name,
+        email: null,
+        image: null,
+      }
+      return Response.json({ user }, { status: 200 })
+    }
   } catch (error) {
     return Response.json(
       {
@@ -16,4 +27,5 @@ export async function POST(req: Request) {
       { status: 500 },
     )
   }
+  return Response.json({ user: null }, { status: 401 })
 }

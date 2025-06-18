@@ -6,16 +6,16 @@ import { AuthError } from "next-auth"
 // signInのformState
 type FormState =
   | {
-    errors?: {
-      username?: string[]
-      password?: string[]
+      errors?: {
+        username?: string[]
+        password?: string[]
+      }
+      message?: string
     }
-    message?: string
-  }
   | undefined
 
 // サーバアクションのサインイン
-export async function signInAction(state: FormState, formData: FormData) {
+export async function signInAction(_state: FormState, formData: FormData) {
   "use server"
 
   const username = formData.get("username")
@@ -34,7 +34,7 @@ export async function signInAction(state: FormState, formData: FormData) {
       message: "パスワードが未入力です",
     }
   }
-  
+
   try {
     // redirectがうまく走らない為、サインイン後にclient側でリダイレクトする
     await signIn("credentials", { redirect: false, username, password })
@@ -45,8 +45,9 @@ export async function signInAction(state: FormState, formData: FormData) {
   } catch (error) {
     // Redirectエラーは無視する
     // これはNextAuthの仕様で、サインイン後にリダイレクトするために発生するエラー
-    console.log("error: ", error)
-    if (error instanceof Error && error.message === "NEXT_REDIRECT") { throw error }
+    if (error instanceof Error && error.message === "NEXT_REDIRECT") {
+      throw error
+    }
     // それ以外のエラーはサインイン失敗とする
     if (error instanceof AuthError) {
       return {

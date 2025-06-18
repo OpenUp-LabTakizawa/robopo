@@ -9,12 +9,12 @@
     "lint": "biome check --write"
   },
   "dependencies": {
+    "@auth/drizzle-adapter": "^1.9.1",
     "next": "^15.3.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
-    "@auth/drizzle-adapter": "^1.9.1",
     "@biomejs/biome": "^1.9.4",
     "@heroicons/react": "^2.2.0",
     "@tailwindcss/postcss": "^4.1.10",
