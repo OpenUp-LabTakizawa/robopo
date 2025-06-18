@@ -10,9 +10,6 @@ const nextConfig: NextConfig = {
     // biome-ignore lint/style/useNamingConvention: Next.jsの環境変数なので、UPPER_SNAKE_CASEのままで良い。
     NEXT_PUBLIC_BASE_URL: process.env.URL ?? undefined,
   },
-  experimental: {
-    nodeMiddleware: true,
-  },
   webpack(config) {
     config.plugins.push(
       new webpack.IgnorePlugin({
