@@ -1,8 +1,7 @@
-import { fetchUser, parsedCredentials } from "@/app/lib/auth"
 import type { NextAuthConfig, User } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
+import { fetchUser, parsedCredentials } from "@/app/lib/auth"
 
-// biome-ignore lint/style/noDefaultExport: Auth.js公式のdocumentに従う。というか、defaultを削除するとコードが通らない。https://authjs.dev/guides/edge-compatibility
 export default {
   providers: [
     Credentials({
