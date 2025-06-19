@@ -1,72 +1,81 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
 import { useFormStatus } from "react-dom"
 import {
-  FieldState,
-  MissionState,
+  checkValidity,
+  type FieldState,
+  type MissionState,
   serializeField,
   serializeMission,
   serializePoint,
-  checkValidity,
 } from "@/app/components/course/utils"
 import { useCourseEdit } from "@/app/course/edit/courseEditContext"
 import { BackLabelWithIcon } from "@/app/lib/const"
 
-type ValidationModalProps = {
-  setModalOpen: React.Dispatch<React.SetStateAction<number>>
-  field: FieldState
-  mission: MissionState
-}
-
 // 終了前に保存するかどうか聞くmodal
-export const BackModal = () => {
+export function BackModal() {
   const router = useRouter()
-  const handleYes = () => {
+  function handleYes() {
     // 今のurlから/back を削除して、/saveに遷移する
     const currentUrl = window.location.href
     const newUrl = currentUrl.replace(/\/back$/, "/save")
     router.push(newUrl)
   }
 
-  const handleCancel = () => {
+  function handleCancel() {
     router.back()
   }
   return (
-    <dialog id="fin-modal" className="modal modal-open" >
+    <dialog id="fin-modal" className="modal modal-open">
       <div className="modal-box">
         <p>保存しますか?保存していない編集内容は失われます。</p>
         <div className="modal-action">
-          <button className="btn btn-accent" onClick={handleYes}>
+          <button type="button" className="btn btn-accent" onClick={handleYes}>
             はい
           </button>
           {/* router.push("/course")でもLinkでの遷移でも、どんだけ/course/@modal/page.tsx, /course/@modal/[...catchAll]/page.tsxでnull返すようにしてもmodalが閉じてくれることはない。
-            仕方無しに、window.location.replace("/course")での遷移で手を打つ。 */}
-          <button className="btn" onClick={() => window.location.replace("/course")}>
+              仕方無しに、window.location.replace("/course")での遷移で手を打つ。 */}
+          <button
+            type="button"
+            className="btn"
+            onClick={() => window.location.replace("/course")}
+          >
             保存せず終わる
           </button>
-          <button className="btn" onClick={handleCancel}>
+          <button type="button" className="btn" onClick={handleCancel}>
             キャンセル
           </button>
         </div>
       </div>
-      <form method="dialog" className="modal-backdrop" onClick={handleCancel}>
-        <button className="cursor-default">close</button>
+      <form
+        method="dialog"
+        className="modal-backdrop"
+        onClick={handleCancel}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === "") {
+            handleCancel()
+          }
+        }}
+      >
+        <button type="button" className="cursor-default">
+          close
+        </button>
       </form>
     </dialog>
   )
 }
 
 // コースを保存するmodal
-export const SaveModal = ({ courseId }: { courseId: number | null }) => {
+export function SaveModal({ courseId }: { courseId: number | null }) {
   const { name, setName, field, mission, point } = useCourseEdit()
   const router = useRouter()
   const [isSuccess, setIsSuccess] = useState<boolean>(false)
   const { pending } = useFormStatus()
 
-  const handleClick = async (id: number | null) => {
+  async function handleClick(id: number | null) {
     if (name.trim() === "") {
       alert("コース名を入力してください")
       return
@@ -97,7 +106,7 @@ export const SaveModal = ({ courseId }: { courseId: number | null }) => {
     }
   }
 
-  const handleClickNo = () => {
+  function handleClickNo() {
     router.back()
   }
 
@@ -129,8 +138,13 @@ export const SaveModal = ({ courseId }: { courseId: number | null }) => {
                   disabled={pending}
                   onClick={() => {
                     handleClick(null)
-                  }}>
-                  {pending ? <span className="loading loading-spinner"></span> : "新規保存"}
+                  }}
+                >
+                  {pending ? (
+                    <span className="loading loading-spinner"></span>
+                  ) : (
+                    "新規保存"
+                  )}
                 </button>
                 {courseId && (
                   <button
@@ -139,63 +153,116 @@ export const SaveModal = ({ courseId }: { courseId: number | null }) => {
                     disabled={pending}
                     onClick={() => {
                       handleClick(courseId)
-                    }}>
-                    {pending ? <span className="loading loading-spinner"></span> : "上書き保存"}
+                    }}
+                  >
+                    {pending ? (
+                      <span className="loading loading-spinner"></span>
+                    ) : (
+                      "上書き保存"
+                    )}
                   </button>
                 )}
               </>
             )}
 
-            <button type="button" disabled={pending} className="btn" onClick={handleClickNo}>
-              {pending ? <span className="loading loading-spinner"></span> : "いいえ"}
+            <button
+              type="button"
+              disabled={pending}
+              className="btn"
+              onClick={handleClickNo}
+            >
+              {pending ? (
+                <span className="loading loading-spinner"></span>
+              ) : (
+                "いいえ"
+              )}
             </button>
           </div>
         </form>
       </div>
-      <form method="dialog" className="modal-backdrop" onClick={handleClickNo}>
-        <button className="cursor-default">close</button>
+      <form
+        method="dialog"
+        className="modal-backdrop"
+        onClick={handleClickNo}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            handleClickNo()
+          }
+        }}
+      >
+        <button type="button" className="cursor-default">
+          close
+        </button>
       </form>
     </dialog>
   )
 }
 
 // コースを検証した結果を表示するmodal
-export const validationModal = ({ setModalOpen, field, mission }: ValidationModalProps) => {
+export function validationModal({
+  setModalOpen,
+  field,
+  mission,
+}: {
+  setModalOpen: React.Dispatch<React.SetStateAction<number>>
+  field: FieldState
+  mission: MissionState
+}) {
   const check = checkValidity(field, mission)
-  const handleYes = () => {
+  function handleYes() {
     setModalOpen(2)
   }
 
-  const handleCancel = () => {
+  function handleCancel() {
     setModalOpen(0)
   }
   return (
-    <dialog id="validation-modal" className="modal modal-open" onClose={() => setModalOpen(0)}>
+    <dialog
+      id="validation-modal"
+      className="modal modal-open"
+      onClose={() => setModalOpen(0)}
+    >
       <div className="modal-box">
         {check ? (
           <>
             <p>コースとミッションは有効です。</p>
             <p>保存しますか?保存していない編集内容は失われます。</p>
             <div className="modal-action">
-              <button className="btn btn-accent" onClick={handleYes}>
+              <button
+                type="button"
+                className="btn btn-accent"
+                onClick={handleYes}
+              >
                 はい
               </button>
-              <button className="btn" onClick={handleCancel}>
-                編集に<BackLabelWithIcon />
+              <button type="button" className="btn" onClick={handleCancel}>
+                編集に
+                <BackLabelWithIcon />
               </button>
             </div>
           </>
         ) : (
           <>
             <p>コースとミッションが有効ではありません。</p>
-            <button className="btn" onClick={handleCancel}>
+            <button type="button" className="btn" onClick={handleCancel}>
               閉じる
             </button>
           </>
         )}
       </div>
-      <form method="dialog" className="modal-backdrop" onClick={handleCancel}>
-        <button className="cursor-default">close</button>
+      <form
+        method="dialog"
+        className="modal-backdrop"
+        onClick={handleCancel}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            handleCancel()
+          }
+        }}
+      >
+        <button type="button" className="cursor-default">
+          close
+        </button>
       </form>
     </dialog>
   )

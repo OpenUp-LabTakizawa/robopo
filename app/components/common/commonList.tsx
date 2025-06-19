@@ -11,23 +11,11 @@ import type {
 type CommonListProps = {
   type: "player" | "umpire" | "course" | "competition"
   commonDataList:
-  | SelectPlayer[]
-  | SelectUmpire[]
-  | SelectCompetition[]
-  | SelectPlayerWithCompetition[]
-  | SelectUmpireWithCompetition[]
-}
-
-type RadioListProps = {
-  props: CommonListProps
-  commonId: number | null
-  setCommonId: React.Dispatch<React.SetStateAction<number | null>>
-}
-
-type CheckboxListProps = {
-  props: CommonListProps
-  commonId: number[] | null
-  setCommonId: React.Dispatch<React.SetStateAction<number[] | null>>
+    | SelectPlayer[]
+    | SelectUmpire[]
+    | SelectCompetition[]
+    | SelectPlayerWithCompetition[]
+    | SelectUmpireWithCompetition[]
 }
 
 function TableComponent({
@@ -36,11 +24,11 @@ function TableComponent({
 }: {
   type: CommonListProps["type"]
   common:
-  | SelectPlayer
-  | SelectUmpire
-  | SelectCompetition
-  | SelectPlayerWithCompetition
-  | SelectUmpireWithCompetition
+    | SelectPlayer
+    | SelectUmpire
+    | SelectCompetition
+    | SelectPlayerWithCompetition
+    | SelectUmpireWithCompetition
 }) {
   return (
     <>
@@ -126,7 +114,11 @@ export function CommonRadioList({
   props: { type, commonDataList },
   commonId,
   setCommonId,
-}: RadioListProps) {
+}: {
+  props: CommonListProps
+  commonId: number | null
+  setCommonId: React.Dispatch<React.SetStateAction<number | null>>
+}) {
   function handleRadioSelect(event: React.ChangeEvent<HTMLInputElement>) {
     setCommonId(Number(event.target.value))
   }
@@ -220,7 +212,11 @@ export function CommonCheckboxList({
   props: { type, commonDataList },
   commonId,
   setCommonId,
-}: CheckboxListProps) {
+}: {
+  props: CommonListProps
+  commonId: number[] | null
+  setCommonId: React.Dispatch<React.SetStateAction<number[] | null>>
+}) {
   function handleCheckboxChange(id: number) {
     if (!commonId) {
       setCommonId([id])
@@ -267,7 +263,11 @@ export function CommonCheckboxList({
                     key={common.id}
                     className="hover cursor-pointer"
                     onClick={() => handleCheckboxChange(common.id)}
-                    onKeyDown={() => handleCheckboxChange(common.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === "") {
+                        handleCheckboxChange(common.id)
+                      }
+                    }}
                     hidden={common.id < 0}
                   >
                     <th>

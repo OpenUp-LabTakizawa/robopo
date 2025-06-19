@@ -1,21 +1,14 @@
+import type React from "react"
 import { NextArrow } from "@/app/components/course/nextArrow"
 import { Panel } from "@/app/components/course/panel"
 import { Robot } from "@/app/components/course/robot"
 import {
   type FieldState,
-  IPPON_BASHI_SIZE,
-  type MissionValue,
   getPanelHeight,
   getPanelWidth,
+  IPPON_BASHI_SIZE,
+  type MissionValue,
 } from "@/app/components/course/utils"
-import type React from "react"
-
-type IpponBashiUiProps = {
-  botPosition: { row: number; col: number }
-  botDirection: MissionValue
-  nextMissionPair: MissionValue[]
-  onPanelClick: (row: number, col: number) => void
-}
 
 // THE一本橋を表すコンポーネント
 export function IpponBashiUI({
@@ -23,7 +16,12 @@ export function IpponBashiUI({
   botDirection,
   nextMissionPair,
   onPanelClick,
-}: IpponBashiUiProps): React.JSX.Element {
+}: {
+  botPosition: { row: number; col: number }
+  botDirection: MissionValue
+  nextMissionPair: MissionValue[]
+  onPanelClick: (row: number, col: number) => void
+}): React.JSX.Element {
   const type: string = "ipponBashi"
   // 一本橋の大きさ 幅1パネル 長さ5パネル 1パネル毎の大きさ60×60
   const width: number = 1
@@ -57,22 +55,20 @@ export function IpponBashiUI({
           />
         )),
       )}
-      <>
-        <Robot
-          row={botPosition.row}
-          col={botPosition.col}
-          direction={botDirection}
-          type={type}
-        />
-        <NextArrow
-          row={botPosition.row}
-          col={botPosition.col}
-          direction={botDirection}
-          nextMissionPair={nextMissionPair}
-          duration={1.5}
-          type={type}
-        />
-      </>
+      <Robot
+        row={botPosition.row}
+        col={botPosition.col}
+        direction={botDirection}
+        type={type}
+      />
+      <NextArrow
+        row={botPosition.row}
+        col={botPosition.col}
+        direction={botDirection}
+        nextMissionPair={nextMissionPair}
+        duration={1.5}
+        type={type}
+      />
     </div>
   )
 }

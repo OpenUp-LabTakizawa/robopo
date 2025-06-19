@@ -1,9 +1,9 @@
 "use client"
 
-import { BackLabelWithIcon } from "@/app/lib/const"
-import type { SelectCompetition } from "@/app/lib/db/schema"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { BackLabelWithIcon } from "@/app/lib/const"
+import type { SelectCompetition } from "@/app/lib/db/schema"
 
 type InputType = "player" | "umpire" | "course"
 
@@ -107,13 +107,16 @@ export function DeleteModal({ type, ids }: { type: InputType; ids: number[] }) {
   )
 }
 
-export function AssignModal(params: {
+export function AssignModal({
+  type,
+  ids,
+  competitionList,
+}: {
   type: InputType
   ids: number[]
   competitionList: { competitions: SelectCompetition[] }
 }) {
   const [loading, setLoading] = useState(false)
-  const { type, ids, competitionList } = params
   const [competitionId, setCompetitionId] = useState<number | null>(null)
   const commonString: string = getCommonString(type)
 

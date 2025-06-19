@@ -1,26 +1,25 @@
+import type React from "react"
+import { useEffect, useState } from "react"
 import {
   type MissionState,
   MissionString,
   type MissionValue,
-  type PointState,
   missionStatePair,
+  type PointState,
   panelOrDegree,
 } from "@/app/components/course/utils"
-import { useEffect, useState } from "react"
-import type React from "react"
 
-type MissionEditProps = {
-  mission: MissionState
-  point: PointState
-  radio: number | null
-  setRadio: React.Dispatch<React.SetStateAction<number | null>>
-}
 export function MissionList({
   mission,
   point,
   radio,
   setRadio,
-}: MissionEditProps) {
+}: {
+  mission: MissionState
+  point: PointState
+  radio: number | null
+  setRadio: React.Dispatch<React.SetStateAction<number | null>>
+}) {
   const [statePair, setMissionStatePair] = useState<MissionValue[][]>(
     missionStatePair(mission),
   )

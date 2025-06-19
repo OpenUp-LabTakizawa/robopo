@@ -1,6 +1,6 @@
-import type { PointState } from "@/app/components/course/utils"
 import type { useRouter } from "next/navigation"
 import type React from "react"
+import type { PointState } from "@/app/components/course/utils"
 
 // 進んだmissionの数によって獲得したポイントを計算する
 // pointStateは start, goal, mission...の順でポイントが入ってる。

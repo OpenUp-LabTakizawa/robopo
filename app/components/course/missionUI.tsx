@@ -1,3 +1,5 @@
+import type React from "react"
+import { useState } from "react"
 import {
   type MissionState,
   MissionString,
@@ -5,17 +7,6 @@ import {
   type PointState,
   type PointValue,
 } from "@/app/components/course/utils"
-import { useState } from "react"
-import type React from "react"
-
-type MissionUiProps = {
-  mission: MissionState
-  setMission: React.Dispatch<React.SetStateAction<MissionState>>
-  point: PointState
-  setPoint: React.Dispatch<React.SetStateAction<PointState>>
-  selectedId: number | null
-  setRadio: React.Dispatch<React.SetStateAction<number | null>>
-}
 
 // 総じて同じようなプルダウンメニューが複数あるのでrefactoringの必要がある。
 
@@ -31,7 +22,14 @@ export function MissionUI({
   setPoint,
   selectedId,
   setRadio,
-}: MissionUiProps) {
+}: {
+  mission: MissionState
+  setMission: React.Dispatch<React.SetStateAction<MissionState>>
+  point: PointState
+  setPoint: React.Dispatch<React.SetStateAction<PointState>>
+  selectedId: number | null
+  setRadio: React.Dispatch<React.SetStateAction<number | null>>
+}) {
   const [isMove, setIsMove] = useState<boolean>(false)
   const [isTurn, setIsTurn] = useState<boolean>(false)
   const [selectedMission, setSelectedMission] = useState<MissionValue | null>(

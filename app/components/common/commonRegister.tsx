@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+import { useCallback, useState } from "react"
 import {
   getCompetitionList,
   getPlayerList,
@@ -10,24 +12,20 @@ import type {
   SelectPlayer,
   SelectUmpire,
 } from "@/app/lib/db/schema"
-import { useCallback, useState } from "react"
-import type React from "react"
-
-type CommonRegisterProps = {
-  type: "player" | "umpire" | "course" | "competition"
-  setSuccessMessage: React.Dispatch<React.SetStateAction<string | null>>
-  setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>
-  setCommonDataList: React.Dispatch<
-    React.SetStateAction<SelectPlayer[] | SelectUmpire[] | SelectCompetition[]>
-  >
-}
 
 export function CommonRegister({
   type,
   setSuccessMessage,
   setErrorMessage,
   setCommonDataList,
-}: CommonRegisterProps) {
+}: {
+  type: "player" | "umpire" | "course" | "competition"
+  setSuccessMessage: React.Dispatch<React.SetStateAction<string | null>>
+  setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>
+  setCommonDataList: React.Dispatch<
+    React.SetStateAction<SelectPlayer[] | SelectUmpire[] | SelectCompetition[]>
+  >
+}) {
   const [loading, setLoading] = useState(false)
   const [name, setName] = useState("")
   const [furigana, setFurigana] = useState("")

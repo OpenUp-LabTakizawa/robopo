@@ -3,11 +3,11 @@ import { Panel } from "@/app/components/course/panel"
 import { Robot } from "@/app/components/course/robot"
 import {
   type FieldState,
+  getPanelHeight,
+  getPanelWidth,
   MAX_FIELD_HEIGHT,
   MAX_FIELD_WIDTH,
   type MissionValue,
-  getPanelHeight,
-  getPanelWidth,
 } from "@/app/components/course/utils"
 
 type EditProps = {
@@ -25,10 +25,8 @@ type ChallengeProps = {
   onPanelClick: (row: number, col: number) => void
 }
 
-type Props = EditProps | ChallengeProps
-
 // Fieldを表すコンポーネント
-export function Field(props: Props) {
+export function Field(props: EditProps | ChallengeProps) {
   return (
     <div
       className={`relative grid grid-cols-${MAX_FIELD_WIDTH} grid-rows-${MAX_FIELD_HEIGHT} mx-auto`}

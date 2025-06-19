@@ -1,17 +1,9 @@
-import { ChallengeModal } from "@/app/challenge/challengeModal"
-import { resultSubmit } from "@/app/components/challenge/utils"
-import { SendIcon } from "@/app/lib/const"
 import { useRouter } from "next/navigation"
 import type React from "react"
 import { useState } from "react"
-
-type SensorCourseProps = {
-  compeId: number
-  courseId: number
-  playerId: number
-  umpireId: number
-  setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>
-}
+import { ChallengeModal } from "@/app/challenge/challengeModal"
+import { resultSubmit } from "@/app/components/challenge/utils"
+import { SendIcon } from "@/app/lib/const"
 
 export function SensorCourse({
   compeId,
@@ -19,7 +11,13 @@ export function SensorCourse({
   playerId,
   umpireId,
   setIsEnabled,
-}: SensorCourseProps) {
+}: {
+  compeId: number
+  courseId: number
+  playerId: number
+  umpireId: number
+  setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>
+}) {
   const [result1, setResult1] = useState<number>(0) // 進んだmission
   const [tunnelPoint, setTunnelPoint] = useState<number>(0)
   const [wallPoint, setWallPoint] = useState<number>(0)

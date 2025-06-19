@@ -1,5 +1,8 @@
 "use client"
 
+import Link from "next/link"
+import type React from "react"
+import { useEffect, useState } from "react"
 import { CommonCheckboxList } from "@/app/components/common/commonList"
 import { CommonRegister } from "@/app/components/common/commonRegister"
 import type {
@@ -9,9 +12,6 @@ import type {
   SelectUmpire,
   SelectUmpireWithCompetition,
 } from "@/app/lib/db/schema"
-import Link from "next/link"
-import { useEffect, useState } from "react"
-import type React from "react"
 
 type PlayerProps = {
   type: "player"
@@ -28,9 +28,10 @@ type CourseProps = {
   initialCommonDataList: SelectCourseWithCompetition[]
 }
 
-type ViewProps = PlayerProps | UmpireProps | CourseProps
-
-export function View({ type, initialCommonDataList }: ViewProps) {
+export function View({
+  type,
+  initialCommonDataList,
+}: PlayerProps | UmpireProps | CourseProps) {
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const commonString =
@@ -43,7 +44,7 @@ export function View({ type, initialCommonDataList }: ViewProps) {
     | SelectUmpire[]
   >(initialCommonDataList)
   // 配列をクエリ文字列に変換する関数
-  const createQueryParams = (ids: number[] | null) => {
+  function createQueryParams(ids: number[] | null) {
     if (!ids || ids.length === 0) {
       return ""
     }
