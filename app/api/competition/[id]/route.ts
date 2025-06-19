@@ -1,10 +1,10 @@
+import type { QueryResult } from "pg"
 import { getCompetitionList } from "@/app/components/server/db"
 import {
   closeCompetitionById,
   openCompetitionById,
   returnCompetitionById,
 } from "@/app/lib/db/queries/queries"
-import type { QueryResult } from "pg"
 
 export const revalidate = 0
 
@@ -15,7 +15,7 @@ export async function POST(
   const { id } = await props.params
   const { type } = await req.json()
   const newList = await getCompetitionList()
-  let result: QueryResult | null = null
+  let result: QueryResult
 
   switch (type) {
     case "open":
@@ -28,7 +28,14 @@ export async function POST(
       result = await closeCompetitionById(id)
       break
     default:
-      break
+      return Response.json(
+        {
+          success: false,
+          message: "An error occurred while updating the course.",
+          error: "Invalid type",
+        },
+        { status: 400 },
+      )
   }
   return Response.json(
     { success: true, data: result, newList: newList },

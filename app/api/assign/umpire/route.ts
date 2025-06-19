@@ -1,8 +1,8 @@
 import { assignById, unassignById } from "@/app/api/assign/assign"
 import { db } from "@/app/lib/db/db"
 import {
-  type SelectCompetitionUmpire,
   competitionUmpire,
+  type SelectCompetitionUmpire,
 } from "@/app/lib/db/schema"
 
 export const revalidate = 0

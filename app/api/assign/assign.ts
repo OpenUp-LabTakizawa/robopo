@@ -1,18 +1,16 @@
+import { and, eq } from "drizzle-orm"
 import { db } from "@/app/lib/db/db"
 import {
   competitionCourse,
   competitionPlayer,
   competitionUmpire,
 } from "@/app/lib/db/schema"
-import { and, eq } from "drizzle-orm"
 
 // 各種idとcompetitionIdを与えてそのcompetitionIdに割り当ての無いものを割り当てていく関数
 export async function assignById(req: Request, mode: string) {
   // modeは"player", "course", "umpire"のどれか
   try {
-    const reqbody = await req.json()
-    const ids = reqbody.ids
-    const competitionId = reqbody.competitionId
+    const { ids, competitionId } = await req.json()
     if (!(competitionId && Array.isArray(ids))) {
       return Response.json({ error: "Invalid input" }, { status: 400 })
     }
@@ -85,9 +83,7 @@ export async function assignById(req: Request, mode: string) {
 export async function unassignById(req: Request, mode: string) {
   // modeは"player", "course", "umpire"のどれか
   try {
-    const reqbody = await req.json()
-    const ids = reqbody.ids
-    const competitionId = reqbody.competitionId
+    const { ids, competitionId } = await req.json()
     if (!(competitionId && Array.isArray(ids))) {
       return Response.json({ error: "Invalid input" }, { status: 400 })
     }
