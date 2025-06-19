@@ -22,11 +22,7 @@ export function useAudioContext() {
   return useContext(AudioContext)
 }
 
-export function AudioProvider({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export function AudioProvider({ children }: { children: React.ReactNode }) {
   const [soundOn, setSoundOn] = useState<boolean>(dummy.soundOn)
 
   return (

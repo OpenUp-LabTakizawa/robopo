@@ -5,7 +5,9 @@ import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 
 export default async function Challenge({
   params,
-}: { params: Promise<{ competitionId: number; courseId: number }> }) {
+}: {
+  params: Promise<{ competitionId: number; courseId: number }>
+}) {
   const { competitionId, courseId } = await params
   const initialPlayerDataList: { players: SelectPlayer[] } =
     await getCompetitionPlayerList(competitionId)

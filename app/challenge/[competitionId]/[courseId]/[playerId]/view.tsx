@@ -1,25 +1,23 @@
 "use client"
 
+import { useNavigationGuard } from "next-navigation-guard"
+import { useState } from "react"
 import { Challenge } from "@/app/challenge/challenge"
 import { SensorCourse } from "@/app/components/challenge/sensorCourse"
 import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
-import { useNavigationGuard } from "next-navigation-guard"
-import { useState } from "react"
-
-type ViewProps = {
-  courseData: SelectCourse
-  playerData: SelectPlayer
-  competitionId: number
-  courseId: number
-}
 
 export function View({
   courseData,
   playerData,
   competitionId,
   courseId,
-}: ViewProps) {
+}: {
+  courseData: SelectCourse
+  playerData: SelectPlayer
+  competitionId: number
+  courseId: number
+}) {
   const playerId = playerData.id
   const umpireId = 1 // 一旦1
   const [isEnabled, setIsEnabled] = useState(true)

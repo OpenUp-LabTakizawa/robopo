@@ -1,17 +1,5 @@
-import { BackLabelWithIcon, RETRY_CONST, SendIcon } from "@/app/lib/const"
 import type React from "react"
-
-type ChallengeModalProps = {
-  setModalOpen: React.Dispatch<React.SetStateAction<number>>
-  handleSubmit: () => void
-  handleRetry: () => void
-  loading: boolean
-  isSuccess: boolean
-  message: string
-  result1Point: number | null
-  result2Point: number | null
-  isGoal: boolean
-}
+import { BackLabelWithIcon, RETRY_CONST, SendIcon } from "@/app/lib/const"
 
 export function ChallengeModal({
   setModalOpen,
@@ -23,7 +11,17 @@ export function ChallengeModal({
   result1Point,
   result2Point,
   isGoal,
-}: ChallengeModalProps) {
+}: {
+  setModalOpen: React.Dispatch<React.SetStateAction<number>>
+  handleSubmit: () => void
+  handleRetry: () => void
+  loading: boolean
+  isSuccess: boolean
+  message: string
+  result1Point: number | null
+  result2Point: number | null
+  isGoal: boolean
+}) {
   function handleClick() {
     setModalOpen(0)
   }
@@ -92,17 +90,15 @@ export function ChallengeModal({
   )
 }
 
-type RetryModalProps = {
-  setModalOpen: React.Dispatch<React.SetStateAction<number>>
-  handleRetry: () => void
-  result1Point: number | null
-}
-
-export const RetryModal = ({
+export function RetryModal({
   setModalOpen,
   handleRetry,
   result1Point,
-}: RetryModalProps) => {
+}: {
+  setModalOpen: React.Dispatch<React.SetStateAction<number>>
+  handleRetry: () => void
+  result1Point: number | null
+}) {
   function thisHandleRetry() {
     handleRetry()
     setModalOpen(0)
@@ -137,18 +133,6 @@ export const RetryModal = ({
   )
 }
 
-type CourseOutModalProps = {
-  setModalOpen: React.Dispatch<React.SetStateAction<number>>
-  setResult1: React.Dispatch<React.SetStateAction<number>>
-  handleSubmit: () => void
-  handleRetry: () => void
-  loading: boolean
-  isSuccess: boolean
-  message: string
-  result1Point: number | null
-  result2Point: number | null
-}
-
 export function CourseOutModal({
   setModalOpen,
   handleSubmit,
@@ -159,8 +143,18 @@ export function CourseOutModal({
   message,
   result1Point,
   result2Point,
-}: CourseOutModalProps) {
-  const thisHandleRetry = () => {
+}: {
+  setModalOpen: React.Dispatch<React.SetStateAction<number>>
+  setResult1: React.Dispatch<React.SetStateAction<number>>
+  handleSubmit: () => void
+  handleRetry: () => void
+  loading: boolean
+  isSuccess: boolean
+  message: string
+  result1Point: number | null
+  result2Point: number | null
+}) {
+  function thisHandleRetry() {
     setResult1(0)
     handleRetry()
     setModalOpen(0)
@@ -227,7 +221,10 @@ export function CourseOutModal({
 function RetryButton({
   handleRetry,
   loading,
-}: { handleRetry: () => void; loading: boolean }) {
+}: {
+  handleRetry: () => void
+  loading: boolean
+}) {
   return (
     <button
       type="button"

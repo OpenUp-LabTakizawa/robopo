@@ -1,25 +1,23 @@
 "use client"
 
-import { CommonRadioList } from "@/app/components/common/commonList"
-import { HomeButton, ReloadButton } from "@/app/components/parts/buttons"
-import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 import { PlayIcon } from "@heroicons/react/24/outline"
 import Link from "next/link"
 import { useState } from "react"
-
-type ViewProps = {
-  courseData: SelectCourse
-  initialPlayerDataList: { players: SelectPlayer[] }
-  competitionId: number
-  courseId: number
-}
+import { CommonRadioList } from "@/app/components/common/commonList"
+import { HomeButton, ReloadButton } from "@/app/components/parts/buttons"
+import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 
 export function View({
   courseData,
   initialPlayerDataList,
   competitionId,
   courseId,
-}: ViewProps) {
+}: {
+  courseData: SelectCourse
+  initialPlayerDataList: { players: SelectPlayer[] }
+  competitionId: number
+  courseId: number
+}) {
   const [playerId, setPlayerId] = useState<number | null>(null)
   const playerDataList = initialPlayerDataList.players
   const disableCondiion = !(competitionId && courseId && playerId)

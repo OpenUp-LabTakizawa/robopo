@@ -1,5 +1,8 @@
 "use client"
 
+import { PlayIcon } from "@heroicons/react/24/outline"
+import { useRouter } from "next/navigation"
+import { type RefObject, useEffect, useRef, useState } from "react"
 import {
   SoundControlUI,
   useAudioContext,
@@ -7,16 +10,14 @@ import {
 import { BackLabelWithIcon } from "@/app/lib/const"
 import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 import StartSound from "@/app/lib/sound/01_start.mp3"
-import { PlayIcon } from "@heroicons/react/24/outline"
-import { useRouter } from "next/navigation"
-import { type RefObject, useEffect, useRef, useState } from "react"
 
-type ViewProps = {
+export function Modal({
+  courseData,
+  playerData,
+}: {
   courseData: SelectCourse
   playerData: SelectPlayer
-}
-
-export function Modal({ courseData, playerData }: ViewProps) {
+}) {
   const startSound = new Audio(StartSound)
   startSound.volume = 0.4
   const router = useRouter()
