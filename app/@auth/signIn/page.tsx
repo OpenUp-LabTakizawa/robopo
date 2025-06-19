@@ -1,19 +1,19 @@
 "use client"
 
+import { useSearchParams } from "next/navigation"
+import { useActionState, useEffect } from "react"
 import {
   ModalBackButton,
   ModalBackdrop,
 } from "@/app/components/common/commonModal"
 import { signInAction } from "@/app/components/server/auth"
 import { SIGN_IN_CONST } from "@/app/lib/const"
-import { useSearchParams } from "next/navigation"
-import { useActionState, useEffect } from "react"
 
 export default function SignIn() {
   const params = useSearchParams()
   const rawCallbackUrl = params.get("callbackUrl") || "/"
   // クロスサイトスクリプティング&フィッシング攻撃対策
-  const getSafeCallbackUrl = (cb: string) => {
+  function getSafeCallbackUrl(cb: string) {
     try {
       const url = new URL(cb, window.location.origin)
       if (
