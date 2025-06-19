@@ -1,7 +1,7 @@
 import { deleteById } from "@/app/api/delete"
 import { db } from "@/app/lib/db/db"
 import { createPlayer } from "@/app/lib/db/queries/insert"
-import { type SelectPlayer, player } from "@/app/lib/db/schema"
+import { player, type SelectPlayer } from "@/app/lib/db/schema"
 
 export const revalidate = 0
 
@@ -34,6 +34,5 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  const result = await deleteById(req, "player")
-  return result
+  return await deleteById(req, "player")
 }

@@ -1,6 +1,6 @@
-import { getUserByName } from "@/app/lib/db/queries/queries"
 import bcrypt from "bcryptjs"
 import type { User } from "next-auth"
+import { getUserByName } from "@/app/lib/db/queries/queries"
 
 export async function POST(req: Request) {
   const { name, password } = await req.json()
