@@ -1,64 +1,71 @@
-import { getPanelWidth, getPanelHeight, getNextPosition, type MissionValue } from "@/app/components/course/utils"
+import {
+  getNextPosition,
+  getPanelHeight,
+  getPanelWidth,
+  type MissionValue,
+} from "@/app/components/course/utils"
 
-type ArrowProps = {
+export function NextArrow({
+  row,
+  col,
+  direction,
+  nextMissionPair,
+  duration = 1,
+  type,
+}: {
   row: number
   col: number
   direction: MissionValue
   nextMissionPair: MissionValue[]
   duration?: number // 点滅速度（秒）
   type?: string
-}
-
-type MoveArrowProps = {
-  row: number
-  col: number
-  nextRow: number
-  nextCol: number
-  duration?: number // 点滅速度（秒）
-  type?: string
-}
-
-type TurnArrowProps = {
-  row: number
-  col: number
-  direction: MissionValue
-  nextMissionPair: MissionValue[]
-  duration?: number // 回転速度（秒）
-  type?: string
-}
-
-export const NextArrow = ({ row, col, direction, nextMissionPair, duration = 1, type }: ArrowProps) => {
+}) {
   if (nextMissionPair[0] === "mf" || nextMissionPair[0] === "mb") {
-    const [nextRow, nextCol, nextDirection] = getNextPosition(
+    const [nextRow, nextCol] = getNextPosition(
       row,
       col,
       direction,
       nextMissionPair[0],
-      nextMissionPair[1]
+      nextMissionPair[1],
     )
-    return <NextMoveArrow row={row} col={col} nextRow={nextRow} nextCol={nextCol} duration={duration} type={type} />
-  } else {
     return (
-      <NextTurnArrow
+      <NextMoveArrow
         row={row}
         col={col}
-        direction={direction}
-        nextMissionPair={nextMissionPair}
+        nextRow={nextRow}
+        nextCol={nextCol}
         duration={duration}
         type={type}
       />
     )
   }
+  return (
+    <NextTurnArrow
+      row={row}
+      col={col}
+      direction={direction}
+      nextMissionPair={nextMissionPair}
+      duration={duration}
+      type={type}
+    />
+  )
 }
 
-const NextMoveArrow = ({
+function NextMoveArrow({
   row,
   col,
   nextRow,
   nextCol,
   duration = 1, // 点滅の速度
   type,
-}: MoveArrowProps) => {
+}: {
+  row: number
+  col: number
+  nextRow: number
+  nextCol: number
+  duration?: number // 点滅速度（秒）
+  type?: string
+}) {
   // 矢印を置く場所・向きの判断
   // (col, row)パネル左上端から矢印起点へのベクトル(colAdd, rowAdd) 単位は [2 / panelWidth] or [2 / panelHeight]
   let colAdd = 0
@@ -164,14 +171,21 @@ const NextMoveArrow = ({
   )
 }
 
-const NextTurnArrow = ({
+function NextTurnArrow({
   row,
   col,
   direction,
   nextMissionPair,
   duration = 1, // 回転の速度
   type,
-}: TurnArrowProps) => {
+}: {
+  row: number
+  col: number
+  direction: MissionValue
+  nextMissionPair: MissionValue[]
+  duration?: number // 回転速度（秒）
+  type?: string
+}) {
   // panelの幅と高さを取得
   const panelWidth = getPanelWidth(type)
   const panelHeight = getPanelHeight(type)
@@ -302,7 +316,7 @@ const NextTurnArrow = ({
 }
 
 // MissionValueから回転角度(90度単位)を取得する関数
-const getStartDeg = (direction: MissionValue): number => {
+function getStartDeg(direction: MissionValue): number {
   switch (direction) {
     case "u":
       return -90
@@ -318,7 +332,7 @@ const getStartDeg = (direction: MissionValue): number => {
 }
 
 // MissionValue(degree)から矢印の線を切り取るclippathの形状を決定する関数
-const getClipPath = (degree: MissionValue): string => {
+function getClipPath(degree: MissionValue): string {
   switch (degree) {
     case 90:
       return "polygon(50% 50%, 100% 50%, 100% 0%, 50% 0%); // 1/4円弧"

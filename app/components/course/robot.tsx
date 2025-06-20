@@ -1,18 +1,25 @@
 import Image from "next/image"
+import {
+  getPanelHeight,
+  getPanelWidth,
+  type MissionValue,
+} from "@/app/components/course/utils"
 import botImage from "@/public/robot.png"
-import { getPanelWidth, getPanelHeight, type MissionValue } from "@/app/components/course/utils"
 
-type RobotProps = {
+export function Robot({
+  row,
+  col,
+  direction,
+  type,
+}: {
   row: number
   col: number
   direction: MissionValue
   type?: string
-}
-
-export const Robot = ({ row, col, direction, type }: RobotProps) => {
+}) {
   const panelWidth = getPanelWidth(type)
   const panelHeight = getPanelHeight(type)
-  const rotationAngle = (dir: MissionValue) => {
+  function rotationAngle(dir: MissionValue) {
     switch (dir) {
       case "u":
         return "rotate(0deg)"
@@ -39,8 +46,8 @@ export const Robot = ({ row, col, direction, type }: RobotProps) => {
   }
 
   return (
-    (<div style={botStyle}>
+    <div style={botStyle}>
       <Image src={botImage} alt="bot" fill sizes="100vw" />
-    </div>)
-  );
+    </div>
+  )
 }

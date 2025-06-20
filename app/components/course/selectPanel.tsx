@@ -1,13 +1,19 @@
-import { PanelValue, isStart, isGoal, FieldState } from "@/app/components/course/utils"
-
-type SelectPanelProps = {
-  field: FieldState
-  setmode: (mode: PanelValue) => void
-}
+import {
+  type FieldState,
+  isGoal,
+  isStart,
+  type PanelValue,
+} from "@/app/components/course/utils"
 
 // 配置するpanelのモード選択UI
-export const SelectPanel = ({ field, setmode }: SelectPanelProps) => {
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+export function SelectPanel({
+  field,
+  setmode,
+}: {
+  field: FieldState
+  setmode: (mode: PanelValue) => void
+}) {
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setmode(event.target.value as PanelValue)
   }
 
