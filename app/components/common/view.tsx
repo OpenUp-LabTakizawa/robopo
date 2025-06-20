@@ -70,11 +70,10 @@ export function View({
           {type === "course" && (
             <Link
               href={`/course/edit/${createQueryParams(commonId)}`}
-              className={`flex btn mx-auto m-3 ${
-                commonId?.length !== 1
+              className={`flex btn mx-auto m-3 ${commonId?.length !== 1
                   ? "pointer-events-none btn-disabled"
                   : "btn-primary"
-              }`}
+                }`}
               aria-disabled={commonId?.length !== 1}
               tabIndex={commonId?.length !== 1 ? -1 : undefined}
               onClick={() => {
@@ -92,11 +91,10 @@ export function View({
                   ? `/umpire/assign/${createQueryParams(commonId)}`
                   : `/course/assign/${createQueryParams(commonId)}`
             }
-            className={`flex btn mx-auto m-3 ml-5 ${
-              commonId === null || commonId?.length === 0
+            className={`flex btn mx-auto m-3 ml-5 ${commonId === null || commonId?.length === 0
                 ? "pointer-events-none btn-disabled"
                 : "btn-primary"
-            }`}
+              }`}
             aria-disabled={commonId === null || commonId?.length === 0}
             tabIndex={
               commonId === null || commonId?.length === 0 ? -1 : undefined
@@ -113,11 +111,10 @@ export function View({
                   ? `/umpire/delete/${createQueryParams(commonId)}`
                   : `/course/delete/${createQueryParams(commonId)}`
             }
-            className={`flex btn mx-auto m-3 ml-5 ${
-              commonId === null || commonId?.length === 0
+            className={`flex btn mx-auto m-3 ml-5 ${commonId === null || commonId?.length === 0
                 ? "pointer-events-none btn-disabled"
                 : "btn-warning"
-            }`}
+              }`}
             aria-disabled={commonId === null || commonId?.length === 0}
             tabIndex={
               commonId === null || commonId?.length === 0 ? -1 : undefined
@@ -133,7 +130,7 @@ export function View({
 
   // 新規登録UIを持つView
   function ViewWithRegister() {
-    const [commonId, setCommonId] = useState<number[] | null>(null)
+    const [commonId, setCommonId] = useState<number[]>([])
     return (
       <div className="lg:flex lg:flex-row">
         <div className="flex-col lg:w-2/3">
@@ -162,7 +159,7 @@ export function View({
 
   // 新規登録UIを持たないView
   function ViewNoRegister() {
-    const [commonId, setCommonId] = useState<number[] | null>(null)
+    const [commonId, setCommonId] = useState<number[]>([])
     return (
       <>
         <CommonCheckboxList

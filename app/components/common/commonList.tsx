@@ -11,11 +11,11 @@ import type {
 type CommonListProps = {
   type: "player" | "umpire" | "course" | "competition"
   commonDataList:
-    | SelectPlayer[]
-    | SelectUmpire[]
-    | SelectCompetition[]
-    | SelectPlayerWithCompetition[]
-    | SelectUmpireWithCompetition[]
+  | SelectPlayer[]
+  | SelectUmpire[]
+  | SelectCompetition[]
+  | SelectPlayerWithCompetition[]
+  | SelectUmpireWithCompetition[]
 }
 
 function TableComponent({
@@ -24,11 +24,11 @@ function TableComponent({
 }: {
   type: CommonListProps["type"]
   common:
-    | SelectPlayer
-    | SelectUmpire
-    | SelectCompetition
-    | SelectPlayerWithCompetition
-    | SelectUmpireWithCompetition
+  | SelectPlayer
+  | SelectUmpire
+  | SelectCompetition
+  | SelectPlayerWithCompetition
+  | SelectUmpireWithCompetition
 }) {
   return (
     <>
@@ -214,8 +214,8 @@ export function CommonCheckboxList({
   setCommonId,
 }: {
   props: CommonListProps
-  commonId: number[] | null
-  setCommonId: React.Dispatch<React.SetStateAction<number[] | null>>
+  commonId: number[]
+  setCommonId: React.Dispatch<React.SetStateAction<number[]>>
 }) {
   function handleCheckboxChange(id: number) {
     if (!commonId) {
