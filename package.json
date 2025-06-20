@@ -28,7 +28,7 @@
     "next-auth": "^5.0.0-beta.28",
     "next-navigation-guard": "^0.1.2",
     "next-rspack": "canary",
-    "pg": "^8.16.1",
+    "pg": "^8.16.2",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.10",
     "typescript": "^5.8.3",
