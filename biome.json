@@ -8,7 +8,6 @@
   },
   "linter": {
     "rules": {
-      "nursery": "error",
       "style": {
         "noUselessElse": "error",
         "useBlockStatements": "error"
