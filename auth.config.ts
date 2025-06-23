@@ -1,6 +1,7 @@
 import type { NextAuthConfig, User } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { fetchUser, parsedCredentials } from "@/app/lib/auth"
+import { BASE_URL } from "@/app/lib/const"
 
 export default {
   providers: [
@@ -16,6 +17,7 @@ export default {
       authorize: async (credentials) => {
         try {
           const { username, password } = parsedCredentials(credentials)
+          console.log("{BASE_URLauthconfig}", BASE_URL)
           const user = await fetchUser(username, password)
           if (!user) {
             return null
