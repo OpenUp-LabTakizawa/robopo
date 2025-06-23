@@ -1,7 +1,5 @@
 import type { User } from "next-auth"
-// biome-ignore lint/nursery/noUnresolvedImports: zodは依存関係として含まれているため、解決可能
 import { z } from "zod"
-// biome-ignore lint/nursery/noUnresolvedImports: @/app/lib/constはプロジェクト内のモジュールであり、解決可能
 import { BASE_URL } from "@/app/lib/const"
 
 const credentialsSchema: z.ZodSchema<{ username: string; password: string }> =
