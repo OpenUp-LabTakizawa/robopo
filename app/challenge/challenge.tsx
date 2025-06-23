@@ -188,37 +188,37 @@ export function Challenge({
   return (
     <>
       {Number(courseId) === RESERVED_COURSE_IDS.IPPON ? (
-        <div className="relative flex flex-col justify-items-center w-full h-[calc(100vh-100px)]">
-          <div className="grid justify-items-center w-full">
-            <p className="text-xl font-bold">THE 一本橋</p>
+        <div className="relative flex h-[calc(100vh-100px)] w-full flex-col justify-items-center">
+          <div className="grid w-full justify-items-center">
+            <p className="font-bold text-xl">THE 一本橋</p>
           </div>
-          <div className="grid grid-cols-2 justify-items-center w-full h-1/2">
+          <div className="grid h-1/2 w-full grid-cols-2 justify-items-center">
             <div className="flex flex-col">
               <div className="stats shadow-sm">
                 <div className="stat">
-                  <div className="stat-title text-3xl font-bold text-orange-600">
+                  <div className="stat-title font-bold text-3xl text-orange-600">
                     現在:
                   </div>
-                  <div className="stat-value text-3xl font-bold text-orange-600">
+                  <div className="stat-value font-bold text-3xl text-orange-600">
                     {pointCount}ポイント
                   </div>
-                  <p className="text-3xl font-bold text-orange-600">
+                  <p className="font-bold text-3xl text-orange-600">
                     {isRetry ? "2回目" : "1回目"}
                     {nowMission < IPPON_BASHI_SIZE - 1 ? "行き" : "帰り"}
                   </p>
                 </div>
               </div>
-              <p className="text-lg mt-5 ml-3">パネルをタップ</p>
-              <p className="text-lg ml-3">で進みます</p>
+              <p className="mt-5 ml-3 text-lg">パネルをタップ</p>
+              <p className="ml-3 text-lg">で進みます</p>
             </div>
           </div>
-          <div className="grid grid-cols-2 justify-items-center w-full h-1/2">
-            <div className="flex flex-col w-full" />
-            <div className="flex flex-col justify-items-end w-full">
+          <div className="grid h-1/2 w-full grid-cols-2 justify-items-center">
+            <div className="flex w-full flex-col" />
+            <div className="flex w-full flex-col justify-items-end">
               <button
                 type="button"
                 id="add"
-                className="btn btn-primary mx-auto m-3"
+                className="btn btn-primary m-3 mx-auto"
                 onClick={handleBack}
                 disabled={nowMission === 0}
               >
@@ -227,7 +227,7 @@ export function Challenge({
               </button>
               <button
                 type="button"
-                className="btn btn-accent mx-auto m-3"
+                className="btn btn-accent m-3 mx-auto"
                 onClick={() => setModalOpen(1)}
               >
                 結果送信
@@ -236,7 +236,7 @@ export function Challenge({
               <div className="grid grid-cols-2">
                 <button
                   type="button"
-                  className="btn btn-primary mx-auto m-3"
+                  className="btn btn-primary m-3 mx-auto"
                   onClick={() => setModalOpen(3)}
                 >
                   コース
@@ -245,7 +245,7 @@ export function Challenge({
                 </button>
                 <button
                   type="button"
-                  className="btn btn-primary mx-auto m-3"
+                  className="btn btn-primary m-3 mx-auto"
                   onClick={() => setModalOpen(2)}
                   disabled={isRetry}
                 >
@@ -255,7 +255,7 @@ export function Challenge({
               <SoundControlUI soundOn={soundOn} setSoundOn={setSoundOn} />
             </div>
           </div>
-          <div className="absolute flex top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 flex transform">
             <IpponBashiUI
               botPosition={botPosition}
               botDirection={botDirection}
@@ -268,12 +268,12 @@ export function Challenge({
           </div>
         </div>
       ) : (
-        <div className="grid justify-items-center h-full w-screen sm:w-5/6">
+        <div className="grid h-full w-screen justify-items-center sm:w-5/6">
           {isGoal ? (
-            <div className="grid justify-items-center w-full max-h-32">
-              <p className="text-2xl font-bold text-orange-600">おめでとう!</p>
+            <div className="grid max-h-32 w-full justify-items-center">
+              <p className="font-bold text-2xl text-orange-600">おめでとう!</p>
               {pointState[1] !== null && pointState[1] > 0 && (
-                <p className="text-2xl font-bold text-orange-600">
+                <p className="font-bold text-2xl text-orange-600">
                   ゴールポイント: {pointState[1]}ポイント
                 </p>
               )}
@@ -290,7 +290,7 @@ export function Challenge({
               ) : (
                 <button
                   type="button"
-                  className="btn btn-accent mx-auto text-2xl m-3"
+                  className="btn btn-accent m-3 mx-auto text-2xl"
                   onClick={() => setModalOpen(1)}
                   disabled={loading}
                 >
@@ -304,11 +304,11 @@ export function Challenge({
               {message && <p className="mx-auto mt-12">{message}</p>}
             </div>
           ) : (
-            <div className="grid justify-items-center w-full h-full min-h-32">
+            <div className="grid h-full min-h-32 w-full justify-items-center">
               {/* <div className="flex flex-row w-full">
                                 <div className="w-1/3" />
                                 <div className="w-1/3 grid justify-items-center"> */}
-              <p className="text-3xl font-bold text-orange-600">
+              <p className="font-bold text-3xl text-orange-600">
                 チャレンジ{isRetry ? "2回目" : "1回目"}
               </p>
               <p>↓ミッション↓</p>
@@ -328,7 +328,7 @@ export function Challenge({
                                   </label>
                                 </div> */}
               {/* </div> */}
-              <p className="text-3xl font-bold text-orange-600">
+              <p className="font-bold text-3xl text-orange-600">
                 {nowMission + 1} :{" "}
                 {missionPair[nowMission][0] === null
                   ? "-"
@@ -355,7 +355,7 @@ export function Challenge({
             onPanelClick={(row, col) => handleNext(row, col)}
           />
 
-          <p className="text-3xl font-bold text-orange-600">
+          <p className="font-bold text-3xl text-orange-600">
             {isGoal ? "クリア" : "現在"}: {pointCount}ポイント
           </p>
           <SoundControlUI soundOn={soundOn} setSoundOn={setSoundOn} />

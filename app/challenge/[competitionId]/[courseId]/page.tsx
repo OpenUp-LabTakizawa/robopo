@@ -23,7 +23,7 @@ export default async function Challenge({
       courseId={courseId}
     />
   ) : (
-    <div className="flex flex-col justify-center items-center overflow-y-auto w-full">
+    <div className="flex w-full flex-col items-center justify-center overflow-y-auto">
       <h2>コースが割り当てられていません。</h2>
     </div>
   )

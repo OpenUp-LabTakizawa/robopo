@@ -23,9 +23,9 @@ export function View({
   const disableCondiion = !(competitionId && courseId && playerId)
 
   return (
-    <div className="flex flex-col justify-center items-center overflow-y-auto w-full">
-      <div className="w-full flex">
-        <h2 className="text-xl ml-5 self-start">選択中コース名:</h2>
+    <div className="flex w-full flex-col items-center justify-center overflow-y-auto">
+      <div className="flex w-full">
+        <h2 className="ml-5 self-start text-xl">選択中コース名:</h2>
         <h2 className="text-xl">{courseData.name}</h2>
       </div>
       <CommonRadioList
@@ -35,7 +35,7 @@ export function View({
       />
       <Link
         href={`/challenge/${competitionId}/${courseId}/${playerId}`}
-        className={`btn min-w-28 max-w-fit mx-auto mt-5 ${disableCondiion ? "btn-disabled" : "btn-primary"}`}
+        className={`btn mx-auto mt-5 min-w-28 max-w-fit ${disableCondiion ? "btn-disabled" : "btn-primary"}`}
       >
         <PlayIcon className="size-6" />
         確認へ

@@ -30,7 +30,7 @@ export function View({
   })
 
   return (
-    <div className="flex flex-col justify-center items-center overflow-y-auto w-full pt-10 sm:pt-px">
+    <div className="flex w-full flex-col items-center justify-center overflow-y-auto pt-10 sm:pt-px">
       {/* ベーシックコースとTHE一本橋 */}
       {Number(courseId) !== RESERVED_COURSE_IDS.SENSOR && playerId !== null && (
         <Challenge

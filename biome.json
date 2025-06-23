@@ -8,6 +8,9 @@
   },
   "linter": {
     "rules": {
+      "nursery": {
+        "useSortedClasses": "error"
+      },
       "style": {
         "noUselessElse": "error",
         "useBlockStatements": "error"

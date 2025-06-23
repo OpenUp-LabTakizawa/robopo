@@ -65,12 +65,12 @@ export default function SignIn() {
           </label>
           <div className="flex flex-row">
             <input
-              className="flex btn btn-accent m-3"
+              className="btn btn-accent m-3 flex"
               type="submit"
               value={SIGN_IN_CONST.label}
             />
             <ModalBackButton />
-            <div className="flex m-3 text-red-500">{state?.message}</div>
+            <div className="m-3 flex text-red-500">{state?.message}</div>
           </div>
         </form>
       </div>

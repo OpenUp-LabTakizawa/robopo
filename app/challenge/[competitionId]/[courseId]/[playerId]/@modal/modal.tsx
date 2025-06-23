@@ -43,16 +43,16 @@ export function Modal({
 
   return (
     <dialog ref={dialogRef} className="modal" open={modalOpen}>
-      <div className="modal-box flex flex-col mt-auto mb-0">
-        <div className="flex flex-col items-center overflow-y-auto w-full">
-          <div className="grid gap-6 items-start">
+      <div className="modal-box mt-auto mb-0 flex flex-col">
+        <div className="flex w-full flex-col items-center overflow-y-auto">
+          <div className="grid items-start gap-6">
             <h2 className="text-lg">チャレンジを開始しますか?</h2>
             <p className="text-2xl">コース: {courseData.name}</p>
             <p className="text-2xl">選手: {playerData.name}</p>
           </div>
           <button
             type="button"
-            className="btn btn-accent min-w-28 max-w-fit text-3xl mx-auto m-5"
+            className="btn btn-accent m-5 mx-auto min-w-28 max-w-fit text-3xl"
             onClick={() => {
               soundOn && startSound.play()
               modalClose()
@@ -64,7 +64,7 @@ export function Modal({
           <SoundControlUI soundOn={soundOn} setSoundOn={setSoundOn} />
           <button
             type="button"
-            className="btn btn-primary min-w-28 max-w-fit mx-auto mt-5"
+            className="btn btn-primary mx-auto mt-5 min-w-28 max-w-fit"
             onClick={() => {
               router.back()
             }}
