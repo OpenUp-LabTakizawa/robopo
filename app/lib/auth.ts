@@ -23,21 +23,17 @@ export async function fetchUser(
   username: string,
   password: string,
 ): Promise<User | null> {
-  try {
-    const response = await fetch(`${BASE_URL}/api/user/`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: username, password }),
-    })
-    console.log("[fetchUser]DB response", response)
-    if (response.ok) {
-      const { user } = await response.json()
-      if (user) {
-        return user as User
-      }
+  console.log("{BASE_URL}", BASE_URL)
+  const response = await fetch(`${BASE_URL}/api/user/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: username, password }),
+  })
+  if (response.ok) {
+    const { user } = await response.json()
+    if (user) {
+      return user as User
     }
-  } catch (error) {
-    console.error("[fetchUser]Error", error)
   }
   return null
 }
