@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs"
 import type { User } from "next-auth"
 import { z } from "zod"
-import { getUserByName } from "@/app/lib/db/queries/queries"
 
 const credentialsSchema: z.ZodSchema<{ username: string; password: string }> =
   z.object({
@@ -24,6 +23,7 @@ export async function passwordMatch(
   name: string,
   password: string,
 ): Promise<User | null> {
+  const { getUserByName } = await import("@/app/lib/db/queries/queries")
   const result = await getUserByName(name)
   const passwordMatch = await bcrypt.compare(password, result.password)
   if (passwordMatch) {
