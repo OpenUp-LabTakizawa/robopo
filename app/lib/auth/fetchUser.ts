@@ -25,8 +25,7 @@ export async function fetchUser(
 ): Promise<User | null> {
   try {
     console.log("vercel", process.env.VERCEL)
-    console.log("netlify", process.env.NETLIFY)
-    if (process.env.VERCEL === "1" || process.env.NETLIFY === "true") {
+    if (process.env.VERCEL === "1") {
       const response = await fetch(`${BASE_URL}/api/user/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

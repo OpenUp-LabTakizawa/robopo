@@ -4,9 +4,6 @@ import withRspack from "next-rspack"
 const mp3TestRegExp = /\.(mp3)$/
 
 const nextConfig: NextConfig = {
-  env: {
-    NETLIFY: process.env.NETLIFY ?? undefined,
-  },
   webpack(config) {
     config.module.rules.push({
       test: mp3TestRegExp,
