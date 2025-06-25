@@ -1,6 +1,6 @@
 import type { NextAuthConfig, User } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-import { fetchUser, parsedCredentials } from "@/app/lib/auth"
+import { fetchUser, parsedCredentials } from "@/app/lib/auth/fetchUser"
 
 export default {
   providers: [
