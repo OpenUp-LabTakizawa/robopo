@@ -48,7 +48,7 @@ export const CompetitionListTab = ({
     const url =
       type === "delete"
         ? "/api/competition/"
-        : "/api/competition/" + competitionId
+        : `/api/competition/${competitionId}`
     try {
       setLoading(true)
       const response = await fetch(url, {
@@ -56,10 +56,8 @@ export const CompetitionListTab = ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody),
       })
-      const { success, data, newList } = await response.json()
+      const { success, newList } = await response.json()
 
-      console.log("data: ", data)
-      console.log("newList: ", newList.competitions)
       if (response.ok && success) {
         setMessage("更新に成功しました")
         setIsSuccess(true)
@@ -69,8 +67,7 @@ export const CompetitionListTab = ({
       } else {
         setMessage("更新に失敗しました")
       }
-    } catch (error) {
-      console.log("error: ", error)
+    } catch (_error) {
       setMessage("送信中にエラーが発生しました")
     } finally {
       setLoading(false)
@@ -133,7 +130,7 @@ export const CompetitionListTab = ({
       />
       <button
         type="button"
-        className="btn btn-primary text-default max-w-fit m-1"
+        className="btn btn-primary m-1 max-w-fit text-default"
         value="open"
         disabled={
           competitionId === null ||
@@ -146,7 +143,7 @@ export const CompetitionListTab = ({
       </button>
       <button
         type="button"
-        className="btn btn-primary text-default max-w-fit m-1"
+        className="btn btn-primary m-1 max-w-fit text-default"
         value="return"
         disabled={
           competitionId === null ||
@@ -159,7 +156,7 @@ export const CompetitionListTab = ({
       </button>
       <button
         type="button"
-        className="btn btn-primary text-default max-w-fit m-1"
+        className="btn btn-primary m-1 max-w-fit text-default"
         value="close"
         disabled={
           competitionId === null ||
@@ -172,7 +169,7 @@ export const CompetitionListTab = ({
       </button>
       <button
         type="button"
-        className="btn btn-warning text-default max-w-fit m-1"
+        className="btn btn-warning m-1 max-w-fit text-default"
         disabled={competitionId === null || loading}
         onClick={() => {
           setIsSuccess(false)

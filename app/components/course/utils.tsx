@@ -413,7 +413,6 @@ export const checkValidity = (
       mission,
       i,
     )
-    console.log("i, row, col, field[row][col]", i, row, col, field[row][col])
     // コース上に存在しない場合はfalse
     if (
       field[row][col] !== "start" &&
