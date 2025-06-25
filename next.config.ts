@@ -6,9 +6,6 @@ const ignorePluginResourceRegExp = /^pg-native$|^cloudflare:sockets$/
 const mp3TestRegExp = /\.(mp3)$/
 
 const nextConfig: NextConfig = {
-  env: {
-    NEXT_PUBLIC_BASE_URL: process.env.URL ?? undefined,
-  },
   webpack(config) {
     config.plugins.push(
       new webpack.IgnorePlugin({
