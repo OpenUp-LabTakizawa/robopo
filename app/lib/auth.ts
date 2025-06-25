@@ -24,12 +24,12 @@ export async function fetchUser(
   password: string,
 ): Promise<User | null> {
   try {
-    const response = await fetch(`${BASE_URL}/api/user/`, {
+    const response = await fetch("/api/user/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: username, password }),
     })
-    console.log("[fetchUser]DB response", response)
+    console.log("[fetchUser] DB response", response)
     if (response.ok) {
       const { user } = await response.json()
       if (user) {
@@ -37,7 +37,7 @@ export async function fetchUser(
       }
     }
   } catch (error) {
-    console.error("[fetchUser]Error", error)
+    console.error("[fetchUser] Error", error)
   }
   return null
 }
