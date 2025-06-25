@@ -1,6 +1,6 @@
 import type { NextAuthConfig, User } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-import { fetchUser, parsedCredentials } from "@/app/lib/auth/fetchUser"
+import { fetchUser } from "@/app/lib/auth/fetchUser"
 
 export default {
   providers: [
@@ -15,16 +15,7 @@ export default {
       },
       authorize: async (credentials) => {
         try {
-          console.log("[authorize]start")
-          const { username, password } = parsedCredentials(credentials)
-          console.log(
-            "[authorize] credentials",
-            username,
-            password ? "••••" : password,
-          )
-          const user = await fetchUser(username, password)
-          console.log("[authorize] fetched user", user)
-          console.log("[authorize]BASE_URL", process.env.DATABASE_URL)
+          const user = await fetchUser(credentials)
           if (!user) {
             return null
           }
