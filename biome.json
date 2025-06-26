@@ -8,6 +8,9 @@
   },
   "linter": {
     "rules": {
+      "correctness": {
+        "noUnusedImports": "error"
+      },
       "nursery": {
         "useSortedClasses": "error"
       },
