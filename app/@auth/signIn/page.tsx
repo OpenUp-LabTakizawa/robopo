@@ -39,39 +39,38 @@ export default function SignIn() {
   }, [state, callbackUrl])
 
   return (
-    <dialog id="signIn-modal" className="modal modal-open">
+    <dialog className="modal modal-open">
       <div className="modal-box">
-        <form action={action}>
-          <label className="flex" htmlFor="name">
-            <span className="label-text">ユーザー名</span>
+        <form action={action} className="place-items-center">
+          <label className="input" htmlFor="username">
+            <span className="label">ユーザー名</span>
             <input
+              id="username"
               type="text"
               name="username"
-              placeholder="ユーザー名"
-              className="input input-bordered w-full max-w-xs"
+              placeholder="robosava"
               required={true}
             />
           </label>
           <br />
-          <label className="flex" htmlFor="password">
-            <span className="label-text">パスワード</span>
+          <label className="input" htmlFor="password">
+            <span className="label">パスワード</span>
             <input
+              id="password"
               type="password"
               name="password"
-              placeholder="パスワード"
-              className="input input-bordered w-full max-w-xs"
+              placeholder="12345678"
               required={true}
             />
           </label>
-          <div className="flex flex-row">
-            <input
-              className="btn btn-accent m-3 flex"
-              type="submit"
-              value={SIGN_IN_CONST.label}
-            />
+          <div className="flex">
+            <button className="btn btn-accent my-3 flex" type="submit">
+              {SIGN_IN_CONST.label}
+              {SIGN_IN_CONST.icon}
+            </button>
             <ModalBackButton />
-            <div className="m-3 flex text-red-500">{state?.message}</div>
           </div>
+          <div className="m-3 flex text-red-500">{state?.message}</div>
         </form>
       </div>
       <ModalBackdrop />

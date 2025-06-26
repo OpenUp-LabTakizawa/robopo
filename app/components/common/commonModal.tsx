@@ -36,7 +36,7 @@ export function ModalBackButton() {
   return (
     <button
       type="button"
-      className="flex btn btn-accent m-3"
+      className="btn m-3 flex"
       onClick={() => router.back()}
     >
       <BackLabelWithIcon />
