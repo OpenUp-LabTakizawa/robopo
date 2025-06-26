@@ -1,31 +1,6 @@
-import type { NextAuthConfig, User } from "next-auth"
-import Credentials from "next-auth/providers/credentials"
-import { fetchUser } from "@/app/lib/auth/fetchUser"
+import type { NextAuthConfig } from "next-auth"
 
 export default {
-  providers: [
-    Credentials({
-      credentials: {
-        username: { label: "Username", type: "text", placeholder: "name" },
-        password: {
-          label: "Password",
-          type: "password",
-          placeholder: "*********",
-        },
-      },
-      authorize: async (credentials) => {
-        try {
-          const user = await fetchUser(credentials)
-          if (!user) {
-            return null
-          }
-          return user as User
-        } catch {
-          return null
-        }
-      },
-    }),
-  ],
   callbacks: {
     jwt({ token, user }) {
       if (user) {
@@ -41,4 +16,8 @@ export default {
       return !!auth?.user
     },
   },
+  pages: {
+    signIn: "/signIn",
+  },
+  providers: [],
 } satisfies NextAuthConfig

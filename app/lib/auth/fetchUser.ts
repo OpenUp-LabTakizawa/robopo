@@ -1,4 +1,4 @@
-import bcrypt from "bcryptjs"
+import bcrypt from "bcrypt"
 import type { User } from "next-auth"
 import { z } from "zod"
 
