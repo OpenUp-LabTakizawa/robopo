@@ -67,25 +67,25 @@ export function SensorCourse({
   }
 
   return (
-    <div className="relative flex flex-col justify-items-center w-full h-[calc(100vh-100px)]">
-      <div className="grid justify-items-center w-full">
-        <p className="text-xl font-bold">センサーコース</p>
+    <div className="relative flex h-[calc(100vh-100px)] w-full flex-col justify-items-center">
+      <div className="grid w-full justify-items-center">
+        <p className="font-bold text-xl">センサーコース</p>
       </div>
       <div className="flex flex-col">
         <div className="stats shadow-sm">
           <div className="stat">
-            <div className="stat-title text-3xl font-bold text-orange-600">
+            <div className="stat-title font-bold text-3xl text-orange-600">
               現在:
             </div>
-            <div className="stat-value text-3xl font-bold text-orange-600">
+            <div className="stat-value font-bold text-3xl text-orange-600">
               {pointCount}ポイント
             </div>
           </div>
         </div>
-        <div className="flex flex-row w-full">
+        <div className="flex w-full flex-row">
           <div className="w-1/5" />
           <div>
-            <label className="label justify-start text-xl mx-auto">
+            <label className="label mx-auto justify-start text-xl">
               <input
                 type="checkbox"
                 id="tunnelcheckbox"
@@ -93,10 +93,10 @@ export function SensorCourse({
                 className="checkbox checkbox-lg checkbox-primary"
                 onChange={(e) => handleChange(e)}
               />
-              <p className="text-xl ml-3">トンネルで停止</p>
+              <p className="ml-3 text-xl">トンネルで停止</p>
             </label>
             <div className="flex flex-row">
-              <label className="label justify-start text-xl mx-auto">
+              <label className="label mx-auto justify-start text-xl">
                 <input
                   type="radio"
                   id="tunnelradio"
@@ -105,9 +105,9 @@ export function SensorCourse({
                   checked={tunnelPoint === 0}
                   value={0}
                 />
-                <p className="text-xl ml-3">0P</p>
+                <p className="ml-3 text-xl">0P</p>
               </label>
-              <label className="label justify-start text-xl mx-auto">
+              <label className="label mx-auto justify-start text-xl">
                 <input
                   type="radio"
                   id="tunnelradio"
@@ -116,11 +116,11 @@ export function SensorCourse({
                   checked={tunnelPoint === 10}
                   value={10}
                 />
-                <p className="text-xl ml-3">10P</p>
+                <p className="ml-3 text-xl">10P</p>
               </label>
             </div>
             <div className="divider m-1" />
-            <label className="label justify-start text-xl mx-auto">
+            <label className="label mx-auto justify-start text-xl">
               <input
                 type="checkbox"
                 id="wallcheckbox"
@@ -128,12 +128,12 @@ export function SensorCourse({
                 onChange={(e) => handleChange(e)}
                 checked={wallPoint !== 0 && wallPoint !== -5}
               />
-              <p className="text-xl ml-3">壁で停止</p>
+              <p className="ml-3 text-xl">壁で停止</p>
             </label>
             <div className="grid grid-cols-2">
               {wallPointArray.map((point) => (
                 <div key={point}>
-                  <label className="label justify-start text-xl mx-auto">
+                  <label className="label mx-auto justify-start text-xl">
                     <input
                       type="radio"
                       id="wallradio"
@@ -142,17 +142,17 @@ export function SensorCourse({
                       checked={wallPoint === point}
                       value={point}
                     />
-                    <p className="text-xl ml-3">{point}P</p>
+                    <p className="ml-3 text-xl">{point}P</p>
                   </label>
                 </div>
               ))}
             </div>
           </div>
         </div>
-        <div className="flex justify-center w-full">
+        <div className="flex w-full justify-center">
           <button
             type="button"
-            className="btn btn-accent mx-auto m-3"
+            className="btn btn-accent m-3 mx-auto"
             onClick={() => setModalOpen(1)}
           >
             結果送信
@@ -160,7 +160,7 @@ export function SensorCourse({
           </button>
           <button
             type="button"
-            className="btn btn-primary mx-auto m-3"
+            className="btn btn-primary m-3 mx-auto"
             onClick={handleRetry}
             disabled={isRetry}
           >
