@@ -1,9 +1,11 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter"
+import bcrypt from "bcrypt"
 import type { User } from "next-auth"
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
-import { fetchUser } from "@/app/lib/auth/fetchUser"
+import { z } from "zod"
 import { db } from "@/app/lib/db/db"
+import { getUserByName } from "@/app/lib/db/queries/queries"
 import authConfig from "@/auth.config"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -19,16 +21,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           placeholder: "*********",
         },
       },
-      authorize: async (credentials) => {
-        try {
-          const user = await fetchUser(credentials)
-          if (!user) {
-            return null
+      async authorize(credentials) {
+        const parsedCredentials = z
+          .object({
+            username: z.string().nonempty(),
+            password: z.string().nonempty(),
+          })
+          .safeParse(credentials)
+
+        if (parsedCredentials.success) {
+          const { username, password } = parsedCredentials.data
+          const user = await getUserByName(username)
+
+          const passwordMatch = await bcrypt.compare(password, user.password)
+          if (passwordMatch) {
+            return {
+              id: user.id.toString(),
+              name: user.name,
+              email: null,
+              image: null,
+            } as User
           }
-          return user as User
-        } catch {
-          return null
         }
+        return null
       },
     }),
   ],
