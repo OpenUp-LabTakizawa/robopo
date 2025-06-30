@@ -2,6 +2,16 @@
   "name": "robopo",
   "version": "0.1.0",
   "private": true,
+  "description": "Scoring and Calculation Application for Robosava",
+  "author": {
+    "name": "kazutan",
+    "url": "https://openup-labtakizawa.github.io/robopo/"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpenUp-LabTakizawa/robopo"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
