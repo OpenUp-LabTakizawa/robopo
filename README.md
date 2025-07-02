@@ -55,7 +55,7 @@ pnpm dev
 bun dev
 ```
 
-ブラウザで [http://localhost:3000](http.://localhost:3000) を開くと、結果が表示されます。
+ブラウザで [http://localhost:3000](http://localhost:3000) を開くと、結果が表示されます。
 
 ページの編集を始めるには、`app/page.tsx` を修正してください。ファイルを編集すると、ページは自動的に更新されます。
 
