@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # はじめに
 
-本ドキュメントでは、こどもテックキャラバン開催時に実施されるロボサバ大会の集計・採点のサポート用アプリケーションのシステム(以下、「ROBOPO アプリ[^1]」と記す)とその開発について解説する。この情報では 2025 年 3 月時点の現状と筆者の考える今後の展望を記す。
+本ドキュメントでは、こどもテックキャラバン開催時に実施されるロボサバ大会の集計・採点のサポート用アプリケーションのシステム(以下、「ROBOPO アプリ[^1]」と記す)とその開発について解説する。この情報では 2025 年 7 月時点の現状と筆者の考える今後の展望を記す。
 
 ## 解説目的
 
@@ -34,15 +34,11 @@ OpenUp ラボ滝沢構成員
 
 ## アプリケーション本体・ソースコードについて
 
-実際の Web アプリケーションは Vercel にホスティングしているため、以下からアクセス可能である。
+実際の Web アプリケーションは、以下からアクセス可能である。
 
-(Vercel でなくなる可能性ある)
-
-[https://robopo.vercel.app/](https://robopo.vercel.app/)
+[https://robopo.caravan-kidstec.com/](https://robopo.caravan-kidstec.com/)
 
 また、code 自体も以下 GitHub から取得することが可能である。
-
-(Organization の GitHub にする予定)
 
 [https://github.com/openup-labtakizawa/robopo](https://github.com/openup-labtakizawa/robopo)
 

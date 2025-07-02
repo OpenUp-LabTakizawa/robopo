@@ -16,16 +16,13 @@ sidebar_position: 1
 ```
 /
 ├─ app // システム本体のコード
-│ ├─ (linkheader) // header のあるページ
-│ │ ├─ config // 大会管理
-│ │ ├─ course // コース一覧
-│ │ ├─ player // 選手一覧
-│ │ ├─ umpire // 採点者一覧
-│ │ ├─ layout.tsx
-│ │ └─ page.tsx // トップページ
-│ ├─ (nolinkheader) // header のないページ
-│ │ ├─ challenge // チャレンジ・採点
-│ │ └─ summary // ポイント集計・表示
+│ ├─ config // 大会管理
+│ ├─ course // コース一覧
+│ ├─ player // 選手一覧
+│ ├─ umpire // 採点者一覧
+│ ├─ challenge // チャレンジ・採点
+│ ├─ summary // ポイント集計・表示
+│ ├─ page.tsx // トップページ
 │ ├─ api // api
 │ ├─ components // 各ページの部品
 │ │ ├─ beforeUnload // 採点中画面の再読み込み機能
@@ -35,8 +32,7 @@ sidebar_position: 1
 │ │ ├─ home // トップページの表示機能
 │ │ ├─ parts // アプリケーション全体で使用する部品
 │ │ ├─ summary // 集計に関わる機能
-│ │ ├─ header.tsx // ヘッダー
-│ │ └─ nolinkheader.tsx // リンクのないヘッダー
+│ │ └─ header.tsx // ヘッダー
 │ ├─ lib // ライブラリ
 │ │ ├─ db // DB 関連ファイル
 │ │ ├─ sound // 音声データ、useSound 関連ファイル

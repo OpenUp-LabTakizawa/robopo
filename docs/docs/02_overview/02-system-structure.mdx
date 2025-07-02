@@ -12,7 +12,5 @@ import systemStructure from "!!raw-loader!/static/drawioData/systemStructure.dra
   <figcaption className="text--center">システム構成</figcaption>
 </figure>
 
-2024 年 11 月こどもテックキャラバン時には上記のように GitHub 上にコードを上げて、Vercel でのホスティング。Neon というサービスの DB を利用した。
-この形にこだわる必要はないと考えている。AWS に移行できるはず。[^1]
-
-[^1]: この形になったのは費用面で無料だったからである。Vercel の DB ではないのはアカウントに 1 つしか作れなくて他の開発で使っていたため。
+GitHub 上にコードを上げて、ConoHa VPS でのホスティング。
+VPS 上で、Dokployというサービスを使用して、Frontend Ubuntu、Backend PostgreSQL、それぞれコンテナ上で動かしている。
