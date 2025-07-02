@@ -106,7 +106,7 @@ bun dev
 
 要了解有关 Next.js 的更多信息，请查看以下资源：
 
-- [Next.js 文档](https.org/docs) - 了解 Next.js 的功能和 API。
+- [Next.js 文档](https://nextjs.org/docs) - 了解 Next.js 的功能和 API。
 - [学习 Next.js](https://nextjs.org/learn) - 一个交互式的 Next.js 教程。
 
 您可以查看 [Next.js 的 GitHub 存储库](https://github.com/vercel/next.js/) - 欢迎您的反馈和贡献！
