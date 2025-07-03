@@ -52,16 +52,8 @@ export function Challenge({
   setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>
 }): React.JSX.Element {
   const router = useRouter()
-  if (field === null || mission === null || point === null) {
-    return (
-      <>
-        <div>エラーです。</div>
-        <ReloadButton />
-      </>
-    )
-  }
-  const fieldState = deserializeField(field)
-  const missionState = deserializeMission(mission)
+  const fieldState = deserializeField(field ?? "")
+  const missionState = deserializeMission(mission ?? "")
   const missionPair = missionStatePair(missionState)
   const pointState: PointState = deserializePoint(point)
   const [isRetry, setIsRetry] = useState<boolean>(false)
@@ -98,6 +90,15 @@ export function Challenge({
   backSound.volume = 0.2
   const goalSound = new Audio(GoalSound)
 
+  if (field === null || mission === null || point === null) {
+    return (
+      <>
+        <div>エラーです。</div>
+        <ReloadButton />
+      </>
+    )
+  }
+
   // クリックされたpanelの情報を入れる
   function handleNext(row: number, col: number) {
     if (
@@ -126,9 +127,9 @@ export function Challenge({
           soundOn && nextSound.play()
         }
         // 一回目か
-        if (!isRetry) {
+        if (!isRetry && !isGoal) {
           setResult1(result1 + 1)
-        } else if (result2 !== null) {
+        } else if (result2 !== null && !isGoal) {
           // リトライか
           setResult2(result2 + 1)
         }
