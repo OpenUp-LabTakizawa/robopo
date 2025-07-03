@@ -362,7 +362,7 @@ export function Challenge({
             setIsGoal(true)
             setModalOpen(1)
             soundOn && goalSound.play()
-          } else {
+          } else if (nowMission < missionPair.length - 1) {
             setNowMission(nowMission + 1)
             soundOn && nextSound.play()
           }
@@ -447,7 +447,7 @@ export function Challenge({
     field: fieldState,
     botPosition,
     botDirection,
-    nextMissionPair: isGoal
+    nextMissionPair: isGoal && nowMission > 0
       ? missionPair[nowMission - 1]
       : missionPair[nowMission],
     onPanelClick: handleNext,
