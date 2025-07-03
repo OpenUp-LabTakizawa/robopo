@@ -16,7 +16,7 @@ type EditProps = {
   onPanelClick: (row: number, col: number) => void
 }
 
-type ChallengeProps = {
+type ChalProps = {
   type: "challenge"
   field: FieldState
   botPosition: { row: number; col: number }
@@ -26,7 +26,7 @@ type ChallengeProps = {
 }
 
 // Fieldを表すコンポーネント
-export function Field(props: EditProps | ChallengeProps) {
+export function Field(props: EditProps | ChalProps) {
   return (
     <div
       className={`relative grid grid-cols-${MAX_FIELD_WIDTH} grid-rows-${MAX_FIELD_HEIGHT} mx-auto`}
@@ -38,7 +38,7 @@ export function Field(props: EditProps | ChallengeProps) {
       {props.field.map((row, rowIndex) =>
         row.map((panel, colIndex) => (
           <Panel
-            key={`${rowIndex}-${colIndex}`}
+            key={`panel-${rowIndex}-${colIndex}-${String(panel)}`}
             value={panel}
             onClick={() => props.onPanelClick(rowIndex, colIndex)}
           />
