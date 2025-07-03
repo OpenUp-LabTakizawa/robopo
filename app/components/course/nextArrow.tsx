@@ -16,10 +16,14 @@ export function NextArrow({
   row: number
   col: number
   direction: MissionValue
-  nextMissionPair: MissionValue[]
+  nextMissionPair: MissionValue[] | undefined
   duration?: number // 点滅速度（秒）
   type?: string
 }) {
+  if (!nextMissionPair || nextMissionPair[0] === null || nextMissionPair[1] === null || nextMissionPair[0] === undefined || nextMissionPair[1] === undefined) {
+    // 次のミッションがない場合は何も表示しない
+    return null
+  }
   if (nextMissionPair[0] === "mf" || nextMissionPair[0] === "mb") {
     const [nextRow, nextCol] = getNextPosition(
       row,
@@ -27,6 +31,7 @@ export function NextArrow({
       direction,
       nextMissionPair[0],
       nextMissionPair[1],
+
     )
     return (
       <NextMoveArrow

@@ -1,3 +1,4 @@
+import type React from "react"
 import { NextArrow } from "@/app/components/course/nextArrow"
 import { Panel } from "@/app/components/course/panel"
 import { Robot } from "@/app/components/course/robot"
@@ -10,53 +11,54 @@ import {
   type MissionValue,
 } from "@/app/components/course/utils"
 
-type EditProps = {
-  type: "edit"
+type FieldProps = {
   field: FieldState
+  type: "edit" | "challenge" | "ipponBashi"
+  botPosition?: { row: number; col: number }
+  botDirection?: MissionValue
+  nextMissionPair?: MissionValue[]
   onPanelClick: (row: number, col: number) => void
-}
-
-type ChalProps = {
-  type: "challenge"
-  field: FieldState
-  botPosition: { row: number; col: number }
-  botDirection: MissionValue
-  nextMissionPair: MissionValue[]
-  onPanelClick: (row: number, col: number) => void
+  customStyle?: React.CSSProperties
 }
 
 // Fieldを表すコンポーネント
-export function Field(props: EditProps | ChalProps) {
+export function Field({
+  field,
+  type,
+  botPosition,
+  botDirection,
+  nextMissionPair,
+  onPanelClick,
+  customStyle,
+}: FieldProps): React.JSX.Element {
+  const styles = customStyle ?? {
+    gridTemplateColumns: `repeat(${MAX_FIELD_WIDTH}, ${getPanelWidth()}px)`,
+    gridTemplateRows: `repeat(${MAX_FIELD_HEIGHT}, ${getPanelHeight()}px)`,
+  }
   return (
-    <div
-      className={`relative grid grid-cols-${MAX_FIELD_WIDTH} grid-rows-${MAX_FIELD_HEIGHT} mx-auto`}
-      style={{
-        gridTemplateColumns: `repeat(${MAX_FIELD_WIDTH}, ${getPanelWidth()}px)`,
-        gridTemplateRows: `repeat(${MAX_FIELD_HEIGHT}, ${getPanelHeight()}px)`,
-      }}
-    >
-      {props.field.map((row, rowIndex) =>
+    <div className={`relative mx-auto grid`} style={styles}>
+      {field.map((row, rowIndex) =>
         row.map((panel, colIndex) => (
           <Panel
             key={`panel-${rowIndex}-${colIndex}-${String(panel)}`}
             value={panel}
-            onClick={() => props.onPanelClick(rowIndex, colIndex)}
+            onClick={() => onPanelClick(rowIndex, colIndex)}
           />
         )),
       )}
       {/* challengeの時はbotを表示 */}
-      {props.type === "challenge" && (
+      {(type === "challenge" || type === "ipponBashi") && botPosition && botDirection && (
         <>
           <Robot
-            row={props.botPosition.row}
-            col={props.botPosition.col}
-            direction={props.botDirection}
+            row={botPosition.row}
+            col={botPosition.col}
+            direction={botDirection}
           />
           <NextArrow
-            row={props.botPosition.row}
-            col={props.botPosition.col}
-            direction={props.botDirection}
-            nextMissionPair={props.nextMissionPair}
+            row={botPosition.row}
+            col={botPosition.col}
+            direction={botDirection}
+            nextMissionPair={nextMissionPair}
             duration={1.5}
           />
         </>
