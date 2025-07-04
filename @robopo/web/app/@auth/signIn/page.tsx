@@ -41,7 +41,7 @@ export default function SignIn() {
   return (
     <dialog className="modal modal-open">
       <div className="modal-box">
-        <form action={action} className="place-items-center">
+        <form action={action} className="flex flex-col items-center">
           <label className="input" htmlFor="username">
             <span className="label">ユーザー名</span>
             <input
