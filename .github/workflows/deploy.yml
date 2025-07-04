@@ -4,13 +4,13 @@ on:
   push:
     branches: main
     paths:
-      - "docs/**"
+      - "@robopo/docs/**"
     # Review gh actions docs if you want to further define triggers, paths, etc
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
 
 defaults:
   run:
-    working-directory: docs
+    working-directory: "@robopo/docs"
 
 jobs:
   build:
@@ -38,7 +38,7 @@ jobs:
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/build
+          path: "@robopo/docs/build"
 
   deploy:
     name: Deploy to GitHub Pages

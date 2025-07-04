@@ -2,7 +2,22 @@
   "name": "robopo",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "./@robopo/web"
+  ],
   "description": "Scoring and Calculation Application for Robosava",
+  "keywords": [
+    "auth.js",
+    "biome",
+    "docusaurus",
+    "drrizzle",
+    "nextjs",
+    "node.js",
+    "react",
+    "robosava",
+    "tailwindcss",
+    "typescript"
+  ],
   "author": {
     "name": "kazutan",
     "url": "https://openup-labtakizawa.github.io/robopo/"
@@ -12,43 +27,21 @@
     "type": "git",
     "url": "git+https://github.com/OpenUp-LabTakizawa/robopo"
   },
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "biome check --write"
+  "bugs": {
+    "url": "https://github.com/OpenUp-LabTakizawa/robopo/issues"
   },
-  "dependencies": {
-    "@auth/drizzle-adapter": "^1.10.0",
-    "next": "^15.3.4",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+  "homepage": "https://openup-labtakizawa.github.io/robopo/",
+  "scripts": {
+    "dev": "npm run -w @robopo/web dev",
+    "dev-win": "npm run -w @robopo/web dev-win",
+    "build": "npm run -w @robopo/web build",
+    "start": "npm run -w @robopo/web start",
+    "lint": "biome lint --write",
+    "format": "biome format --write",
+    "check": "biome check --write"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.6",
-    "@heroicons/react": "^2.2.0",
-    "@tailwindcss/postcss": "^4.1.11",
-    "@types/bcrypt": "^5.0.2",
-    "@types/node": "^24.0.10",
-    "@types/pg": "^8.15.4",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "bcrypt": "^6.0.0",
-    "daisyui": "^5.0.43",
-    "drizzle-kit": "^0.31.4",
-    "drizzle-orm": "^0.44.2",
-    "next-auth": "^5.0.0-beta.29",
-    "next-navigation-guard": "^0.2.0",
-    "next-rspack": "canary",
-    "pg": "^8.16.3",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.11",
-    "typescript": "^5.8.3",
-    "zod": "^3.25.67"
-  },
-  "overrides": {
-    "@esbuild-kit/core-utils": {
-      "esbuild": "0.25.5"
-    }
+    "@types/node": "^24.0.10"
   }
 }
