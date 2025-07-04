@@ -19,7 +19,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/OpenUp-LabTakizawa/robopo",
-    "directory": "@robopo/docs"
+    "directory": "docs"
   },
   "bugs": {
     "url": "https://github.com/OpenUp-LabTakizawa/robopo/issues"
