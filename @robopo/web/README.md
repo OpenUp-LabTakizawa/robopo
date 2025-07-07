@@ -1,4 +1,4 @@
-English | [日本語](README.ja.md) | [简体中文](README.zh-CN.md)
+English | [日本語](/@robopo/web/README.ja.md) | [简体中文](/@robopo/web/README.zh-CN.md)
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 

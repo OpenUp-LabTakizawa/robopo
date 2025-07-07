@@ -1,4 +1,4 @@
-[English](README.md) | 日本語 | [简体中文](README.zh-CN.md)
+[English](/@robopo/web/README.md) | 日本語 | [简体中文](/@robopo/web/README.zh-CN.md)
 
 # Next.js プロジェクト (日本語)
 
