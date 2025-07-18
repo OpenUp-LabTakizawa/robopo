@@ -39,7 +39,7 @@ export function MissionList({
   }
 
   return (
-    <div className="w-full max-h-64 overflow-auto p-4">
+    <div className="max-h-64 w-full overflow-auto p-4">
       <div>MissionEdit</div>
       <div className="form-control">
         <table className="table">

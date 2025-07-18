@@ -137,7 +137,7 @@ export function CommonRegister({
       <div>
         <label
           htmlFor={label}
-          className="block text-sm font-medium text-gray-700"
+          className="block font-medium text-gray-700 text-sm"
         >
           {dispName}
         </label>
@@ -147,7 +147,7 @@ export function CommonRegister({
           value={value}
           onChange={(e) => setValue(e.target.value)}
           required={true}
-          className="mt-1 p-2 border border-gray-300 rounded-md"
+          className="mt-1 rounded-md border border-gray-300 p-2"
         />
       </div>
     ),
@@ -160,7 +160,7 @@ export function CommonRegister({
         <button
           type="submit"
           disabled={loading}
-          className="btn btn-primary mx-auto m-3"
+          className="btn btn-primary m-3 mx-auto"
         >
           {loading ? "登録中..." : "↓新規登録"}
         </button>

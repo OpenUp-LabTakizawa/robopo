@@ -26,7 +26,7 @@ export function Panel({
     <button
       type="button"
       onClick={onClick}
-      className="flex justify-center items-center w-10 h-10 border border-gray-800 bg-white"
+      className="flex h-10 w-10 items-center justify-center border border-gray-800 bg-white"
       style={{ width: `${panelWidth}px`, height: `${panelHeight}px` }}
     >
       {hasRole && (
@@ -34,7 +34,7 @@ export function Panel({
           className={
             routeStyle +
             textStyle +
-            " flex justify-center items-center font-bold rounded-sm"
+            " flex items-center justify-center rounded-sm font-bold"
           }
           style={{
             width: `${panelWidth - 10}px`,

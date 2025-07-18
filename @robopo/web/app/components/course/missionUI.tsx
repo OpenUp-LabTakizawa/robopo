@@ -228,7 +228,7 @@ export function MissionUI({
                   </option>
                 ))}
               </select>
-              <p className="self-center ml-2">ポイント</p>
+              <p className="ml-2 self-center">ポイント</p>
             </div>
           </>
         ) : selectedId === null ? (
@@ -266,7 +266,7 @@ export function MissionUI({
                       </option>
                     ))}
                   </select>
-                  <p className="self-center ml-2">パネル</p>
+                  <p className="ml-2 self-center">パネル</p>
                   <select
                     className="select select-bordered ml-2"
                     defaultValue={0}
@@ -279,7 +279,7 @@ export function MissionUI({
                       </option>
                     ))}
                   </select>
-                  <p className="self-center ml-2">ポイント</p>{" "}
+                  <p className="ml-2 self-center">ポイント</p>{" "}
                 </>
               ) : isTurn ? (
                 <>
@@ -297,7 +297,7 @@ export function MissionUI({
                       </option>
                     ))}
                   </select>
-                  <p className="self-center ml-2">度</p>
+                  <p className="ml-2 self-center">度</p>
                   <select
                     className="select select-bordered"
                     defaultValue={0}
@@ -312,7 +312,7 @@ export function MissionUI({
                       </option>
                     ))}
                   </select>
-                  <p className="self-center ml-2">ポイント</p>
+                  <p className="ml-2 self-center">ポイント</p>
                 </>
               ) : (
                 <p className="self-center">{"<"}-選択してください</p>
@@ -321,7 +321,7 @@ export function MissionUI({
           </>
         )}
       </div>
-      <div className="grid grid-cols-4 mt-2">
+      <div className="mt-2 grid grid-cols-4">
         <div />
         <button
           type="button"

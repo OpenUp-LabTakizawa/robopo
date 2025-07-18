@@ -60,20 +60,21 @@ export function View({
     return (
       <>
         {successMessage && (
-          <div className="text-green-500 font-semibold">{successMessage}</div>
+          <div className="font-semibold text-green-500">{successMessage}</div>
         )}
         {errorMessage && (
-          <div className="text-red-500 font-semibold">{errorMessage}</div>
+          <div className="font-semibold text-red-500">{errorMessage}</div>
         )}
         <div className="flex w-fit">
-          <p className="flex m-3">選択した{commonString}を</p>
+          <p className="m-3 flex">選択した{commonString}を</p>
           {type === "course" && (
             <Link
               href={`/course/edit/${createQueryParams(commonId)}`}
-              className={`flex btn mx-auto m-3 ${commonId?.length !== 1
-                  ? "pointer-events-none btn-disabled"
+              className={`btn m-3 mx-auto flex ${
+                commonId?.length !== 1
+                  ? "btn-disabled pointer-events-none"
                   : "btn-primary"
-                }`}
+              }`}
               aria-disabled={commonId?.length !== 1}
               tabIndex={commonId?.length !== 1 ? -1 : undefined}
               onClick={() => {
@@ -91,10 +92,11 @@ export function View({
                   ? `/umpire/assign/${createQueryParams(commonId)}`
                   : `/course/assign/${createQueryParams(commonId)}`
             }
-            className={`flex btn mx-auto m-3 ml-5 ${commonId === null || commonId?.length === 0
-                ? "pointer-events-none btn-disabled"
+            className={`btn m-3 mx-auto ml-5 flex ${
+              commonId === null || commonId?.length === 0
+                ? "btn-disabled pointer-events-none"
                 : "btn-primary"
-              }`}
+            }`}
             aria-disabled={commonId === null || commonId?.length === 0}
             tabIndex={
               commonId === null || commonId?.length === 0 ? -1 : undefined
@@ -111,10 +113,11 @@ export function View({
                   ? `/umpire/delete/${createQueryParams(commonId)}`
                   : `/course/delete/${createQueryParams(commonId)}`
             }
-            className={`flex btn mx-auto m-3 ml-5 ${commonId === null || commonId?.length === 0
-                ? "pointer-events-none btn-disabled"
+            className={`btn m-3 mx-auto ml-5 flex ${
+              commonId === null || commonId?.length === 0
+                ? "btn-disabled pointer-events-none"
                 : "btn-warning"
-              }`}
+            }`}
             aria-disabled={commonId === null || commonId?.length === 0}
             tabIndex={
               commonId === null || commonId?.length === 0 ? -1 : undefined

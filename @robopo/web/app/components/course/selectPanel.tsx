@@ -20,11 +20,11 @@ export function SelectPanel({
   return (
     <form>
       <div className="form-control">
-        <label className="cursor-pointer label justify-start">
+        <label className="label cursor-pointer justify-start">
           <input
             type="radio"
             name="mode"
-            className="radio checked:bg-red-500 mr-2"
+            className="radio mr-2 checked:bg-red-500"
             value="start"
             onChange={handleChange}
             disabled={isStart(field)}
@@ -33,11 +33,11 @@ export function SelectPanel({
         </label>
       </div>
       <div className="form-control">
-        <label className="cursor-pointer label justify-start">
+        <label className="label cursor-pointer justify-start">
           <input
             type="radio"
             name="mode"
-            className="radio checked:bg-blue-500 mr-2"
+            className="radio mr-2 checked:bg-blue-500"
             value="route"
             onChange={handleChange}
             disabled={!isStart(field)}
@@ -46,11 +46,11 @@ export function SelectPanel({
         </label>
       </div>
       <div className="form-control">
-        <label className="cursor-pointer label justify-start">
+        <label className="label cursor-pointer justify-start">
           <input
             type="radio"
             name="mode"
-            className="radio checked:bg-green-500 mr-2"
+            className="radio mr-2 checked:bg-green-500"
             value="goal"
             onChange={handleChange}
             disabled={!isStart(field) || isGoal(field)}

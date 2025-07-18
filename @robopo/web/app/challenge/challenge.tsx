@@ -176,9 +176,7 @@ function IpponBashiSection({
         <IpponBashiUI
           botPosition={botPosition}
           botDirection={botDirection}
-          nextMissionPair={
-            isGoal ? [null, null] : missionPair[nowMission]
-          }
+          nextMissionPair={isGoal ? [null, null] : missionPair[nowMission]}
           onPanelClick={handleNext}
         />
       </div>
@@ -447,9 +445,7 @@ export function Challenge({
     field: fieldState,
     botPosition,
     botDirection,
-    nextMissionPair: isGoal
-      ? [null, null]
-      : missionPair[nowMission],
+    nextMissionPair: isGoal ? [null, null] : missionPair[nowMission],
     onPanelClick: handleNext,
     nowMission,
     isRetry,

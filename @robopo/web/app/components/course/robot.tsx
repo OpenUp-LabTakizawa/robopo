@@ -4,7 +4,6 @@ import {
   getPanelWidth,
   type MissionValue,
 } from "@/app/components/course/utils"
-import botImage from "@/public/robot.png"
 
 export function Robot({
   row,
@@ -47,7 +46,7 @@ export function Robot({
 
   return (
     <div style={botStyle}>
-      <Image src={botImage} alt="bot" fill sizes="100vw" />
+      <Image src="/robot.png" alt="bot" fill sizes="100vw" />
     </div>
   )
 }

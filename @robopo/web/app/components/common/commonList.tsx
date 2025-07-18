@@ -11,11 +11,11 @@ import type {
 type CommonListProps = {
   type: "player" | "umpire" | "course" | "competition"
   commonDataList:
-  | SelectPlayer[]
-  | SelectUmpire[]
-  | SelectCompetition[]
-  | SelectPlayerWithCompetition[]
-  | SelectUmpireWithCompetition[]
+    | SelectPlayer[]
+    | SelectUmpire[]
+    | SelectCompetition[]
+    | SelectPlayerWithCompetition[]
+    | SelectUmpireWithCompetition[]
 }
 
 function TableComponent({
@@ -24,11 +24,11 @@ function TableComponent({
 }: {
   type: CommonListProps["type"]
   common:
-  | SelectPlayer
-  | SelectUmpire
-  | SelectCompetition
-  | SelectPlayerWithCompetition
-  | SelectUmpireWithCompetition
+    | SelectPlayer
+    | SelectUmpire
+    | SelectCompetition
+    | SelectPlayerWithCompetition
+    | SelectUmpireWithCompetition
 }) {
   return (
     <>
@@ -126,7 +126,7 @@ export function CommonRadioList({
   return (
     <>
       {type !== "competition" && (
-        <h2 className="text-center text-xl font-semibold">
+        <h2 className="text-center font-semibold text-xl">
           {type === "player"
             ? "選手"
             : type === "umpire"
@@ -138,8 +138,8 @@ export function CommonRadioList({
         </h2>
       )}
       <div className="w-full">
-        <div className="border overflow-x-auto overflow-y-auto max-h-96 sm:h-96 m-3">
-          <table className="table table-pin-rows">
+        <div className="m-3 max-h-96 overflow-x-auto overflow-y-auto border sm:h-96">
+          <table className="table-pin-rows table">
             <thead>
               <tr>
                 <th>
@@ -230,7 +230,7 @@ export function CommonCheckboxList({
   return (
     <>
       {type !== "competition" && (
-        <h2 className="text-center text-xl font-semibold">
+        <h2 className="text-center font-semibold text-xl">
           {type === "player"
             ? "選手"
             : type === "umpire"
@@ -242,8 +242,8 @@ export function CommonCheckboxList({
         </h2>
       )}
       <div className="w-full">
-        <div className="border overflow-x-auto overflow-y-auto max-h-96 sm:h-96 m-3">
-          <table className="table table-pin-rows">
+        <div className="m-3 max-h-96 overflow-x-auto overflow-y-auto border sm:h-96">
+          <table className="table-pin-rows table">
             <thead>
               <tr>
                 <th>
