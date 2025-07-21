@@ -46,7 +46,7 @@
     "@biomejs/biome": "^2.1.1",
     "@heroicons/react": "^2.2.0",
     "@tailwindcss/postcss": "^4.1.11",
-    "@types/bcrypt": "^5.0.2",
+    "@types/bcrypt": "^6.0.0",
     "@types/node": "^24.0.14",
     "@types/pg": "^8.15.4",
     "@types/react": "^19.1.8",
