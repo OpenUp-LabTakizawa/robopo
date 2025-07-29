@@ -39,8 +39,8 @@
   "dependencies": {
     "@auth/drizzle-adapter": "^1.10.0",
     "next": "^15.4.4",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.1.2",
@@ -52,7 +52,7 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "bcrypt": "^6.0.0",
-    "daisyui": "^5.0.48",
+    "daisyui": "^5.0.49",
     "drizzle-kit": "^0.31.4",
     "drizzle-orm": "^0.44.3",
     "next-auth": "^5.0.0-beta.29",
