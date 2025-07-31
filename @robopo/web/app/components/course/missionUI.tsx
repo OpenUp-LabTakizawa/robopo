@@ -126,7 +126,7 @@ export function MissionUI({
   }
 
   function handleButtonClick(event: React.MouseEvent<HTMLButtonElement>) {
-    const id = event.currentTarget.id
+    const {id} = event.currentTarget
     if (selectedId === null) { return }
 
     let newStates = { newMissionState: [...mission], newPointState: [...point] }
@@ -354,7 +354,6 @@ export function MissionUI({
             selectedId === null ||
             selectedMission === null ||
             selectedParam === null ||
-            Number.isNaN(selectedPoint) ||
             selectedPoint == null
           }
           onClick={handleButtonClick}
