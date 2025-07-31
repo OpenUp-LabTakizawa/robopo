@@ -87,61 +87,75 @@ export function MissionUI({
     return false
   }
 
-  function handleButtonClick(event: React.MouseEvent<HTMLButtonElement>) {
-    const id = event.currentTarget.id
-
-    if (selectedId === null) {
-      return
-    }
+  function addMission(
+    selectedId: number,
+    selectedMission: MissionValue,
+    selectedParam: number,
+    selectedPoint: PointValue,
+    mission: MissionState,
+    point: PointState
+  ) {
     const newMissionState = [...mission]
     const newPointState = [...point]
+    if (selectedId === -1) {
+      newMissionState[2] = selectedMission
+      newMissionState[3] = selectedParam
+      newPointState[2] = selectedPoint
+    } else {
+      const insertIndex = 2 * selectedId + 4
+      newMissionState.splice(insertIndex, 0, selectedMission, selectedParam)
+      newPointState.splice(selectedId + 3, 0, selectedPoint)
+    }
+    return { newMissionState, newPointState }
+  }
+
+  function updateMission(
+    selectedId: number,
+    selectedMission: MissionValue,
+    selectedParam: number,
+    selectedPoint: PointValue,
+    mission: MissionState,
+    point: PointState
+  ) {
+    const newMissionState = [...mission]
+    const newPointState = [...point]
+    newMissionState[2 * selectedId + 2] = selectedMission
+    newMissionState[2 * selectedId + 3] = selectedParam
+    newPointState[selectedId + 2] = selectedPoint
+    return { newMissionState, newPointState }
+  }
+
+  function handleButtonClick(event: React.MouseEvent<HTMLButtonElement>) {
+    const id = event.currentTarget.id
+    if (selectedId === null) { return }
+
+    let newStates = { newMissionState: [...mission], newPointState: [...point] }
 
     if (isStartGoal() && id === "update") {
+      const newMissionState = [...mission]
+      const newPointState = [...point]
       if (selectedId === -2) {
-        // Startで更新ボタン押下時
         newMissionState[0] = selectedMission
         newPointState[0] = 0
       } else {
-        // Goalで更新ボタン押下時
         newMissionState[1] = null
         newPointState[1] = selectedPoint
       }
-    } else if (
-      id === "add" &&
-      selectedMission !== null &&
-      selectedParam !== null &&
-      selectedPoint !== null
-    ) {
-      // 追加ボタン押下時
-      if (selectedId === -1) {
-        // ミッションに何も入っていない時
-        newMissionState[2] = selectedMission
-        newMissionState[3] = selectedParam
-        newPointState[2] = selectedPoint
-      } else {
-        const insertIndex = 2 * selectedId + 4
-        newMissionState.splice(insertIndex, 0, selectedMission, selectedParam)
-        newPointState.splice(selectedId + 3, 0, selectedPoint)
-      }
-    } else if (
-      id === "update" &&
-      !isStartGoal() &&
-      selectedMission !== null &&
-      selectedParam !== null &&
-      selectedPoint !== null &&
-      selectedId !== -1
-    ) {
-      // 更新ボタン押下時
-      newMissionState[2 * selectedId + 2] = selectedMission
-      newMissionState[2 * selectedId + 3] = selectedParam
-      newPointState[selectedId + 2] = selectedPoint
+      newStates = { newMissionState, newPointState }
+    } else if (id === "add" && selectedMission && selectedParam && selectedPoint) {
+      newStates = addMission(selectedId, selectedMission, selectedParam, selectedPoint, mission, point)
+    } else if (id === "update" && selectedMission && selectedParam && selectedPoint && selectedId !== -1) {
+      newStates = updateMission(selectedId, selectedMission, selectedParam, selectedPoint, mission, point)
     } else if (id === "delete" && selectedId !== -1) {
-      // 削除ボタン押下時
+      const newMissionState = [...mission]
+      const newPointState = [...point]
       newMissionState.splice(2 * selectedId + 2, 2)
       newPointState.splice(selectedId + 2, 1)
+      newStates = { newMissionState, newPointState }
     }
-    setMission(newMissionState)
-    setPoint(newPointState)
+
+    setMission(newStates.newMissionState)
+    setPoint(newStates.newPointState)
     resetUi()
   }
 
