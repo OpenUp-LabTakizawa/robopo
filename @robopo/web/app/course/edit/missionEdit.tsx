@@ -1,7 +1,12 @@
 import { useState } from "react"
-import { MissionUI } from "@/app/components/course/missionUI"
 import { MissionList } from "@/app/components/course/missionList"
-import { MissionState, PointState } from "@/app/components/course/utils"
+import { MissionUI } from "@/app/components/course/missionUI"
+import type {
+  MissionState,
+  MissionValue,
+  PointState,
+  PointValue,
+} from "@/app/components/course/utils"
 
 type MissionEditProps = {
   mission: MissionState
@@ -10,9 +15,25 @@ type MissionEditProps = {
   setPoint: React.Dispatch<React.SetStateAction<PointState>>
 }
 
-export default function MissionEdit({ mission, setMission, point, setPoint }: MissionEditProps) {
+export default function MissionEdit({
+  mission,
+  setMission,
+  point,
+  setPoint,
+}: MissionEditProps) {
   const [radio, setRadio] = useState<number | null>(null)
+  const [selectedMission, setSelectedMission] = useState<MissionValue | null>(
+    null,
+  )
+  const [selectedParam, setSelectedParam] = useState<number | null>(null) // 選択されたミッションのパラメータ
+  const [selectedPoint, setSelectedPoint] = useState<PointValue | null>(null)
 
+  function handleRadioChange(selectedIndex: number) {
+    setRadio(selectedIndex) // 選択されたインデックスを状態として保存
+    setSelectedMission(null) // 選択されたミッションをリセット
+    setSelectedParam(null) // 選択されたパラメータをリセット
+    setSelectedPoint(null) // 選択されたポイントをリセット
+  }
   // ラジオボタンを押した時の動作
   // ラジオボタン value=0以上の整数 はmissionの順番
   // ラジオボタン value=-1 はmissionが設定されていない
@@ -21,12 +42,17 @@ export default function MissionEdit({ mission, setMission, point, setPoint }: Mi
 
   return (
     <div className="container mx-auto">
-      <div className="card bg-base-100 w-full min-w-72 shadow-xl">
+      <div className="card w-full min-w-72 bg-base-100 shadow-xl">
         <div className="card-body">
-          <MissionList mission={mission} point={point} radio={radio} setRadio={setRadio} />
+          <MissionList
+            mission={mission}
+            point={point}
+            radio={radio}
+            handleRadioChange={handleRadioChange}
+          />
         </div>
       </div>
-      <div className="card bg-base-100 w-full min-w-72 shadow-xl">
+      <div className="card w-full min-w-72 bg-base-100 shadow-xl">
         <div className="card-body">
           <MissionUI
             mission={mission}
@@ -34,6 +60,12 @@ export default function MissionEdit({ mission, setMission, point, setPoint }: Mi
             point={point}
             setPoint={setPoint}
             selectedId={radio}
+            selectedMission={selectedMission}
+            setSelectedMission={setSelectedMission}
+            selectedParam={selectedParam}
+            setSelectedParam={setSelectedParam}
+            selectedPoint={selectedPoint}
+            setSelectedPoint={setSelectedPoint}
             setRadio={setRadio}
           />
         </div>

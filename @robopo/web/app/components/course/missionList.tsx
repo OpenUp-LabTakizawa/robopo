@@ -1,4 +1,3 @@
-import type React from "react"
 import { useEffect, useState } from "react"
 import {
   type MissionState,
@@ -13,12 +12,12 @@ export function MissionList({
   mission,
   point,
   radio,
-  setRadio,
+  handleRadioChange,
 }: {
   mission: MissionState
   point: PointState
   radio: number | null
-  setRadio: React.Dispatch<React.SetStateAction<number | null>>
+  handleRadioChange: (selectedIndex: number) => void
 }) {
   const [statePair, setMissionStatePair] = useState<MissionValue[][]>(
     missionStatePair(mission),
@@ -34,9 +33,6 @@ export function MissionList({
   // ラジオボタン value=-1 はmissionが設定されていない
   // ラジオボタン value=-2 はStart
   // ラジオボタン value=-3 はGoal
-  function handleRadioChange(selectedIndex: number) {
-    setRadio(selectedIndex) // 選択されたインデックスを状態として保存
-  }
 
   return (
     <div className="max-h-64 w-full overflow-auto p-4">
@@ -80,8 +76,8 @@ export function MissionList({
               </th>
               <td>Start</td>
               {mission[0] === null ||
-              mission[0] === undefined ||
-              mission[0] === "" ? (
+                mission[0] === undefined ||
+                mission[0] === "" ? (
                 <td>-</td>
               ) : (
                 <td>{MissionString[mission[0]]}</td>
@@ -91,7 +87,7 @@ export function MissionList({
             {statePair.length > 0 ? (
               statePair.map((mission, index) => (
                 <tr
-                  key={index}
+                  key={`${mission[0] ?? "null"}-${mission[1] ?? "null"}-${index}`}
                   className="hover cursor-pointer"
                   onClick={() => handleRadioChange(index)}
                   onKeyDown={(e) => {
@@ -165,8 +161,8 @@ export function MissionList({
               </th>
               <td>Goal</td>
               {mission[1] === null ||
-              mission[1] === undefined ||
-              mission[1] === "" ? (
+                mission[1] === undefined ||
+                mission[1] === "" ? (
                 <td>-</td>
               ) : (
                 <td>{MissionString[mission[1]]}</td>
