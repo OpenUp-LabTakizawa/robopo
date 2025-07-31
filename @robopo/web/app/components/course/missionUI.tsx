@@ -371,7 +371,7 @@ export function MissionUI({
             (selectedId !== -2 &&
               selectedId !== -3 &&
               selectedParam === null) ||
-            (selectedId !== -2 && (Number.isNaN(selectedPoint) || selectedPoint == null)) ||
+            (selectedId !== -2 &&selectedPoint == null) ||
             (selectedId !== -3 && selectedMission === null)
           }
         >
