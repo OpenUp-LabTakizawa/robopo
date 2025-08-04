@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "workspaces": [
-    "./@robopo/web",
-    "./@robopo/docs"
+    "./@robopo/web"
   ],
   "description": "Scoring and Calculation Application for Robosava",
   "keywords": [
@@ -37,7 +36,6 @@
     "dev-win": "npm run -w @robopo/web dev-win",
     "build": "npm run -w @robopo/web build",
     "start": "npm run -w @robopo/web start",
-    "docstart": "npm run -w @robopo/docs start",
     "lint": "biome lint --write",
     "format": "biome format --write",
     "check": "biome check --write"
