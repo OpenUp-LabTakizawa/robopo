@@ -4,8 +4,9 @@ sidebar_position: 1
 
 import Drawio from "@theme/Drawio"
 import workFlow from "!!raw-loader!/static/drawioData/workflow.drawio"
+import signIn from "./gif/001_signIn.gif"
 
-# 概要
+# 概要と管理者サインイン
 
 ユーザー編では POBOPO アプリの使い方について解説する。
 
@@ -26,3 +27,13 @@ import workFlow from "!!raw-loader!/static/drawioData/workflow.drawio"
   <Drawio content={workFlow} title={"ワークフロー"} />
   <figcaption className="text--center">ワークフロー</figcaption>
 </figure>
+
+## 管理者サインイン
+
+大会管理と集計結果表示機能は管理者のみが利用できる機能である。大会管理と集計結果表示機能を利用するには、まず管理者としてサインインする必要がある。
+以下、動画の手順に従いadminとしてサインインする。
+
+<img role="img" src={signIn} alt="Field and panel" width="600" />
+
+なお、管理者画面をパスワードロックする以上の意味は無いので、管理者を増やす機能は実装していない。
+管理者のパスワードは、本マニュアルには記載しないため、別途引き継ぐ。
