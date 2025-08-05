@@ -1,6 +1,6 @@
 {
   "name": "@robopo/docs",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "description": "Scoring and Calculation Application for Robosava",
   "keywords": [
@@ -69,8 +69,5 @@
   },
   "engines": {
     "node": ">=18.0"
-  },
-  "overrides": {
-    "webpack-dev-server": "^5.2.1"
   }
 }
