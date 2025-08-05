@@ -87,7 +87,7 @@ export function MissionList({
             {statePair.length > 0 ? (
               statePair.map((mission, index) => (
                 <tr
-                  key={`${mission[0] ?? "null"}-${mission[1] ?? "null"}`}
+                  key={`${mission[0] ?? "null"}-${mission[1] ?? "null"}-${index}`}
                   className="hover cursor-pointer"
                   onClick={() => handleRadioChange(index)}
                   onKeyDown={(e) => {
