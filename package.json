@@ -50,6 +50,6 @@
     "@esbuild-kit/core-utils": {
       "esbuild": "^0.25.8"
     },
-    "webpack-dev-server": "^5.2.1"
+    "webpack-dev-server": "^5.2.2"
   }
 }
