@@ -34,7 +34,8 @@
     "start": "next start",
     "lint": "biome lint --write",
     "format": "biome format --write",
-    "check": "biome check --write"
+    "check": "biome check --write",
+    "test": "jest"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.10.0",
