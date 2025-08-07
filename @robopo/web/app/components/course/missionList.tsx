@@ -19,12 +19,15 @@ export function MissionList({
   radio: number | null
   handleRadioChange: (selectedIndex: number) => void
 }) {
-  const [statePair, setMissionStatePair] = useState<MissionValue[][]>(
-    missionStatePair(mission),
-  )
+  const [statePair, setMissionStatePair] = useState<
+    { id: string; mission: MissionValue[] }[]
+  >([])
 
   useEffect(() => {
-    const newStatePair = missionStatePair(mission)
+    const newStatePair = missionStatePair(mission).map((m) => ({
+      id: crypto.randomUUID(),
+      mission: m,
+    }))
     setMissionStatePair(newStatePair)
   }, [mission])
 
@@ -85,9 +88,9 @@ export function MissionList({
               <td>{point[0]}</td>
             </tr>
             {statePair.length > 0 ? (
-              statePair.map((mission, index) => (
+              statePair.map(({ id, mission }, index) => (
                 <tr
-                  key={`${mission[0] ?? "null"}-${mission[1] ?? "null"}-${index}`}
+                  key={id}
                   className="hover cursor-pointer"
                   onClick={() => handleRadioChange(index)}
                   onKeyDown={(e) => {
