@@ -28,14 +28,7 @@ field.tsx で定義された碁盤の目フィールド上に panel.tsx で定�
 フィールドの定数とパネルの定数は<GithubLink filePath="app/components/course/utils.tsx" />の冒頭部分で定義されている。
 
 ```tsx title="utils.tsx"
-// コース作成の最大サイズ
-export const MAX_FIELD_WIDTH: number = 3
-export const MAX_FIELD_HEIGHT: number = 3
-
-// 一本橋のサイズ
-export const IPPON_BASHI_SIZE: number = 5
-
-// デフォルトのパネルサイズ
+// デフォルトのパネルサイズ (Tコース)
 const PANEL_WIDTH: number = 85
 const PANEL_HEIGHT: number = 85
 
@@ -43,16 +36,32 @@ const PANEL_HEIGHT: number = 85
 const BASHI_PANEL_WIDTH: number = 85
 const BASHI_PANEL_HEIGHT: number = 85
 
+// コース作成の最大サイズ
+export const MAX_FIELD_WIDTH: number = 3
+export const MAX_FIELD_HEIGHT: number = 3
+
+// 一本橋のサイズ
+export const IPPON_BASHI_SIZE: number = 5
+
+export const RESERVED_COURSE_IDS = {
+  IPPON: -1,
+  SENSOR: -2,
+} as const
+
 // パネルの幅を返す関数
-export const getPanelWidth = (type?: string): number => {
-  if (type === "ipponBashi") return BASHI_PANEL_WIDTH
-  else return PANEL_WIDTH
+export function getPanelWidth(type?: string): number {
+  if (type === "ipponBashi") {
+    return BASHI_PANEL_WIDTH
+  }
+  return PANEL_WIDTH
 }
 
 // パネルの高さを返す関数
-export const getPanelHeight = (type?: string): number => {
-  if (type === "ipponBashi") return BASHI_PANEL_HEIGHT
-  else return PANEL_HEIGHT
+export function getPanelHeight(type?: string): number {
+  if (type === "ipponBashi") {
+    return BASHI_PANEL_HEIGHT
+  }
+  return PANEL_HEIGHT
 }
 
 // Panelの種類
