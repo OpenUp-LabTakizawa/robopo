@@ -1,18 +1,14 @@
 "use client"
+import { useState } from "react"
 import { ThreeTabs } from "@/app/components/parts/threeTabs"
 import { CompetitionListTab, NewCompetitionTab } from "@/app/config/tabs"
-import type {
-  SelectCompetition,
-} from "@/app/lib/db/schema"
-import { useState } from "react"
+import type { SelectCompetition } from "@/app/lib/db/schema"
 
 type ViewProps = {
   initialCompetitionList: { competitions: SelectCompetition[] }
 }
 
-export function View({
-  initialCompetitionList,
-}: ViewProps) {
+export function View({ initialCompetitionList }: ViewProps) {
   const [competitionId, setCompetitionId] = useState<number | null>(null)
   const [competitionList, setCompetitionList] = useState<SelectCompetition[]>(
     initialCompetitionList.competitions,
