@@ -1,5 +1,5 @@
-import { PointState } from "@/app/components/course/utils"
 import { calcPoint } from "@/app/components/challenge/utils"
+import type { PointState } from "@/app/components/course/utils"
 
 export type CourseSummary = {
   playerId: number | null
@@ -20,7 +20,10 @@ export type CourseSummary = {
 }
 
 // コース完走判定関数
-export const isCompletedCourse = (pointData: PointState, result: number | null): boolean => {
+export function isCompletedCourse(
+  pointData: PointState,
+  result: number | null,
+): boolean {
   const resultPoint = calcPoint(pointData, result)
   // pointDataを全て足し合わせる。
   let totalPoint = 0
@@ -28,6 +31,8 @@ export const isCompletedCourse = (pointData: PointState, result: number | null):
     totalPoint += Number(pointData[i])
   }
   // resultの得点がtotalPointと等しい場合は完走していると判定
-  if (totalPoint === resultPoint) return true
+  if (totalPoint === resultPoint) {
+    return true
+  }
   return false
 }

@@ -3,7 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import type { Session } from "next-auth"
 import { SessionProvider, signOut } from "next-auth/react"
-import DropdownMenu from "@/app/components/parts/dropdownMenu"
+import { DropdownMenu } from "@/app/components/parts/dropdownMenu"
 import { SIGN_IN_CONST, SIGN_OUT_CONST } from "@/app/lib/const"
 
 type Props = {
@@ -15,7 +15,7 @@ export const Header = ({ session }: Props) => {
     <>
       <header className="flex flex-row h-24 md:h-14 items-center relative">
         <div className="w-full flex items-center">
-          <Link href="/" >
+          <Link href="/">
             <Image
               src="/logo.png"
               alt="Logo"

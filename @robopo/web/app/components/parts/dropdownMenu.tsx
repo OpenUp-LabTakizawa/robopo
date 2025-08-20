@@ -1,4 +1,5 @@
 "use client"
+
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { signOut, useSession } from "next-auth/react"
@@ -10,7 +11,7 @@ import {
   SIGN_OUT_CONST,
 } from "@/app/lib/const"
 
-const DropdownMenu = () => {
+export function DropdownMenu() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { status } = useSession()
 
@@ -32,8 +33,7 @@ const DropdownMenu = () => {
         <p className="hidden lg:inline">メニュー</p>
       </button>
       <div
-        className={`${isMenuOpen ? "flex" : "hidden"
-          } absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 lg:flex lg:mx-auto lg:items-center lg:w-auto lg:space-x-6`}
+        className={`${isMenuOpen ? "flex" : "hidden"} -translate-y-1/2 -translate-x-1/2 absolute top-1/2 left-1/2 transform lg:mx-auto lg:flex lg:w-auto lg:items-center lg:space-x-6`}
       ></div>
       {isMenuOpen && (
         <div className="navbar-menu relative z-50">
@@ -49,11 +49,11 @@ const DropdownMenu = () => {
             }}
             tabIndex={0}
           />
-          <div className="fixed top-0 left-0 bottom-0 flex flex-col w-4/6 max-w-sm py-6 px-6 bg-neutral-500/90 overflow-y-auto">
-            <div className="flex items-center mb-8">
+          <div className="fixed top-0 bottom-0 left-0 flex w-4/6 max-w-sm flex-col overflow-y-auto bg-neutral-500/90 px-6 py-6">
+            <div className="mb-8 flex items-center">
               <Link href="/">
-                <div className="mr-auto text-3xl font-bold leading-none">
-                  <div className="textShadow_wt text-white text-[2.2rem] font-bold text-nowrap max-[1000px]:text-[1.4rem] ">
+                <div className="mr-auto font-bold text-3xl leading-none">
+                  <div className="textShadow_wt text-nowrap font-bold text-[2.2rem] text-white max-[1000px]:text-[1.4rem]">
                     メニュー
                   </div>
                 </div>
@@ -64,7 +64,7 @@ const DropdownMenu = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 <svg
-                  className="h-6 w-6 text-neutral-950 cursor-pointer hover:text-gray-700"
+                  className="h-6 w-6 cursor-pointer text-neutral-950 hover:text-gray-700"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -84,7 +84,7 @@ const DropdownMenu = () => {
                     setIsMenuOpen(false)
                     signOut({ redirect: true, redirectTo: "/" })
                   }}
-                  className="flex mt-10 w-[fit-content] hover:bg-slate-500 hover:text-zinc/60 text-white px-3 py-1 rounded-md text-sm font-medium cursor-pointer text-[1.1rem]"
+                  className="mt-10 flex w-fit cursor-pointer rounded-md px-3 py-1 font-medium text-[1.1rem] text-sm text-white hover:bg-slate-500 hover:text-zinc/60"
                 >
                   {SIGN_OUT_CONST.icon}
                   {SIGN_OUT_CONST.label}
@@ -95,7 +95,7 @@ const DropdownMenu = () => {
                     setIsMenuOpen(false)
                   }}
                   href={SIGN_IN_CONST.href}
-                  className="flex mt-10 w-[fit-content] hover:bg-slate-500 hover:text-zinc/60 text-white px-3 py-1 rounded-md text-sm font-medium cursor-pointer text-[1.1rem]"
+                  className="mt-10 flex w-fit cursor-pointer rounded-md px-3 py-1 font-medium text-[1.1rem] text-sm text-white hover:bg-slate-500 hover:text-zinc/60"
                 >
                   {SIGN_IN_CONST.icon}
                   {SIGN_IN_CONST.label}
@@ -114,7 +114,7 @@ type PropsType = {
   setIsMenuOpen: (arg0: boolean) => void
 }
 
-const NavLinks = ({ status, setIsMenuOpen }: PropsType) => {
+function NavLinks({ status, setIsMenuOpen }: PropsType) {
   const currentPath = usePathname()
   const links = [HOME_CONST]
   if (status === "authenticated") {
@@ -122,19 +122,16 @@ const NavLinks = ({ status, setIsMenuOpen }: PropsType) => {
   }
 
   return (
-    <div
-      className="flex gap-3 mx-3 flex-col text-white
-      gap-9 max-[767px]:w-[fit-content] max-[767px]:last:w-[70%]"
-    >
+    <div className="mx-3 flex flex-col gap-3 gap-9 text-white max-[767px]:w-fit max-[767px]:last:w-[70%]">
       {links.map((link) => (
         <Link
           onClick={() => setIsMenuOpen(false)}
           href={link.href}
-          className={`flex w-[fit-content] hover:bg-slate-500 hover:text-zinc/60 px-3 py-1 rounded-md text-sm font-medium cursor-pointer text-[1.1rem]
-          ${currentPath === link.href
-              ? "bg-slate-700 cursor-default shadow-1 text-lime-300/70 hover:text-lime-300/80"
+          className={`flex w-fit cursor-pointer rounded-md px-3 py-1 font-medium text-[1.1rem] text-sm hover:bg-slate-500 hover:text-zinc/60 ${
+            currentPath === link.href
+              ? "cursor-default bg-slate-700 text-lime-300/70 shadow-1 hover:text-lime-300/80"
               : ""
-            }`}
+          }`}
           key={link.label}
         >
           {link.icon}
@@ -144,5 +141,3 @@ const NavLinks = ({ status, setIsMenuOpen }: PropsType) => {
     </div>
   )
 }
-
-export default DropdownMenu

@@ -1,20 +1,20 @@
 "use server"
 
+import { eq } from "drizzle-orm"
 import { db } from "@/app/lib/db/db"
 import {
-  type SelectCompetition,
-  type SelectCompetitionCourse,
-  type SelectCourse,
-  type SelectPlayer,
-  type SelectUmpire,
   competition,
   competitionCourse,
   competitionPlayer,
   course,
   player,
+  type SelectCompetition,
+  type SelectCompetitionCourse,
+  type SelectCourse,
+  type SelectPlayer,
+  type SelectUmpire,
   umpire,
 } from "@/app/lib/db/schema"
-import { eq } from "drizzle-orm"
 
 // 選手一覧情報を取得する関数
 export async function getPlayerList(): Promise<{
