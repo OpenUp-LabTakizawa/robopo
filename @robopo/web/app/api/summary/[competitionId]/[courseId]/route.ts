@@ -8,20 +8,23 @@ export const revalidate = 0
 
 export async function GET(
   _req: Request,
-  { params }: { params: Promise<{ competitionId: number; courseId: number }> },
+  { params }: { params: Promise<{ competitionId: string; courseId: string }> },
 ) {
   const { competitionId, courseId } = await params
 
   // データ取得
-  const courseSummary = await getCourseSummary(competitionId, courseId)
-  const course = await getCourseById(courseId)
+  const courseSummary = await getCourseSummary(
+    Number(competitionId),
+    Number(courseId),
+  )
+  const course = await getCourseById(Number(courseId))
   const pointState = deserializePoint(course?.point as string)
 
   // 各プレイヤーの総得点と一本橋の総得点を計算
   const courseSummaryWithPoints = await Promise.all(
     courseSummary.map(async (player) => {
       const sumIpponPoints = await sumIpponPoint(
-        competitionId,
+        Number(competitionId),
         player.playerId || 0,
       )
       const totalPoint =

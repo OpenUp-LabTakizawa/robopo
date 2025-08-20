@@ -10,7 +10,7 @@ export const revalidate = 0
 
 export async function POST(
   req: Request,
-  props: { params: Promise<{ id: number }> },
+  props: { params: Promise<{ id: string }> },
 ) {
   const { id } = await props.params
   const { type } = await req.json()
@@ -19,13 +19,13 @@ export async function POST(
 
   switch (type) {
     case "open":
-      result = await openCompetitionById(id)
+      result = await openCompetitionById(Number(id))
       break
     case "return":
-      result = await returnCompetitionById(id)
+      result = await returnCompetitionById(Number(id))
       break
     case "close":
-      result = await closeCompetitionById(id)
+      result = await closeCompetitionById(Number(id))
       break
     default:
       return Response.json(
