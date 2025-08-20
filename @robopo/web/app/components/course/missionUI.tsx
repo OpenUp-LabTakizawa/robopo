@@ -54,7 +54,7 @@ export function MissionUI({
   }
 
   function handleParamChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const value = Number.parseInt(event.target.value)
+    const value = Number(event.target.value)
     if (Number.isNaN(value)) {
       setSelectedParam(null)
     } else {
@@ -63,7 +63,7 @@ export function MissionUI({
   }
 
   function handlePointChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const value = Number.parseInt(event.target.value)
+    const value = Number(event.target.value)
     if (Number.isNaN(value)) {
       setSelectedPoint(null)
     } else {
@@ -93,7 +93,7 @@ export function MissionUI({
     selectedParam: number,
     selectedPoint: PointValue,
     mission: MissionState,
-    point: PointState
+    point: PointState,
   ) {
     const newMissionState = [...mission]
     const newPointState = [...point]
@@ -115,7 +115,7 @@ export function MissionUI({
     selectedParam: number,
     selectedPoint: PointValue,
     mission: MissionState,
-    point: PointState
+    point: PointState,
   ) {
     const newMissionState = [...mission]
     const newPointState = [...point]
@@ -126,8 +126,10 @@ export function MissionUI({
   }
 
   function handleButtonClick(event: React.MouseEvent<HTMLButtonElement>) {
-    const {id} = event.currentTarget
-    if (selectedId === null) { return }
+    const { id } = event.currentTarget
+    if (selectedId === null) {
+      return
+    }
 
     let newStates = { newMissionState: [...mission], newPointState: [...point] }
 
@@ -142,10 +144,35 @@ export function MissionUI({
         newPointState[1] = selectedPoint
       }
       newStates = { newMissionState, newPointState }
-    } else if (id === "add" && selectedMission && selectedParam && selectedPoint) {
-      newStates = addMission(selectedId, selectedMission, selectedParam, selectedPoint, mission, point)
-    } else if (id === "update" && selectedMission && selectedParam && selectedPoint && selectedId !== -1) {
-      newStates = updateMission(selectedId, selectedMission, selectedParam, selectedPoint, mission, point)
+    } else if (
+      id === "add" &&
+      selectedMission &&
+      selectedParam &&
+      selectedPoint
+    ) {
+      newStates = addMission(
+        selectedId,
+        selectedMission,
+        selectedParam,
+        selectedPoint,
+        mission,
+        point,
+      )
+    } else if (
+      id === "update" &&
+      selectedMission &&
+      selectedParam &&
+      selectedPoint &&
+      selectedId !== -1
+    ) {
+      newStates = updateMission(
+        selectedId,
+        selectedMission,
+        selectedParam,
+        selectedPoint,
+        mission,
+        point,
+      )
     } else if (id === "delete" && selectedId !== -1) {
       const newMissionState = [...mission]
       const newPointState = [...point]
@@ -175,7 +202,7 @@ export function MissionUI({
             value={selectedMission ?? ""}
             onChange={handleMissionChange}
           >
-            <option value={""}>選択してください</option>
+            <option value="">選択してください</option>
             {(["u", "r", "d", "l"] as Exclude<MissionValue, null>[]).map(
               (value) => (
                 <option key={value} value={value}>
@@ -207,7 +234,7 @@ export function MissionUI({
             value={selectedPoint ?? ""}
             onChange={handlePointChange}
           >
-            <option value={""}>選択</option>
+            <option value="">選択</option>
             {goalPointArray.map((num) => (
               <option key={num} value={num}>
                 {num}
@@ -251,11 +278,13 @@ export function MissionUI({
             onChange={onMissionChange}
           >
             <option value="">選択</option>
-            {(["mf", "mb", "tr", "tl"] as Exclude<MissionValue, null>[]).map((v) => (
-              <option key={v} value={v}>
-                {MissionString[v]}
-              </option>
-            ))}
+            {(["mf", "mb", "tr", "tl"] as Exclude<MissionValue, null>[]).map(
+              (v) => (
+                <option key={v} value={v}>
+                  {MissionString[v]}
+                </option>
+              ),
+            )}
           </select>
 
           {isMove && (
@@ -312,7 +341,9 @@ export function MissionUI({
             </>
           )}
 
-          {!isMove && !isTurn && <p className="self-center">{"<"}-選択してください</p>}
+          {!isMove && !isTurn && (
+            <p className="self-center">{"<"}-選択してください</p>
+          )}
         </div>
       </>
     )
@@ -326,9 +357,16 @@ export function MissionUI({
       <div>MissionUI</div>
       <div className="container">
         {selectedId === -2 ? (
-          <StartSelect selectedMission={selectedMission} onMissionChange={handleMissionChange} />
+          <StartSelect
+            selectedMission={selectedMission}
+            onMissionChange={handleMissionChange}
+          />
         ) : selectedId === -3 ? (
-          <GoalSelect selectedPoint={selectedPoint} onPointChange={handlePointChange} goalPointArray={goalPointArray} />
+          <GoalSelect
+            selectedPoint={selectedPoint}
+            onPointChange={handlePointChange}
+            goalPointArray={goalPointArray}
+          />
         ) : selectedId === null ? (
           <p>上のいずれかを選択してください</p>
         ) : (
@@ -371,7 +409,7 @@ export function MissionUI({
             (selectedId !== -2 &&
               selectedId !== -3 &&
               selectedParam === null) ||
-            (selectedId !== -2 &&selectedPoint == null) ||
+            (selectedId !== -2 && selectedPoint == null) ||
             (selectedId !== -3 && selectedMission === null)
           }
         >

@@ -363,12 +363,12 @@ export function getNextPosition(
 }
 
 // 初期配置と現在のmissionStateからRobotのpositionとdirectionを取得する関数
-export const getRobotPosition = (
+export function getRobotPosition(
   startRow: number,
   startCol: number,
   missionState: MissionState,
   nowMission: number,
-): [number, number, MissionValue] => {
+): [number, number, MissionValue] {
   // 初期配置
   let row: number = startRow
   let col: number = startCol
@@ -387,10 +387,10 @@ export const getRobotPosition = (
 }
 
 // courseとmissionの有効性を確認する関数
-export const checkValidity = (
+export function checkValidity(
   field: FieldState,
   mission: MissionState,
-): boolean => {
+): boolean {
   // startとgoalの存在を確認
   if (!isStart(field) || !isGoal(field)) {
     return false

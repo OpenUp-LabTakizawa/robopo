@@ -36,7 +36,7 @@ export function Field({
     gridTemplateRows: `repeat(${MAX_FIELD_HEIGHT}, ${getPanelHeight()}px)`,
   }
   return (
-    <div className={`relative mx-auto grid`} style={styles}>
+    <div className="relative mx-auto grid" style={styles}>
       {field.map((row, rowIndex) =>
         row.map((panel, colIndex) => (
           <Panel
@@ -47,22 +47,24 @@ export function Field({
         )),
       )}
       {/* challengeの時はbotを表示 */}
-      {(type === "challenge" || type === "ipponBashi") && botPosition && botDirection && (
-        <>
-          <Robot
-            row={botPosition.row}
-            col={botPosition.col}
-            direction={botDirection}
-          />
-          <NextArrow
-            row={botPosition.row}
-            col={botPosition.col}
-            direction={botDirection}
-            nextMissionPair={nextMissionPair}
-            duration={1.5}
-          />
-        </>
-      )}
+      {(type === "challenge" || type === "ipponBashi") &&
+        botPosition &&
+        botDirection && (
+          <>
+            <Robot
+              row={botPosition.row}
+              col={botPosition.col}
+              direction={botDirection}
+            />
+            <NextArrow
+              row={botPosition.row}
+              col={botPosition.col}
+              direction={botDirection}
+              nextMissionPair={nextMissionPair}
+              duration={1.5}
+            />
+          </>
+        )}
     </div>
   )
 }

@@ -155,7 +155,7 @@ export function CommonRegister({
   )
 
   return (
-    <div className=" flex justify-center">
+    <div className="flex justify-center">
       <form onSubmit={handleSubmit} className="space-y-4">
         <button
           type="submit"
