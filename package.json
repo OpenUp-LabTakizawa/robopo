@@ -50,6 +50,9 @@
     "@esbuild-kit/core-utils": {
       "esbuild": "^0.25.9"
     },
-    "webpack-dev-server": "^5.2.2"
+    "webpack-dev-server": "^5.2.2",
+    "@docusaurus/theme-mermaid": {
+      "mermaid": "^11.10.0"
+    }
   }
 }
