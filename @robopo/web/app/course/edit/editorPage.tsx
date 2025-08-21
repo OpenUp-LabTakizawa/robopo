@@ -26,7 +26,7 @@ export function EditorPage({
   const [modalOpen, setModalOpen] = useState(0)
 
   useEffect(() => {
-    const fetchCourseData = async () => {
+    async function fetchCourseData() {
       if (courseData) {
         if (courseData.field) {
           setField(deserializeField(courseData.field))
@@ -44,10 +44,6 @@ export function EditorPage({
     }
     fetchCourseData()
   }, [courseData, setField, setMission, setPoint, setName])
-
-  const handleButtonClick = (id: number) => {
-    setModalOpen(id)
-  }
 
   return (
     <>
@@ -69,7 +65,7 @@ export function EditorPage({
           <button
             type="button"
             className="btn btn-primary min-w-28 max-w-fit"
-            onClick={() => handleButtonClick(3)}
+            onClick={() => setModalOpen(3)}
           >
             有効性チェック
           </button>

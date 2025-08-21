@@ -1,7 +1,11 @@
 import { useState } from "react"
-import { FieldState, PanelValue, putPanel } from "@/app/components/course/utils"
-import { SelectPanel } from "@/app/components/course/selectPanel"
 import { Field } from "@/app/components/course/field"
+import { SelectPanel } from "@/app/components/course/selectPanel"
+import {
+  type FieldState,
+  type PanelValue,
+  putPanel,
+} from "@/app/components/course/utils"
 
 type CourseEditProps = {
   field: FieldState
@@ -10,7 +14,7 @@ type CourseEditProps = {
 export default function CourseEdit({ field, setField }: CourseEditProps) {
   const [mode, setMode] = useState<PanelValue>(null)
 
-  const handlePanelClick = (row: number, col: number) => {
+  function handlePanelClick(row: number, col: number) {
     // panelが置けるかどうかをチェック
     const newField = putPanel(field, row, col, mode)
     // panelを置けた場合
@@ -20,20 +24,18 @@ export default function CourseEdit({ field, setField }: CourseEditProps) {
   }
 
   return (
-    <>
-      <div className="container mx-auto">
-        <div className="card bg-base-100 w-full min-w-72 shadow-xl">
-          <div className="card-body">
-            <p>CourseEdit</p>
-            <Field type="edit" field={field} onPanelClick={handlePanelClick} />
-          </div>
-        </div>
-        <div className="card bg-base-100 w-full min-w-72 shadow-xl">
-          <div className="card-body">
-            <SelectPanel field={field} setmode={setMode} />
-          </div>
+    <div className="container mx-auto">
+      <div className="card w-full min-w-72 bg-base-100 shadow-xl">
+        <div className="card-body">
+          <p>CourseEdit</p>
+          <Field type="edit" field={field} onPanelClick={handlePanelClick} />
         </div>
       </div>
-    </>
+      <div className="card w-full min-w-72 bg-base-100 shadow-xl">
+        <div className="card-body">
+          <SelectPanel field={field} setmode={setMode} />
+        </div>
+      </div>
+    </div>
   )
 }
