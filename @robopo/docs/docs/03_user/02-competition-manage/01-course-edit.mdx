@@ -4,6 +4,117 @@ sidebar_position: 1
 
 # コース作成
 
+import courseEditList from "../gif/002_courseEditList.gif"
+import courseEditor from "../gif/003_courseEditor.gif"
+import missionEditStart from "../gif/004_missionEditStart.gif"
+import missionEdit from "../gif/005_missionEdit.gif"
+import validModalFalse from "@site/static/img/screen/021_validModalFalse.webp"
+import validModalTrue from "@site/static/img/screen/022_validModalTrue.webp"
+import save from "@site/static/img/screen/023_save.webp"
+import saveAfter from "@site/static/img/screen/024_saveAfter.webp"
+import saveAfterList from "@site/static/img/screen/025_saveAfterList.webp"
+import editDelete from "@site/static/img/screen/026_editDelete.webp"
 import { GithubLink } from "@site/src/components/variables.tsx"
+import clsx from "clsx"
 
-この章ではについて解説する。
+この章ではロボサバ用コースの作成方法について解説する。
+
+1. サインイン後、トップページから大会管理のコース作成をクリック。
+1. 新規作成の場合は「コース新規作成」をクリック。
+
+:::note info
+- 既存のコースを編集する場合は、コース一覧から編集したいコースを選択し、画面下の選択したコースを「編集」をクリック。
+:::
+
+<div style={{ marginBottom: "20px" }}>
+<img role="img" src={courseEditList} alt="Field and panel" width="600" />
+</div>
+
+3. コース作成画面左側CourseEditでコースを編集する。
+    1. 画面左下から設置するパネルを「Start」 「Route」 「Goal」の3つから選択する。
+    2. 3x3の任意のマスをクリックして選択したパネルを設置する。
+
+<img role="img" src={courseEditor} alt="Field and panel" width="600" />
+
+:::note info
+- 設置したパネルは、クリックすることで削除できる。
+- StartとGoalは1つずつしか設置できない。
+- 1番最初に設置するパネル以外は隣接するマスにしか設置できない。
+:::
+
+<br />
+
+4. コース作成画面右側MissionEditでミッション(Start)を編集する。
+    1. 画面右上のミッション一覧のStartをクリックして選択する。
+    2. 画面右下のMissionUIからスタートの向きを選択する。
+    3. MissionUIの「更新」ボタンをクリックする。
+
+<div style={{ marginBottom: "20px" }}>
+<img role="img" src={missionEditStart} alt="Field and panel" width="600" />
+</div>
+
+5. コース作成画面右側MissionEditでミッション(Start, Goal以外)を編集する。
+    1. 画面右上のミッション一覧のStartとGoalの間のミッションをクリックして選択する。
+    1. 画面右下のMissionUIからミッションの種類「前進」 「後進」 「右回転」 「左回転」を選択する。
+    1. 進むパネル数、又は、回転する角度を選択する。
+    1. ミッションのポイントを選択する。
+    1. MissionUIの「追加」ボタンをクリックする。(既にあるミッションを更新する場合、「更新」ボタンをクリックする。)
+    1. Goalまでのミッションを追加するのを繰り返す。
+    1. 最後にGoalをクリックして選択し、MissionUIからGoalのポイントを選択する。(六足 10P、タイヤ 5Pとされている。)
+
+<div style={{ marginBottom: "20px" }}>
+<img role="img" src={missionEdit} alt="Field and panel" width="600" />
+</div>
+
+6. コースを保存する
+    1. 画面左下の「有効性チェック」ボタンをクリックする。
+    1. 有効性チェックの結果を確認する。
+    1. 「コースを保存」ボタンをクリックする。
+    1. コース名を入力して保存する。
+
+<div style={{ width: '45%', float: 'left', clear: 'both' }}>
+①コースとミッションが無効時
+<img role="img" src={validModalFalse} alt="Field and panel" width="600" />
+</div>
+
+<div style={{ width: '45%', float: 'right', clear: 'right' }}>
+②コースとミッションが有効時
+<img role="img" src={validModalTrue} alt="Field and panel" width="600" />
+</div>
+
+<div style={{ width: '45%', float: 'left', clear: 'both' }}>
+<br />
+③コース名入力して保存
+<img role="img" src={save} alt="Field and panel" width="600" />
+</div>
+
+<div style={{ width: '45%', float: 'right', clear: 'right' }}>
+<br />
+④コース保存成功
+<img role="img" src={saveAfter} alt="Field and panel" width="600" />
+</div>
+
+<div style={{ width: '45%', float: 'left', clear: 'both', marginBottom: "20px" }}>
+<br />
+⑤コース一覧に追加されている
+<img role="img" src={saveAfterList} alt="Field and panel" width="600" />
+</div>
+
+<div style={{ width: '45%', float: 'right', clear: 'right' }}>
+<br />
+:::note info
+有効性チェックでは、スタートとゴールがあり、スタートからゴールまでミッション全て実行した時にrouteの外に出ないことと最後にゴールにいることを確認する。[^1]
+:::
+</div>
+
+
+
+
+<div style={{ width: '100%', float: 'left', clear: 'both', marginBottom: "20px" }}>
+7. コース横のチェックボックスを選択すると「編集」や「削除」ボタンをクリックできるようになる。
+</div>
+<div style={{ marginBottom: "20px" }}>
+<img role="img" src={editDelete} alt="Field and panel" width="600" />
+</div>
+
+[^1]: 実際にコースを動くアニメーションや無効なポイントを指摘する機能も実装したいところ。
