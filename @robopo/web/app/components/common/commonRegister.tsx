@@ -92,14 +92,12 @@ export function CommonRegister({
           setFurigana("")
           setZekken("")
           setQr("")
-          const newCommonDataList: { players: SelectPlayer[] } =
-            await getPlayerList()
-          setCommonDataList(newCommonDataList.players)
+          const players: SelectPlayer[] = await getPlayerList()
+          setCommonDataList(players)
         } else if (type === "umpire") {
           setSuccessMessage("採点者が正常に登録されました")
-          const newCommonDataList: { umpires: SelectUmpire[] } =
-            await getUmpireList()
-          setCommonDataList(newCommonDataList.umpires as SelectUmpire[])
+          const umpires: SelectUmpire[] = await getUmpireList()
+          setCommonDataList(umpires)
         } else {
           setSuccessMessage("大会が正常に登録されました")
           const newCommonDataList: { competitions: SelectCompetition[] } =

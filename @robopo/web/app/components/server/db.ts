@@ -17,19 +17,13 @@ import {
 } from "@/app/lib/db/schema"
 
 // 選手一覧情報を取得する関数
-export async function getPlayerList(): Promise<{
-  players: SelectPlayer[]
-}> {
-  const players: SelectPlayer[] = await db.select().from(player)
-  return { players }
+export async function getPlayerList(): Promise<SelectPlayer[]> {
+  return await db.select().from(player)
 }
 
 // 採点者一覧情報を取得する関数
-export async function getUmpireList(): Promise<{
-  umpires: SelectUmpire[]
-}> {
-  const umpires: SelectUmpire[] = await db.select().from(umpire)
-  return { umpires }
+export async function getUmpireList(): Promise<SelectUmpire[]> {
+  return await db.select().from(umpire)
 }
 
 // 大会一覧情報を取得する関数
