@@ -227,7 +227,7 @@ export async function getCourseSummaryByPlayerId(
   playerId: number,
 ) {
   // 結果を配列で取得
-  const result = await db
+  return await db
     .select({
       results1: challenge.result1,
       results2: challenge.result2,
@@ -242,8 +242,6 @@ export async function getCourseSummaryByPlayerId(
     )
     .orderBy(challenge.id)
     .groupBy(challenge.id)
-
-  return result as { results1: number; results2: number | null }[]
 }
 
 // 個人成績を取得

@@ -36,13 +36,13 @@ export const SIGN_IN_CONST: NavItem = {
   icon: <ArrowRightEndOnRectangleIcon className="size-6" />,
 }
 
-export const SIGN_OUT_CONST = {
+export const SIGN_OUT_CONST: NavItem = {
   label: "サインアウト",
   href: "/signOut",
   icon: <ArrowRightStartOnRectangleIcon className="size-6" />,
 }
 
-export const COMPETITION_MANAGEMENT_LIST = [
+export const COMPETITION_MANAGEMENT_LIST: NavItem[] = [
   {
     label: "コース作成",
     href: "/course",

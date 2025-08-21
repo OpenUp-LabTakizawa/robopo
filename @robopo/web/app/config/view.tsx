@@ -1,4 +1,5 @@
 "use client"
+
 import { useState } from "react"
 import { ThreeTabs } from "@/app/components/parts/threeTabs"
 import { CompetitionListTab, NewCompetitionTab } from "@/app/config/tabs"

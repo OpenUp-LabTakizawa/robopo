@@ -1,4 +1,5 @@
 "use client"
+
 import { useState } from "react"
 import { CommonRadioList } from "@/app/components/common/commonList"
 import { CommonRegister } from "@/app/components/common/commonRegister"
@@ -20,30 +21,28 @@ type NewCompetitionTabProps = {
   setCompetitionList: React.Dispatch<React.SetStateAction<SelectCompetition[]>>
 }
 
-export const CompetitionListTab = ({
+export function CompetitionListTab({
   competitionId,
   setCompetitionId,
   competitionList,
   setCompetitionList,
-}: CompetitionListTabProps): React.JSX.Element => {
+}: CompetitionListTabProps): React.JSX.Element {
   const [loading, setLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [message, setMessage] = useState("")
   const [modalOpen, setModalOpen] = useState<boolean>(false)
 
-  const handleButtonClick = async (
-    event: React.MouseEvent<HTMLButtonElement>,
-  ) => {
+  async function handleButtonClick(event: React.MouseEvent<HTMLButtonElement>) {
     const type = event.currentTarget.value
     const requestBody =
       type === "delete"
         ? {
-          type: type,
-          id: competitionId,
-        }
+            type: type,
+            id: competitionId,
+          }
         : {
-          type: type,
-        }
+            type: type,
+          }
 
     const url =
       type === "delete"
@@ -74,10 +73,7 @@ export const CompetitionListTab = ({
     }
   }
 
-  const DeleteModal = () => {
-    const handleClick = () => {
-      setModalOpen(false)
-    }
+  function DeleteModal() {
     return (
       <dialog
         id="challenge-modal"
@@ -101,7 +97,7 @@ export const CompetitionListTab = ({
           <button
             type="button"
             className="btn btn-accent m-3"
-            onClick={handleClick}
+            onClick={() => setModalOpen(false)}
             disabled={loading}
           >
             <BackLabelWithIcon />
@@ -110,8 +106,8 @@ export const CompetitionListTab = ({
         <form
           method="dialog"
           className="modal-backdrop"
-          onClick={handleClick}
-          onKeyDown={(e) => e.key === "Escape" && handleClick()}
+          onClick={() => setModalOpen(false)}
+          onKeyDown={(e) => e.key === "Escape" && setModalOpen(false)}
         >
           <button type="button" className="cursor-default">
             close
@@ -185,9 +181,9 @@ export const CompetitionListTab = ({
   )
 }
 
-export const NewCompetitionTab = ({
+export function NewCompetitionTab({
   setCompetitionList,
-}: NewCompetitionTabProps) => {
+}: NewCompetitionTabProps) {
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   return (
