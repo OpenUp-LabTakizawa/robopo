@@ -14,7 +14,7 @@ import save from "@site/static/img/screen/023_save.webp"
 import saveAfter from "@site/static/img/screen/024_saveAfter.webp"
 import saveAfterList from "@site/static/img/screen/025_saveAfterList.webp"
 import editDelete from "@site/static/img/screen/026_editDelete.webp"
-import { GithubLink } from "@site/src/components/variables.tsx"
+import { TwoColumnLayout, TwoColumnList } from "@site/src/components/variables.tsx"
 import clsx from "clsx"
 
 この章ではロボサバ用コースの作成方法について解説する。
@@ -27,7 +27,7 @@ import clsx from "clsx"
 :::
 
 <div style={{ marginBottom: "20px" }}>
-<img role="img" src={courseEditList} alt="Field and panel" width="600" />
+<img src={courseEditList} alt="Field and panel" width="600" />
 </div>
 
 3. コース作成画面左側CourseEditでコースを編集する。
@@ -50,7 +50,7 @@ import clsx from "clsx"
     3. MissionUIの「更新」ボタンをクリックする。
 
 <div style={{ marginBottom: "20px" }}>
-<img role="img" src={missionEditStart} alt="Field and panel" width="600" />
+<img src={missionEditStart} alt="Field and panel" width="600" />
 </div>
 
 5. コース作成画面右側MissionEditでミッション(Start, Goal以外)を編集する。
@@ -63,7 +63,7 @@ import clsx from "clsx"
     1. 最後にGoalをクリックして選択し、MissionUIからGoalのポイントを選択する。(六足 10P、タイヤ 5Pとされている。)
 
 <div style={{ marginBottom: "20px" }}>
-<img role="img" src={missionEdit} alt="Field and panel" width="600" />
+<img src={missionEdit} alt="Field and panel" width="600" />
 </div>
 
 6. コースを保存する
@@ -72,33 +72,38 @@ import clsx from "clsx"
     1. 「コースを保存」ボタンをクリックする。
     1. コース名を入力して保存する。
 
-<div style={{ width: '45%', float: 'left', clear: 'both' }}>
-①コースとミッションが無効時
-<img role="img" src={validModalFalse} alt="Field and panel" width="600" />
-</div>
-
-<div style={{ width: '45%', float: 'right', clear: 'right' }}>
-②コースとミッションが有効時
-<img role="img" src={validModalTrue} alt="Field and panel" width="600" />
-</div>
-
-<div style={{ width: '45%', float: 'left', clear: 'both' }}>
-<br />
-③コース名入力して保存
-<img role="img" src={save} alt="Field and panel" width="600" />
-</div>
-
-<div style={{ width: '45%', float: 'right', clear: 'right' }}>
-<br />
-④コース保存成功
-<img role="img" src={saveAfter} alt="Field and panel" width="600" />
-</div>
-
-<div style={{ width: '45%', float: 'left', clear: 'both', marginBottom: "20px" }}>
-<br />
-⑤コース一覧に追加されている
-<img role="img" src={saveAfterList} alt="Field and panel" width="600" />
-</div>
+<TwoColumnList items={[
+  {
+    id: "step1",
+    text: "①コースとミッションが無効時",
+    imgSrc: validModalFalse,
+    alt: "無効状態のコースとミッション画面",
+  },
+  {
+    id: "step2",
+    text: "②コースとミッションが有効時",
+    imgSrc: validModalTrue,
+    alt: "有効状態のコースとミッション画面",
+  },
+  {
+    id: "step3",
+    text: "③コース名入力して保存",
+    imgSrc: save,
+    alt: "コース名入力と保存操作の画面",
+  },
+  {
+    id: "step4",
+    text: "④コース保存成功",
+    imgSrc: saveAfter,
+    alt: "保存完了後の確認画面",
+  },
+  {
+    id: "step5",
+    text: "⑤コース一覧に追加されている",
+    imgSrc: saveAfterList,
+    alt: "保存後のコース一覧画面",
+  },
+]} />
 
 <div style={{ width: '45%', float: 'right', clear: 'right' }}>
 <br />
@@ -107,14 +112,11 @@ import clsx from "clsx"
 :::
 </div>
 
-
-
-
 <div style={{ width: '100%', float: 'left', clear: 'both', marginBottom: "20px" }}>
 7. コース横のチェックボックスを選択すると「編集」や「削除」ボタンをクリックできるようになる。
 </div>
 <div style={{ marginBottom: "20px" }}>
-<img role="img" src={editDelete} alt="Field and panel" width="600" />
+<img src={editDelete} alt="Field and panel" width="600" />
 </div>
 
 [^1]: 実際にコースを動くアニメーションや無効なポイントを指摘する機能も実装したいところ。
