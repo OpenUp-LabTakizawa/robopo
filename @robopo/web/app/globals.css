@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noUnknownAtRules: tailwind plugin and daisyui */
 @import "tailwindcss";
 @plugin "daisyui";
 
@@ -5,7 +6,10 @@
 
 @theme {
   --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
-  --background-image-gradient-conic: conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops));
+  --background-image-gradient-conic: conic-gradient(
+    from 180deg at 50% 50%,
+    var(--tw-gradient-stops)
+  );
 }
 
 /*
@@ -47,12 +51,21 @@
 
   body {
     color: rgb(var(--foreground-rgb));
-    background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgb(var(--background-end-rgb))
+      )
+      rgb(var(--background-start-rgb));
   }
 }
 
 .gradient-button {
-  background: radial-gradient(circle, rgba(144, 238, 144, 1) 0%, rgba(0, 128, 0, 1) 100%);
+  background: radial-gradient(
+    circle,
+    rgba(144, 238, 144, 1) 0%,
+    rgba(0, 128, 0, 1) 100%
+  );
   border: none;
   padding: 0;
   color: #fff;
@@ -75,7 +88,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle, rgba(144, 238, 144, 1) 0%, rgba(0, 128, 0, 1) 100%);
+  background: radial-gradient(
+    circle,
+    rgba(144, 238, 144, 1) 0%,
+    rgba(0, 128, 0, 1) 100%
+  );
   z-index: 0;
 }
 
