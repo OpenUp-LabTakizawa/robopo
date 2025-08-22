@@ -8,12 +8,12 @@ import courseEditList from "../gif/002_courseEditList.gif"
 import courseEditor from "../gif/003_courseEditor.gif"
 import missionEditStart from "../gif/004_missionEditStart.gif"
 import missionEdit from "../gif/005_missionEdit.gif"
-import validModalFalse from "@site/static/img/screen/021_validModalFalse.webp"
-import validModalTrue from "@site/static/img/screen/022_validModalTrue.webp"
-import save from "@site/static/img/screen/023_save.webp"
-import saveAfter from "@site/static/img/screen/024_saveAfter.webp"
-import saveAfterList from "@site/static/img/screen/025_saveAfterList.webp"
-import editDelete from "@site/static/img/screen/026_editDelete.webp"
+import validModalFalse from "@site/static/img/screen/02_course/021_validModalFalse.webp"
+import validModalTrue from "@site/static/img/screen/02_course/022_validModalTrue.webp"
+import save from "@site/static/img/screen/02_course/023_save.webp"
+import saveAfter from "@site/static/img/screen/02_course/024_saveAfter.webp"
+import saveAfterList from "@site/static/img/screen/02_course/025_saveAfterList.webp"
+import editDelete from "@site/static/img/screen/02_course/026_editDelete.webp"
 import { TwoColumnLayout, TwoColumnList } from "@site/src/components/variables.tsx"
 import clsx from "clsx"
 
@@ -76,31 +76,31 @@ import clsx from "clsx"
   {
     id: "step1",
     text: "①コースとミッションが無効時",
-    imgSrc: validModalFalse,
+    imgSrc: require("@site/static/img/screen/02_course/021_validModalFalse.webp").default,
     alt: "無効状態のコースとミッション画面",
   },
   {
     id: "step2",
     text: "②コースとミッションが有効時",
-    imgSrc: validModalTrue,
+    imgSrc: require("@site/static/img/screen/02_course/022_validModalTrue.webp").default,
     alt: "有効状態のコースとミッション画面",
   },
   {
     id: "step3",
     text: "③コース名入力して保存",
-    imgSrc: save,
+    imgSrc: require("@site/static/img/screen/02_course/023_save.webp").default,
     alt: "コース名入力と保存操作の画面",
   },
   {
     id: "step4",
     text: "④コース保存成功",
-    imgSrc: saveAfter,
+    imgSrc: require("@site/static/img/screen/02_course/024_saveAfter.webp").default,
     alt: "保存完了後の確認画面",
   },
   {
     id: "step5",
     text: "⑤コース一覧に追加されている",
-    imgSrc: saveAfterList,
+    imgSrc: require("@site/static/img/screen/02_course/025_saveAfterList.webp").default,
     alt: "保存後のコース一覧画面",
   },
 ]} />
@@ -116,7 +116,6 @@ import clsx from "clsx"
 7. コース横のチェックボックスを選択すると「編集」や「削除」ボタンをクリックできるようになる。
 </div>
 <div style={{ marginBottom: "20px" }}>
-<img src={editDelete} alt="Field and panel" width="600" />
+<img src={require("@site/static/img/screen/02_course/026_editDelete.webp").default} alt="Field and panel" width="600" />
 </div>
-
 [^1]: 実際にコースを動くアニメーションや無効なポイントを指摘する機能も実装したいところ。
