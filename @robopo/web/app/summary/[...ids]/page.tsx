@@ -23,10 +23,12 @@ import { TCourseTable } from "@/app/summary/[...ids]/tCourseTable"
 
 export const revalidate = 0
 
-export default async function SummaryPlayer(props: {
+export default async function SummaryPlayer({
+  params,
+}: {
   params: Promise<{ ids: number[] }>
 }) {
-  const { ids } = await props.params
+  const { ids } = await params
   // ids[0]:competitionId, ids[1]:courseId, ids[2]:playerId
   // 個人成績を取得する
   const player = await getPlayerById(ids[2])
@@ -144,7 +146,7 @@ export default async function SummaryPlayer(props: {
               </td>
               <td className="border border-gray-400 p-2">
                 {maxIpponResult.length > 0 &&
-                  isCompletedCourse(ipponPoint, maxIpponResult[0].maxResult)
+                isCompletedCourse(ipponPoint, maxIpponResult[0].maxResult)
                   ? firstIpponCount[0].firstCount
                   : "-"}
               </td>

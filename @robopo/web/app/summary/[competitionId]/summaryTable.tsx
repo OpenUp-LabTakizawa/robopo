@@ -1,10 +1,19 @@
 "use client"
-import { useState, useEffect } from "react"
+
 import Link from "next/link"
-import { type CourseSummary, isCompletedCourse } from "@/app/components/summary/utils"
-import { deserializePoint, PointState, PointValue, RESERVED_COURSE_IDS } from "@/app/components/course/utils"
+import { useEffect, useState } from "react"
 import { calcPoint } from "@/app/components/challenge/utils"
-import { type SelectCourse } from "@/app/lib/db/schema"
+import {
+  deserializePoint,
+  type PointState,
+  type PointValue,
+  RESERVED_COURSE_IDS,
+} from "@/app/components/course/utils"
+import {
+  type CourseSummary,
+  isCompletedCourse,
+} from "@/app/components/summary/utils"
+import type { SelectCourse } from "@/app/lib/db/schema"
 
 type Props = {
   id: number
@@ -12,12 +21,14 @@ type Props = {
   ipponBashiPoint: PointValue[]
 }
 
-export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
+export function SummaryTable({ id, courseList, ipponBashiPoint }: Props) {
   const competitionId: number = id
   const courseData: { courses: SelectCourse[] } = courseList
   const initialCourseId = courseData.courses
     .filter((course) => course.id > 0)
-    .reduce((mincourse, currentCourse) => (currentCourse.id < mincourse.id ? currentCourse : mincourse)).id
+    .reduce((mincourse, currentCourse) =>
+      currentCourse.id < mincourse.id ? currentCourse : mincourse,
+    ).id
 
   const [pointData, setPointData] = useState<PointValue[]>([])
   const [courseId, setCourseId] = useState<number | null>(initialCourseId)
@@ -27,15 +38,19 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc") // 昇順・降順
 
   useEffect(() => {
-    const fetchData = async () => {
+    async function fetchData() {
       try {
-        const selectedCourse = courseData.courses?.find((course) => course.id === courseId)
+        const selectedCourse = courseData.courses?.find(
+          (course) => course.id === courseId,
+        )
         if (selectedCourse) {
           const point = await deserializePoint(selectedCourse.point)
           setPointData(point)
         }
 
-        const res = await fetch(`/api/summary/${competitionId}/${courseId}`, { cache: "no-store" })
+        const res = await fetch(`/api/summary/${competitionId}/${courseId}`, {
+          cache: "no-store",
+        })
         const data = await res.json()
         setCourseSummary(data)
       } catch (error) {
@@ -45,14 +60,14 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
       }
     }
     fetchData()
-  }, [competitionId, courseId])
+  }, [competitionId, courseData, courseId])
 
   // 並べ替え機能
-  const handleSort = (key: keyof CourseSummary) => {
+  function handleSort(key: keyof CourseSummary) {
     const order = sortKey === key && sortOrder === "asc" ? "desc" : "asc"
     setSortKey(key)
     setSortOrder(order)
-    const parseDateValue = (value: any, tCourseMaxResult: any): number => {
+    function parseDateValue(value: any, tCourseMaxResult: any): number {
       if (
         !value ||
         value === "-" ||
@@ -61,31 +76,38 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
         return order === "asc" ? Infinity : -Infinity
       }
       const t = Date.parse(value as string)
-      return isNaN(t) ? (order === "asc" ? Infinity : -Infinity) : t
+      return Number.isNaN(t) ? (order === "asc" ? Infinity : -Infinity) : t
     }
 
     const parseZekken = (value: any): number | string => {
       const num = Number(value)
-      return !isNaN(num) ? num : typeof value === "string" ? value : ""
+      return !Number.isNaN(num) ? num : typeof value === "string" ? value : ""
     }
 
     const parseNumberFallback = (value: any): number => {
-      return typeof value === "number" ? value : value === null ? 0 : Number(value)
+      if (typeof value === "number") {
+        return value
+      }
+      if (value === null) {
+        return 0
+      }
+      const num = Number(value)
+      return Number.isNaN(num) ? 0 : num
     }
 
     const sortedData = [...courseSummary].sort((a, b) => {
-      const getVal = (item: CourseSummary) => {
+      function getVal(item: CourseSummary) {
         const value = item[key]
 
         switch (key) {
           case "firstTCourseTime":
-            return parseDateValue(value, item["tCourseMaxResult"])
+            return parseDateValue(value, item.tCourseMaxResult)
           case "playerFurigana":
             return typeof value === "string" ? value.toString() : ""
           case "playerZekken":
             return parseZekken(value)
           case "firstTCourseCount":
-            if (!isCompletedCourse(pointData, item["tCourseMaxResult"])) {
+            if (!isCompletedCourse(pointData, item.tCourseMaxResult)) {
               return order === "asc" ? Infinity : -Infinity
             }
             return parseNumberFallback(value)
@@ -97,36 +119,53 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
       const aVal = getVal(a)
       const bVal = getVal(b)
 
-      if (key === "playerFurigana" && typeof aVal === "string" && typeof bVal === "string") {
-        return order === "asc" ? aVal.localeCompare(bVal, "ja")
+      if (
+        key === "playerFurigana" &&
+        typeof aVal === "string" &&
+        typeof bVal === "string"
+      ) {
+        return order === "asc"
+          ? aVal.localeCompare(bVal, "ja")
           : bVal.localeCompare(aVal, "ja")
-      } else if (aVal < bVal) {
-        return order === "asc" ? -1 : 1
-      } else if (aVal > bVal) {
-        return order === "asc" ? 1 : -1
-      } else {
-        return 0
       }
+      if (aVal < bVal) {
+        return order === "asc" ? -1 : 1
+      }
+      if (aVal > bVal) {
+        return order === "asc" ? 1 : -1
+      }
+      return 0
     })
     setCourseSummary(sortedData)
   }
 
-  const renderSortIcon = (key: string) => {
+  function renderSortIcon(key: string) {
     if (sortKey === key) {
-      return sortOrder === "asc" ? <span className="text-blue-500">▲</span> : <span className="text-red-500">▼</span> // sortOrder === "asc" ? "▲" : "▼"
+      return sortOrder === "asc" ? (
+        <span className="text-blue-500">▲</span>
+      ) : (
+        <span className="text-red-500">▼</span>
+      ) // sortOrder === "asc" ? "▲" : "▼"
     }
     return "▲"
   }
 
-  const itemTitle = (title1: string, title2?: string, key?: keyof CourseSummary) => {
+  function itemTitle(
+    title1: string,
+    title2?: string,
+    key?: keyof CourseSummary,
+  ) {
     return (
-      <td className={"border border-gray-400 p-2" + (key && " cursor-pointer")} onClick={() => key && handleSort(key)}>
-        <div className="flex-none 2xl:flex flex-row">
+      <td
+        className={`border border-gray-400 p-2 ${key ? "cursor-pointer" : ""}}`}
+        onClick={() => key && handleSort(key)}
+      >
+        <div className="flex-none flex-row 2xl:flex">
           <p>
             {title1} {(!title2 || title2 === "") && key && renderSortIcon(key)}
           </p>
           <p>
-            {title2 && title2} {title2 && title2 !== "" && key && renderSortIcon(key)}
+            {title2} {title2 !== "" && key && renderSortIcon(key)}
           </p>
         </div>
       </td>
@@ -135,8 +174,8 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
 
   return (
     <div className="w-full">
-      <div className="flex mb-5">
-        <h1 className="text-3xl font-bold m-2">
+      <div className="mb-5 flex">
+        <h1 className="m-2 font-bold text-3xl">
           <span className="hidden sm:inline">成績判定シート</span>
           <span className="inline sm:hidden">
             成績判定
@@ -147,7 +186,8 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
         <select
           className="select select-bordered m-2"
           onChange={(event) => setCourseId(Number(event.target.value))}
-          value={courseId ? courseId : 0}>
+          value={courseId ? courseId : 0}
+        >
           <option value={0} disabled>
             コースを選んでください
           </option>
@@ -159,15 +199,15 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
                   <option key={course.id} value={course.id}>
                     {course.name}
                   </option>
-                )
+                ),
             )
           ) : (
             <option>コースがありません</option>
           )}
         </select>
       </div>
-      <div className="flex m-5 overflow-x-auto overflow-y-auto 2xl:overflow-x-visible max-h-96">
-        <table className="table table-pin-rows table-pin-cols">
+      <div className="m-5 flex max-h-96 overflow-x-auto overflow-y-auto 2xl:overflow-x-visible">
+        <table className="table-pin-rows table-pin-cols table">
           <thead>
             <tr>
               <th className="border border-gray-400 p-2">名前</th>
@@ -205,7 +245,10 @@ export const SummaryTable = ({ id, courseList, ipponBashiPoint }: Props) => {
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="border border-gray-400 p-2 text-center">
+                <td
+                  colSpan={5}
+                  className="border border-gray-400 p-2 text-center"
+                >
                   データがありません
                 </td>
               </tr>
@@ -225,7 +268,13 @@ type PlayerRowProps = {
   ipponBashiPoint: PointValue[]
 }
 
-const PlayerRow = ({ player, competitionId, courseId, pointData, ipponBashiPoint }: PlayerRowProps) => {
+function PlayerRow({
+  player,
+  competitionId,
+  courseId,
+  pointData,
+  ipponBashiPoint,
+}: PlayerRowProps) {
   const completed = isCompletedCourse(pointData, player.tCourseMaxResult)
   return (
     <tr>
@@ -233,7 +282,8 @@ const PlayerRow = ({ player, competitionId, courseId, pointData, ipponBashiPoint
       <th className="border border-gray-400 p-2">
         <Link
           href={`/summary/${competitionId}/${courseId}/${player.playerId}`}
-          className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 sm:whitespace-nowrap">
+          className="text-blue-600 underline visited:text-purple-600 hover:text-blue-800 sm:whitespace-nowrap"
+        >
           {player.playerName ?? "-"}
         </Link>
       </th>
@@ -242,16 +292,16 @@ const PlayerRow = ({ player, competitionId, courseId, pointData, ipponBashiPoint
         {player.playerFurigana ?? "-"}
       </td>
       {/* ゼッケン */}
-      <td className="border border-gray-400 p-2">{player.playerZekken ?? "-"}</td>
+      <td className="border border-gray-400 p-2">
+        {player.playerZekken ?? "-"}
+      </td>
       {/* ベーシックコース完走時刻 */}
       <td className="border border-gray-400 p-2">
         {completed ? player.firstTCourseTime : "-"}
       </td>
       {/* 完走は何回で達成? */}
       <td className="border border-gray-400 p-2">
-        {completed && player.firstTCourseCount
-          ? player.firstTCourseCount
-          : "-"}
+        {completed && player.firstTCourseCount ? player.firstTCourseCount : "-"}
       </td>
       {/* ベーシックコースの最高得点 */}
       <td className="border border-gray-400 p-2">
@@ -264,7 +314,9 @@ const PlayerRow = ({ player, competitionId, courseId, pointData, ipponBashiPoint
         {player.sensorMaxResult ?? "-"}
       </td>
       {/* 一本橋の合計得点 */}
-      <td className="border border-gray-400 p-2">{player.sumIpponPoint ?? "-"}</td>
+      <td className="border border-gray-400 p-2">
+        {player.sumIpponPoint ?? "-"}
+      </td>
       {/* 一本橋の最高得点 */}
       <td className="border border-gray-400 p-2">
         {player.ipponMaxResult || player.ipponMaxResult === 0
