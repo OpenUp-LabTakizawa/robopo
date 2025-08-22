@@ -11,7 +11,8 @@ type FeatureItem = {
 const FeatureList: FeatureItem[] = [
   {
     description: "①採点する選手を選択",
-    src: require("@site/static/img/screen/01_index/001_playername.webp").default,
+    src: require("@site/static/img/screen/01_index/001_playername.webp")
+      .default,
   },
   {
     description: "②確認画面",
@@ -19,7 +20,8 @@ const FeatureList: FeatureItem[] = [
   },
   {
     description: "③パネルをタップ(クリック)でロボットが進行。点が更新。",
-    src: require("@site/static/img/screen/01_index/003_challenge_resize.webp").default,
+    src: require("@site/static/img/screen/01_index/003_challenge_resize.webp")
+      .default,
   },
   {
     description: "④結果送信。",
@@ -31,7 +33,8 @@ const DetailFeatureList: FeatureItem[] = [
   {
     description:
       "①選手一覧の中から採点する選手をタップして選択。確認へボタンをタップ。",
-    src: require("@site/static/img/screen/01_index/001_playername.webp").default,
+    src: require("@site/static/img/screen/01_index/001_playername.webp")
+      .default,
   },
   {
     description:
@@ -41,7 +44,8 @@ const DetailFeatureList: FeatureItem[] = [
   {
     description:
       "③パネル(どこでも良い)をタップするとロボットが次のミッションへ動く。点とミッションが更新される。間違って進んだ場合は1つ戻るボタンを押す。",
-    src: require("@site/static/img/screen/01_index/003_challenge_resize.webp").default,
+    src: require("@site/static/img/screen/01_index/003_challenge_resize.webp")
+      .default,
   },
   {
     description:
@@ -59,22 +63,26 @@ const DetailFeatureListIpponBashi: FeatureItem[] = [
   {
     description:
       "①パネル(どこでも良い)をタップするとロボットが次のマスへ動く。点が更新される。間違って進んだ場合は1つ戻るボタンを押す。",
-    src: require("@site/static/img/screen/01_index/015_ipponbashi01.webp").default,
+    src: require("@site/static/img/screen/01_index/015_ipponbashi01.webp")
+      .default,
   },
   {
     description:
       "②ロボットがコースアウトした時にはコースアウトを押す。1回目の場合、2回目のチャレンジの選択肢が出る。1回目で終了する時は結果を送信して終わる。",
-    src: require("@site/static/img/screen/01_index/015_ipponbashi02.webp").default,
+    src: require("@site/static/img/screen/01_index/015_ipponbashi02.webp")
+      .default,
   },
   {
     description:
       "③コースアウトしなければロボットが止まった所の点を獲得できるので、1回目の場合、結果を保存しておいて、2回目のチャレンジをすることができる。その時は再挑戦ボタン押す。",
-    src: require("@site/static/img/screen/01_index/015_ipponbashi03.webp").default,
+    src: require("@site/static/img/screen/01_index/015_ipponbashi03.webp")
+      .default,
   },
   {
     description:
       "④結果送信ボタンを押すと結果を送信する。1回目のチャレンジの場合、ここからでも2回目のチャレンジを選択できる。",
-    src: require("@site/static/img/screen/01_index/015_ipponbashi04.webp").default,
+    src: require("@site/static/img/screen/01_index/015_ipponbashi04.webp")
+      .default,
   },
 ]
 
