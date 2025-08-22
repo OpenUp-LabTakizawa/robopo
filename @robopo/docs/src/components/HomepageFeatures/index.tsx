@@ -37,7 +37,6 @@ function Feature({ title, src, url, description }: FeatureItem) {
     <div className={clsx("col col--4")}>
       <a href={url}>
         <div className="text--center">
-          {/** biome-ignore lint/performance/noImgElement: ここでのimgは妥当。 */}
           <img src={src} alt={title} className={styles.featureImg} />
         </div>
         <div className="padding-horiz--md text--center">

@@ -32,7 +32,6 @@ function HomepageHeader() {
             style={{ display: "flex", alignItems: "center" }}
           >
             <img
-              role="img"
               src="img/logo.svg"
               alt="ROBOPOアプリへ"
               width="30"
@@ -48,7 +47,6 @@ function HomepageHeader() {
             to="https://github.com/openup-labtakizawa/robopo"
           >
             <img
-              role="img"
               src="img/github-mark.png"
               alt="ROBOPO GitHubへ"
               width="20"

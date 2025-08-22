@@ -23,7 +23,7 @@ import { GithubLink } from "@site/src/components/variables.tsx"
 
 field.tsx で定義された碁盤の目フィールド上に panel.tsx で定義されたパネルや robot.tsx によるロボット、nextArrow.tsx による次の動きを配置することでロボサバの場面を表現する。
 
-<img role="img" src={fieldAndPanel} alt="Field and panel" width="600" />
+<img src={fieldAndPanel} alt="Field and panel" width="600" />
 
 フィールドの定数とパネルの定数は<GithubLink filePath="app/components/course/utils.tsx" />の冒頭部分で定義されている。
 
@@ -83,7 +83,7 @@ export const PanelString: { [key in Exclude<PanelValue, null>]: string } = {
 
 パネルの種類は `PanelValue` で定義されており、3 種類+null、 `PanelString` はパネルの表示テキストを定義している。
 
-<img role="img" src={descCourse} alt="Field and panel" width="600" />
+<img src={descCourse} alt="Field and panel" width="600" />
 
 上図左のように、フィールドの場所(`FieldState`)に`PanelValue`(start, route, goal, null)を定めて、コースを保存している。
 上図右のように座標系が置かれている。
@@ -115,8 +115,8 @@ export const PanelString: { [key in Exclude<PanelValue, null>]: string } = {
 
 以下はこどもテックキャラバンで使用されているロボサバ大会のルールを示した資料の一部抜粋である。
 
-<img role="img" src={mission1} alt="MissionDesc1" width="340" />
-<img role="img" src={mission2} alt="MissionDesc2" width="340" />
+<img src={mission1} alt="MissionDesc1" width="340" />
+<img src={mission2} alt="MissionDesc2" width="340" />
 
 資料から、ミッションは以下の種類に分けられる。
 
@@ -170,7 +170,7 @@ start,route,null
 
 となる。再度下に図を出すと、左の図のコースを表したものになっている。
 
-<img role="img" src={descCourse} alt="Field and panel" width="600" />
+<img src={descCourse} alt="Field and panel" width="600" />
 
 次に mission`r;r;mf;1;tl;90;mf;2;tr;90;mf;1`に着目し解説する。
 このデータは、;で区切られた配列であり、以下の意味で読み取る。

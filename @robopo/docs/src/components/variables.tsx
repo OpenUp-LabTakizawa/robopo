@@ -47,7 +47,6 @@ export function TwoColumnLayout({
     <div style={style}>
       <br />
       {text}
-      {/** biome-ignore lint/performance/noImgElement: DocusaurusはNext.js環境ではないので、img要素を使用する */}
       <img src={useBaseUrl(imgSrc)} alt={alt} width="600" />
     </div>
   )

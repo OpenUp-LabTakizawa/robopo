@@ -18,9 +18,6 @@
         "noUselessElse": "error",
         "useBlockStatements": "error"
       }
-    },
-    "domains": {
-      "next": "all"
     }
   },
   "formatter": {

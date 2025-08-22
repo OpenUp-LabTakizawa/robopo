@@ -123,7 +123,7 @@ function Feature({ description, src }: FeatureItem) {
         ))}
       </p>
       <div className={clsx("text--center", styles.featureImg)}>
-        <img src={src} role="img" className={clsx(styles.featureImg)} />
+        <img src={src} alt="feature" className={clsx(styles.featureImg)} />
       </div>
       <hr />
     </div>
