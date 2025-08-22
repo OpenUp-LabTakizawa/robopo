@@ -9,7 +9,7 @@ export const revalidate = 0
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams
   const rawId = searchParams.get("id")
-  const id = rawId ? Number.parseInt(rawId) : 0
+  const id = rawId ? Number.parseInt(rawId, 10) : 0
 
   if (id !== 0) {
     const course = await getCourseById(id)
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     await req.json()
   const searchParams = req.nextUrl.searchParams
   const rawId = searchParams.get("id")
-  const id = rawId ? Number.parseInt(rawId) : null
+  const id = rawId ? Number.parseInt(rawId, 10) : null
   const courseData = {
     name: name,
     field: field,

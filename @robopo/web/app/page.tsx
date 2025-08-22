@@ -51,7 +51,7 @@ export default async function Home() {
       tab3Icon={<TrophyIcon className="h-3 w-3 md:h-8 md:w-8" />}
     />
   ) : (
-    <div className="bg-base-100 border border-base-300 rounded-box p-6">
+    <div className="rounded-box border border-base-300 bg-base-100 p-6">
       <ChallengeTab
         key="challenge"
         competitionList={competitionList}
