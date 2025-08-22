@@ -19,7 +19,8 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: "集計結果表示",
-    src: require("@site/static/img/screen/07_pointlist_mosaic_resize.webp").default,
+    src: require("@site/static/img/screen/07_pointlist_mosaic_resize.webp")
+      .default,
     url: "/robopo/docs/category/集計結果",
     description: <>競技の結果を一覧で表示します。</>,
   },

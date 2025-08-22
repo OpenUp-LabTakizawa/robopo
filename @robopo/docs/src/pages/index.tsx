@@ -1,10 +1,10 @@
-import type { ReactNode } from "react"
-import clsx from "clsx"
 import Link from "@docusaurus/Link"
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext"
-import Layout from "@theme/Layout"
 import HomepageFeatures from "@site/src/components/HomepageFeatures"
 import Heading from "@theme/Heading"
+import Layout from "@theme/Layout"
+import clsx from "clsx"
+import type { ReactNode } from "react"
 import styles from "./index.module.css"
 
 function HomepageHeader() {
@@ -17,7 +17,10 @@ function HomepageHeader() {
         </Heading>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
         <div className={styles.buttons}>
-          <Link className="button button--secondary button--lg" to="/docs/intro">
+          <Link
+            className="button button--secondary button--lg"
+            to="/docs/intro"
+          >
             マニュアルトップへ
           </Link>
         </div>
@@ -26,8 +29,15 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="https://robopo.vercel.app/"
-            style={{ display: "flex", alignItems: "center" }}>
-            <img role="img" src="img/logo.svg" alt="ROBOPOアプリへ" width="30" height="30" />
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            <img
+              role="img"
+              src="img/logo.svg"
+              alt="ROBOPOアプリへ"
+              width="30"
+              height="30"
+            />
             ROBOPOアプリへ
           </Link>
         </div>
@@ -35,8 +45,15 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="https://github.com/openup-labtakizawa/robopo">
-            <img role="img" src="img/github-mark.png" alt="ROBOPO GitHubへ" width="20" height="20" />
+            to="https://github.com/openup-labtakizawa/robopo"
+          >
+            <img
+              role="img"
+              src="img/github-mark.png"
+              alt="ROBOPO GitHubへ"
+              width="20"
+              height="20"
+            />
             ROBOPO GitHubへ
           </Link>
         </div>
@@ -50,7 +67,8 @@ export default function Home(): ReactNode {
   return (
     <Layout
       title={`${siteConfig.title}へようこそ`}
-      description="このサイトはロボサバ採点集計アプリについての手引書です。This site is a manual for the scoring aggregation app using in competitions of the ROBOT SURVIVAL PROJECT.">
+      description="このサイトはロボサバ採点集計アプリについての手引書です。This site is a manual for the scoring aggregation app using in competitions of the ROBOT SURVIVAL PROJECT."
+    >
       <HomepageHeader />
       <main>
         <HomepageFeatures />

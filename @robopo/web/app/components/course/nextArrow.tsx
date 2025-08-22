@@ -20,7 +20,13 @@ export function NextArrow({
   duration?: number // 点滅速度（秒）
   type?: string
 }) {
-  if (!nextMissionPair || nextMissionPair[0] === null || nextMissionPair[1] === null || nextMissionPair[0] === undefined || nextMissionPair[1] === undefined) {
+  if (
+    !nextMissionPair ||
+    nextMissionPair[0] === null ||
+    nextMissionPair[1] === null ||
+    nextMissionPair[0] === undefined ||
+    nextMissionPair[1] === undefined
+  ) {
     // 次のミッションがない場合は何も表示しない
     return null
   }
@@ -31,7 +37,6 @@ export function NextArrow({
       direction,
       nextMissionPair[0],
       nextMissionPair[1],
-
     )
     return (
       <NextMoveArrow

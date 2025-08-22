@@ -38,20 +38,20 @@ export function CommonRegister({
       : { label: "name", dispName: "名前", value: name, setValue: setName },
     ...(type === "player"
       ? [
-        {
-          label: "furigana",
-          dispName: "ふりがな",
-          value: furigana,
-          setValue: setFurigana,
-        },
-        {
-          label: "zekken",
-          dispName: "ゼッケン番号",
-          value: zekken,
-          setValue: setZekken,
-        },
-        // { label: "qr", dispName: "QRコード", value: qr, setValue: setQr },
-      ]
+          {
+            label: "furigana",
+            dispName: "ふりがな",
+            value: furigana,
+            setValue: setFurigana,
+          },
+          {
+            label: "zekken",
+            dispName: "ゼッケン番号",
+            value: zekken,
+            setValue: setZekken,
+          },
+          // { label: "qr", dispName: "QRコード", value: qr, setValue: setQr },
+        ]
       : []),
   ]
 

@@ -26,7 +26,7 @@ export function TwoColumnLayout({
   text,
   imgSrc,
   alt,
-  position = "left"
+  position = "left",
 }: {
   text: string
   imgSrc: string
@@ -34,9 +34,10 @@ export function TwoColumnLayout({
   position: Position
 }) {
   // "l" を "left" に、"r" を "right" に正規化
-  const normalized = position === "l" ? "left" :
-    position === "r" ? "right" : position
-  const clear: React.CSSProperties["clear"] = normalized === "left" ? "both" : "right"
+  const normalized =
+    position === "l" ? "left" : position === "r" ? "right" : position
+  const clear: React.CSSProperties["clear"] =
+    normalized === "left" ? "both" : "right"
   const style = {
     width: "45%",
     float: normalized,
