@@ -2,8 +2,20 @@
 sidebar_position: 3
 ---
 
+import umpireMenu from "@site/static/img/screen/03_player/038_umpireMenu.webp"
+import umpireList from "@site/static/img/screen/03_player/039_umpireList.webp"
+import { BaseImage } from "@site/src/components/variables.tsx"
+
 # 採点者登録
 
-import { GithubLink } from "@site/src/components/variables.tsx"
+この章では採点者を登録する方法について解説するが、ほとんど選手登録と似た作業であるため、詳細は[選手登録](./player-registration)を参照されたい。
 
-この章ではについて解説する。
+1. サインイン後、トップページから大会管理の採点者登録をクリック。
+
+<BaseImage src={umpireMenu} alt="採点者登録選択" />
+
+2. 左側に採点者一覧が表示され、右側に採点者情報「名前」を入力し、「新規登録」ボタンをクリックすると新規追加。
+一覧から採点者を選択し、「削除」ボタンをクリックすると削除される。
+選手登録と同様の操作ができる。
+
+<BaseImage src={umpireList} alt="採点者一覧" />
