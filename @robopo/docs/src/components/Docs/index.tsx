@@ -25,7 +25,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     description: "④結果送信。",
-    src: require("@site/static/img/screen/01_index/005_succsess.webp").default,
+    src: require("@site/static/img/screen/01_index/005_success.webp").default,
   },
 ]
 
@@ -50,7 +50,7 @@ const DetailFeatureList: FeatureItem[] = [
   {
     description:
       "④ゴールまで進んだら結果送信ボタンを押す。間違った場合はチャレンジに戻る。",
-    src: require("@site/static/img/screen/01_index/005_succsess.webp").default,
+    src: require("@site/static/img/screen/01_index/005_success.webp").default,
   },
   {
     description:

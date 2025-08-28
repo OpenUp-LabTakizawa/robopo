@@ -20,7 +20,7 @@ export function View({
 }) {
   const [playerId, setPlayerId] = useState<number | null>(null)
   const playerDataList = initialPlayerDataList.players
-  const disableCondiion = !(competitionId && courseId && playerId)
+  const disableCondition = !(competitionId && courseId && playerId)
 
   return (
     <div className="flex w-full flex-col items-center justify-center overflow-y-auto">
@@ -35,7 +35,7 @@ export function View({
       />
       <Link
         href={`/challenge/${competitionId}/${courseId}/${playerId}`}
-        className={`btn mx-auto mt-5 min-w-28 max-w-fit ${disableCondiion ? "btn-disabled" : "btn-primary"}`}
+        className={`btn mx-auto mt-5 min-w-28 max-w-fit ${disableCondition ? "btn-disabled" : "btn-primary"}`}
       >
         <PlayIcon className="size-6" />
         確認へ
