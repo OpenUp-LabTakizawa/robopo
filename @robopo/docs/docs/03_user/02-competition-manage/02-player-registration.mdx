@@ -2,8 +2,59 @@
 sidebar_position: 2
 ---
 
+import menu from "@site/static/img/screen/03_player/031_menu.webp"
+import playerList from "@site/static/img/screen/03_player/032_playerList.webp"
+import newPlayer from "@site/static/img/screen/03_player/033_newPlayer.webp"
+import newPlayerRegister from "@site/static/img/screen/03_player/034_newPlayerRegister.webp"
+import playerChecked from "@site/static/img/screen/03_player/035_playerChecked.webp"
+import playerDelete from "@site/static/img/screen/03_player/036_playerDelete.webp"
+import playerDeleted from "@site/static/img/screen/03_player/037_playerDeleted.webp"
+import { BaseImage, TwoColumnList } from "@site/src/components/variables.tsx"
+
 # 選手登録
 
-import { GithubLink } from "@site/src/components/variables.tsx"
+この章では参加選手を登録する方法について解説する。
 
-この章ではについて解説する。
+
+## 選手追加
+
+1. サインイン後、トップページから大会管理の選手登録をクリック。
+
+<TwoColumnList items={[
+  {
+    id: "step1",
+    text: "",
+    src: menu,
+    alt: "メニュー画面",
+  },
+  {
+    id: "step2",
+    text: "",
+    src: playerList,
+    alt: "選手一覧画面",
+  },
+]} />
+
+<div style={{ width: '100%', float: 'left', clear: 'both', marginTop: "20px" }}>
+2. 選手一覧右側にある「名前」 「ふりがな」 「ゼッケン番号」を入力し、「新規登録」ボタンをクリックする。
+</div>
+
+<BaseImage src={newPlayer} alt="新規登録" />
+
+3. 選手が追加される。
+
+<BaseImage src={newPlayerRegister} alt="選手追加" />
+
+## 選手削除
+
+1. 選手一覧から削除したい選手を選択し、画面下側の削除ボタンをクリックする。
+
+<BaseImage src={playerChecked} alt="選手選択" />
+
+2. 確認メッセージが表示されるので、「はい」ボタンをクリックする。
+
+<BaseImage src={playerDelete} alt="選手削除確認" />
+
+3. 選手が一覧から削除される。
+
+<BaseImage src={playerDeleted} alt="選手削除" />

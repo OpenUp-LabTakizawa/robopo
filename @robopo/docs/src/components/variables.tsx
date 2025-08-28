@@ -22,14 +22,30 @@ export function GithubLink({ filePath }: GithubLinkProps) {
   )
 }
 
+export function BaseImage({
+  src,
+  alt,
+  width = 600,
+}: {
+  src: string
+  alt: string
+  width?: number
+}) {
+  return (
+    <div style={{ marginBottom: "20px" }}>
+      <img src={useBaseUrl(src)} alt={alt} width={width} />
+    </div>
+  )
+}
+
 export function TwoColumnLayout({
   text,
-  imgSrc,
+  src,
   alt,
   position = "left",
 }: {
   text: string
-  imgSrc: string
+  src: string
   alt: string
   position: Position
 }) {
@@ -47,7 +63,7 @@ export function TwoColumnLayout({
     <div style={style}>
       <br />
       {text}
-      <img src={useBaseUrl(imgSrc)} alt={alt} width="600" />
+      <img src={useBaseUrl(src)} alt={alt} width="600" />
     </div>
   )
 }
@@ -55,7 +71,7 @@ export function TwoColumnLayout({
 export function TwoColumnList({
   items,
 }: {
-  items: { id: string; text: string; imgSrc: string; alt: string }[]
+  items: { id: string; text: string; src: string; alt: string }[]
 }) {
   return (
     <>
