@@ -126,7 +126,7 @@ export function MissionUI({
   }
 
   function handleButtonClick(event: React.MouseEvent<HTMLButtonElement>) {
-    const { id } = event.currentTarget
+    const { id } = event.currentTarget.dataset
     if (selectedId === null) {
       return
     }
@@ -385,7 +385,7 @@ export function MissionUI({
         <div />
         <button
           type="button"
-          id="add"
+          data-id="add"
           className="btn btn-primary mx-auto"
           disabled={
             isStartGoal() ||
@@ -400,7 +400,7 @@ export function MissionUI({
         </button>
         <button
           type="button"
-          id="update"
+          data-id="update"
           className="btn btn-primary mx-auto"
           onClick={handleButtonClick}
           disabled={
@@ -417,7 +417,7 @@ export function MissionUI({
         </button>
         <button
           type="button"
-          id="delete"
+          data-id="delete"
           className="btn btn-warning mx-auto"
           onClick={handleButtonClick}
           disabled={isStartGoal() || selectedId === null}

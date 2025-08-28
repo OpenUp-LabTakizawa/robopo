@@ -29,7 +29,7 @@ export function BackModal() {
     router.back()
   }
   return (
-    <dialog id="fin-modal" className="modal modal-open">
+    <dialog className="modal modal-open">
       <div className="modal-box">
         <p>保存しますか?保存していない編集内容は失われます。</p>
         <div className="modal-action">
@@ -111,7 +111,7 @@ export function SaveModal({ courseId }: { courseId: number | null }) {
   }
 
   return (
-    <dialog id="save-modal" className="modal modal-open">
+    <dialog className="modal modal-open">
       <div className="modal-box">
         <form>
           <label htmlFor="name" className="label">
@@ -217,11 +217,7 @@ export function validationModal({
     setModalOpen(0)
   }
   return (
-    <dialog
-      id="validation-modal"
-      className="modal modal-open"
-      onClose={() => setModalOpen(0)}
-    >
+    <dialog className="modal modal-open" onClose={() => setModalOpen(0)}>
       <div className="modal-box">
         {check ? (
           <>

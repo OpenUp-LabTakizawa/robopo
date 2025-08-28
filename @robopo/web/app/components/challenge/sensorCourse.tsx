@@ -35,11 +35,11 @@ export function SensorCourse({
   // 選択で得点計算する
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     // トンネル停止
-    if (e.target.id === "tunnelradio") {
+    if (e.target.dataset.id === "tunnelradio") {
       const value = Number(e.target.value)
       setTunnelPoint(value)
       setPointCount(wallPoint + value)
-    } else if (e.target.id === "tunnelcheckbox") {
+    } else if (e.target.dataset.id === "tunnelcheckbox") {
       if (e.target.checked) {
         setTunnelPoint(10)
         setPointCount(wallPoint + 10)
@@ -50,7 +50,7 @@ export function SensorCourse({
     }
 
     // 壁停止
-    if (e.target.id === "wallradio") {
+    if (e.target.dataset.id === "wallradio") {
       const value = Number(e.target.value)
       setWallPoint(value)
       setPointCount(tunnelPoint + value)
@@ -88,7 +88,7 @@ export function SensorCourse({
             <label className="label mx-auto justify-start text-xl">
               <input
                 type="checkbox"
-                id="tunnelcheckbox"
+                data-id="tunnelcheckbox"
                 checked={tunnelPoint === 10}
                 className="checkbox checkbox-lg checkbox-primary"
                 onChange={(e) => handleChange(e)}
@@ -99,7 +99,7 @@ export function SensorCourse({
               <label className="label mx-auto justify-start text-xl">
                 <input
                   type="radio"
-                  id="tunnelradio"
+                  data-id="tunnelradio"
                   className="radio radio-lg radio-primary"
                   onChange={(e) => handleChange(e)}
                   checked={tunnelPoint === 0}
@@ -110,7 +110,7 @@ export function SensorCourse({
               <label className="label mx-auto justify-start text-xl">
                 <input
                   type="radio"
-                  id="tunnelradio"
+                  data-id="tunnelradio"
                   className="radio radio-lg radio-primary"
                   onChange={(e) => handleChange(e)}
                   checked={tunnelPoint === 10}
@@ -123,7 +123,7 @@ export function SensorCourse({
             <label className="label mx-auto justify-start text-xl">
               <input
                 type="checkbox"
-                id="wallcheckbox"
+                data-id="wallcheckbox"
                 className="checkbox checkbox-lg checkbox-primary"
                 onChange={(e) => handleChange(e)}
                 checked={wallPoint !== 0 && wallPoint !== -5}
@@ -136,7 +136,7 @@ export function SensorCourse({
                   <label className="label mx-auto justify-start text-xl">
                     <input
                       type="radio"
-                      id="wallradio"
+                      data-id="wallradio"
                       className="radio radio-lg radio-primary"
                       onChange={(e) => handleChange(e)}
                       checked={wallPoint === point}

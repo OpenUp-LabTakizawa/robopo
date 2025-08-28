@@ -30,11 +30,7 @@ export function ChallengeModal({
     setModalOpen(0)
   }
   return (
-    <dialog
-      id="challenge-modal"
-      className="modal modal-open"
-      onClose={() => setModalOpen(0)}
-    >
+    <dialog className="modal modal-open" onClose={() => setModalOpen(0)}>
       <div className="modal-box">
         {isSuccess ? (
           <>
@@ -104,11 +100,7 @@ export function RetryModal({
     setModalOpen(0)
   }
   return (
-    <dialog
-      id="retry-modal"
-      className="modal modal-open"
-      onClose={() => setModalOpen(0)}
-    >
+    <dialog className="modal modal-open" onClose={() => setModalOpen(0)}>
       <div className="modal-box">
         <p>1回目のポイントを保存して再チャレンジしますか?</p>
         <p>1回目: {result1Point}ポイント</p>
@@ -160,11 +152,7 @@ export function CourseOutModal({
     setModalOpen(0)
   }
   return (
-    <dialog
-      id="course-out-modal"
-      className="modal modal-open"
-      onClose={() => setModalOpen(0)}
-    >
+    <dialog className="modal modal-open" onClose={() => setModalOpen(0)}>
       <div className="modal-box">
         {isSuccess ? (
           <>

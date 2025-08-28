@@ -134,7 +134,6 @@ function IpponBashiSection({
         <div className="flex w-full flex-col justify-items-end">
           <button
             type="button"
-            id="add"
             className="btn btn-primary m-3 mx-auto"
             onClick={handleBack}
             disabled={nowMission === 0}
@@ -280,7 +279,6 @@ function NormalChallengeSection({
       <div className="grid grid-cols-2 gap-4 p-4">
         <button
           type="button"
-          id="add"
           className="btn btn-primary mx-auto"
           onClick={handleBack}
           disabled={FieldProps.nowMission === 0}

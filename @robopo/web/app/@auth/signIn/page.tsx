@@ -1,7 +1,7 @@
 "use client"
 
 import { useSearchParams } from "next/navigation"
-import { useActionState, useEffect } from "react"
+import { useActionState, useEffect, useId } from "react"
 import {
   ModalBackButton,
   ModalBackdrop,
@@ -12,6 +12,10 @@ import { SIGN_IN_CONST } from "@/app/lib/const"
 export default function SignIn() {
   const params = useSearchParams()
   const rawCallbackUrl = params.get("callbackUrl") || "/"
+  const usernameId = useId()
+  const passwordId = useId()
+
+  // callbackUrlのバリデーション
   // クロスサイトスクリプティング&フィッシング攻撃対策
   function getSafeCallbackUrl(cb: string) {
     try {
@@ -42,10 +46,10 @@ export default function SignIn() {
     <dialog className="modal modal-open">
       <div className="modal-box">
         <form action={action} className="flex flex-col items-center">
-          <label className="input" htmlFor="username">
+          <label className="input" htmlFor={usernameId}>
             <span className="label">ユーザー名</span>
             <input
-              id="username"
+              id={usernameId}
               type="text"
               name="username"
               placeholder="robosava"
@@ -53,10 +57,10 @@ export default function SignIn() {
             />
           </label>
           <br />
-          <label className="input" htmlFor="password">
+          <label className="input" htmlFor={passwordId}>
             <span className="label">パスワード</span>
             <input
-              id="password"
+              id={passwordId}
               type="password"
               name="password"
               placeholder="12345678"

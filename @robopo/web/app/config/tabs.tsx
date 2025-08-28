@@ -73,50 +73,6 @@ export function CompetitionListTab({
     }
   }
 
-  function DeleteModal() {
-    return (
-      <dialog
-        id="challenge-modal"
-        className="modal modal-open"
-        onClose={() => setModalOpen(false)}
-      >
-        <div className="modal-box">
-          {isSuccess ? <p>{message}</p> : <p>選択した大会を削除しますか?</p>}
-
-          {!isSuccess && (
-            <button
-              type="button"
-              className="btn btn-accent m-3"
-              value="delete"
-              onClick={(e) => handleButtonClick(e)}
-              disabled={loading}
-            >
-              はい
-            </button>
-          )}
-          <button
-            type="button"
-            className="btn btn-accent m-3"
-            onClick={() => setModalOpen(false)}
-            disabled={loading}
-          >
-            <BackLabelWithIcon />
-          </button>
-        </div>
-        <form
-          method="dialog"
-          className="modal-backdrop"
-          onClick={() => setModalOpen(false)}
-          onKeyDown={(e) => e.key === "Escape" && setModalOpen(false)}
-        >
-          <button type="button" className="cursor-default">
-            close
-          </button>
-        </form>
-      </dialog>
-    )
-  }
-
   return (
     <>
       <CommonRadioList
@@ -176,7 +132,46 @@ export function CompetitionListTab({
       </button>
       {isSuccess && <p>{message}</p>}
       <p>{loading && <span className="loading loading-spinner"></span>}</p>
-      {modalOpen && <DeleteModal />}
+      {modalOpen && (
+        <dialog
+          className="modal modal-open"
+          onClose={() => setModalOpen(false)}
+        >
+          <div className="modal-box">
+            {isSuccess ? <p>{message}</p> : <p>選択した大会を削除しますか?</p>}
+
+            {!isSuccess && (
+              <button
+                type="button"
+                className="btn btn-accent m-3"
+                value="delete"
+                onClick={(e) => handleButtonClick(e)}
+                disabled={loading}
+              >
+                はい
+              </button>
+            )}
+            <button
+              type="button"
+              className="btn btn-accent m-3"
+              onClick={() => setModalOpen(false)}
+              disabled={loading}
+            >
+              <BackLabelWithIcon />
+            </button>
+          </div>
+          <form
+            method="dialog"
+            className="modal-backdrop"
+            onClick={() => setModalOpen(false)}
+            onKeyDown={(e) => e.key === "Escape" && setModalOpen(false)}
+          >
+            <button type="button" className="cursor-default">
+              close
+            </button>
+          </form>
+        </dialog>
+      )}
     </>
   )
 }

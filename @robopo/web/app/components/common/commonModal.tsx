@@ -73,7 +73,7 @@ export function DeleteModal({ type, ids }: { type: InputType; ids: number[] }) {
   }
 
   return (
-    <dialog id="challenge-modal" className="modal modal-open">
+    <dialog className="modal modal-open">
       <div className="modal-box">
         {successMessage ? (
           successMessage
@@ -167,7 +167,7 @@ export function AssignModal({
   }
 
   return (
-    <dialog id="challenge-modal" className="modal modal-open">
+    <dialog className="modal modal-open">
       <div className="modal-box">
         <div>
           <select

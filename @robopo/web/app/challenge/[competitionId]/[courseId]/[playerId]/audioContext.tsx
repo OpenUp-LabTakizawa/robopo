@@ -49,7 +49,6 @@ export function SoundControlUI({
       <span className="text-lg">効果音: {soundOn ? "ON" : "OFF"}</span>
       <label className="flex items-center gap-1">
         <input
-          id="sound-toggle"
           type="checkbox"
           checked={soundOn}
           onChange={(e) => setSoundOn(e.target.checked)}
