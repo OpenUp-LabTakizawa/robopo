@@ -1,14 +1,12 @@
-import type React from "react"
 import { AudioProvider } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/audioContext"
 
-export default function Layout({
-  children,
-  modal,
-}: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
+export default function Layout(
+  props: LayoutProps<"/challenge/[competitionId]/[courseId]/[playerId]">,
+) {
   return (
     <AudioProvider>
-      {children}
-      {modal}
+      {props.children}
+      {props.modal}
     </AudioProvider>
   )
 }

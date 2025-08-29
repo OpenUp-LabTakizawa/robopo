@@ -1,18 +1,12 @@
 import { NavigationGuardProvider } from "next-navigation-guard"
 import { CourseEditProvider } from "@/app/course/edit/courseEditContext"
 
-export default function Layout({
-  children,
-  modal,
-}: Readonly<{
-  children: React.ReactNode
-  modal: React.ReactNode
-}>) {
+export default function Layout(props: LayoutProps<"/course">) {
   return (
     <NavigationGuardProvider>
       <CourseEditProvider>
-        {children}
-        {modal}
+        {props.children}
+        {props.modal}
       </CourseEditProvider>
     </NavigationGuardProvider>
   )

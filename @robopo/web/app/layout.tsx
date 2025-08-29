@@ -11,21 +11,15 @@ export const metadata: Metadata = {
   description: "robopo",
 }
 
-export default async function RootLayout({
-  children,
-  auth,
-}: Readonly<{
-  children: React.ReactNode
-  auth: React.ReactNode
-}>) {
+export default async function RootLayout(props: LayoutProps<"/">) {
   const { session } = await HeaderServer()
   return (
     <html lang="ja" className={inter.className}>
       <body className="font-zenKakuGothicNew">
         <main className="mx-auto h-screen w-screen text-xs sm:px-12 lg:text-base">
           <Header session={session} />
-          {children}
-          {auth}
+          {props.children}
+          {props.auth}
         </main>
       </body>
     </html>

@@ -1,14 +1,8 @@
-export default function Layout({
-  children,
-  modal,
-}: Readonly<{
-  children: React.ReactNode
-  modal: React.ReactNode
-}>) {
+export default function Layout(props: LayoutProps<"/player">) {
   return (
     <>
-      {children}
-      {modal}
+      {props.children}
+      {props.modal}
     </>
   )
 }
