@@ -1,5 +1,6 @@
 "use client"
 
+import type { Route } from "next"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -21,7 +22,7 @@ export function BackModal() {
   function handleYes() {
     // 今のurlから/back を削除して、/saveに遷移する
     const currentUrl = window.location.href
-    const newUrl = currentUrl.replace(/\/back$/, "/save")
+    const newUrl = currentUrl.replace(/\/back$/, "/save") as Route
     router.push(newUrl)
   }
 

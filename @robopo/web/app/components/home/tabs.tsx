@@ -1,6 +1,7 @@
 "use client"
 
 import { CalculatorIcon } from "@heroicons/react/24/outline"
+import type { Route } from "next"
 import Link from "next/link"
 import type React from "react"
 import { useMemo, useState } from "react"
@@ -19,13 +20,13 @@ function ContentButton({
   disabled,
 }: {
   name: string
-  link: string
+  link: Route
   icon?: React.JSX.Element
   disabled: boolean
 }) {
   return (
     <Link
-      href={disabled ? "" : link}
+      href={disabled ? ("" as Route) : link}
       className={`btn m-3 flex min-h-20 min-w-40 max-w-fit text-2xl ${disabled ? "btn-disabled" : "btn-primary"}`}
     >
       {icon}
@@ -104,18 +105,22 @@ export function ChallengeTab({
             <ContentButton
               key={course.id}
               name={course.name}
-              link={`/challenge/${competitionId}/${course.id}`}
+              link={`/challenge/${competitionId}/${course.id}` as Route}
               disabled={disableCondition}
             />
           ))}
           <ContentButton
             name="THE一本橋"
-            link={`/challenge/${competitionId}/${RESERVED_COURSE_IDS.IPPON}`}
+            link={
+              `/challenge/${competitionId}/${RESERVED_COURSE_IDS.IPPON}` as Route
+            }
             disabled={disableCondition}
           />
           <ContentButton
             name="センサーコース"
-            link={`/challenge/${competitionId}/${RESERVED_COURSE_IDS.SENSOR}`}
+            link={
+              `/challenge/${competitionId}/${RESERVED_COURSE_IDS.SENSOR}` as Route
+            }
             disabled={disableCondition}
           />
         </div>
@@ -153,7 +158,7 @@ export function SummaryTab({
       </select>
       <ContentButton
         name="集計結果"
-        link={`/summary/${competitionId}`}
+        link={`/summary/${competitionId}` as Route}
         icon={<CalculatorIcon className="h-6 w-6" />}
         disabled={disableCondition}
       />

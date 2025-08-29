@@ -10,6 +10,7 @@ import {
   UserIcon,
   WrenchIcon,
 } from "@heroicons/react/24/outline"
+import type { Route } from "next"
 import type { JSX } from "react"
 
 export const BASE_URL: string = process.env.VERCEL
@@ -20,7 +21,7 @@ export const BASE_URL: string = process.env.VERCEL
 
 export interface NavItem {
   label: string
-  href: string
+  href: Route
   icon: JSX.Element
 }
 
@@ -38,7 +39,7 @@ export const SIGN_IN_CONST: NavItem = {
 
 export const SIGN_OUT_CONST: NavItem = {
   label: "サインアウト",
-  href: "/signOut",
+  href: "/signOut" as Route,
   icon: <ArrowRightStartOnRectangleIcon className="size-6" />,
 }
 
