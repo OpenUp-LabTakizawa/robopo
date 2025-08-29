@@ -1,8 +1,8 @@
 import { useRouter } from "next/navigation"
 import type React from "react"
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
-  SoundControlUI,
+  SoundController,
   useAudioContext,
 } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/audioContext"
 import {
@@ -30,9 +30,6 @@ import {
 } from "@/app/components/course/utils"
 import { ReloadButton } from "@/app/components/parts/buttons"
 import { BackLabelWithIcon, SendIcon } from "@/app/lib/const"
-import NextSound from "@/app/lib/sound/02_next.mp3"
-import BackSound from "@/app/lib/sound/03_back.mp3"
-import GoalSound from "@/app/lib/sound/04_goal.mp3"
 
 // 型定義
 type ChallengeProps = {
@@ -57,23 +54,6 @@ type FieldPropsType = {
   isRetry: boolean
 }
 
-// サウンド管理用カスタムフック
-const useAudio = () => {
-  const { soundOn, setSoundOn } = useAudioContext()
-  const nextSound = useMemo(() => {
-    const audio = new Audio(NextSound)
-    audio.volume = 0.4
-    return audio
-  }, [])
-  const backSound = useMemo(() => {
-    const audio = new Audio(BackSound)
-    audio.volume = 0.2
-    return audio
-  }, [])
-  const goalSound = useMemo(() => new Audio(GoalSound), [])
-  return { soundOn, setSoundOn, nextSound, backSound, goalSound }
-}
-
 // 一本橋用セクション
 interface IpponBashiSectionProps {
   pointCount: number | null
@@ -86,8 +66,6 @@ interface IpponBashiSectionProps {
   botDirection: MissionValue
   missionPair: MissionValue[][]
   handleNext: (row: number, col: number) => void
-  soundOn: boolean
-  setSoundOn: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function IpponBashiSection({
@@ -101,8 +79,6 @@ function IpponBashiSection({
   botDirection,
   missionPair,
   handleNext,
-  soundOn,
-  setSoundOn,
 }: IpponBashiSectionProps) {
   return (
     <div className="relative flex h-[calc(100vh-100px)] w-full flex-col justify-items-center">
@@ -168,7 +144,7 @@ function IpponBashiSection({
               再挑戦
             </button>
           </div>
-          <SoundControlUI soundOn={soundOn} setSoundOn={setSoundOn} />
+          <SoundController />
         </div>
       </div>
       <div className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 flex transform">
@@ -196,8 +172,6 @@ interface NormalChallengeSectionProps {
   isSuccess: boolean
   message: string
   FieldProps: FieldPropsType // You can further type this if you know the shape
-  soundOn: boolean
-  setSoundOn: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function NormalChallengeSection({
@@ -212,8 +186,6 @@ function NormalChallengeSection({
   isSuccess,
   message,
   FieldProps,
-  soundOn,
-  setSoundOn,
 }: NormalChallengeSectionProps) {
   return (
     <div className="grid h-full w-screen justify-items-center sm:w-5/6">
@@ -275,7 +247,7 @@ function NormalChallengeSection({
       <p className="font-bold text-3xl text-orange-600">
         {isGoal ? "クリア" : "現在"}: {pointCount}ポイント
       </p>
-      <SoundControlUI soundOn={soundOn} setSoundOn={setSoundOn} />
+      <SoundController />
       <div className="grid grid-cols-2 gap-4 p-4">
         <button
           type="button"
@@ -337,7 +309,20 @@ export function Challenge({
   })
   const [botDirection, setBotDirection] = useState(missionState[0])
   const [strictMode, _setStrictMode] = useState(false)
-  const { soundOn, setSoundOn, nextSound, backSound, goalSound } = useAudio()
+  const nextAudioRef = useRef<HTMLAudioElement | null>(null)
+  const nextSound = nextAudioRef.current
+  const backAudioRef = useRef<HTMLAudioElement | null>(null)
+  const backSound = backAudioRef.current
+  const goalAudioRef = useRef<HTMLAudioElement | null>(null)
+  const goalSound = goalAudioRef.current
+  const { muted } = useAudioContext()
+
+  useEffect(() => {
+    if (nextSound && backSound) {
+      nextSound.volume = 0.4
+      backSound.volume = 0.2
+    }
+  }, [nextSound, backSound])
 
   const handleNext = useCallback(
     (row: number, col: number) => {
@@ -357,10 +342,10 @@ export function Challenge({
           if (nowMission === missionPair.length - 1) {
             setIsGoal(true)
             setModalOpen(1)
-            soundOn && goalSound.play()
+            !muted && goalSound?.play()
           } else if (nowMission < missionPair.length - 1) {
             setNowMission(nowMission + 1)
-            soundOn && nextSound.play()
+            !muted && nextSound?.play()
           }
           if (!isRetry && !isGoal) {
             setResult1(result1 + 1)
@@ -385,7 +370,7 @@ export function Challenge({
       isGoal,
       result1,
       result2,
-      soundOn,
+      muted,
       goalSound,
       nextSound,
     ],
@@ -413,7 +398,7 @@ export function Challenge({
       if (isGoal) {
         setIsGoal(false)
       }
-      soundOn && backSound.play()
+      !muted && backSound?.play()
     }
   }, [
     nowMission,
@@ -424,7 +409,7 @@ export function Challenge({
     pointState,
     start,
     missionState,
-    soundOn,
+    muted,
     backSound,
   ])
 
@@ -451,7 +436,7 @@ export function Challenge({
   if (field === null || mission === null || point === null) {
     return (
       <>
-        <div>エラーです。</div>
+        <p>エラーです。</p>
         <ReloadButton />
       </>
     )
@@ -459,6 +444,9 @@ export function Challenge({
 
   return (
     <>
+      <audio src="/sound/02_next.mp3" ref={nextAudioRef} muted={muted} />
+      <audio src="/sound/03_back.mp3" ref={backAudioRef} muted={muted} />
+      <audio src="/sound/04_goal.mp3" ref={goalAudioRef} muted={muted} />
       {Number(courseId) === RESERVED_COURSE_IDS.IPPON ? (
         <IpponBashiSection
           pointCount={pointCount}
@@ -471,8 +459,6 @@ export function Challenge({
           botDirection={botDirection}
           missionPair={missionPair}
           handleNext={handleNext}
-          soundOn={soundOn}
-          setSoundOn={setSoundOn}
         />
       ) : (
         <NormalChallengeSection
@@ -487,8 +473,6 @@ export function Challenge({
           isSuccess={isSuccess}
           message={message}
           FieldProps={FieldProps}
-          soundOn={soundOn}
-          setSoundOn={setSoundOn}
         />
       )}
       {modalOpen === 1 && (

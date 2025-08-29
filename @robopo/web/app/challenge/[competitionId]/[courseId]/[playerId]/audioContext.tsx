@@ -5,13 +5,13 @@ import type React from "react"
 import { createContext, useContext, useState } from "react"
 
 export type AudioContextType = {
-  soundOn: boolean
-  setSoundOn: React.Dispatch<React.SetStateAction<boolean>>
+  muted: boolean
+  setMuted: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const dummy: AudioContextType = {
-  soundOn: false,
-  setSoundOn: () => {
+  muted: true,
+  setMuted: () => {
     throw new Error("setSoundOn called outside of AudioContext provider")
   },
 }
@@ -23,39 +23,31 @@ export function useAudioContext() {
 }
 
 export function AudioProvider({ children }: { children: React.ReactNode }) {
-  const [soundOn, setSoundOn] = useState<boolean>(dummy.soundOn)
+  const [muted, setMuted] = useState<boolean>(dummy.muted)
 
   return (
-    <AudioContext.Provider value={{ soundOn, setSoundOn }}>
+    <AudioContext.Provider value={{ muted, setMuted }}>
       {children}
     </AudioContext.Provider>
   )
 }
 
-export function SoundControlUI({
-  soundOn,
-  setSoundOn,
-}: {
-  soundOn: boolean
-  setSoundOn: React.Dispatch<React.SetStateAction<boolean>>
-}) {
+export function SoundController() {
+  const { muted, setMuted } = useAudioContext()
+
   return (
-    <div className="flex items-center justify-center gap-2">
-      {soundOn ? (
-        <SpeakerWaveIcon className="size-8 text-green-500" />
-      ) : (
+    <button
+      type="button"
+      className="btn btn-ghost mx-auto bg-gray-100"
+      onClick={() => setMuted(!muted)}
+      aria-label="効果音のオン・オフ切り替え"
+    >
+      <span className="text-lg">効果音: {muted ? "OFF" : "ON"}</span>
+      {muted ? (
         <SpeakerXMarkIcon className="size-8 text-red-500" />
+      ) : (
+        <SpeakerWaveIcon className="size-8 text-green-500" />
       )}
-      <span className="text-lg">効果音: {soundOn ? "ON" : "OFF"}</span>
-      <label className="flex items-center gap-1">
-        <input
-          type="checkbox"
-          checked={soundOn}
-          onChange={(e) => setSoundOn(e.target.checked)}
-          className="toggle toggle-success"
-        />
-        <span className="sr-only">効果音のオン・オフ切り替え</span>
-      </label>
-    </div>
+    </button>
   )
 }

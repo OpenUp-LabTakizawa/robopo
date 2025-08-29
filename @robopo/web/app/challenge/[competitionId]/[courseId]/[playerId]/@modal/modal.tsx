@@ -2,14 +2,13 @@
 
 import { PlayIcon } from "@heroicons/react/24/outline"
 import { useRouter } from "next/navigation"
-import { type RefObject, useEffect, useRef, useState } from "react"
+import { type RefObject, useEffect, useRef } from "react"
 import {
-  SoundControlUI,
+  SoundController,
   useAudioContext,
 } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/audioContext"
 import { BackLabelWithIcon } from "@/app/lib/const"
 import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
-import StartSound from "@/app/lib/sound/01_start.mp3"
 
 export function Modal({
   courseData,
@@ -18,31 +17,24 @@ export function Modal({
   courseData: SelectCourse
   playerData: SelectPlayer
 }) {
-  const startSound = new Audio(StartSound)
-  startSound.volume = 0.4
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const startSound = audioRef.current
   const router = useRouter()
-  const [modalOpen, setModalOpen] = useState<boolean>(true)
-  const { soundOn, setSoundOn } = useAudioContext()
+  const { muted } = useAudioContext()
   const dialogRef: RefObject<HTMLDialogElement | null> =
     useRef<HTMLDialogElement | null>(null)
 
-  function modalClose() {
-    dialogRef.current?.close()
-    setModalOpen(false)
-  }
-
   useEffect(() => {
+    if (startSound) {
+      startSound.volume = 0.4
+    }
     if (!dialogRef.current?.open) {
       dialogRef.current?.showModal()
     }
-  }, [])
-
-  if (!modalOpen) {
-    return null
-  }
+  }, [startSound])
 
   return (
-    <dialog ref={dialogRef} className="modal" open={modalOpen}>
+    <dialog ref={dialogRef} className="modal">
       <div className="modal-box mt-auto mb-0 flex flex-col">
         <div className="flex w-full flex-col items-center overflow-y-auto">
           <div className="grid items-start gap-6">
@@ -54,14 +46,15 @@ export function Modal({
             type="button"
             className="btn btn-accent m-5 mx-auto min-w-28 max-w-fit text-3xl"
             onClick={() => {
-              soundOn && startSound.play()
-              modalClose()
+              !muted && startSound?.play()
+              dialogRef.current?.close()
             }}
           >
-            <span>スタート</span>
+            スタート
             <PlayIcon className="size-6" />
           </button>
-          <SoundControlUI soundOn={soundOn} setSoundOn={setSoundOn} />
+          <SoundController />
+          <audio src="/sound/01_start.mp3" ref={audioRef} muted={muted} />
           <button
             type="button"
             className="btn btn-primary mx-auto mt-5 min-w-28 max-w-fit"

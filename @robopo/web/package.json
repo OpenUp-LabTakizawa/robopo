@@ -29,8 +29,8 @@
   },
   "homepage": "https://openup-labtakizawa.github.io/robopo/",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
     "start": "next start",
     "lint": "biome lint --write",
     "format": "biome format --write",
@@ -57,7 +57,6 @@
     "drizzle-orm": "^0.44.5",
     "next-auth": "^5.0.0-beta.29",
     "next-navigation-guard": "^0.2.0",
-    "next-rspack": "canary",
     "pg": "^8.16.3",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.12",
