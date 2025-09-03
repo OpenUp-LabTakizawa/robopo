@@ -11,11 +11,11 @@ import type {
 type CommonListProps = {
   type: "player" | "umpire" | "course" | "competition"
   commonDataList:
-  | SelectPlayer[]
-  | SelectUmpire[]
-  | SelectCompetition[]
-  | SelectPlayerWithCompetition[]
-  | SelectUmpireWithCompetition[]
+    | SelectPlayer[]
+    | SelectUmpire[]
+    | SelectCompetition[]
+    | SelectPlayerWithCompetition[]
+    | SelectUmpireWithCompetition[]
 }
 
 function TableComponent({
@@ -24,11 +24,11 @@ function TableComponent({
 }: {
   type: CommonListProps["type"]
   common:
-  | SelectPlayer
-  | SelectUmpire
-  | SelectCompetition
-  | SelectPlayerWithCompetition
-  | SelectUmpireWithCompetition
+    | SelectPlayer
+    | SelectUmpire
+    | SelectCompetition
+    | SelectPlayerWithCompetition
+    | SelectUmpireWithCompetition
 }) {
   return (
     <>
