@@ -11,11 +11,11 @@ import type {
 type CommonListProps = {
   type: "player" | "umpire" | "course" | "competition"
   commonDataList:
-    | SelectPlayer[]
-    | SelectUmpire[]
-    | SelectCompetition[]
-    | SelectPlayerWithCompetition[]
-    | SelectUmpireWithCompetition[]
+  | SelectPlayer[]
+  | SelectUmpire[]
+  | SelectCompetition[]
+  | SelectPlayerWithCompetition[]
+  | SelectUmpireWithCompetition[]
 }
 
 function TableComponent({
@@ -24,11 +24,11 @@ function TableComponent({
 }: {
   type: CommonListProps["type"]
   common:
-    | SelectPlayer
-    | SelectUmpire
-    | SelectCompetition
-    | SelectPlayerWithCompetition
-    | SelectUmpireWithCompetition
+  | SelectPlayer
+  | SelectUmpire
+  | SelectCompetition
+  | SelectPlayerWithCompetition
+  | SelectUmpireWithCompetition
 }) {
   return (
     <>
@@ -105,7 +105,7 @@ function itemNames(type: CommonListProps["type"]): string[] {
   } else if (type === "course") {
     itemNames.push("ID", "コース名", "作成日時", "使用大会")
   } else if (type === "competition") {
-    itemNames.push("ID", "名前", "開催中")
+    itemNames.push("ID", "名前", "開催状況")
   }
   return itemNames
 }

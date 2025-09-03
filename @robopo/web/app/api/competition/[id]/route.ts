@@ -14,7 +14,6 @@ export async function POST(
 ) {
   const { id } = await props.params
   const { type } = await req.json()
-  const newList = await getCompetitionList()
   let result: QueryResult
 
   switch (type) {
@@ -37,6 +36,7 @@ export async function POST(
         { status: 400 },
       )
   }
+  const newList = await getCompetitionList()
   return Response.json(
     { success: true, data: result, newList: newList },
     { status: 200 },

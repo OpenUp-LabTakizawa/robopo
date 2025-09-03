@@ -37,12 +37,12 @@ export function CompetitionListTab({
     const requestBody =
       type === "delete"
         ? {
-            type: type,
-            id: competitionId,
-          }
+          type: type,
+          id: competitionId,
+        }
         : {
-            type: type,
-          }
+          type: type,
+        }
 
     const url =
       type === "delete"
@@ -117,7 +117,7 @@ export function CompetitionListTab({
         }
         onClick={(e) => handleButtonClick(e)}
       >
-        停止
+        終了
       </button>
       <button
         type="button"
