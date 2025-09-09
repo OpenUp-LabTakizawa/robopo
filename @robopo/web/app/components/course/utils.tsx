@@ -437,7 +437,10 @@ export function checkValidity(
         missionPair[i][0],
         missionPair[i][1],
       )
-      if (field[lastRow][lastCol] !== "goal" && field[lastRow][lastCol] !== "startGoal") {
+      if (
+        field[lastRow][lastCol] !== "goal" &&
+        field[lastRow][lastCol] !== "startGoal"
+      ) {
         return false
       }
     }

@@ -22,7 +22,11 @@ export function Panel({
         ? "bg-green-300"
         : "bg-blue-300"
   const textStyle = type === "ipponBashi" ? "text-[10px]" : "text-lg"
-  const hasRole = value === "start" || value === "goal" || value === "route" || value === "startGoal"
+  const hasRole =
+    value === "start" ||
+    value === "goal" ||
+    value === "route" ||
+    value === "startGoal"
 
   const panelWidth = getPanelWidth(type)
   const panelHeight = getPanelHeight(type)
@@ -34,8 +38,8 @@ export function Panel({
       className="flex h-10 w-10 flex-col items-center justify-center border border-gray-800 bg-white"
       style={{ width: `${panelWidth}px`, height: `${panelHeight}px` }}
     >
-      {hasRole && (
-        value === "startGoal" ? (
+      {hasRole &&
+        (value === "startGoal" ? (
           // StartとGoalが重なっている場合
           <>
             <div
@@ -67,8 +71,7 @@ export function Panel({
           >
             {PanelString[value]}
           </div>
-        )
-      )}
+        ))}
     </button>
   )
 }
