@@ -30,7 +30,7 @@ export async function GET(
       const totalPoint =
         calcPoint(pointState, player.tCourseMaxResult) +
         (player.sensorMaxResult || 0) +
-        (player.ipponMaxResult || 0)
+        sumIpponPoints
       return {
         ...player,
         totalPoint,
