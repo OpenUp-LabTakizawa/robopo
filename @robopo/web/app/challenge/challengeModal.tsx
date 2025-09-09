@@ -75,7 +75,7 @@ export function ChallengeModal({
                 onClick={handleClick}
                 disabled={loading}
               >
-                チャレンジに
+                採点に
                 <BackLabelWithIcon />
               </button>
             </div>
@@ -195,7 +195,7 @@ export function CourseOutModal({
                 onClick={() => setModalOpen(0)}
                 disabled={loading}
               >
-                チャレンジに
+                採点に
                 <BackLabelWithIcon />
               </button>
             </div>
