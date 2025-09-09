@@ -35,11 +35,12 @@ export function getPanelHeight(type?: string): number {
 }
 
 // Panelの種類
-export type PanelValue = "start" | "goal" | "route" | null
+export type PanelValue = "start" | "goal" | "route" | "startGoal" | null
 export const PanelString: { [key in Exclude<PanelValue, null>]: string } = {
   start: "スタート",
   goal: "ゴール",
   route: "",
+  startGoal: "スタート\nゴール",
 }
 export type FieldState = PanelValue[][]
 
@@ -103,7 +104,7 @@ export function initializeField(): FieldState {
 export function isStart(field: FieldState): boolean {
   for (const row of field) {
     for (const panel of row) {
-      if (panel === "start") {
+      if (panel === "start" || panel === "startGoal") {
         return true
       }
     }
@@ -115,7 +116,7 @@ export function isStart(field: FieldState): boolean {
 export function isGoal(field: FieldState): boolean {
   for (const row of field) {
     for (const panel of row) {
-      if (panel === "goal") {
+      if (panel === "goal" || panel === "startGoal") {
         return true
       }
     }
@@ -130,7 +131,7 @@ export function findStart(field: FieldState): [number, number] | null {
     MAX_FIELD_HEIGHT >= IPPON_BASHI_SIZE ? MAX_FIELD_HEIGHT : IPPON_BASHI_SIZE
   for (let i = 0; i < height; i++) {
     for (let j = 0; j < MAX_FIELD_WIDTH; j++) {
-      if (field[i][j] === "start") {
+      if (field[i][j] === "start" || field[i][j] === "startGoal") {
         return [i, j]
       }
     }
@@ -147,6 +148,11 @@ export function putPanel(
 ): FieldState | null {
   const newField = field.map((newRow) => [...newRow]) // フィールドのコピーを作成
   if (field[row][col] !== null) {
+    // startの上にgoalを置くとstartGoalになる
+    if (mode === "goal" && field[row][col] === "start") {
+      newField[row][col] = "startGoal"
+      return newField
+    }
     newField[row][col] = null // panelを消す
     return newField
   }
@@ -401,7 +407,7 @@ export function checkValidity(
   }
   // 全てのmissionにおいてコース上か確認する
   const missionPair = missionStatePair(mission)
-  // missionPairに何も入っていなければはfalse
+  // missionPairに何も入っていなければfalse
   if (missionPair.length === 0) {
     return false
   }
@@ -417,6 +423,7 @@ export function checkValidity(
     if (
       field[row][col] !== "start" &&
       field[row][col] !== "goal" &&
+      field[row][col] !== "startGoal" &&
       field[row][col] !== "route"
     ) {
       return false
@@ -430,7 +437,7 @@ export function checkValidity(
         missionPair[i][0],
         missionPair[i][1],
       )
-      if (field[lastRow][lastCol] !== "goal") {
+      if (field[lastRow][lastCol] !== "goal" && field[lastRow][lastCol] !== "startGoal") {
         return false
       }
     }
