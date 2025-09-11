@@ -12,6 +12,173 @@ import {
 // ラジオボタン value=-2 はStart
 // ラジオボタン value=-3 はGoal
 
+// Start用セレクト
+function StartSelect({
+  selectedMission,
+  onMissionChange,
+}: {
+  selectedMission: MissionValue | null
+  onMissionChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+}) {
+  return (
+    <>
+      <p>スタートの向き</p>
+      <div className="flex justify-start">
+        <select
+          className="select select-bordered"
+          value={selectedMission ?? ""}
+          onChange={onMissionChange}
+        >
+          <option value="">選択してください</option>
+          {(["u", "r", "d", "l"] as Exclude<MissionValue, null>[]).map(
+            (value) => (
+              <option key={value} value={value}>
+                {MissionString[value]}
+              </option>
+            ),
+          )}
+        </select>
+      </div>
+    </>
+  )
+}
+
+// Goal用セレクト
+function GoalSelect({
+  selectedPoint,
+  onPointChange,
+  goalPointArray,
+}: {
+  selectedPoint: PointValue | null
+  onPointChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  goalPointArray: number[]
+}) {
+  return (
+    <>
+      <p>ゴールポイント</p>
+      <div className="flex justify-start">
+        <select
+          className="select select-bordered ml-2"
+          value={selectedPoint ?? ""}
+          onChange={onPointChange}
+        >
+          <option value="">
+            選択
+          </option>
+          {goalPointArray.map((num) => (
+            <option key={num} value={num}>
+              {num}
+            </option>
+          ))}
+        </select>
+        <p className="ml-2 self-center">ポイント</p>
+      </div>
+    </>
+  )
+}
+
+// 通常ミッション用セレクト
+function MissionSelect({
+  selectedMission,
+  selectedParam,
+  selectedPoint,
+  onMissionChange,
+  onParamChange,
+  onPointChange,
+  pointArray,
+}: {
+  selectedMission: MissionValue | null
+  selectedParam: number | null
+  selectedPoint: PointValue | null
+  onMissionChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  onParamChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  onPointChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  pointArray: number[]
+}) {
+  const isMove = selectedMission === "mf" || selectedMission === "mb"
+  const isTurn = selectedMission === "tr" || selectedMission === "tl"
+
+  return (
+    <>
+      <p>ミッション選択</p>
+      <div className="flex justify-start">
+        <select
+          className="select select-bordered"
+          value={selectedMission ?? ""}
+          onChange={onMissionChange}
+        >
+          <option value="">選択</option>
+          {(["mf", "mb", "tr", "tl"] as Exclude<MissionValue, null>[]).map(
+            (v) => (
+              <option key={v} value={v}>
+                {MissionString[v]}
+              </option>
+            ),
+          )}
+        </select>
+
+        {isMove && (
+          <>
+            <select
+              className="select select-bordered ml-2"
+              value={selectedParam ?? ""}
+              onChange={onParamChange}
+            >
+              <option value="">選択</option>
+              {[1, 2].map((num) => (
+                <option key={num} value={num}>
+                  {num}
+                </option>
+              ))}
+            </select>
+            <p className="ml-2 self-center">パネル</p>
+          </>
+        )}
+
+        {isTurn && (
+          <>
+            <select
+              className="select select-bordered ml-2"
+              value={selectedParam ?? ""}
+              onChange={onParamChange}
+            >
+              <option value="">選択</option>
+              {[90, 180, 270, 360].map((num) => (
+                <option key={num} value={num}>
+                  {num}
+                </option>
+              ))}
+            </select>
+            <p className="ml-2 self-center">度</p>
+          </>
+        )}
+
+        {(isMove || isTurn) && (
+          <>
+            <select
+              className="select select-bordered ml-2"
+              value={selectedPoint ?? ""}
+              onChange={onPointChange}
+            >
+              <option value="">選択</option>
+              {pointArray.map((num) => (
+                <option key={num} value={num}>
+                  {num}
+                </option>
+              ))}
+            </select>
+            <p className="ml-2 self-center">ポイント</p>
+          </>
+        )}
+
+        {!isMove && !isTurn && (
+          <p className="self-center">{"<"}-選択してください</p>
+        )}
+      </div>
+    </>
+  )
+}
+
 export function MissionUI({
   mission,
   setMission,
@@ -184,169 +351,6 @@ export function MissionUI({
     setMission(newStates.newMissionState)
     setPoint(newStates.newPointState)
     resetUi()
-  }
-
-  // Start用セレクト
-  function StartSelect({
-    selectedMission,
-  }: {
-    selectedMission: MissionValue | null
-    onMissionChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
-  }) {
-    return (
-      <>
-        <p>スタートの向き</p>
-        <div className="flex justify-start">
-          <select
-            className="select select-bordered"
-            value={selectedMission ?? ""}
-            onChange={handleMissionChange}
-          >
-            <option value="">選択してください</option>
-            {(["u", "r", "d", "l"] as Exclude<MissionValue, null>[]).map(
-              (value) => (
-                <option key={value} value={value}>
-                  {MissionString[value]}
-                </option>
-              ),
-            )}
-          </select>
-        </div>
-      </>
-    )
-  }
-
-  // Goal用セレクト
-  function GoalSelect({
-    selectedPoint,
-    goalPointArray,
-  }: {
-    selectedPoint: PointValue | null
-    onPointChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
-    goalPointArray: number[]
-  }) {
-    return (
-      <>
-        <p>ゴールポイント</p>
-        <div className="flex justify-start">
-          <select
-            className="select select-bordered ml-2"
-            value={selectedPoint ?? ""}
-            onChange={handlePointChange}
-          >
-            <option value="">選択</option>
-            {goalPointArray.map((num) => (
-              <option key={num} value={num}>
-                {num}
-              </option>
-            ))}
-          </select>
-          <p className="ml-2 self-center">ポイント</p>
-        </div>
-      </>
-    )
-  }
-
-  // 通常ミッション用セレクト
-  function MissionSelect({
-    selectedMission,
-    selectedParam,
-    selectedPoint,
-    onMissionChange,
-    onParamChange,
-    onPointChange,
-    pointArray,
-  }: {
-    selectedMission: MissionValue | null
-    selectedParam: number | null
-    selectedPoint: PointValue | null
-    onMissionChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
-    onParamChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
-    onPointChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
-    pointArray: number[]
-  }) {
-    const isMove = selectedMission === "mf" || selectedMission === "mb"
-    const isTurn = selectedMission === "tr" || selectedMission === "tl"
-
-    return (
-      <>
-        <p>ミッション選択</p>
-        <div className="flex justify-start">
-          <select
-            className="select select-bordered"
-            value={selectedMission ?? ""}
-            onChange={onMissionChange}
-          >
-            <option value="">選択</option>
-            {(["mf", "mb", "tr", "tl"] as Exclude<MissionValue, null>[]).map(
-              (v) => (
-                <option key={v} value={v}>
-                  {MissionString[v]}
-                </option>
-              ),
-            )}
-          </select>
-
-          {isMove && (
-            <>
-              <select
-                className="select select-bordered ml-2"
-                value={selectedParam ?? ""}
-                onChange={onParamChange}
-              >
-                <option value="">選択</option>
-                {[1, 2].map((num) => (
-                  <option key={num} value={num}>
-                    {num}
-                  </option>
-                ))}
-              </select>
-              <p className="ml-2 self-center">パネル</p>
-            </>
-          )}
-
-          {isTurn && (
-            <>
-              <select
-                className="select select-bordered ml-2"
-                value={selectedParam ?? ""}
-                onChange={onParamChange}
-              >
-                <option value="">選択</option>
-                {[90, 180, 270, 360].map((num) => (
-                  <option key={num} value={num}>
-                    {num}
-                  </option>
-                ))}
-              </select>
-              <p className="ml-2 self-center">度</p>
-            </>
-          )}
-
-          {(isMove || isTurn) && (
-            <>
-              <select
-                className="select select-bordered ml-2"
-                value={selectedPoint ?? ""}
-                onChange={onPointChange}
-              >
-                <option value="">選択</option>
-                {pointArray.map((num) => (
-                  <option key={num} value={num}>
-                    {num}
-                  </option>
-                ))}
-              </select>
-              <p className="ml-2 self-center">ポイント</p>
-            </>
-          )}
-
-          {!isMove && !isTurn && (
-            <p className="self-center">{"<"}-選択してください</p>
-          )}
-        </div>
-      </>
-    )
   }
 
   const pointArray = [0, 1, 2]

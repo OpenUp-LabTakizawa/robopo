@@ -27,10 +27,10 @@ const dummy: CourseEditState = {
   field: initializeField(),
   mission: [],
   point: [],
-  setName: () => {},
-  setField: () => {},
-  setMission: () => {},
-  setPoint: () => {},
+  setName: () => { },
+  setField: () => { },
+  setMission: () => { },
+  setPoint: () => { },
 }
 
 const CourseEditContext = createContext<CourseEditState>(dummy)
@@ -45,7 +45,7 @@ export function CourseEditProvider({
   const [name, setName] = useState<string>("")
   const [field, setField] = useState<FieldState>(initializeField())
   const [mission, setMission] = useState<MissionState>([])
-  const [point, setPoint] = useState<PointState>([])
+  const [point, setPoint] = useState<PointState>([0, 10])
 
   return (
     <CourseEditContext.Provider
