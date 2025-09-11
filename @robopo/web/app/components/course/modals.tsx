@@ -7,8 +7,6 @@ import { useState } from "react"
 import { useFormStatus } from "react-dom"
 import {
   checkValidity,
-  type FieldState,
-  type MissionState,
   serializeField,
   serializeMission,
   serializePoint,
@@ -200,25 +198,22 @@ export function SaveModal({ courseId }: { courseId: number | null }) {
 }
 
 // コースを検証した結果を表示するmodal
-export function validationModal({
-  setModalOpen,
-  field,
-  mission,
-}: {
-  setModalOpen: React.Dispatch<React.SetStateAction<number>>
-  field: FieldState
-  mission: MissionState
-}) {
+export function ValidationModal() {
+  const { field, mission } = useCourseEdit()
+  const router = useRouter()
   const check = checkValidity(field, mission)
   function handleYes() {
-    setModalOpen(2)
+    // 今のurlから/valid を削除して、/saveに遷移する
+    const currentUrl = window.location.href
+    const newUrl = currentUrl.replace(/\/valid$/, "/save") as Route
+    router.push(newUrl)
   }
 
   function handleCancel() {
-    setModalOpen(0)
+    router.back()
   }
   return (
-    <dialog className="modal modal-open" onClose={() => setModalOpen(0)}>
+    <dialog className="modal modal-open" onClose={() => handleCancel()}>
       <div className="modal-box">
         {check ? (
           <>
