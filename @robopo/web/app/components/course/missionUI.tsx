@@ -62,9 +62,7 @@ function GoalSelect({
           value={selectedPoint ?? ""}
           onChange={onPointChange}
         >
-          <option value="">
-            選択
-          </option>
+          <option value="">選択</option>
           {goalPointArray.map((num) => (
             <option key={num} value={num}>
               {num}
