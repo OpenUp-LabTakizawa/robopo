@@ -27,10 +27,10 @@ const dummy: CourseEditState = {
   field: initializeField(),
   mission: [],
   point: [],
-  setName: () => {},
-  setField: () => {},
-  setMission: () => {},
-  setPoint: () => {},
+  setName: () => { },
+  setField: () => { },
+  setMission: () => { },
+  setPoint: () => { },
 }
 
 const CourseEditContext = createContext<CourseEditState>(dummy)
