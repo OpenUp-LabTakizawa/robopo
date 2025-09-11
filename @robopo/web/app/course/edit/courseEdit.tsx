@@ -23,6 +23,12 @@ export default function CourseEdit({ field, setField }: CourseEditProps) {
     }
   }
 
+  // 全クリア
+  function allClear() {
+    const newField = field.map((row) => row.map(() => null))
+    setField(newField)
+  }
+
   return (
     <div className="container mx-auto">
       <div className="card w-full min-w-72 bg-base-100 shadow-xl">
@@ -32,8 +38,16 @@ export default function CourseEdit({ field, setField }: CourseEditProps) {
         </div>
       </div>
       <div className="card w-full min-w-72 bg-base-100 shadow-xl">
-        <div className="card-body">
+        <div className="card-body flex w-full flex-row">
           <SelectPanel field={field} setmode={setMode} />
+          <button
+            type="button"
+            data-id="add"
+            className="btn btn-primary mx-auto"
+            onClick={allClear}
+          >
+            全クリア
+          </button>
         </div>
       </div>
     </div>

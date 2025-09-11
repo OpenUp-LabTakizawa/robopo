@@ -79,8 +79,8 @@ export function MissionList({
               </th>
               <td>Start</td>
               {mission[0] === null ||
-                mission[0] === undefined ||
-                mission[0] === "" ? (
+              mission[0] === undefined ||
+              mission[0] === "" ? (
                 <td>-</td>
               ) : (
                 <td>{MissionString[mission[0]]}</td>
@@ -164,8 +164,8 @@ export function MissionList({
               </th>
               <td>Goal</td>
               {mission[1] === null ||
-                mission[1] === undefined ||
-                mission[1] === "" ? (
+              mission[1] === undefined ||
+              mission[1] === "" ? (
                 <td>-</td>
               ) : (
                 <td>{MissionString[mission[1]]}</td>
