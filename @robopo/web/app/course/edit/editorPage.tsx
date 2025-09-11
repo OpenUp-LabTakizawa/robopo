@@ -20,7 +20,8 @@ export function EditorPage({
 }) {
   const courseId = courseData?.id || null
 
-  const { setName, field, setField, mission, setMission, point, setPoint } = useCourseEdit()
+  const { setName, field, setField, mission, setMission, point, setPoint } =
+    useCourseEdit()
 
   useEffect(() => {
     async function fetchCourseData() {
