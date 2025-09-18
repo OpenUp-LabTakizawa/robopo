@@ -272,7 +272,9 @@ export function MissionUI({
       newMissionState[3] = selectedParam
       newPointState[2] = selectedPoint
     } else {
-      const insertIndex = selectedId === -4 ? 2 : 2 * selectedId + 4
+      // Special constant for handling the "insert at start" case in mission/point arrays.
+      const INSERT_AT_START_ID = -4; // When selectedId is -4, insert at the beginning (index 2).
+      const insertIndex = selectedId === INSERT_AT_START_ID ? 2 : 2 * selectedId + 4
       newMissionState.splice(insertIndex, 0, selectedMission, selectedParam)
       newPointState.splice(selectedId + 3, 0, selectedPoint)
     }
