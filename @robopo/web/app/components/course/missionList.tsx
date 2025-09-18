@@ -27,6 +27,7 @@ export function MissionList({
   const [statePair, setMissionStatePair] = useState<
     { id: string; mission: MissionValue[] }[]
   >([])
+  const TOP_INSERT_INDEX = -4 // 先頭に挿入するための特別な定数
 
   useEffect(() => {
     const newStatePair = missionStatePair(mission).map((m) => ({
@@ -84,8 +85,8 @@ export function MissionList({
               </th>
               <td>Start</td>
               {mission[0] === null ||
-              mission[0] === undefined ||
-              mission[0] === "" ? (
+                mission[0] === undefined ||
+                mission[0] === "" ? (
                 <td>-</td>
               ) : (
                 <td>{MissionString[mission[0]]}</td>
@@ -103,12 +104,12 @@ export function MissionList({
                           <AddMissionButton
                             addOrder={addOrder}
                             setAddOrder={setAddOrder}
-                            index={-4} // 上側挿入専用
+                            index={TOP_INSERT_INDEX} // 上側挿入専用
                             handleRadioChange={handleRadioChange}
                           />
                         </th>
                       </tr>
-                      {addOrder === -4 && (
+                      {addOrder === TOP_INSERT_INDEX && (
                         <AddMissionItem
                           radio={radio}
                           handleRadioChange={handleRadioChange}
@@ -184,8 +185,8 @@ export function MissionList({
               </th>
               <td>Goal</td>
               {mission[1] === null ||
-              mission[1] === undefined ||
-              mission[1] === "" ? (
+                mission[1] === undefined ||
+                mission[1] === "" ? (
                 <td>-</td>
               ) : (
                 <td>{MissionString[mission[1]]}</td>
