@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react"
+import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline"
+import { Fragment, useEffect, useState } from "react"
 import {
   type MissionState,
   MissionString,
@@ -13,11 +14,15 @@ export function MissionList({
   point,
   radio,
   handleRadioChange,
+  addOrder,
+  setAddOrder,
 }: {
   mission: MissionState
   point: PointState
   radio: number | null
   handleRadioChange: (selectedIndex: number) => void
+  addOrder: number
+  setAddOrder: (mode: number) => void
 }) {
   const [statePair, setMissionStatePair] = useState<
     { id: string; mission: MissionValue[] }[]
@@ -59,7 +64,7 @@ export function MissionList({
           </thead>
           <tbody>
             <tr
-              className="hover cursor-pointer"
+              className="hover relative cursor-pointer"
               onClick={() => handleRadioChange(-2)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === "Space") {
@@ -79,8 +84,8 @@ export function MissionList({
               </th>
               <td>Start</td>
               {mission[0] === null ||
-              mission[0] === undefined ||
-              mission[0] === "" ? (
+                mission[0] === undefined ||
+                mission[0] === "" ? (
                 <td>-</td>
               ) : (
                 <td>{MissionString[mission[0]]}</td>
@@ -89,59 +94,74 @@ export function MissionList({
             </tr>
             {statePair.length > 0 ? (
               statePair.map(({ id, mission }, index) => (
-                <tr
-                  key={id}
-                  className="hover cursor-pointer"
-                  onClick={() => handleRadioChange(index)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === "Space") {
-                      handleRadioChange(index)
-                    }
-                  }}
-                >
-                  <th>
-                    <input
-                      type="radio"
-                      name="radio-1"
-                      className="radio"
-                      value={index}
-                      checked={radio === index}
-                      readOnly={true}
+                <Fragment key={id}>
+                  {/* 先頭行(index=0)の前に上側ボタンを表示 */}
+                  {index === 0 && (
+                    <>
+                      <tr>
+                        <th colSpan={4} className="relative h-0 p-0">
+                          <AddMissionButton
+                            addOrder={addOrder}
+                            setAddOrder={setAddOrder}
+                            index={-4} // 上側挿入専用
+                            handleRadioChange={handleRadioChange}
+                          />
+                        </th>
+                      </tr>
+                      {addOrder === -4 && (
+                        <AddMissionItem
+                          radio={radio}
+                          handleRadioChange={handleRadioChange}
+                        />
+                      )}
+                    </>
+                  )}
+                  <tr
+                    className="hover relative cursor-pointer"
+                    onClick={() => handleRadioChange(index)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === "Space") {
+                        handleRadioChange(index)
+                      }
+                    }}
+                  >
+                    <th>
+                      <input
+                        type="radio"
+                        name="radio-1"
+                        className="radio"
+                        value={index}
+                        checked={radio === index}
+                        readOnly={true}
+                      />
+                      <AddMissionButton
+                        addOrder={addOrder}
+                        setAddOrder={setAddOrder}
+                        index={index}
+                        handleRadioChange={handleRadioChange}
+                      />
+                    </th>
+                    <td>{index + 1}</td>
+                    <td>
+                      {mission[0] === null ? "-" : MissionString[mission[0]]}
+                      {mission[1] === null ? "-" : mission[1]}
+                      {panelOrDegree(mission[0])}
+                    </td>
+                    <td>{point[index + 2]}</td>
+                  </tr>
+                  {addOrder === index && (
+                    <AddMissionItem
+                      radio={radio}
+                      handleRadioChange={handleRadioChange}
                     />
-                  </th>
-                  <td>{index + 1}</td>
-                  <td>
-                    {mission[0] === null ? "-" : MissionString[mission[0]]}
-                    {mission[1] === null ? "-" : mission[1]}
-                    {panelOrDegree(mission[0])}
-                  </td>
-                  <td>{point[index + 2]}</td>
-                </tr>
+                  )}
+                </Fragment>
               ))
             ) : (
-              <tr
-                className="hover cursor-pointer"
-                onClick={() => handleRadioChange(-1)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === "Space") {
-                    handleRadioChange(-1)
-                  }
-                }}
-              >
-                <th>
-                  <input
-                    type="radio"
-                    name="radio-1"
-                    className="radio"
-                    value={-1}
-                    checked={radio === -1}
-                    readOnly={true}
-                  />
-                </th>
-                <td>-</td>
-                <td>ミッションを追加してください。</td>
-                <td>-</td>
-              </tr>
+              <AddMissionItem
+                radio={radio}
+                handleRadioChange={handleRadioChange}
+              />
             )}
             <tr
               className="hover cursor-pointer"
@@ -164,8 +184,8 @@ export function MissionList({
               </th>
               <td>Goal</td>
               {mission[1] === null ||
-              mission[1] === undefined ||
-              mission[1] === "" ? (
+                mission[1] === undefined ||
+                mission[1] === "" ? (
                 <td>-</td>
               ) : (
                 <td>{MissionString[mission[1]]}</td>
@@ -177,5 +197,70 @@ export function MissionList({
       </div>
       <div />
     </div>
+  )
+}
+
+const AddMissionButton = ({
+  addOrder,
+  setAddOrder,
+  index,
+  handleRadioChange,
+}: {
+  addOrder: number
+  setAddOrder: (mode: number) => void
+  index: number
+  handleRadioChange: (index: number) => void
+}) => {
+  return (
+    <button
+      type="button"
+      className="-bottom-4 -left-4 absolute cursor-pointer rounded-full border bg-white shadow"
+      onClick={(e) => {
+        e.stopPropagation()
+        setAddOrder(addOrder === -1 ? index : -1)
+        handleRadioChange(-1) // 追加する行を選択
+        console.log("addOrder", addOrder)
+      }}
+    >
+      {addOrder === -1 ? (
+        <PlusCircleIcon className="size-5 text-blue-500" />
+      ) : (
+        addOrder === index && (
+          <MinusCircleIcon className="size-5 text-red-500" />
+        )
+      )}
+    </button>
+  )
+}
+
+const AddMissionItem = ({
+  radio,
+  handleRadioChange,
+}: {
+  radio: number | null
+  handleRadioChange: (index: number) => void
+}) => {
+  return (
+    <tr
+      className="hover cursor-pointer"
+      onClick={() => handleRadioChange(-1)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === "Space") {
+          handleRadioChange(-1)
+        }
+      }}
+    >
+      <th>
+        <input
+          type="radio"
+          name="radio-1"
+          className="radio"
+          value={-1}
+          checked={radio === -1}
+          readOnly={true}
+        />
+      </th>
+      <td colSpan={3}>ミッションを追加してください。</td>
+    </tr>
   )
 }

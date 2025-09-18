@@ -27,6 +27,7 @@ export default function MissionEdit({
   )
   const [selectedParam, setSelectedParam] = useState<number | null>(null) // 選択されたミッションのパラメータ
   const [selectedPoint, setSelectedPoint] = useState<PointValue | null>(null)
+  const [addOrder, setAddOrder] = useState<number>(-1)
 
   function handleRadioChange(selectedIndex: number) {
     setRadio(selectedIndex) // 選択されたインデックスを状態として保存
@@ -49,6 +50,8 @@ export default function MissionEdit({
             point={point}
             radio={radio}
             handleRadioChange={handleRadioChange}
+            addOrder={addOrder}
+            setAddOrder={setAddOrder}
           />
         </div>
       </div>
@@ -58,8 +61,9 @@ export default function MissionEdit({
             mission={mission}
             setMission={setMission}
             point={point}
+            radio={radio}
             setPoint={setPoint}
-            selectedId={radio}
+            selectedId={radio === -1 ? addOrder : radio}
             selectedMission={selectedMission}
             setSelectedMission={setSelectedMission}
             selectedParam={selectedParam}
@@ -67,6 +71,7 @@ export default function MissionEdit({
             selectedPoint={selectedPoint}
             setSelectedPoint={setSelectedPoint}
             setRadio={setRadio}
+            setAddOrder={setAddOrder}
           />
         </div>
       </div>

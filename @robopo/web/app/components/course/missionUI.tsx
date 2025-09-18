@@ -181,6 +181,7 @@ export function MissionUI({
   mission,
   setMission,
   point,
+  radio,
   setPoint,
   selectedId,
   selectedMission,
@@ -190,10 +191,12 @@ export function MissionUI({
   selectedPoint,
   setSelectedPoint,
   setRadio,
+  setAddOrder,
 }: {
   mission: MissionState
   setMission: React.Dispatch<React.SetStateAction<MissionState>>
   point: PointState
+  radio: number | null
   setPoint: React.Dispatch<React.SetStateAction<PointState>>
   selectedId: number | null
   selectedMission: MissionValue | null
@@ -203,6 +206,7 @@ export function MissionUI({
   selectedPoint: PointValue | null
   setSelectedPoint: React.Dispatch<React.SetStateAction<PointValue | null>>
   setRadio: React.Dispatch<React.SetStateAction<number | null>>
+  setAddOrder: React.Dispatch<React.SetStateAction<number>>
 }) {
   function handleMissionChange(event: React.ChangeEvent<HTMLSelectElement>) {
     // 「選択」に変更された場合、MissionもParamもnullにして入れられないようにする。
@@ -242,6 +246,7 @@ export function MissionUI({
     setSelectedParam(null)
     setSelectedPoint(null)
     setRadio(null)
+    setAddOrder(-1)
   }
 
   // start, goalを選択しているかをチェックする関数
@@ -267,7 +272,7 @@ export function MissionUI({
       newMissionState[3] = selectedParam
       newPointState[2] = selectedPoint
     } else {
-      const insertIndex = 2 * selectedId + 4
+      const insertIndex = selectedId === -4 ? 2 : 2 * selectedId + 4
       newMissionState.splice(insertIndex, 0, selectedMission, selectedParam)
       newPointState.splice(selectedId + 3, 0, selectedPoint)
     }
@@ -358,7 +363,7 @@ export function MissionUI({
     <div>
       <div>MissionUI</div>
       <div className="container">
-        {selectedId === -2 ? (
+        {selectedId === -2 && radio === -2 ? (
           <StartSelect
             selectedMission={selectedMission}
             onMissionChange={handleMissionChange}
@@ -391,6 +396,7 @@ export function MissionUI({
           className="btn btn-primary mx-auto"
           disabled={
             isStartGoal() ||
+            radio !== -1 ||
             selectedId === null ||
             selectedMission === null ||
             selectedParam === null ||
@@ -407,7 +413,7 @@ export function MissionUI({
           onClick={handleButtonClick}
           disabled={
             selectedId === null ||
-            selectedId === -1 ||
+            radio === -1 ||
             (selectedId !== -2 &&
               selectedId !== -3 &&
               selectedParam === null) ||
@@ -422,7 +428,7 @@ export function MissionUI({
           data-id="delete"
           className="btn btn-warning mx-auto"
           onClick={handleButtonClick}
-          disabled={isStartGoal() || selectedId === null}
+          disabled={isStartGoal() || selectedId === null || radio === -1}
         >
           削除
         </button>
