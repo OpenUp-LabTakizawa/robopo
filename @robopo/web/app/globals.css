@@ -99,3 +99,13 @@
 .gradient-button span {
   z-index: 1; /* 文字を前面に表示 */
 }
+
+/* hide default password visibility toggle button */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-password-toggle-button {
+  /* biome-ignore lint/complexity/noImportantStyles: 各ブラウザの UA stylesheet（ブラウザ内部のデフォルト CSS）はかなり強い優先度を持っています。
+  Safari や一部のモバイルブラウザでは !important を付けないと UA stylesheet に勝てず、::-webkit-password-toggle-button が消せないことがあります。 */
+  display: none !important;
+}
