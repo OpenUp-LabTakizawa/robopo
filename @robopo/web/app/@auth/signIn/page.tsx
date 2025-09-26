@@ -1,7 +1,8 @@
 "use client"
 
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline"
 import { useSearchParams } from "next/navigation"
-import { useActionState, useEffect, useId } from "react"
+import { useActionState, useEffect, useId, useState } from "react"
 import {
   ModalBackButton,
   ModalBackdrop,
@@ -35,6 +36,7 @@ export default function SignIn() {
 
   const callbackUrl = getSafeCallbackUrl(rawCallbackUrl)
   const [state, action] = useActionState(signInAction, undefined)
+  const [showPassword, setShowPassword] = useState(false)
 
   useEffect(() => {
     if (state?.success) {
@@ -57,15 +59,27 @@ export default function SignIn() {
             />
           </label>
           <br />
-          <label className="input" htmlFor={passwordId}>
+          <label className="input relative" htmlFor={passwordId}>
             <span className="label">パスワード</span>
             <input
               id={passwordId}
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               placeholder="12345678"
               required={true}
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute inset-y-0 right-2 flex items-center text-gray-500 text-sm"
+              aria-label="Show password"
+            >
+              {showPassword ? (
+                <EyeSlashIcon className="size-6" />
+              ) : (
+                <EyeIcon className="size-6" />
+              )}
+            </button>
           </label>
           <div className="flex">
             <button className="btn btn-accent my-3 flex" type="submit">
