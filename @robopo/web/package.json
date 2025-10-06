@@ -39,28 +39,28 @@
   "dependencies": {
     "@auth/drizzle-adapter": "^1.10.0",
     "next": "^15.5.4",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.2.4",
+    "@biomejs/biome": "^2.2.5",
     "@heroicons/react": "^2.2.0",
-    "@tailwindcss/postcss": "^4.1.13",
+    "@tailwindcss/postcss": "^4.1.14",
     "@types/bcrypt": "^6.0.0",
-    "@types/node": "^24.5.2",
+    "@types/node": "^24.6.2",
     "@types/pg": "^8.15.5",
-    "@types/react": "^19.1.15",
-    "@types/react-dom": "^19.1.9",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
     "bcrypt": "^6.0.0",
-    "daisyui": "^5.1.25",
+    "daisyui": "^5.1.27",
     "drizzle-kit": "^0.31.5",
-    "drizzle-orm": "^0.44.5",
+    "drizzle-orm": "^0.44.6",
     "next-auth": "^5.0.0-beta.29",
     "next-navigation-guard": "^0.2.0",
     "pg": "^8.16.3",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.13",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "zod": "^4.1.11"
   }
 }
