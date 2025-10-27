@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-@source './**/*.{js,ts,jsx,tsx,mdx}';
+@source "./**/*.{js,ts,jsx,tsx,mdx}";
 
 @theme {
   --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
