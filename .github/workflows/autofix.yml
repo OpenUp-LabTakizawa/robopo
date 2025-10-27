@@ -23,13 +23,21 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup Biome
-        uses: biomejs/setup-biome@v2
+      - uses: actions/setup-node@v6
         with:
-          version: latest
+          node-version: latest
+          cache: npm
 
-      - name: Run Biome
-        run: biome check --write
+      - name: Install dependencies
+        run: rm package-lock.json && npm i
+
+      # - name: Setup Biome
+      #   uses: biomejs/setup-biome@v2
+      #   with:
+      #     version: latest
+
+      # - name: Run Biome
+      #   run: biome check --write
 
       - name: Commit
         if: success() || failure()
