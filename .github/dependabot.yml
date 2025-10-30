@@ -10,7 +10,7 @@ updates:
       - "/"
       - "/@robopo/docs"
     schedule:
-      interval: "weekly"
+      interval: "daily"
     groups:
       dependencies:
         patterns:
@@ -19,7 +19,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
     groups:
       ci:
         patterns:
