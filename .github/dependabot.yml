@@ -11,6 +11,9 @@ updates:
       - "/@robopo/docs"
     schedule:
       interval: "daily"
+    ignore:
+      - dependency-name: "next"
+        versions: "16.x"
     groups:
       dependencies:
         patterns:
