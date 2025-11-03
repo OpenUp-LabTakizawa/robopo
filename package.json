@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.1",
-    "@types/node": "^24.9.1"
+    "@types/node": "^24.10.0"
   },
   "overrides": {
     "@esbuild-kit/core-utils": {
