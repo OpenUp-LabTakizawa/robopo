@@ -21,7 +21,6 @@ const config: Config = {
   projectName: "robopo", // Usually your repo name.
 
   onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "warn",
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -38,10 +37,14 @@ const config: Config = {
   },
 
   markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: "warn",
+      onBrokenMarkdownImages: 'throw',
+    },
+    mermaid: true,
     remarkRehypeOptions: {
       footnoteLabel: "脚注",
     },
-    mermaid: true,
   },
 
   themes: ["@docusaurus/theme-mermaid"],
