@@ -7,6 +7,9 @@ updates:
     ignore:
       - dependency-name: "next"
         versions: "16.x"
+    commit-message:
+      prefix: "build"
+      include: "scope"
     groups:
       dependencies:
         patterns:
@@ -16,6 +19,8 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "ci"
     groups:
       ci:
         patterns:
