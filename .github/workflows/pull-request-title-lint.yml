@@ -1,0 +1,127 @@
+name: ✨ Check Conventional Commit Title
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+
+permissions:
+  contents: read
+
+jobs:
+  lint-title:
+    runs-on: ubuntu-latest
+    outputs:
+      is_success: ${{ steps.commitlint.outputs.is_success }}
+      commitlint_log: ${{ steps.commitlint.outputs.commitlint_log }}
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: 🐣 Install bun
+        uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76
+        with:
+          bun-version: canary
+      - name: 📦 Install commitlint
+        run: bun add -d @commitlint/cli @commitlint/config-conventional
+      - name: 📝 Create commitlint config
+        run: |
+          echo 'export default { extends: ["@commitlint/config-conventional"],
+          ignores: [(message: string) => message.includes("Signed-off-by: dependabot[bot]")] }' > commitlint.config.ts
+
+      - name: 👀 Validate PR title with commitlint
+        id: commitlint
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          echo "$TITLE" | bun commitlint --verbose &> >(tee -p commitlint.log) || STATUS=$?
+          if [ $STATUS -ne 0 ]; then
+            echo "is_success=false" >> $GITHUB_OUTPUT
+          else
+            echo "is_success=true" >> $GITHUB_OUTPUT
+          fi
+          UUID=$(uuidgen)
+          {
+            echo "commitlint_log<<EOF_$UUID"
+            cat commitlint.log
+            echo "EOF_$UUID"
+          } >> $GITHUB_OUTPUT
+
+      - name: 💔 Fail if test failed
+        if: steps.commitlint.outputs.is_success == 'false'
+        run: exit 1
+
+  upload:
+    runs-on: ubuntu-latest
+    needs: lint-title
+    if: success() || failure()
+
+    steps:
+      - name: ❌ Create test failed comment
+        if: needs.lint-title.outputs.is_success == 'false'
+        env:
+          ACTOR: ${{ github.actor }}
+          COMMITLINT_LOG: ${{ needs.lint-title.outputs.commitlint_log }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          UUID=$(uuidgen)
+          cat <<EOF_$UUID > comment.txt
+          # ❌ Pull Request Title Linting Failed
+          @$ACTOR, thank you for opening this pull request 👋🏼
+          We require pull request titles to follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) and it looks like your proposed title needs to be adjusted.
+
+          <details>
+          <summary><strong>Commitlint Log</strong></summary>
+
+          \`\`\`shell
+          $COMMITLINT_LOG
+          \`\`\`
+
+          </details>
+
+          Please update the title of this pull request to follow the specification.
+          👀[View in Actions](https://github.com/$REPO/actions/runs/$RUN_ID)
+          <!-- generated-comment [Lint-Title](https://github.com/$REPO/.github/workflows/commitlint.yml) -->
+          EOF_$UUID
+
+      - name: ✅ Create test success comment
+        if: needs.lint-title.outputs.is_success == 'true'
+        env:
+          REPO: ${{ github.repository }}
+        run: |
+          UUID=$(uuidgen)
+          cat <<EOF_$UUID > comment.txt
+          # ✅ Pull Request Title Linting Passed
+          Thank you for updating the title of this pull request to follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
+          <!-- generated-comment [Lint-Title](https://github.com/$REPO/.github/workflows/commitlint.yml) -->
+          EOF_$UUID
+
+      - name: 🔢 Create pull request number and title
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          echo "$PR_NUMBER" > pr_number.txt
+          echo "# ❌ Pull Request Title Linting Failed" > title.txt
+
+      - name: 🆙 Upload test comment
+        uses: actions/upload-artifact@v5
+        with:
+          name: comment
+          path: comment.txt
+      - name: 🆙 Upload pull request number
+        uses: actions/upload-artifact@v5
+        with:
+          name: pr_number
+          path: pr_number.txt
+      - name: 🆙 Upload title
+        uses: actions/upload-artifact@v5
+        with:
+          name: title
+          path: title.txt
