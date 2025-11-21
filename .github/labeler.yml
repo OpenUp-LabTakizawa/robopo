@@ -1,0 +1,30 @@
+🍱asset:
+- changed-files:
+  - any-glob-to-any-file: ['**/*.avif', '**/*.ico', '**/*.png', '**/*.svg']
+🐛bug:
+- head-branch: ['^fix', 'fix']
+♻️ci:
+- changed-files:
+  - any-glob-to-any-file: '.github/**/*.yml'
+⚙️config:
+- changed-files:
+  - any-glob-to-any-file: '**/*config.*'
+dependencies:
+- changed-files:
+  - any-glob-to-any-file: ['package-lock.json', '**/package.json']
+📝documentation:
+- changed-files:
+  - any-glob-to-any-file: ['@robopo/docs/**', '**/*.md', '**/*.mdx']
+🚀enhancement:
+- all:
+  - changed-files:
+    - any-glob-to-any-file: '@robopo/web/app/**'
+🪸git:
+- changed-files:
+  - any-glob-to-any-file: ['.gitattributes', '**/.gitignore']
+🧰infrastructure:
+- changed-files:
+  - any-glob-to-any-file: ['.devcontainer/*', '.editorconfig', 'biome.json']
+🆚vscode:
+- changed-files:
+  - any-glob-to-any-file: '.vscode/*'
