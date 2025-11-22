@@ -4,5 +4,9 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.biome": "explicit",
     "source.organizeImports.biome": "explicit"
+  },
+  "files.exclude": {
+    "**/.jj": true,
+    "**/.sl": true
   }
 }
