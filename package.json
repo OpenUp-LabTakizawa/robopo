@@ -48,11 +48,7 @@
   },
   "overrides": {
     "@esbuild-kit/core-utils": {
-      "esbuild": "^0.27.0"
-    },
-    "webpack-dev-server": "^5.2.2",
-    "@docusaurus/theme-mermaid": {
-      "mermaid": "^11.10.0"
+      "esbuild": "^0.27.1"
     }
   }
 }
