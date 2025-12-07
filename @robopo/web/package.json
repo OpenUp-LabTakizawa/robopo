@@ -30,7 +30,7 @@
   "homepage": "https://openup-labtakizawa.github.io/robopo/",
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "next build",
     "start": "next start",
     "lint": "biome lint --write",
     "format": "biome format --write",
