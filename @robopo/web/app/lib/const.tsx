@@ -13,12 +13,6 @@ import {
 import type { Route } from "next"
 import type { JSX } from "react"
 
-export const BASE_URL: string = process.env.VERCEL
-  ? `https://${process.env.VERCEL_URL}`
-  : process.env.CI === "true"
-    ? (process.env.DEPLOY_PRIME_URL as string)
-    : process.env.URL || "http://localhost:3000"
-
 export interface NavItem {
   label: string
   href: Route
