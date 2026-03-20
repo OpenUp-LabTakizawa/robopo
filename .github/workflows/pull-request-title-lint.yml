@@ -88,7 +88,7 @@ jobs:
 
           Please update the title of this pull request to follow the specification.
           👀[View in Actions](https://github.com/$REPO/actions/runs/$RUN_ID)
-          <!-- generated-comment [Lint-Title](https://github.com/$REPO/.github/workflows/commitlint.yml) -->
+          <!-- generated-comment [Lint-Title](https://github.com/$REPO/.github/workflows/pull-request-title-lint.yml) -->
           EOF_$UUID
 
       - name: ✅ Create test success comment
@@ -100,7 +100,7 @@ jobs:
           cat <<EOF_$UUID > comment.txt
           # ✅ Pull Request Title Linting Passed
           Thank you for updating the title of this pull request to follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/).
-          <!-- generated-comment [Lint-Title](https://github.com/$REPO/.github/workflows/commitlint.yml) -->
+          <!-- generated-comment [Lint-Title](https://github.com/$REPO/.github/workflows/pull-request-title-lint.yml) -->
           EOF_$UUID
 
       - name: 🔢 Create pull request number and title
