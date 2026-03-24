@@ -75,7 +75,7 @@ bun start
 
 [Visual Studio Code](https://code.visualstudio.com/) is the recommended IDE for working on this project, as it has been configured.
 
-Once opening, you can run `Extensions: Show Recommended Extensions` to install the recommended extensions for good development is automatically configured.
+Once opened, you can run `Extensions: Show Recommended Extensions` to install the recommended extensions so that your development environment is automatically configured.
 
 ## 🐳 Dev Containers
 
