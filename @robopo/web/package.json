@@ -27,7 +27,7 @@
   "homepage": "https://openup-labtakizawa.github.io/robopo/",
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "next build",
     "start": "next start",
     "lint": "biome lint --write",
     "format": "biome format --write",
@@ -56,7 +56,7 @@
     "pg": "^8.20.0",
     "postcss": "^8.5.8",
     "tailwindcss": "^4.1.13",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "zod": "^4.3.6"
   }
 }
