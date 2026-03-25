@@ -30,7 +30,7 @@ OpenUp ラボ滝沢構成員
 
   Web 開発についての知識。
 
-  あるとよい技術的知識 →GitHub, Node.js, TypeScript, AWS
+  あるとよい技術的知識 →GitHub, Bun, TypeScript, AWS
 
 ## アプリケーション本体・ソースコードについて
 

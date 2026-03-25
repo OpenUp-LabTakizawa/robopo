@@ -15,7 +15,6 @@ import {
   type SelectPlayerWithCompetition,
   type SelectUmpireWithCompetition,
   umpire,
-  users,
 } from "@/app/lib/db/schema"
 
 // IDを指定してDBからコースを削除する関数
@@ -609,14 +608,4 @@ export function groupByCourse(
     }
   }
   return Array.from(courseMap.values())
-}
-
-// signInの時に、userが存在するか確認する関数
-export async function getUserByName(name: string) {
-  const result = await db
-    .select()
-    .from(users)
-    .where(eq(users.name, name))
-    .limit(1)
-  return result[0]
 }
