@@ -1,32 +1,31 @@
-name: Test deployment
+name: 🌐 Test deployment
 
 permissions:
-  contents: read # to download the repository
-  pull-requests: write # to comment on the pull request
+  contents: read
+  pull-requests: write
 
 on:
   pull_request:
     branches: main
     paths:
       - "@robopo/docs/**"
-      - "package-lock.json"
-    # Review gh actions docs if you want to further define triggers, paths, etc
-    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
 
 jobs:
   test-deploy:
     name: Test deployment
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - name: 📥 Checkout
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v6
+          persist-credentials: false
+      - name: 🐣 Install bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: latest
-          cache: npm
+          bun-version: canary
 
-      - name: Install dependencies
-        run: npm ci
-      - name: Test build website
-        run: npm run docs-build
+      - name: 📦 Install dependencies
+        run: bun i --frozen-lockfile
+      - name: 🌐 Test build website
+        run: bun docs-build

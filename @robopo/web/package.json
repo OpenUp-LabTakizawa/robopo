@@ -1,23 +1,20 @@
 {
   "name": "@robopo/web",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Scoring and Calculation Application for Robosava",
   "keywords": [
     "auth.js",
     "biome",
+    "bun",
     "drrizzle",
     "nextjs",
-    "node.js",
     "react",
     "robosava",
     "tailwindcss",
     "typescript"
   ],
-  "author": {
-    "name": "kazutan",
-    "url": "https://openup-labtakizawa.github.io/robopo/"
-  },
+  "author": "Marukome <jambalaya.pyoncafe@gmail.com> (https://github.com/Marukome0743)",
   "license": "MIT",
   "repository": {
     "type": "git",

@@ -14,7 +14,7 @@
   <a href="https://github.com/OpenUp-LabTakizawa/robopo/blob/main/LICENSE"><img src="https://img.shields.io/github/license/OpenUp-LabTakizawa/robopo?labelColor=000000&style=for-the-badge" alt="License" /></a>
 
   <p>
-    Application for ROBOT SURVIVAL PROJECT
+    Scoring and Calculation Application for Robosava
   </p>
 </div>
 
