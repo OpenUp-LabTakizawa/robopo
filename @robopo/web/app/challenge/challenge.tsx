@@ -147,7 +147,7 @@ function IpponBashiSection({
           <SoundController />
         </div>
       </div>
-      <div className="-translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 flex transform">
+      <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 transform">
         <IpponBashiUI
           botPosition={botPosition}
           botDirection={botDirection}

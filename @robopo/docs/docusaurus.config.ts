@@ -39,7 +39,7 @@ const config: Config = {
   markdown: {
     hooks: {
       onBrokenMarkdownLinks: "warn",
-      onBrokenMarkdownImages: 'throw',
+      onBrokenMarkdownImages: "throw",
     },
     mermaid: true,
     remarkRehypeOptions: {
@@ -66,7 +66,19 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
-  plugins: [["drawio", {}]],
+  plugins: [
+    ["drawio", {}],
+    () => ({
+      name: "drawio-raw-loader",
+      configureWebpack() {
+        return {
+          module: {
+            rules: [{ test: /\.drawio$/, type: "asset/source" }],
+          },
+        }
+      },
+    }),
+  ],
 
   themeConfig: {
     // Replace with your project's social card

@@ -215,7 +215,7 @@ const AddMissionButton = ({
   return (
     <button
       type="button"
-      className="-bottom-4 -left-4 absolute cursor-pointer rounded-full border bg-white shadow"
+      className="absolute -bottom-4 -left-4 cursor-pointer rounded-full border bg-white shadow"
       onClick={(e) => {
         e.stopPropagation()
         setAddOrder(addOrder === -1 ? index : -1)

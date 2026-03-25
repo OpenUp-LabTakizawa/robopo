@@ -33,7 +33,7 @@ export function DropdownMenu() {
         <p className="hidden lg:inline">メニュー</p>
       </button>
       <div
-        className={`${isMenuOpen ? "flex" : "hidden"} -translate-y-1/2 -translate-x-1/2 absolute top-1/2 left-1/2 transform lg:mx-auto lg:flex lg:w-auto lg:items-center lg:space-x-6`}
+        className={`${isMenuOpen ? "flex" : "hidden"} absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform lg:mx-auto lg:flex lg:w-auto lg:items-center lg:space-x-6`}
       ></div>
       {isMenuOpen && (
         <div className="navbar-menu relative z-50">

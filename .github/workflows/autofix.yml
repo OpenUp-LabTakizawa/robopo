@@ -18,29 +18,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: 📥 Checkout
         uses: actions/checkout@v6
         with:
           persist-credentials: false
 
-      - uses: actions/setup-node@v6
-        with:
-          node-version: latest
-          cache: npm
+      - name: 🐣 Setup mise
+        uses: jdx/mise-action@v4
 
-      - name: Install dependencies
-        run: rm package-lock.json && npm i
-
-      # - name: Setup Biome
-      #   uses: biomejs/setup-biome@v2
-      #   with:
-      #     version: latest
+      - name: 📦 Update dependencies
+        run: mise update
 
       # - name: Run Biome
       #   run: biome check --write
 
       - name: Commit
         if: success() || failure()
-        uses: autofix-ci/action@7a166d7532b277f34e16238930461bf77f9d7ed8
+        uses: autofix-ci/action@v1.3.3
         with:
           commit-message: "fix(autofix.ci): apply automated fixes"

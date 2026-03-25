@@ -49,7 +49,7 @@ export function Header({ session }: Props) {
           )}
         </div>
       </div>
-      <h1 className="-translate-x-1/2 absolute left-1/2 transform whitespace-nowrap text-center font-semibold text-xl md:text-3xl">
+      <h1 className="absolute left-1/2 -translate-x-1/2 transform whitespace-nowrap text-center font-semibold text-xl md:text-3xl">
         ロボサバ大会集計アプリ
         <br className="md:hidden" />
         ROBOPO
