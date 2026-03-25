@@ -41,7 +41,8 @@ export async function signInAction(_state: FormState, formData: FormData) {
       success: true,
       message: "サインインに成功しました",
     }
-  } catch {
+  } catch (error) {
+    console.error("signInAction error:", error)
     return {
       success: false,
       message: "サインインに失敗しました",

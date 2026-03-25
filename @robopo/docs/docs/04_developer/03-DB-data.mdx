@@ -242,11 +242,38 @@ erDiagram
 DB は Neon Postgres を使用している。
 [Drizzle with Neon Postgres](https://orm.drizzle.team/docs/tutorials/drizzle-with-neon) に従って、DB を初期設定する。
 
-**2 Setup connection string variable** `DATABASE_URL` は localhost の場合、`.env`に記載するが、Vercel 等に host する場合は、Vercel の環境変数に設定する。
+`DATABASE_URL` は localhost の場合、`.env`に記載するが、Vercel 等に host する場合は、Vercel の環境変数に設定する。
 
-**4 Create tables**の`schema.ts`は<GithubLink filePath="app/lib/db/schema.ts" />を使う。
+`schema.ts`は<GithubLink filePath="app/lib/db/schema.ts" />を使う。
 
-正常に DB が設定できたら、ターミナル(Powershell 等)で DB に接続して、手動で THE 一本橋コースとセンサーコースを入れる。
+正常に DB が設定できたら、以下のコマンドでスキーマを DB に反映する。
+
+```shell
+bunx drizzle-kit push
+```
+
+### 認証テーブル（Better Auth）
+
+認証には [Better Auth](https://www.better-auth.com/) を使用している。
+Better Auth 用のテーブル（`user`, `session`, `account`, `verification`）は<GithubLink filePath="app/lib/db/schema.ts" />に定義されており、上記の `drizzle-kit push` で自動的に作成される。
+
+管理者ユーザーの登録は、dev サーバー起動後に Better Auth の API を使って行う。
+
+```shell
+# dev サーバーを起動
+bun run dev
+
+# 別のターミナルで管理者ユーザーを登録
+curl -X POST http://localhost:3000/api/auth/sign-up/email \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"YOUR_PASSWORD","email":"admin@example.com","name":"admin"}'
+```
+
+`YOUR_PASSWORD` は適切なパスワードに置き換えること。
+
+### 初期データの投入
+
+ターミナルで DB に接続して、手動で THE 一本橋コースとセンサーコースを入れる。
 
 ```shell
 psql "postgres://[username]:[password]@[databaseURL]:[port]/[databaseName]"
@@ -255,9 +282,6 @@ psql "postgres://[username]:[password]@[databaseURL]:[port]/[databaseName]"
 入れるクエリは<GithubLink filePath="@robopo/web/app/lib/db/queries/initial.sql" />
 
 ```sql
--- ユーザー名とハッシュ化されたパスワードを挿入する
-INSERT INTO users (id, name, password) VALUES (1, 'USER_NAME', 'HASHED_PASSWORD');
-
 -- THE 一本橋のコースをID -1 に挿入する
 INSERT INTO course (id, name, field, fieldvalid, mission, missionvalid, point) VALUES (-1, 'THE IpponBashi', 'route;route;route;route;start', TRUE, 'u;null;mf;1;mf;1;mf;1;mf;1;tr;180;mf;1;mf;1;mf;1;mf;1', TRUE, '0;20;1;1;1;1;0;2;2;2;2');
 
@@ -267,7 +291,5 @@ INSERT INTO course (id, name, fieldvalid, missionvalid) VALUES (-2, 'SensorCours
 -- testUmpireをID 1 に挿入する
 INSERT INTO umpire (id, name) VALUES (1, 'TestUmpire');
 ```
-
-2行目の`USER_NAME`と`HASHED_PASSWORD`は、適切な値を入れること。
 
 上記を入れることで、THE 一本橋コースが id=-1、センサーコースが id=-2 に登録される。
