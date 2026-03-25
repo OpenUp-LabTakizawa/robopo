@@ -2,13 +2,12 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import type { Session } from "next-auth"
-import { SessionProvider, signOut } from "next-auth/react"
+import { signOut } from "@/lib/auth-client"
 import { DropdownMenu } from "@/app/components/parts/dropdownMenu"
 import { SIGN_IN_CONST, SIGN_OUT_CONST } from "@/app/lib/const"
 
 type Props = {
-  session: Session | null
+  session: { user: { id: string; name: string } } | null
 }
 
 export function Header({ session }: Props) {
@@ -31,7 +30,9 @@ export function Header({ session }: Props) {
         <div className="ml-3 hidden lg:inline-block">
           {session?.user ? (
             <button
-              onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
+              onClick={() =>
+                signOut({ fetchOptions: { onSuccess: () => { window.location.href = "/" } } })
+              }
               type="button"
               className="btn btn-primary p-2 text-xl"
             >
@@ -55,9 +56,7 @@ export function Header({ session }: Props) {
         ROBOPO
       </h1>
       <div className="flex w-full justify-end">
-        <SessionProvider session={session}>
-          <DropdownMenu />
-        </SessionProvider>
+        <DropdownMenu session={session} />
       </div>
     </header>
   )
