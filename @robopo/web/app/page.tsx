@@ -15,13 +15,16 @@ import type {
   SelectCompetitionCourse,
   SelectCourse,
 } from "@/app/lib/db/schema"
-import { auth } from "@/auth"
+import { headers } from "next/headers"
+import { auth } from "@/lib/auth"
 
 export const dynamic = "force-dynamic"
 export const revalidate = 0
 
 export default async function Home() {
-  const session = await auth()
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
   const competitionList: { competitions: SelectCompetition[] } =
     await getCompetitionList()
   const courseList: { courses: SelectCourse[] } = await getCourseList()

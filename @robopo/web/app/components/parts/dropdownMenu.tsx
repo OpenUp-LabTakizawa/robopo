@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { signOut, useSession } from "next-auth/react"
+import { signOut } from "@/lib/auth-client"
 import { useState } from "react"
 import {
   COMPETITION_MANAGEMENT_LIST,
@@ -11,9 +11,13 @@ import {
   SIGN_OUT_CONST,
 } from "@/app/lib/const"
 
-export function DropdownMenu() {
+type Props = {
+  session: { user: { id: string; name: string } } | null
+}
+
+export function DropdownMenu({ session }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { status } = useSession()
+  const status = session?.user ? "authenticated" : "unauthenticated"
 
   return (
     <nav className="flex">
@@ -82,7 +86,7 @@ export function DropdownMenu() {
                   type="button"
                   onClick={() => {
                     setIsMenuOpen(false)
-                    signOut({ redirect: true, redirectTo: "/" })
+                    signOut({ fetchOptions: { onSuccess: () => { window.location.href = "/" } } })
                   }}
                   className="mt-10 flex w-fit cursor-pointer rounded-md px-3 py-1 font-medium text-[1.1rem] text-sm text-white hover:bg-slate-500 hover:text-zinc/60"
                 >
@@ -109,12 +113,12 @@ export function DropdownMenu() {
   )
 }
 
-type PropsType = {
-  status: "authenticated" | "unauthenticated" | "loading"
+type NavLinksProps = {
+  status: "authenticated" | "unauthenticated"
   setIsMenuOpen: (arg0: boolean) => void
 }
 
-function NavLinks({ status, setIsMenuOpen }: PropsType) {
+function NavLinks({ status, setIsMenuOpen }: NavLinksProps) {
   const currentPath = usePathname()
   const links = [HOME_CONST]
   if (status === "authenticated") {

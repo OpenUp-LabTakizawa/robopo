@@ -4,9 +4,6 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    ignore:
-      - dependency-name: "next"
-        versions: "16.x"
     commit-message:
       prefix: "build"
       include: "scope"
