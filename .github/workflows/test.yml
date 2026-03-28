@@ -1,0 +1,143 @@
+name: 🧪 Test
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    paths:
+      - "@robopo/web/**"
+      - "bun.lock"
+      - "package.json"
+  push:
+    paths:
+      - "@robopo/web/**"
+      - "bun.lock"
+      - "package.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    outputs:
+      is_success: ${{ steps.test.outputs.is_success }}
+      test_log: ${{ steps.test.outputs.test_log }}
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: 🐣 Install bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: canary
+
+      - name: 📦 Install dependencies
+        run: bun i
+
+      - name: 🗄️ Setup database
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+        run: |
+          cd @robopo/web
+          bunx drizzle-kit push --force
+          bun run app/lib/db/seed.ts
+
+      - name: 🧪 Test app
+        id: test
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+        run: |
+          bun test:app &> >(tee -p test.log) || STATUS=$?
+          if [ ${STATUS:-0} -ne 0 ]; then
+            echo "is_success=false" >> $GITHUB_OUTPUT
+          else
+            echo "is_success=true" >> $GITHUB_OUTPUT
+          fi
+          UUID=$(uuidgen)
+          {
+            echo "test_log<<EOF_$UUID"
+            cat test.log
+            echo "EOF_$UUID"
+          } >> $GITHUB_OUTPUT
+
+      - name: 💔 Fail if test failed
+        if: steps.test.outputs.is_success == 'false'
+        run: exit 1
+
+  upload:
+    runs-on: ubuntu-latest
+    needs: test
+    if: (success() || failure()) && github.event_name == 'pull_request'
+    steps:
+      - name: 📝 Create comment
+        env:
+          ACTOR: ${{ github.actor }}
+          IS_SUCCESS: ${{ needs.test.outputs.is_success }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+          TEST_LOG: ${{ needs.test.outputs.test_log }}
+          WORKFLOW_NAME: ${{ github.workflow }}
+        run: |
+          UUID=$(uuidgen)
+          if [ "$IS_SUCCESS" = "true" ]; then
+            cat <<EOF_$UUID > comment.txt
+          # ✅ Test Passed
+
+          Failed tests were fixed.
+          EOF_$UUID
+          else
+            cat <<EOF_$UUID > comment.txt
+          # ❌ Test Failed
+
+          @$ACTOR, your commit $SHA failed the test.
+
+          <details>
+          <summary><strong>Test Log</strong></summary>
+
+          \`\`\`shell
+          $TEST_LOG
+          \`\`\`
+
+          </details>
+
+          👀[View in Actions](https://github.com/$REPO/actions/runs/$RUN_ID)
+          <!-- generated-comment [$WORKFLOW_NAME](https://github.com/$REPO/.github/workflows/test.yml) -->
+          EOF_$UUID
+          fi
+
+      - name: 🔢 Create pull request number
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          echo "$PR_NUMBER" > pr_number.txt
+
+      - name: 🆙 Upload test comment
+        uses: actions/upload-artifact@v7
+        with:
+          name: comment
+          path: comment.txt
+
+      - name: 🆙 Upload pull request number
+        uses: actions/upload-artifact@v7
+        with:
+          name: pr_number
+          path: pr_number.txt
