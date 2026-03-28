@@ -1,7 +1,6 @@
 "use client"
 
-import { useNavigationGuard } from "next-navigation-guard"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Challenge } from "@/app/challenge/challenge"
 import { SensorCourse } from "@/app/components/challenge/sensorCourse"
 import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
@@ -21,13 +20,17 @@ export function View({
   const playerId = playerData.id
   const umpireId = 1 // 一旦1
   const [isEnabled, setIsEnabled] = useState(true)
-  useNavigationGuard({
-    enabled: isEnabled,
-    confirm: () =>
-      window.confirm(
-        "このページを離れると編集中のデータは失われます。よろしいですか？",
-      ),
-  })
+  useEffect(() => {
+    if (!isEnabled) {
+      return
+    }
+    const handler = (e: BeforeUnloadEvent) => {
+      e.preventDefault()
+      e.returnValue = ""
+    }
+    window.addEventListener("beforeunload", handler)
+    return () => window.removeEventListener("beforeunload", handler)
+  }, [isEnabled])
 
   return (
     <div className="flex w-full flex-col items-center justify-center overflow-y-auto pt-10 sm:pt-px">
