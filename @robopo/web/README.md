@@ -20,7 +20,7 @@
 
 ## 📄 Usage
 
-To clone and run this application, you'll need [Git](https://git-scm.com/) installed on your computer.  
+To clone and run this application, you'll need [Git](https://git-scm.com/) and [Mise](https://mise.jdx.dev/) installed on your computer.  
 From your command line:
 
 ### 1. Clone this repository
@@ -142,6 +142,7 @@ This software uses the following open source packages:
 - [daisyUI](https://daisyui.com/)
 - [Drizzle](https://orm.drizzle.team/)
 - [HAPPY DOM](https://github.com/capricorn86/happy-dom)
+- [Mise](https://mise.jdx.dev/)
 - [Next.js](https://nextjs.org/)
 - [Node.js](https://nodejs.org/)
 - [Playwright](https://playwright.dev/)
