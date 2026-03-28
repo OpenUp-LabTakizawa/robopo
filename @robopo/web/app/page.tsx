@@ -3,6 +3,7 @@ import {
   ClipboardDocumentCheckIcon,
   TrophyIcon,
 } from "@heroicons/react/24/outline"
+import { headers } from "next/headers"
 import { ChallengeTab, ManageTab, SummaryTab } from "@/app/components/home/tabs"
 import { ThreeTabs } from "@/app/components/parts/threeTabs"
 import {
@@ -15,7 +16,6 @@ import type {
   SelectCompetitionCourse,
   SelectCourse,
 } from "@/app/lib/db/schema"
-import { headers } from "next/headers"
 import { auth } from "@/lib/auth"
 
 export const dynamic = "force-dynamic"

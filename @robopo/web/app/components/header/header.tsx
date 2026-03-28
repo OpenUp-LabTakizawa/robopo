@@ -2,9 +2,9 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { signOut } from "@/lib/auth-client"
 import { DropdownMenu } from "@/app/components/parts/dropdownMenu"
 import { SIGN_IN_CONST, SIGN_OUT_CONST } from "@/app/lib/const"
+import { signOut } from "@/lib/auth-client"
 
 type Props = {
   session: { user: { id: string; name: string } } | null
@@ -31,7 +31,13 @@ export function Header({ session }: Props) {
           {session?.user ? (
             <button
               onClick={() =>
-                signOut({ fetchOptions: { onSuccess: () => { window.location.href = "/" } } })
+                signOut({
+                  fetchOptions: {
+                    onSuccess: () => {
+                      window.location.href = "/"
+                    },
+                  },
+                })
               }
               type="button"
               className="btn btn-primary p-2 text-xl"

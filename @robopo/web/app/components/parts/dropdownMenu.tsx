@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { signOut } from "@/lib/auth-client"
 import { useState } from "react"
 import {
   COMPETITION_MANAGEMENT_LIST,
@@ -10,6 +9,7 @@ import {
   SIGN_IN_CONST,
   SIGN_OUT_CONST,
 } from "@/app/lib/const"
+import { signOut } from "@/lib/auth-client"
 
 type Props = {
   session: { user: { id: string; name: string } } | null
@@ -86,7 +86,13 @@ export function DropdownMenu({ session }: Props) {
                   type="button"
                   onClick={() => {
                     setIsMenuOpen(false)
-                    signOut({ fetchOptions: { onSuccess: () => { window.location.href = "/" } } })
+                    signOut({
+                      fetchOptions: {
+                        onSuccess: () => {
+                          window.location.href = "/"
+                        },
+                      },
+                    })
                   }}
                   className="mt-10 flex w-fit cursor-pointer rounded-md px-3 py-1 font-medium text-[1.1rem] text-sm text-white hover:bg-slate-500 hover:text-zinc/60"
                 >
