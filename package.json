@@ -38,7 +38,8 @@
     "lint": "biome lint --write",
     "format": "biome format --write",
     "check": "biome check --write",
-    "test:app": "bun --filter @robopo/web test:app"
+    "test:app": "bun --filter @robopo/web test:app",
+    "db:seed": "bun --filter @robopo/web db:seed"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.9",
