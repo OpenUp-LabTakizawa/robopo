@@ -1,15 +1,14 @@
 <div align="center">
   <h1>robopo</h1>
 
+  <a href="https://better-auth.com/"><img src="https://img.shields.io/badge/better%20auth-FFFFFF?labelColor=000000&logo=betterauth&style=for-the-badge" alt="Better Auth" /></a>
   <a href="https://biomejs.dev/"><img src="https://img.shields.io/badge/biome-60A5FA?labelColor=000000&logo=biome&style=for-the-badge" alt="Biome" /></a>
   <a href="https://bun.sh/"><img src="https://img.shields.io/badge/bun-FBF0DF?labelColor=000000&logo=bun&style=for-the-badge" alt="Bun" /></a>
   <a href="https://orm.drizzle.team/"><img src="https://img.shields.io/badge/drizzle-C5F74F?labelColor=000000&logo=drizzle&style=for-the-badge" alt="Drizzle" /></a>
   <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/next.js-000000?labelColor=000000&logo=next.js&style=for-the-badge" alt="Next.js" /></a>
   <a href="https://react.dev/"><img src="https://img.shields.io/badge/react-61DAFB?labelColor=000000&logo=react&style=for-the-badge" alt="React" /></a>
-  <a href="https://react-hook-form.com/"><img src="https://img.shields.io/badge/react%20hook%20form-EC5990?labelColor=000000&logo=reacthookform&style=for-the-badge" alt="React Hook Form" /></a>
   <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/tailwind%20css-06B6D4?labelColor=000000&logo=tailwindcss&style=for-the-badge" alt="Tailwind CSS" /></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-3178C6?labelColor=000000&logo=typescript&style=for-the-badge" alt="TypeScript" /></a>
-  <a href="https://pr.new/github.com/OpenUp-LabTakizawa/robopo"><img src="https://img.shields.io/badge/stackblitz-207BEA?labelColor=000000&logo=stackblitz&style=for-the-badge" alt="StackBlitz" /></a>
   <a href="https://github.com/codespaces/new/?repo=OpenUp-LabTakizawa/robopo"><img src="https://img.shields.io/badge/open-007ACC?label=github%20codespaces&labelColor=000000&style=for-the-badge" alt="GitHub Codespaces" /></a>
   <a href="https://github.com/OpenUp-LabTakizawa/robopo/blob/main/LICENSE"><img src="https://img.shields.io/github/license/OpenUp-LabTakizawa/robopo?labelColor=000000&style=for-the-badge" alt="License" /></a>
 
@@ -136,7 +135,7 @@ Then check out one of our issues labeled as [😵‍💫help wanted][help] or [g
 
 This software uses the following open source packages:
 
-- [AWS Lambda Web Adapter](https://github.com/awslabs/aws-lambda-web-adapter)
+- [Better Auth](https://better-auth.com/)
 - [Biome](https://biomejs.dev/)
 - [Bun](https://bun.sh/)
 - [daisyUI](https://daisyui.com/)
@@ -147,8 +146,6 @@ This software uses the following open source packages:
 - [Node.js](https://nodejs.org/)
 - [Playwright](https://playwright.dev/)
 - [React](https://react.dev/)
-- [React Hook Form](https://react-hook-form.com/)
-- [StackBlitz Codeflow](https://stackblitz.com/codeflow/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [TypeScript](https://www.typescriptlang.org/)
 
