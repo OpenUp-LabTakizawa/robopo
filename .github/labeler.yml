@@ -19,12 +19,16 @@ dependencies:
 - all:
   - changed-files:
     - any-glob-to-any-file: '@robopo/web/app/**'
+    - all-globs-to-all-files: '!@robopo/web/test/**/*.test.*'
 🪸git:
 - changed-files:
   - any-glob-to-any-file: ['.gitattributes', '**/.gitignore']
 🧰infrastructure:
 - changed-files:
   - any-glob-to-any-file: ['.devcontainer/*', '.editorconfig', 'biome.json']
+✅test:
+- changed-files:
+  - any-glob-to-any-file: ['@caravan-kidstec/web/happydom.tsx', '@caravan-kidstec/web/test/**']
 🆚vscode:
 - changed-files:
   - any-glob-to-any-file: '.vscode/*'
