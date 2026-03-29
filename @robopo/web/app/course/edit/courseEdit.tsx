@@ -15,15 +15,15 @@ export default function CourseEdit({ field, setField }: CourseEditProps) {
   const [mode, setMode] = useState<PanelValue>(null)
 
   function handlePanelClick(row: number, col: number) {
-    // panelが置けるかどうかをチェック
+    // Check if panel can be placed
     const newField = putPanel(field, row, col, mode)
-    // panelを置けた場合
+    // If panel was placed successfully
     if (newField) {
       setField(newField)
     }
   }
 
-  // 全クリア
+  // Clear all
   function allClear() {
     const newField = field.map((row) => row.map(() => null))
     setField(newField)

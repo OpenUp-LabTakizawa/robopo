@@ -12,7 +12,7 @@ export default async function Challenge({
   const initialPlayerDataList: { players: SelectPlayer[] } =
     await getCompetitionPlayerList(competitionId)
 
-  // courseIdからcourseDataを取得
+  // Get courseData from courseId
   const courseData: SelectCourse | null = await getCourseById(courseId)
 
   return courseData ? (

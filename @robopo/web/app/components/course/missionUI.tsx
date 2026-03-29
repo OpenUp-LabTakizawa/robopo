@@ -7,12 +7,12 @@ import {
   type PointValue,
 } from "@/app/components/course/utils"
 
-// ラジオボタン value=0以上の整数 はmissionの順番
-// ラジオボタン value=-1 はmissionが設定されていない
-// ラジオボタン value=-2 はStart
-// ラジオボタン value=-3 はGoal
+// Radio button value >= 0: mission order index
+// Radio button value = -1: no mission set
+// Radio button value = -2: Start
+// Radio button value = -3: Goal
 
-// Start用セレクト
+// Start select
 function StartSelect({
   selectedMission,
   onMissionChange,
@@ -43,7 +43,7 @@ function StartSelect({
   )
 }
 
-// Goal用セレクト
+// Goal select
 function GoalSelect({
   selectedPoint,
   onPointChange,
@@ -75,7 +75,7 @@ function GoalSelect({
   )
 }
 
-// 通常ミッション用セレクト
+// Normal mission select
 function MissionSelect({
   selectedMission,
   selectedParam,
@@ -209,10 +209,10 @@ export function MissionUI({
   setAddOrder: React.Dispatch<React.SetStateAction<number>>
 }) {
   function handleMissionChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    // 「選択」に変更された場合、MissionもParamもnullにして入れられないようにする。
-    // 「選択」をdisabledにすれば良いやんと思うかもしれないが、
-    // リストでラジオボタンを切り替えた時の動作に不満があるので、
-    // ここでhandleする。
+    // When changed to "select", set both Mission and Param to null to prevent input.
+    // You might think disabling "select" would work, but
+    // the behavior when switching radio buttons in the list is unsatisfactory,
+    // so we handle it here.
     if (event.target.value === "") {
       setSelectedMission(null)
       setSelectedParam(null)
@@ -240,7 +240,7 @@ export function MissionUI({
     }
   }
 
-  // UIをリセットする関数
+  // Reset UI
   function resetUi() {
     setSelectedMission(null)
     setSelectedParam(null)
@@ -249,7 +249,7 @@ export function MissionUI({
     setAddOrder(-1)
   }
 
-  // start, goalを選択しているかをチェックする関数
+  // Check if start or goal is selected
   function isStartGoal() {
     if (selectedId === -2 || selectedId === -3) {
       return true

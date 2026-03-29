@@ -7,7 +7,7 @@ import {
 
 export const revalidate = 0
 
-// 割り当てられた大会・選手一覧を取得
+// Get assigned competition and umpire list
 export async function GET() {
   const assigns: SelectCompetitionUmpire[] = await db
     .select()

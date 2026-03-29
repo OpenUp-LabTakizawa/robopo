@@ -50,7 +50,7 @@ export function CommonRegister({
             value: zekken,
             setValue: setZekken,
           },
-          // { label: "qr", dispName: "QRコード", value: qr, setValue: setQr },
+          // { label: "qr", dispName: "QR Code", value: qr, setValue: setQr },
         ]
       : []),
   ]
@@ -67,7 +67,7 @@ export function CommonRegister({
     }
 
     try {
-      // APIにPOSTリクエストを送信
+      // Send POST request to API
       const url =
         type === "player"
           ? "/api/player"
@@ -86,7 +86,7 @@ export function CommonRegister({
 
       if (response.ok) {
         setName("")
-        // 登録成功時の処理
+        // Handle successful registration
         if (type === "player") {
           setSuccessMessage("プレイヤーが正常に登録されました")
           setFurigana("")
@@ -108,18 +108,18 @@ export function CommonRegister({
             )
         }
       } else {
-        // エラーメッセージを表示
+        // Display error message
         setErrorMessage(result.message || "登録中にエラーが発生しました")
       }
     } catch {
-      // ネットワークエラーやその他のエラーの処理
+      // Handle network errors and other errors
       setErrorMessage("エラーが発生しました。もう一度お試しください。")
     } finally {
       setLoading(false)
     }
   }
 
-  //   個々の入力フォーム
+  // Individual input form
   const FormItem = useCallback(
     ({
       label,

@@ -8,7 +8,7 @@ import {
   getCourseSummaryByPlayerId,
 } from "@/app/lib/db/queries/queries"
 
-// THE 一本橋コースの総得点を計算する
+// Calculate total score for THE Ippon Bashi course
 export async function sumIpponPoint(
   compeId: number,
   playerId: number,

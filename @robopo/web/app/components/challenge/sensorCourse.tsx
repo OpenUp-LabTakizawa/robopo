@@ -29,12 +29,12 @@ export function SensorCourse({
   const [isRetry, setIsRetry] = useState<boolean>(false)
   const router = useRouter()
 
-  // 壁停止のポイント配列を20, 10, 5, 3, 0, -5で作成
+  // Wall stop point array: 20, 10, 5, 3, 0, -5
   const wallPointArray = [20, 10, 5, 3, 0, -5]
 
-  // 選択で得点計算する
+  // Calculate score from selection
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    // トンネル停止
+    // Tunnel stop
     if (e.target.dataset.id === "tunnelradio") {
       const value = Number(e.target.value)
       setTunnelPoint(value)
@@ -49,7 +49,7 @@ export function SensorCourse({
       }
     }
 
-    // 壁停止
+    // Wall stop
     if (e.target.dataset.id === "wallradio") {
       const value = Number(e.target.value)
       setWallPoint(value)
@@ -57,7 +57,7 @@ export function SensorCourse({
     }
   }
 
-  // やり直しする時
+  // When retrying
   function handleRetry() {
     setResult1(pointCount)
     setTunnelPoint(0)
@@ -169,7 +169,7 @@ export function SensorCourse({
         </div>
       </div>
       {modalOpen === 1 && (
-        // センサーコースはresultにそのまま得点を入れる。
+        // Sensor course stores the score directly in result.
         <ChallengeModal
           setModalOpen={setModalOpen}
           handleSubmit={() =>

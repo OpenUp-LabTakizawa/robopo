@@ -17,8 +17,8 @@ import {
   umpire,
 } from "@/app/lib/db/schema"
 
-// IDを指定してDBからコースを削除する関数
-// @/app/lib/db/queries/delete.tsを作成して移動させる方がいいかもしれない。
+// Delete course from DB by ID
+// Consider moving to @/app/lib/db/queries/delete.ts
 export async function deleteCourseById(id: number) {
   return await db
     .delete(course)
@@ -26,7 +26,7 @@ export async function deleteCourseById(id: number) {
     .returning({ deletedId: course.id })
 }
 
-// コースをIDから取得する関数
+// Get course by ID
 export async function getCourseById(id: number): Promise<SelectCourse | null> {
   const result = await db
     .select()
@@ -37,7 +37,7 @@ export async function getCourseById(id: number): Promise<SelectCourse | null> {
   return result.length > 0 ? result[0] : null
 }
 
-// IDを指定してDBからPlayerを削除する関数
+// Delete player from DB by ID
 export async function deletePlayerById(id: number) {
   return await db
     .delete(player)
@@ -45,7 +45,7 @@ export async function deletePlayerById(id: number) {
     .returning({ deletedId: player.id })
 }
 
-// QRからPlayerを取得する関数
+// Get player by QR code
 export async function getPlayerByQR(qr: string) {
   const result = await db
     .select()
@@ -54,7 +54,7 @@ export async function getPlayerByQR(qr: string) {
     .limit(1)
   return result.length > 0 ? result[0] : null
 }
-// IDからPlayerを取得する関数
+// Get player by ID
 export async function getPlayerById(id: number) {
   const result = await db
     .select()
@@ -64,7 +64,7 @@ export async function getPlayerById(id: number) {
   return result.length > 0 ? result[0] : null
 }
 
-// IDを指定してDBからChallengeを削除する関数
+// Delete challenge from DB by ID
 export async function deleteChallengeById(id: number) {
   return await db
     .delete(challenge)
@@ -72,7 +72,7 @@ export async function deleteChallengeById(id: number) {
     .returning({ deletedId: challenge.id })
 }
 
-// IDを指定してDBからUmpireを削除する関数
+// Delete umpire from DB by ID
 export async function deleteUmpireById(id: number) {
   return await db
     .delete(umpire)
@@ -80,7 +80,7 @@ export async function deleteUmpireById(id: number) {
     .returning({ deletedId: umpire.id })
 }
 
-// IDからUmpireを取得する関数
+// Get umpire by ID
 export async function getUmpireById(id: number) {
   const result = await db
     .select()
@@ -90,7 +90,7 @@ export async function getUmpireById(id: number) {
   return result.length > 0 ? result[0] : null
 }
 
-// IDを指定してDBからCompetitionを削除する関数
+// Delete competition from DB by ID
 export async function deleteCompetitionById(id: number) {
   return await db
     .delete(competition)
@@ -98,7 +98,7 @@ export async function deleteCompetitionById(id: number) {
     .returning({ deletedId: competition.id })
 }
 
-// IDからCompetitionを取得する関数
+// Get competition by ID
 export const getCompetitionById = async (id: number) => {
   const result = await db
     .select()
@@ -108,11 +108,11 @@ export const getCompetitionById = async (id: number) => {
   return result.length > 0 ? result[0] : null
 }
 
-// 特定の competition_id と course_id に基づくデータを取得
-// firstTCourseCountはresult1とresult2から最大のものを取得し、
-// それまで(created_atとidを昇順に並べた際の古いもの)のresult1とresult2の個数を最大のものが出るまで足している。
-// 完走してない時もその時点で最大のresultまでの回数が出るので、完走したかどうかで表示非表示を変える必要がある。
-// firstTCourseTimeは、firstTCourseCountで取得したもののcreated_atを取得している。
+// Get data based on specific competition_id and course_id
+// firstTCourseCount gets the max from result1 and result2,
+// then sums the count of result1 and result2 (ordered by created_at and id asc) until the max is reached.
+// Even when not completed, it shows the count up to the current max result, so display should toggle based on completion status.
+// firstTCourseTime gets the created_at of the entry found by firstTCourseCount.
 export async function getCourseSummary(
   competitionId: number,
   courseId: number,
@@ -188,7 +188,7 @@ export async function getCourseSummary(
         )
       `.as("firstTCourseTime"),
       tCourseCount:
-        // 単純にresult1とresult2の個数を足している。
+        // Simply summing the count of result1 and result2.
         sql`SUM(CASE WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END) ELSE 0 END)`.as(
           "tCourseCount",
         ),
@@ -219,13 +219,13 @@ export async function getCourseSummary(
   return result as CourseSummary[]
 }
 
-// competition_id, course_id, player_idから個人成績result配列を取得
+// Get individual result array by competition_id, course_id, player_id
 export async function getCourseSummaryByPlayerId(
   competitionId: number,
   courseId: number,
   playerId: number,
 ) {
-  // 結果を配列で取得
+  // Get results as array
   return await db
     .select({
       results1: challenge.result1,
@@ -243,7 +243,7 @@ export async function getCourseSummaryByPlayerId(
     .groupBy(challenge.id)
 }
 
-// 個人成績を取得
+// Get individual player results
 export async function getPlayerResult(
   competitionId: number,
   courseId: number,
@@ -254,7 +254,7 @@ export async function getPlayerResult(
       maxResult:
         sql`MAX(GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)))`.as(
           "maxResult",
-        ), // result1とresult2の最大値を取得
+        ), // Get max of result1 and result2
       firstCount: sql`
         (SELECT SUM(attempts_up_to_max) FROM (
           SELECT ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
@@ -316,11 +316,11 @@ export async function getPlayerResult(
         eq(challenge.playerId, playerId),
       ),
     )
-    .groupBy(challenge.playerId) // グループ化
+    .groupBy(challenge.playerId) // Group by player
   return result as { maxResult: number }[]
 }
 
-// result1, result2の中で最大値を取得
+// Get max value from result1 and result2
 export async function getMaxResult(
   competitionId: number,
   courseId: number,
@@ -331,7 +331,7 @@ export async function getMaxResult(
       maxResult:
         sql`MAX(GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)))`.as(
           "maxResult",
-        ), // result1とresult2の最大値を取得
+        ), // Get max of result1 and result2
     })
     .from(challenge)
     .where(
@@ -341,11 +341,11 @@ export async function getMaxResult(
         eq(challenge.courseId, courseId),
       ),
     )
-    .groupBy(challenge.playerId) // グループ化
+    .groupBy(challenge.playerId) // Group by player
   return result as { maxResult: number }[]
 }
 
-// 最初に最大のresultを得るまでの回数(goalしているとは限らない)
+// Count of attempts until the max result is achieved (not necessarily a goal)
 export async function getFirstCount(
   competitionId: number,
   courseId: number,
@@ -395,7 +395,7 @@ export async function getFirstCount(
   return result as { firstCount: number }[]
 }
 
-// プレイヤー毎のチャレンジ回数
+// Challenge count per player
 export async function getChallengeCount(
   competitionId: number,
   courseId: number,
@@ -423,7 +423,7 @@ export async function getChallengeCount(
   return result as { challengeCount: number }[]
 }
 
-// competitionのIDを指定して開催にする関数
+// Set competition to open status by ID
 export async function openCompetitionById(id: number) {
   return await db
     .update(competition)
@@ -431,7 +431,7 @@ export async function openCompetitionById(id: number) {
     .where(eq(competition.id, id))
 }
 
-// competitionのIDを指定して開催前にする関数
+// Set competition to pre-open status by ID
 export async function returnCompetitionById(id: number) {
   // 1) Check the current step to enforce valid state transition
   const existing = await db
@@ -456,7 +456,7 @@ export async function returnCompetitionById(id: number) {
     .where(eq(competition.id, id))
 }
 
-// competitionのIDを指定して非開催にする関数
+// Set competition to closed status by ID
 export async function closeCompetitionById(id: number) {
   return await db
     .update(competition)
@@ -464,7 +464,7 @@ export async function closeCompetitionById(id: number) {
     .where(eq(competition.id, id))
 }
 
-// playerと参加大会を表にする関数
+// Get players with their competitions
 export async function getPlayersWithCompetition() {
   return await db
     .select({
@@ -481,7 +481,7 @@ export async function getPlayersWithCompetition() {
     .orderBy(player.id)
 }
 
-// 上記queryをplayer毎にgroup化する。(配列を許可)
+// Group the above query results by player (allows arrays)
 export function groupByPlayer(
   flatRows: {
     id: number
@@ -516,7 +516,7 @@ export function groupByPlayer(
   return Array.from(playerMap.values())
 }
 
-// umpireと参加大会を表にする関数
+// Get umpires with their competitions
 export async function getUmpireWithCompetition() {
   return await db
     .select({
@@ -531,7 +531,7 @@ export async function getUmpireWithCompetition() {
     .orderBy(umpire.id)
 }
 
-// 上記queryをumpire毎にgroup化する。(配列を許可)
+// Group the above query results by umpire (allows arrays)
 export function groupByUmpire(
   flatRows: {
     id: number
@@ -562,7 +562,7 @@ export function groupByUmpire(
   return Array.from(umpireMap.values())
 }
 
-// courseと参加大会を表にする関数
+// Get courses with their competitions
 export async function getCourseWithCompetition() {
   return await db
     .select({
@@ -578,7 +578,7 @@ export async function getCourseWithCompetition() {
     .orderBy(course.id)
 }
 
-// 上記queryをcourse毎にgroup化する。(配列を許可)
+// Group the above query results by course (allows arrays)
 export function groupByCourse(
   flatRows: {
     id: number

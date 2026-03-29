@@ -6,9 +6,9 @@ import {
   competitionUmpire,
 } from "@/app/lib/db/schema"
 
-// 各種idとcompetitionIdを与えてそのcompetitionIdに割り当ての無いものを割り当てていく関数
+// Assign items to a competition by their IDs if not already assigned
 export async function assignById(req: Request, mode: string) {
-  // modeは"player", "course", "umpire"のどれか
+  // mode is one of "player", "course", "umpire"
   try {
     const { ids, competitionId } = await req.json()
     if (!(competitionId && Array.isArray(ids))) {
@@ -47,7 +47,7 @@ export async function assignById(req: Request, mode: string) {
         )
 
       if (existing.length === 0) {
-        // 割り当てが無い場合、割り当てを追加
+        // If not assigned, add assignment
         await db
           .insert(
             mode === "player"
@@ -79,9 +79,9 @@ export async function assignById(req: Request, mode: string) {
   }
 }
 
-// 各種idとcompetitionIdを与えてそのcompetitionIdに割り当てのあるものの割り当てを解除する関数
+// Unassign items from a competition by their IDs
 export async function unassignById(req: Request, mode: string) {
-  // modeは"player", "course", "umpire"のどれか
+  // mode is one of "player", "course", "umpire"
   try {
     const { ids, competitionId } = await req.json()
     if (!(competitionId && Array.isArray(ids))) {
@@ -119,7 +119,7 @@ export async function unassignById(req: Request, mode: string) {
         )
 
       if (existing.length > 0) {
-        // 割り当てがある場合、割り当てを解除
+        // If assigned, remove assignment
         await db
           .delete(
             mode === "player"

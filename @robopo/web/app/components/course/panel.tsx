@@ -5,7 +5,7 @@ import {
   type PanelValue,
 } from "@/app/components/course/utils"
 
-// Panelを表すコンポーネント
+// Panel component
 export function Panel({
   value,
   type,
@@ -40,7 +40,7 @@ export function Panel({
     >
       {hasRole &&
         (value === "startGoal" ? (
-          // StartとGoalが重なっている場合
+          // When Start and Goal overlap
           <>
             <div
               className={`${textStyle} flex items-center justify-center rounded-t-sm bg-pink-300 font-bold`}

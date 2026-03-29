@@ -1,16 +1,16 @@
-// デフォルトのパネルサイズ (Tコース)
+// Default panel size (T-course)
 const PANEL_WIDTH: number = 85
 const PANEL_HEIGHT: number = 85
 
-// THE 一本橋のパネルサイズ
+// THE Ippon Bashi panel size
 const BASHI_PANEL_WIDTH: number = 85
 const BASHI_PANEL_HEIGHT: number = 85
 
-// コース作成の最大サイズ
+// Max size for course creation
 export const MAX_FIELD_WIDTH: number = 3
 export const MAX_FIELD_HEIGHT: number = 3
 
-// 一本橋のサイズ
+// Ippon Bashi size
 export const IPPON_BASHI_SIZE: number = 5
 
 export const RESERVED_COURSE_IDS = {
@@ -18,7 +18,7 @@ export const RESERVED_COURSE_IDS = {
   SENSOR: -2,
 } as const
 
-// パネルの幅を返す関数
+// Get panel width
 export function getPanelWidth(type?: string): number {
   if (type === "ipponBashi") {
     return BASHI_PANEL_WIDTH
@@ -26,7 +26,7 @@ export function getPanelWidth(type?: string): number {
   return PANEL_WIDTH
 }
 
-// パネルの高さを返す関数
+// Get panel height
 export function getPanelHeight(type?: string): number {
   if (type === "ipponBashi") {
     return BASHI_PANEL_HEIGHT
@@ -34,7 +34,7 @@ export function getPanelHeight(type?: string): number {
   return PANEL_HEIGHT
 }
 
-// Panelの種類
+// Panel types
 export type PanelValue = "start" | "goal" | "route" | "startGoal" | null
 export const PanelString: { [key in Exclude<PanelValue, null>]: string } = {
   start: "スタート",
@@ -44,8 +44,8 @@ export const PanelString: { [key in Exclude<PanelValue, null>]: string } = {
 }
 export type FieldState = PanelValue[][]
 
-// Missionの種類 u:up上向き r:right右向き d:down下向き l:left左向き
-// mf:move_forward前進 mb:move_backward後退 tr:turn_right右転 tl:turn_left左転
+// Mission types: u:up r:right d:down l:left
+// mf:move_forward mb:move_backward tr:turn_right tl:turn_left
 export type MissionValue =
   | "u"
   | "r"
@@ -73,7 +73,7 @@ export const MissionString: {
 }
 
 // Mission
-// start時の向き, goal時の向き, 以後ルート上のmission…
+// Direction at start, direction at goal, followed by route missions...
 export type MissionState = MissionValue[]
 
 // Point
@@ -81,7 +81,7 @@ export type MissionState = MissionValue[]
 export type PointValue = number | null
 export type PointState = PointValue[]
 
-// パネルか度かを表示する
+// Display panel count or degrees
 export function panelOrDegree(mission: MissionValue): string {
   if (mission === "mf" || mission === "mb") {
     return "パネル"
@@ -92,7 +92,7 @@ export function panelOrDegree(mission: MissionValue): string {
   return "-"
 }
 
-// 初期配置を表示する関数。
+// Initialize field layout.
 export function initializeField(): FieldState {
   const field: FieldState = Array(MAX_FIELD_WIDTH)
     .fill(null)
@@ -100,7 +100,7 @@ export function initializeField(): FieldState {
   return field
 }
 
-// field上にstartがあるかをチェックする関数
+// Check if start exists on the field
 export function isStart(field: FieldState): boolean {
   for (const row of field) {
     for (const panel of row) {
@@ -112,7 +112,7 @@ export function isStart(field: FieldState): boolean {
   return false
 }
 
-// field上にgoalがあるかをチェックする関数
+// Check if goal exists on the field
 export function isGoal(field: FieldState): boolean {
   for (const row of field) {
     for (const panel of row) {
@@ -124,9 +124,9 @@ export function isGoal(field: FieldState): boolean {
   return false
 }
 
-// field上のstartの位置を返す関数
+// Get start position on the field
 export function findStart(field: FieldState): [number, number] | null {
-  // 一本橋のサイズ以上になるように調整
+  // Adjust to be at least Ippon Bashi size
   const height =
     MAX_FIELD_HEIGHT >= IPPON_BASHI_SIZE ? MAX_FIELD_HEIGHT : IPPON_BASHI_SIZE
   for (let i = 0; i < height; i++) {
@@ -139,39 +139,39 @@ export function findStart(field: FieldState): [number, number] | null {
   return null
 }
 
-// 指定された位置にpanelを置く処理を行う関数
+// Place a panel at the specified position
 export function putPanel(
   field: FieldState,
   row: number,
   col: number,
   mode: PanelValue,
 ): FieldState | null {
-  const newField = field.map((newRow) => [...newRow]) // フィールドのコピーを作成
+  const newField = field.map((newRow) => [...newRow]) // Create a copy of the field
   if (field[row][col] !== null) {
-    // startの上にgoalを置くとstartGoalになる
+    // Placing goal on start creates startGoal
     if (mode === "goal" && field[row][col] === "start") {
       newField[row][col] = "startGoal"
       return newField
     }
-    newField[row][col] = null // panelを消す
+    newField[row][col] = null // Remove panel
     return newField
   }
 
-  // start以外の場合、panelに隣接しているかどうかを確認
+  // For non-start panels, check if adjacent to an existing panel
   if (mode !== "start") {
-    // goalの場合、goalが既に配置されている場合は置けない
+    // If placing goal, cannot place if goal already exists
     if (mode === "goal" && isGoal(field)) {
       return null
     }
-    let nextTo = false // panelが隣接しているかどうかのフラグ
+    let nextTo = false // Flag for whether panel is adjacent
     const directions = [
       [-1, 0],
       [1, 0],
       [0, -1],
       [0, 1],
-    ] // 4方向を表す配列
+    ] // Array representing 4 directions
 
-    // 各方向に対してループを行う
+    // Loop through each direction
     directions.forEach(([dx, dy]) => {
       const x = row + dx
       const y = col + dy
@@ -192,11 +192,11 @@ export function putPanel(
   } else if (isStart(field)) {
     return null
   }
-  newField[row][col] = mode // panelを置く
+  newField[row][col] = mode // Place panel
   return newField
 }
 
-// FieldState型をString型に変換する関数
+// Convert FieldState to String
 export function serializeField(fieldState: FieldState): string {
   return fieldState
     .map((row) =>
@@ -205,7 +205,7 @@ export function serializeField(fieldState: FieldState): string {
     .join(";")
 }
 
-// String型をFieldState型に変換する関数
+// Convert String to FieldState
 export function deserializeField(str: string): FieldState {
   return str
     .split(";")
@@ -216,41 +216,41 @@ export function deserializeField(str: string): FieldState {
     )
 }
 
-// missionStateをString型に変換する関数
+// Convert MissionState to String
 export function serializeMission(missionState: MissionState): string {
   return missionState
     .map((mission) => (mission === null ? "null" : mission))
     .join(";")
 }
 
-// String型をMissionState型に変換する関数
+// Convert String to MissionState
 export function deserializeMission(str: string): MissionState {
   return str
     .split(";")
     .map((mission) => (mission === "null" ? null : (mission as MissionValue)))
 }
 
-// String型からStartとGoal時の向き以外その他のミッションの配列を取得する関数
+// Get mission pairs excluding Start and Goal directions from String
 export function missionStatePair(missionState: MissionState): MissionValue[][] {
-  // missionStateに最初のミッション(StartとGoalの向きを除く)が設定されていない場合、空配列を返す
+  // Return empty array if no missions are set (excluding Start and Goal directions)
   if (missionState[3] === null) {
     return []
   }
 
   const pairs = []
   for (let i = 2; i < missionState.length; i += 2) {
-    // 多分、最後のpairは[ゴールの向き, null]になる
+    // The last pair is probably [goal direction, null]
     pairs.push([missionState[i], missionState[i + 1]])
   }
   return pairs
 }
 
-// PointStateをString型に変換する関数
+// Convert PointState to String
 export function serializePoint(pointState: PointState): string {
   return pointState.map((point) => (point === null ? "null" : point)).join(";")
 }
 
-// String型をPointState型に変換する関数
+// Convert String to PointState
 export function deserializePoint(str: string | null): PointState {
   if (!str) {
     return []
@@ -262,7 +262,7 @@ export function deserializePoint(str: string | null): PointState {
     )
 }
 
-// 現在のrowとcolとdirectionとmissionPairから次のpositionとdirectionを取得する関数
+// Get next position and direction from current row, col, direction, and mission pair
 export function getNextPosition(
   row: number,
   col: number,
@@ -270,13 +270,13 @@ export function getNextPosition(
   mission0: MissionValue,
   mission1: MissionValue,
 ): [number, number, MissionValue] {
-  // mission0, mission1の向きによって次のpositionとdirectionを決定する
+  // Determine next position and direction based on mission0 and mission1
   const mission1Num = Number(mission1)
   if (Number.isNaN(mission1Num)) {
     return [row, col, direction]
   }
 
-  // directionと回転方向、回転角度(90度単位)から次のdirectionを取得する関数
+  // Get next direction from current direction, rotation direction, and angle (in 90-degree units)
   function getDirection(
     directionTo: MissionValue,
     rotate: MissionValue,
@@ -368,14 +368,14 @@ export function getNextPosition(
   }
 }
 
-// 初期配置と現在のmissionStateからRobotのpositionとdirectionを取得する関数
+// Get robot position and direction from initial placement and current mission state
 export function getRobotPosition(
   startRow: number,
   startCol: number,
   missionState: MissionState,
   nowMission: number,
 ): [number, number, MissionValue] {
-  // 初期配置
+  // Initial placement
   let row: number = startRow
   let col: number = startCol
   let direction: MissionValue = missionState[0]
@@ -392,22 +392,22 @@ export function getRobotPosition(
   return [row, col, direction]
 }
 
-// courseとmissionの有効性を確認する関数
+// Validate course and mission
 export function checkValidity(
   field: FieldState,
   mission: MissionState,
 ): boolean {
-  // startとgoalの存在を確認
+  // Check if start and goal exist
   if (!isStart(field) || !isGoal(field)) {
     return false
   }
-  // スタート向きが無ければはfalse
+  // False if start direction is not set
   if (mission[0] === null) {
     return false
   }
-  // 全てのmissionにおいてコース上か確認する
+  // Check if all missions are on the course
   const missionPair = missionStatePair(mission)
-  // missionPairに何も入っていなければfalse
+  // False if missionPair is empty
   if (missionPair.length === 0) {
     return false
   }
@@ -419,7 +419,7 @@ export function checkValidity(
       mission,
       i,
     )
-    // コース上に存在しない場合はfalse
+    // False if not on the course
     if (
       field[row][col] !== "start" &&
       field[row][col] !== "goal" &&
@@ -428,7 +428,7 @@ export function checkValidity(
     ) {
       return false
     }
-    // 最後のmissionでgoal上に存在しない場合はfalse
+    // False if not on goal at the last mission
     if (i === missionPair.length - 1) {
       const [lastRow, lastCol] = getNextPosition(
         row,
@@ -445,6 +445,6 @@ export function checkValidity(
       }
     }
   }
-  // 全checkが通ったらtrue
+  // All checks passed
   return true
 }

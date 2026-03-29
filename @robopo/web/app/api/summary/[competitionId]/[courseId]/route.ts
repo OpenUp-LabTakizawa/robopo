@@ -12,7 +12,7 @@ export async function GET(
 ) {
   const { competitionId, courseId } = await params
 
-  // データ取得
+  // Fetch data
   const courseSummary = await getCourseSummary(
     Number(competitionId),
     Number(courseId),
@@ -20,7 +20,7 @@ export async function GET(
   const course = await getCourseById(Number(courseId))
   const pointState = deserializePoint(course?.point as string)
 
-  // 各プレイヤーの総得点と一本橋の総得点を計算
+  // Calculate total score and Ippon Bashi total score for each player
   const courseSummaryWithPoints = await Promise.all(
     courseSummary.map(async (player) => {
       const sumIpponPoints = await sumIpponPoint(
@@ -39,29 +39,29 @@ export async function GET(
     }),
   )
 
-  // 総得点の順位を計算
+  // Calculate total score ranking
   const sortedByTotalPoints = [...courseSummaryWithPoints].sort(
     (a, b) => b.totalPoint - a.totalPoint,
   )
   sortedByTotalPoints.forEach((player, index) => {
-    player.pointRank = index + 1 // 総得点の順位
+    player.pointRank = index + 1 // Total score rank
   })
 
-  // チャレンジ回数の順位を計算
+  // Calculate challenge count ranking
   const sortedByChallengeCount = [...courseSummaryWithPoints].sort(
     (a, b) => (b.challengeCount || 0) - (a.challengeCount || 0),
   )
   sortedByChallengeCount.forEach((player, index) => {
-    player.challengeRank = index + 1 // チャレンジ回数の順位
+    player.challengeRank = index + 1 // Challenge count rank
   })
 
-  // レスポンスの構築
+  // Build response
   const resbody: CourseSummary[] = courseSummaryWithPoints.map((player) => ({
     ...player,
-    totalPoint: player.totalPoint, // 総得点
-    sumIpponPoint: player.sumIpponPoint, // 一本橋の全得点合計
-    pointRank: player.pointRank, // 総得点の順位
-    challengeRank: player.challengeRank, // チャレンジ回数の順位
+    totalPoint: player.totalPoint, // Total score
+    sumIpponPoint: player.sumIpponPoint, // Ippon Bashi total score
+    pointRank: player.pointRank, // Total score rank
+    challengeRank: player.challengeRank, // Challenge count rank
   }))
 
   return Response.json(resbody)

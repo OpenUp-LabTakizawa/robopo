@@ -5,7 +5,7 @@ async function seed() {
   await db.execute(sql`BEGIN`)
 
   try {
-    // 予約コース
+    // Reserved courses
     await db.execute(sql`
       INSERT INTO course (id, name, field, fieldvalid, mission, missionvalid, point)
       VALUES (-1, 'THE IpponBashi', 'route;route;route;route;start', TRUE,
@@ -19,14 +19,14 @@ async function seed() {
       ON CONFLICT (id) DO NOTHING
     `)
 
-    // テスト用採点者
+    // Test umpire
     await db.execute(sql`
       INSERT INTO umpire (id, name)
       VALUES (1, 'TestUmpire')
       ON CONFLICT (id) DO NOTHING
     `)
 
-    // テストデータの重複を防ぐため既存データを削除
+    // Delete existing data to prevent test data duplication
     await db.execute(sql`
       DELETE FROM competition_course WHERE competition_id IN (
         SELECT id FROM competition WHERE name = 'テスト大会'
@@ -46,7 +46,7 @@ async function seed() {
     await db.execute(sql`DELETE FROM course WHERE name = 'TestCourse'`)
     await db.execute(sql`DELETE FROM player WHERE zekken IN ('001', '002', '003')`)
 
-    // テスト用Tコース
+    // Test T-course
     const courseResult = await db.execute<{ id: number }>(sql`
       INSERT INTO course (name, field, fieldvalid, mission, missionvalid, point)
       VALUES ('TestCourse',
@@ -59,7 +59,7 @@ async function seed() {
     `)
     const testCourseId = courseResult.rows[0].id
 
-    // テスト大会（開催中: step=1）
+    // Test competition (in progress: step=1)
     const compResult = await db.execute<{ id: number }>(sql`
       INSERT INTO competition (name, step)
       VALUES ('テスト大会', 1)
@@ -67,7 +67,7 @@ async function seed() {
     `)
     const competitionId = compResult.rows[0].id
 
-    // テスト選手
+    // Test players
     const playerResult = await db.execute<{ id: number }>(sql`
       INSERT INTO player (name, furigana, zekken) VALUES
         ('選手A', 'センシュエー', '001'),
@@ -76,13 +76,13 @@ async function seed() {
       RETURNING id
     `)
 
-    // 大会にコース割当
+    // Assign course to competition
     await db.execute(sql`
       INSERT INTO competition_course (competition_id, course_id)
       VALUES (${competitionId}, ${testCourseId})
     `)
 
-    // 大会に選手割当
+    // Assign players to competition
     for (const p of playerResult.rows) {
       await db.execute(sql`
         INSERT INTO competition_player (competition_id, player_id)
@@ -90,7 +90,7 @@ async function seed() {
       `)
     }
 
-    // 大会に採点者割当
+    // Assign umpire to competition
     await db.execute(sql`
       INSERT INTO competition_umpire (competition_id, umpire_id)
       VALUES (${competitionId}, 1)

@@ -2,7 +2,7 @@
 
 import { auth } from "@/lib/auth"
 
-// signInのformState
+// Form state for signIn
 type FormState =
   | {
       errors?: {
@@ -14,12 +14,12 @@ type FormState =
     }
   | undefined
 
-// サーバアクションのサインイン
+// Server action for sign-in
 export async function signInAction(_state: FormState, formData: FormData) {
   const username = formData.get("username")
   const password = formData.get("password")
 
-  // バリデーション
+  // Validation
   if (!username || typeof username !== "string") {
     return {
       success: false,

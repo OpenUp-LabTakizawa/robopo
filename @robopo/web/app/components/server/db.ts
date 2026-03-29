@@ -16,17 +16,17 @@ import {
   umpire,
 } from "@/app/lib/db/schema"
 
-// 選手一覧情報を取得する関数
+// Get player list
 export async function getPlayerList(): Promise<SelectPlayer[]> {
   return await db.select().from(player)
 }
 
-// 採点者一覧情報を取得する関数
+// Get umpire list
 export async function getUmpireList(): Promise<SelectUmpire[]> {
   return await db.select().from(umpire)
 }
 
-// 大会一覧情報を取得する関数
+// Get competition list
 export async function getCompetitionList(): Promise<{
   competitions: SelectCompetition[]
 }> {
@@ -34,7 +34,7 @@ export async function getCompetitionList(): Promise<{
   return { competitions }
 }
 
-// コース一覧情報を取得する関数
+// Get course list
 export async function getCourseList(): Promise<{
   courses: SelectCourse[]
 }> {
@@ -42,7 +42,7 @@ export async function getCourseList(): Promise<{
   return { courses }
 }
 
-// 大会IDからコースを取得する関数
+// Get courses by competition ID
 export async function getCompetitionCourseList(competitionId: number): Promise<{
   competitionCourses: SelectCourse[]
 }> {
@@ -64,7 +64,7 @@ export async function getCompetitionCourseList(competitionId: number): Promise<{
   return { competitionCourses }
 }
 
-// 大会とその使用コースの一覧を取得する
+// Get competition-course assignment list
 export async function getCompetitionCourseAssignList(): Promise<{
   competitionCourseList: SelectCompetitionCourse[]
 }> {
@@ -74,7 +74,7 @@ export async function getCompetitionCourseAssignList(): Promise<{
   return { competitionCourseList }
 }
 
-// 大会IDから参加選手を取得する
+// Get players by competition ID
 export async function getCompetitionPlayerList(competitionId: number): Promise<{
   players: SelectPlayer[]
 }> {

@@ -115,7 +115,7 @@ export default async function SummaryPlayer({
           <tbody>
             <tr className="grid grid-cols-5 justify-center text-base sm:grid-cols-10 lg:grid-cols-20">
               {resultIpponArray.map((result, index: number) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: resultIpponArrayの要素にidが無いのでindexをキーにする
+                // biome-ignore lint/suspicious/noArrayIndexKey: elements have no id, using index as key
                 <React.Fragment key={index}>
                   <td className="min-w-9 border border-gray-400 p-2 text-center">
                     {calcPoint(ipponPoint, result.results1)}
@@ -169,7 +169,7 @@ export default async function SummaryPlayer({
           <tbody>
             <tr className="grid grid-cols-5 justify-center text-base sm:grid-cols-10 lg:grid-cols-20">
               {resultSensorArray.map((result, index: number) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: resultIpponArrayの要素にidが無いのでindexをキーにする
+                // biome-ignore lint/suspicious/noArrayIndexKey: elements have no id, using index as key
                 <React.Fragment key={index}>
                   <td className="min-w-9 border border-gray-400 p-2 text-center">
                     {result.results1}

@@ -16,8 +16,8 @@ export default function SignIn() {
   const usernameId = useId()
   const passwordId = useId()
 
-  // callbackUrlのバリデーション
-  // クロスサイトスクリプティング&フィッシング攻撃対策
+  // Callback URL validation
+  // XSS & phishing attack prevention
   function getSafeCallbackUrl(cb: string) {
     try {
       const url = new URL(cb, window.location.origin)

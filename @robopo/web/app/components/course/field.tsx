@@ -21,7 +21,7 @@ type FieldProps = {
   customStyle?: React.CSSProperties
 }
 
-// Fieldを表すコンポーネント
+// Field component
 export function Field({
   field,
   type,
@@ -46,7 +46,7 @@ export function Field({
           />
         )),
       )}
-      {/* challengeの時はbotを表示 */}
+      {/* Show bot during challenge */}
       {(type === "challenge" || type === "ipponBashi") &&
         botPosition &&
         botDirection && (

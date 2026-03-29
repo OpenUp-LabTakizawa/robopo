@@ -5,7 +5,7 @@ import {
   type PanelValue,
 } from "@/app/components/course/utils"
 
-// 配置するpanelのモード選択UI
+// Panel placement mode selection UI
 export function SelectPanel({
   field,
   setmode,

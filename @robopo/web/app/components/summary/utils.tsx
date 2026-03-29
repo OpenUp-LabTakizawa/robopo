@@ -19,18 +19,18 @@ export type CourseSummary = {
   challengeRank: number | null
 }
 
-// コース完走判定関数
+// Course completion check function
 export function isCompletedCourse(
   pointData: PointState,
   result: number | null,
 ): boolean {
   const resultPoint = calcPoint(pointData, result)
-  // pointDataを全て足し合わせる。
+  // Sum all pointData values.
   let totalPoint = 0
   for (let i = 0; i < pointData.length; i++) {
     totalPoint += Number(pointData[i])
   }
-  // resultの得点がtotalPointと等しい場合は完走していると判定
+  // If result score equals totalPoint, the course is completed
   if (totalPoint === resultPoint) {
     return true
   }

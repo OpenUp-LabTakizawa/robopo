@@ -27,30 +27,30 @@ export function ThreeTabs({
 }: ThreeTabsProps) {
   const [threeCols, setThreeCols] = useState(false)
   useEffect(() => {
-    // 768px以上のブレイクポイントに対応
+    // Handle breakpoint for 768px+
     const mediaQuery768 = window.matchMedia("(min-width: 768px)")
 
     function updateItemsPerPage() {
       if (mediaQuery768.matches) {
-        setThreeCols(true) // 768px以上では3行
+        setThreeCols(true) // 3 columns for 768px+
       } else {
-        setThreeCols(false) // 768px未満では1行
+        setThreeCols(false) // 1 row for below 768px
       }
     }
 
-    // 各メディアクエリにリスナーを登録
+    // Register listener for media query
     mediaQuery768.addEventListener("change", updateItemsPerPage)
 
-    // 初期化時に適切な itemsPerPage を設定
+    // Set appropriate value on initialization
     updateItemsPerPage()
 
-    // クリーンアップ
+    // Cleanup
     return () => {
       mediaQuery768.removeEventListener("change", updateItemsPerPage)
     }
   }, [])
 
-  // タブのタイトルと内容を配列化
+  // Convert tab titles and contents to array
   const tabs = [
     { title: tab1Title, content: tab1, icon: tab1Icon || null },
     { title: tab2Title, content: tab2, icon: tab2Icon || null },
@@ -59,7 +59,7 @@ export function ThreeTabs({
 
   return (
     <>
-      {/* 768px以上の場合は3行で表示 */}
+      {/* Display in 3 columns for 768px+ */}
       {threeCols && (
         <div className="m-5 flex w-full flex-row justify-center">
           {tabs.map(({ title, content, icon }) => (
@@ -74,7 +74,7 @@ export function ThreeTabs({
         </div>
       )}
 
-      {/* 768px未満の場合は1行で表示 */}
+      {/* Display in 1 row for below 768px */}
       {!threeCols && (
         <div role="tablist" className="tabs tabs-lifted m-5">
           {tabs.map(({ title, content, icon }, idx) => (
