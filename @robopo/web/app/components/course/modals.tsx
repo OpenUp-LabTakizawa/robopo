@@ -14,11 +14,11 @@ import {
 import { useCourseEdit } from "@/app/course/edit/courseEditContext"
 import { BackLabelWithIcon } from "@/app/lib/const"
 
-// 終了前に保存するかどうか聞くmodal
+// Modal asking whether to save before exiting
 export function BackModal() {
   const router = useRouter()
   function handleYes() {
-    // 今のurlから/back を削除して、/saveに遷移する
+    // Remove /back from current URL and navigate to /save
     const currentUrl = window.location.href
     const newUrl = currentUrl.replace(/\/back$/, "/save") as Route
     router.push(newUrl)
@@ -35,8 +35,8 @@ export function BackModal() {
           <button type="button" className="btn btn-accent" onClick={handleYes}>
             はい
           </button>
-          {/* router.push("/course")でもLinkでの遷移でも、どんだけ/course/@modal/page.tsx, /course/@modal/[...catchAll]/page.tsxでnull返すようにしてもmodalが閉じてくれることはない。
-              仕方無しに、window.location.replace("/course")での遷移で手を打つ。 */}
+                    {/* Neither router.push("/course") nor Link navigation closes the modal, even when /course/@modal/page.tsx and /course/@modal/[...catchAll]/page.tsx return null.
+              As a workaround, using window.location.replace("/course") for navigation. */}
           <button
             type="button"
             className="btn"
@@ -67,7 +67,7 @@ export function BackModal() {
   )
 }
 
-// コースを保存するmodal
+// Modal for saving a course
 export function SaveModal({ courseId }: { courseId: number | null }) {
   const { name, setName, field, mission, point } = useCourseEdit()
   const router = useRouter()
@@ -197,13 +197,13 @@ export function SaveModal({ courseId }: { courseId: number | null }) {
   )
 }
 
-// コースを検証した結果を表示するmodal
+// Modal displaying course validation results
 export function ValidationModal() {
   const { field, mission } = useCourseEdit()
   const router = useRouter()
   const check = checkValidity(field, mission)
   function handleYes() {
-    // 今のurlから/valid を削除して、/saveに遷移する
+    // Remove /valid from current URL and navigate to /save
     const currentUrl = window.location.href
     const newUrl = currentUrl.replace(/\/valid$/, "/save") as Route
     router.push(newUrl)

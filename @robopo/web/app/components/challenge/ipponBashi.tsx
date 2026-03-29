@@ -8,7 +8,7 @@ import {
   type MissionValue,
 } from "@/app/components/course/utils"
 
-// THE一本橋を表すコンポーネント
+// Component representing THE Ippon Bashi
 export function IpponBashiUI({
   botPosition,
   botDirection,
@@ -21,7 +21,7 @@ export function IpponBashiUI({
   onPanelClick: (row: number, col: number) => void
 }): React.JSX.Element {
   const type: "ipponBashi" = "ipponBashi"
-  // 一本橋の大きさ 幅1パネル 長さ5パネル 1パネル毎の大きさ60×60
+  // Ippon Bashi size: 1 panel wide, 5 panels long, 60x60 per panel
   const width: number = 1
   const length: number = IPPON_BASHI_SIZE
 

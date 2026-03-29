@@ -1,7 +1,7 @@
 import Link from "@docusaurus/Link"
 import useBaseUrl from "@docusaurus/useBaseUrl"
 
-// ROBOPO のあるGitHubリポジトリのURL
+// GitHub repository URL for ROBOPO
 const robopoGithubUrl = "https://github.com/openup-labtakizawa/robopo/"
 
 interface GithubLinkProps {
@@ -49,7 +49,7 @@ export function TwoColumnLayout({
   alt: string
   position: Position
 }) {
-  // "l" を "left" に、"r" を "right" に正規化
+  // Normalize "l" to "left" and "r" to "right"
   const normalized =
     position === "l" ? "left" : position === "r" ? "right" : position
   const clear: React.CSSProperties["clear"] =

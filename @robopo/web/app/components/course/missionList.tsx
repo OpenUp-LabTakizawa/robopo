@@ -27,7 +27,7 @@ export function MissionList({
   const [statePair, setMissionStatePair] = useState<
     { id: string; mission: MissionValue[] }[]
   >([])
-  const TOP_INSERT_INDEX = -4 // 先頭に挿入するための特別な定数
+  const TOP_INSERT_INDEX = -4 // Special constant for inserting at the top
 
   useEffect(() => {
     const newStatePair = missionStatePair(mission).map((m) => ({
@@ -37,11 +37,11 @@ export function MissionList({
     setMissionStatePair(newStatePair)
   }, [mission])
 
-  // ラジオボタンを押した時の動作
-  // ラジオボタン value=0以上の整数 はmissionの順番
-  // ラジオボタン value=-1 はmissionが設定されていない
-  // ラジオボタン value=-2 はStart
-  // ラジオボタン value=-3 はGoal
+  // Behavior when radio button is pressed
+  // Radio button value >= 0: mission order index
+  // Radio button value = -1: no mission set
+  // Radio button value = -2: Start
+  // Radio button value = -3: Goal
 
   return (
     <div className="max-h-64 w-full overflow-auto p-4">
@@ -96,7 +96,7 @@ export function MissionList({
             {statePair.length > 0 ? (
               statePair.map(({ id, mission }, index) => (
                 <Fragment key={id}>
-                  {/* 先頭行(index=0)の前に上側ボタンを表示 */}
+                  {/* Show upper button before the first row (index=0) */}
                   {index === 0 && (
                     <>
                       <tr>
@@ -104,7 +104,7 @@ export function MissionList({
                           <AddMissionButton
                             addOrder={addOrder}
                             setAddOrder={setAddOrder}
-                            index={TOP_INSERT_INDEX} // 上側挿入専用
+                            index={TOP_INSERT_INDEX} // For top insertion only
                             handleRadioChange={handleRadioChange}
                           />
                         </th>
@@ -219,7 +219,7 @@ const AddMissionButton = ({
       onClick={(e) => {
         e.stopPropagation()
         setAddOrder(addOrder === -1 ? index : -1)
-        handleRadioChange(-1) // 追加する行を選択
+        handleRadioChange(-1) // Select row to add
         console.log("addOrder", addOrder)
       }}
     >

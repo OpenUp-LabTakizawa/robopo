@@ -31,7 +31,7 @@ import {
 import { ReloadButton } from "@/app/components/parts/buttons"
 import { BackLabelWithIcon, SendIcon } from "@/app/lib/const"
 
-// 型定義
+// Type definitions
 type ChallengeProps = {
   field: string | null
   mission: string | null
@@ -54,7 +54,7 @@ type FieldPropsType = {
   isRetry: boolean
 }
 
-// 一本橋用セクション
+// Ippon Bashi section
 interface IpponBashiSectionProps {
   pointCount: number | null
   isRetry: boolean

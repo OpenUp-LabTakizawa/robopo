@@ -30,16 +30,16 @@ export default function MissionEdit({
   const [addOrder, setAddOrder] = useState<number>(-1)
 
   function handleRadioChange(selectedIndex: number) {
-    setRadio(selectedIndex) // 選択されたインデックスを状態として保存
-    setSelectedMission(null) // 選択されたミッションをリセット
-    setSelectedParam(null) // 選択されたパラメータをリセット
-    setSelectedPoint(null) // 選択されたポイントをリセット
+    setRadio(selectedIndex) // Save selected index as state
+    setSelectedMission(null) // Reset selected mission
+    setSelectedParam(null) // Reset selected parameter
+    setSelectedPoint(null) // Reset selected point
   }
-  // ラジオボタンを押した時の動作
-  // ラジオボタン value=0以上の整数 はmissionの順番
-  // ラジオボタン value=-1 はmissionが設定されていない
-  // ラジオボタン value=-2 はStart
-  // ラジオボタン value=-3 はGoal
+  // Behavior when radio button is pressed
+  // Radio button value >= 0: mission order index
+  // Radio button value = -1: no mission set
+  // Radio button value = -2: Start
+  // Radio button value = -3: Goal
 
   return (
     <div className="container mx-auto">

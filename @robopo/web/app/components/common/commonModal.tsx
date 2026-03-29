@@ -62,7 +62,7 @@ export function DeleteModal({ type, ids }: { type: InputType; ids: number[] }) {
       })
 
       if (response.ok) {
-        // 削除成功時の処理
+        // Handle successful deletion
         setSuccessMessage(`${commonString}を正常に削除しました`)
       } else {
         setErrorMessage(`${commonString}を削除できませんでした`)

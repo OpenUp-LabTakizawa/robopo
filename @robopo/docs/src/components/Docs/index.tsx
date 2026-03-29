@@ -138,7 +138,7 @@ function Feature({ description, src }: FeatureItem) {
   )
 }
 
-// Mobile viewとそれより幅広画面で表示の段組みを変えて、高さを揃える。
+// Adjust column layout between mobile and wider screens, aligning heights.
 function FeatureCol({ items }: { items: FeatureItem[] }) {
   return (
     <>

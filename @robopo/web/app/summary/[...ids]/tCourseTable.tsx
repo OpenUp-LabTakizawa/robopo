@@ -25,40 +25,40 @@ export function TCourseTable({
   firstTCourseCount,
   maxResult,
 }: TCourseTableProps) {
-  // 現在のタブを管理(最初は0ページ)
+  // Manage current tab (starts at page 0)
   const [currentTab, setCurrentTab] = useState(0)
   const [itemsPerTab, setItemsPerPage] = useState(5)
 
   useEffect(() => {
-    // 640px以上、1024px以上のブレイクポイントに対応
+    // Handle breakpoints for 640px+ and 1024px+
     const mediaQuery640 = window.matchMedia("(min-width: 640px)")
     const mediaQuery1024 = window.matchMedia("(min-width: 1024px)")
 
     function updateItemsPerPage() {
       if (mediaQuery1024.matches) {
-        setItemsPerPage(20) // 1024px以上では20列
+        setItemsPerPage(20) // 20 columns for 1024px+
       } else if (mediaQuery640.matches) {
-        setItemsPerPage(10) // 640px以上では10列
+        setItemsPerPage(10) // 10 columns for 640px+
       } else {
-        setItemsPerPage(5) // 640px未満では5列
+        setItemsPerPage(5) // 5 columns for below 640px
       }
     }
 
-    // 各メディアクエリにリスナーを登録
+    // Register listeners for each media query
     mediaQuery640.addEventListener("change", updateItemsPerPage)
     mediaQuery1024.addEventListener("change", updateItemsPerPage)
 
-    // 初期化時に適切な itemsPerPage を設定
+    // Set appropriate itemsPerPage on initialization
     updateItemsPerPage()
 
-    // クリーンアップ
+    // Cleanup
     return () => {
       mediaQuery640.removeEventListener("change", updateItemsPerPage)
       mediaQuery1024.removeEventListener("change", updateItemsPerPage)
     }
   }, [])
 
-  // 総列数
+  // Total columns
   const totalColumns = resultArray.reduce((count, result) => {
     return (
       count +
@@ -89,7 +89,7 @@ export function TCourseTable({
     }
   }
 
-  // タブ切り替えコンポーネント
+  // Tab switcher component
   function tabSwitcher() {
     return (
       <div className="join">

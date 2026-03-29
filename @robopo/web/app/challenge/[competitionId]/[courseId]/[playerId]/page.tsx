@@ -9,9 +9,9 @@ export default async function Challenge({
 }) {
   const { competitionId, courseId, playerId } = await params
 
-  // courseIdからcourseDataを取得
+  // Get courseData from courseId
   const courseData: SelectCourse | null = await getCourseById(courseId)
-  // playerIdからplayerDataを取得
+  // Get playerData from playerId
   const playerData: SelectPlayer | null = await getPlayerById(playerId)
 
   return courseData && playerData ? (

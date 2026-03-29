@@ -34,7 +34,7 @@ export function View({
 
   return (
     <div className="flex w-full flex-col items-center justify-center overflow-y-auto pt-10 sm:pt-px">
-      {/* ベーシックコースとTHE一本橋 */}
+      {/* Basic course and THE Ippon Bashi */}
       {Number(courseId) !== RESERVED_COURSE_IDS.SENSOR && playerId !== null && (
         <Challenge
           field={courseData.field}
@@ -48,7 +48,7 @@ export function View({
         />
       )}
 
-      {/* センサーコース */}
+      {/* Sensor course */}
       {Number(courseId) === RESERVED_COURSE_IDS.SENSOR && playerId !== null && (
         <SensorCourse
           compeId={competitionId}

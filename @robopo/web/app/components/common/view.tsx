@@ -43,7 +43,7 @@ export function View({
     | SelectPlayer[]
     | SelectUmpire[]
   >(initialCommonDataList)
-  // 配列をクエリ文字列に変換する関数
+  // Convert array to query string
   function createQueryParams(ids: number[] | null) {
     if (!ids || ids.length === 0) {
       return ""
@@ -55,7 +55,7 @@ export function View({
     setCommonDataList(commonDataList)
   }, [commonDataList])
 
-  // 選択したitemに実施する行動の選択肢
+  // Action options for selected items
   function ItemManager({ commonId }: { commonId: number[] | null }) {
     return (
       <>
@@ -131,7 +131,7 @@ export function View({
     )
   }
 
-  // 新規登録UIを持つView
+  // View with registration UI
   function ViewWithRegister() {
     const [commonId, setCommonId] = useState<number[]>([])
     return (
@@ -160,7 +160,7 @@ export function View({
     )
   }
 
-  // 新規登録UIを持たないView
+  // View without registration UI
   function ViewNoRegister() {
     const [commonId, setCommonId] = useState<number[]>([])
     return (

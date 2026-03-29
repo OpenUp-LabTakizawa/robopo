@@ -9,7 +9,7 @@ import {
   type PointState,
 } from "@/app/components/course/utils"
 
-// フォームの中身
+// Form contents
 export type CourseEditState = {
   name: string
   field: FieldState
@@ -21,7 +21,7 @@ export type CourseEditState = {
   setPoint: React.Dispatch<React.SetStateAction<PointState>>
 }
 
-// ダミーの初期値
+// Dummy initial values
 const dummy: CourseEditState = {
   name: "",
   field: initializeField(),

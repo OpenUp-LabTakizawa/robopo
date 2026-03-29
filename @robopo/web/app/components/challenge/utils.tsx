@@ -3,24 +3,24 @@ import type React from "react"
 import type { PointState } from "@/app/components/course/utils"
 
 // 進んだmissionの数によって獲得したポイントを計算する
-// pointStateは start, goal, mission...の順でポイントが入ってる。
-// index = 2からが最初のmissionでそのpointは pointState[2], index = i のポイントは pointState[i]
-// 最後のmissionは index = pointState.length-1 になるので、その時は goalのポイント pointState[1]を足す
+// pointState contains points in order: start, goal, mission...
+// First mission starts at index=2 with point pointState[2], point for index=i is pointState[i]
+// Last mission is at index=pointState.length-1, at which point goal points pointState[1] are added
 export function calcPoint(pointState: PointState, index: number | null) {
   if (index === null) {
     return 0
   }
-  let point = Number(pointState[0]) //初期値はstartの値(ハンデ的な)
+  let point = Number(pointState[0]) // Initial value is start value (handicap)
   for (let i = 2; i < index + 2; i++) {
     point += Number(pointState[i])
     if (i === pointState.length - 1) {
-      point += Number(pointState[1]) //goalの点を加算
+      point += Number(pointState[1]) // Add goal points
     }
   }
   return point
 }
 
-// 結果送信
+// Submit result
 export async function resultSubmit(
   result1: number,
   result2: number | null,
