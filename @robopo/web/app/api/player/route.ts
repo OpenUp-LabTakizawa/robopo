@@ -1,14 +1,5 @@
 import { deleteById } from "@/app/api/delete"
-import { db } from "@/app/lib/db/db"
 import { createPlayer } from "@/app/lib/db/queries/insert"
-import { player, type SelectPlayer } from "@/app/lib/db/schema"
-
-export const revalidate = 0
-
-export async function GET() {
-  const players: SelectPlayer[] = await db.select().from(player)
-  return Response.json({ players })
-}
 
 export async function POST(req: Request) {
   const { name, furigana, zekken, qr } = await req.json()

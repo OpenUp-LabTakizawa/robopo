@@ -1,9 +1,11 @@
-import { beforeEach, describe, expect, mock, test } from "bun:test"
+import { afterAll, beforeEach, describe, expect, spyOn, test } from "bun:test"
+import { db } from "@/app/lib/db/db"
 import {
   competitionCourse,
   competitionPlayer,
   competitionUmpire,
 } from "@/app/lib/db/schema"
+import { assignById, unassignById } from "@/app/api/assign/assign"
 
 type Operation = {
   type: "select" | "insert" | "delete"
@@ -15,7 +17,6 @@ type Operation = {
 let operations: Operation[] = []
 let mockSelectResult: unknown[] = []
 
-// Chainable mock builder for db operations
 function createChain(op: Operation) {
   const chain: Record<string, unknown> = {
     from: (table: unknown) => {
@@ -36,15 +37,21 @@ function createChain(op: Operation) {
   return chain
 }
 
-mock.module("@/app/lib/db/db", () => ({
-  db: {
-    select: () => createChain({ type: "select", table: null }),
-    insert: (table: unknown) => createChain({ type: "insert", table }),
-    delete: (table: unknown) => createChain({ type: "delete", table }),
-  },
-}))
+const selectSpy = spyOn(db, "select").mockImplementation(
+  () => createChain({ type: "select", table: null }) as ReturnType<typeof db.select>,
+)
+const insertSpy = spyOn(db, "insert").mockImplementation(
+  (table: unknown) => createChain({ type: "insert", table }) as ReturnType<typeof db.insert>,
+)
+const deleteSpy = spyOn(db, "delete").mockImplementation(
+  (table: unknown) => createChain({ type: "delete", table }) as ReturnType<typeof db.delete>,
+)
 
-const { assignById, unassignById } = await import("@/app/api/assign/assign")
+afterAll(() => {
+  selectSpy.mockRestore()
+  insertSpy.mockRestore()
+  deleteSpy.mockRestore()
+})
 
 function makeRequest(body: unknown): Request {
   return new Request("http://localhost/api/assign", {

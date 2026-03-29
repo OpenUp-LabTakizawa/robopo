@@ -1,14 +1,5 @@
 import { deleteById } from "@/app/api/delete"
-import { db } from "@/app/lib/db/db"
 import { createUmpire } from "@/app/lib/db/queries/insert"
-import { type SelectUmpire, umpire } from "@/app/lib/db/schema"
-
-export const revalidate = 0
-
-export async function GET() {
-  const umpires: SelectUmpire[] = await db.select().from(umpire)
-  return Response.json({ umpires })
-}
 
 export async function POST(req: Request) {
   const { name } = await req.json()

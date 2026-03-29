@@ -1,27 +1,30 @@
-import { beforeEach, describe, expect, mock, test } from "bun:test"
+import { afterAll, beforeEach, describe, expect, spyOn, test } from "bun:test"
+import { db } from "@/app/lib/db/db"
 import {
   competitionCourse,
   competitionPlayer,
   competitionUmpire,
 } from "@/app/lib/db/schema"
 
-// Track which table object each select().from() call targets
 let lastFromTable: unknown = null
 
-beforeEach(() => {
-  lastFromTable = null
-})
-
-mock.module("@/app/lib/db/db", () => ({
-  db: {
-    select: () => ({
+const selectSpy = spyOn(db, "select").mockImplementation(
+  () =>
+    ({
       from: (table: unknown) => {
         lastFromTable = table
         return Promise.resolve([])
       },
-    }),
-  },
-}))
+    }) as ReturnType<typeof db.select>,
+)
+
+afterAll(() => {
+  selectSpy.mockRestore()
+})
+
+beforeEach(() => {
+  lastFromTable = null
+})
 
 const courseRoute = await import("@/app/api/assign/course/route")
 const playerRoute = await import("@/app/api/assign/player/route")
