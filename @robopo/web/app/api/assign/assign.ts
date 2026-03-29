@@ -6,64 +6,55 @@ import {
   competitionUmpire,
 } from "@/app/lib/db/schema"
 
+const tableMap = {
+  player: {
+    table: competitionPlayer,
+    idCol: competitionPlayer.playerId,
+    compCol: competitionPlayer.competitionId,
+    idKey: "playerId" as const,
+  },
+  course: {
+    table: competitionCourse,
+    idCol: competitionCourse.courseId,
+    compCol: competitionCourse.competitionId,
+    idKey: "courseId" as const,
+  },
+  umpire: {
+    table: competitionUmpire,
+    idCol: competitionUmpire.umpireId,
+    compCol: competitionUmpire.competitionId,
+    idKey: "umpireId" as const,
+  },
+} as const
+
+export type AssignMode = keyof typeof tableMap
+
+function isValidMode(mode: string): mode is AssignMode {
+  return mode in tableMap
+}
+
 // Assign items to a competition by their IDs if not already assigned
-export async function assignById(req: Request, mode: string) {
-  // mode is one of "player", "course", "umpire"
+export async function assignById(req: Request, mode: AssignMode) {
   try {
+    if (!isValidMode(mode)) {
+      return Response.json({ error: "Invalid mode" }, { status: 400 })
+    }
+
     const { ids, competitionId } = await req.json()
     if (!(competitionId && Array.isArray(ids))) {
       return Response.json({ error: "Invalid input" }, { status: 400 })
     }
 
-    for (const pid of ids) {
+    const { table, idCol, compCol, idKey } = tableMap[mode]
+
+    for (const id of ids) {
       const existing = await db
         .select()
-        .from(
-          mode === "player"
-            ? competitionPlayer
-            : mode === "course"
-              ? competitionCourse
-              : competitionUmpire,
-        )
-        .where(
-          and(
-            eq(
-              mode === "player"
-                ? competitionPlayer.competitionId
-                : mode === "course"
-                  ? competitionCourse.competitionId
-                  : competitionUmpire.competitionId,
-              competitionId,
-            ),
-            eq(
-              mode === "player"
-                ? competitionPlayer.playerId
-                : mode === "course"
-                  ? competitionCourse.courseId
-                  : competitionUmpire.umpireId,
-              pid,
-            ),
-          ),
-        )
+        .from(table)
+        .where(and(eq(compCol, competitionId), eq(idCol, id)))
 
       if (existing.length === 0) {
-        // If not assigned, add assignment
-        await db
-          .insert(
-            mode === "player"
-              ? competitionPlayer
-              : mode === "course"
-                ? competitionCourse
-                : competitionUmpire,
-          )
-          .values({
-            competitionId: competitionId,
-            [mode === "player"
-              ? "playerId"
-              : mode === "course"
-                ? "courseId"
-                : "umpireId"]: pid,
-          })
+        await db.insert(table).values({ competitionId, [idKey]: id })
       }
     }
     return Response.json({ success: true }, { status: 200 })
@@ -72,7 +63,7 @@ export async function assignById(req: Request, mode: string) {
       {
         success: false,
         message: "An error occurred while assigning.",
-        error: error,
+        error,
       },
       { status: 500 },
     )
@@ -80,74 +71,29 @@ export async function assignById(req: Request, mode: string) {
 }
 
 // Unassign items from a competition by their IDs
-export async function unassignById(req: Request, mode: string) {
-  // mode is one of "player", "course", "umpire"
+export async function unassignById(req: Request, mode: AssignMode) {
   try {
+    if (!isValidMode(mode)) {
+      return Response.json({ error: "Invalid mode" }, { status: 400 })
+    }
+
     const { ids, competitionId } = await req.json()
     if (!(competitionId && Array.isArray(ids))) {
       return Response.json({ error: "Invalid input" }, { status: 400 })
     }
-    for (const pid of ids) {
+
+    const { table, idCol, compCol } = tableMap[mode]
+
+    for (const id of ids) {
       const existing = await db
         .select()
-        .from(
-          mode === "player"
-            ? competitionPlayer
-            : mode === "course"
-              ? competitionCourse
-              : competitionUmpire,
-        )
-        .where(
-          and(
-            eq(
-              mode === "player"
-                ? competitionPlayer.competitionId
-                : mode === "course"
-                  ? competitionCourse.competitionId
-                  : competitionUmpire.competitionId,
-              competitionId,
-            ),
-            eq(
-              mode === "player"
-                ? competitionPlayer.playerId
-                : mode === "course"
-                  ? competitionCourse.courseId
-                  : competitionUmpire.umpireId,
-              pid,
-            ),
-          ),
-        )
+        .from(table)
+        .where(and(eq(compCol, competitionId), eq(idCol, id)))
 
       if (existing.length > 0) {
-        // If assigned, remove assignment
         await db
-          .delete(
-            mode === "player"
-              ? competitionPlayer
-              : mode === "course"
-                ? competitionCourse
-                : competitionUmpire,
-          )
-          .where(
-            and(
-              eq(
-                mode === "player"
-                  ? competitionPlayer.competitionId
-                  : mode === "course"
-                    ? competitionCourse.competitionId
-                    : competitionUmpire.competitionId,
-                competitionId,
-              ),
-              eq(
-                mode === "player"
-                  ? competitionPlayer.playerId
-                  : mode === "course"
-                    ? competitionCourse.courseId
-                    : competitionUmpire.umpireId,
-                pid,
-              ),
-            ),
-          )
+          .delete(table)
+          .where(and(eq(compCol, competitionId), eq(idCol, id)))
       }
     }
     return Response.json({ success: true }, { status: 200 })
@@ -156,7 +102,7 @@ export async function unassignById(req: Request, mode: string) {
       {
         success: false,
         message: "An error occurred while unassigning.",
-        error: error,
+        error,
       },
       { status: 500 },
     )
