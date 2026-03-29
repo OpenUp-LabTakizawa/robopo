@@ -99,7 +99,7 @@ function TableComponent({
 function itemNames(type: CommonListProps["type"]): string[] {
   const itemNames: string[] = []
   if (type === "player") {
-    itemNames.push("ゼッケン番号", "ふりがな", "名前", "参加大会")
+    itemNames.push("ゼッケン番号", "ふりがな", "名前", "参加大会")
   } else if (type === "umpire") {
     itemNames.push("ID", "名前", "参加大会")
   } else if (type === "course") {
@@ -110,31 +110,54 @@ function itemNames(type: CommonListProps["type"]): string[] {
   return itemNames
 }
 
-export function CommonRadioList({
+function typeLabel(type: CommonListProps["type"]): string | null {
+  switch (type) {
+    case "player":
+      return "選手"
+    case "umpire":
+      return "採点者"
+    case "course":
+      return "コース"
+    case "competition":
+      return "大会"
+    default:
+      return null
+  }
+}
+
+function emptyLabel(
+  type: CommonListProps["type"],
+  selectionMode: "radio" | "checkbox",
+): string {
+  if (selectionMode === "checkbox" && type === "competition") {
+    return "大会"
+  }
+  return typeLabel(type) ?? "割当"
+}
+
+export function CommonSelectionList({
   props: { type, commonDataList },
-  commonId,
-  setCommonId,
+  selectionMode,
+  selectedId,
+  onSelect,
 }: {
   props: CommonListProps
-  commonId: number | null
-  setCommonId: React.Dispatch<React.SetStateAction<number | null>>
+  selectionMode: "radio" | "checkbox"
+  selectedId: number | null | number[]
+  onSelect: (id: number) => void
 }) {
-  function handleRadioSelect(event: React.ChangeEvent<HTMLInputElement>) {
-    setCommonId(Number(event.target.value))
+  function isChecked(id: number): boolean {
+    if (selectionMode === "radio") {
+      return selectedId === id
+    }
+    return Array.isArray(selectedId) && selectedId.includes(id)
   }
 
   return (
     <>
       {type !== "competition" && (
         <h2 className="text-center font-semibold text-xl">
-          {type === "player"
-            ? "選手"
-            : type === "umpire"
-              ? "採点者"
-              : type === "course"
-                ? "コース"
-                : null}
-          一覧
+          {typeLabel(type)}一覧
         </h2>
       )}
       <div className="w-full">
@@ -144,13 +167,17 @@ export function CommonRadioList({
               <tr>
                 <th>
                   <label>
-                    <input type="radio" disabled={true} />
+                    <input type={selectionMode} disabled={true} />
                   </label>
                 </th>
                 {itemNames(type).map((name) => (
                   <th
                     key={name}
-                    hidden={type === "player" && name === "参加大会"}
+                    hidden={
+                      selectionMode === "radio" &&
+                      type === "player" &&
+                      name === "参加大会"
+                    }
                   >
                     {name}
                   </th>
@@ -163,10 +190,11 @@ export function CommonRadioList({
                   <tr
                     key={common.id}
                     className="hover cursor-pointer"
-                    onClick={() => setCommonId(common.id)}
+                    onClick={() => onSelect(common.id)}
                     onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === "Space") {
-                        setCommonId(common.id)
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault()
+                        onSelect(common.id)
                       }
                     }}
                     hidden={common.id < 0}
@@ -174,11 +202,11 @@ export function CommonRadioList({
                     <th>
                       <label>
                         <input
-                          type="radio"
+                          type={selectionMode}
                           name="selectedCommon"
                           value={common.id}
-                          checked={commonId === common.id}
-                          onChange={handleRadioSelect}
+                          checked={isChecked(common.id)}
+                          onChange={() => onSelect(common.id)}
                           className="size-4"
                         />
                       </label>
@@ -189,14 +217,7 @@ export function CommonRadioList({
               ) : (
                 <tr>
                   <td colSpan={5} className="text-center">
-                    {type === "player"
-                      ? "選手"
-                      : type === "umpire"
-                        ? "採点者"
-                        : type === "competition"
-                          ? "大会"
-                          : null}
-                    が登録されていません。
+                    {emptyLabel(type, selectionMode)}が登録されていません。
                   </td>
                 </tr>
               )}
@@ -208,8 +229,27 @@ export function CommonRadioList({
   )
 }
 
+export function CommonRadioList({
+  props,
+  commonId,
+  setCommonId,
+}: {
+  props: CommonListProps
+  commonId: number | null
+  setCommonId: React.Dispatch<React.SetStateAction<number | null>>
+}) {
+  return (
+    <CommonSelectionList
+      props={props}
+      selectionMode="radio"
+      selectedId={commonId}
+      onSelect={(id) => setCommonId(id)}
+    />
+  )
+}
+
 export function CommonCheckboxList({
-  props: { type, commonDataList },
+  props,
   commonId,
   setCommonId,
 }: {
@@ -217,94 +257,22 @@ export function CommonCheckboxList({
   commonId: number[]
   setCommonId: React.Dispatch<React.SetStateAction<number[]>>
 }) {
-  function handleCheckboxChange(id: number) {
+  function handleToggle(id: number) {
     if (!commonId) {
       setCommonId([id])
     } else if (commonId.includes(id)) {
-      setCommonId(commonId.filter((common) => common !== id))
+      setCommonId(commonId.filter((c) => c !== id))
     } else {
       setCommonId([...commonId, id])
     }
   }
 
   return (
-    <>
-      {type !== "competition" && (
-        <h2 className="text-center font-semibold text-xl">
-          {type === "player"
-            ? "選手"
-            : type === "umpire"
-              ? "採点者"
-              : type === "course"
-                ? "コース"
-                : null}
-          一覧
-        </h2>
-      )}
-      <div className="w-full">
-        <div className="m-3 max-h-96 overflow-x-auto overflow-y-auto border sm:h-96">
-          <table className="table-pin-rows table">
-            <thead>
-              <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" disabled={true} />
-                  </label>
-                </th>
-                {itemNames(type).map((name) => (
-                  <th key={name}>{name}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {commonDataList.length > 0 ? (
-                commonDataList.map((common) => (
-                  <tr
-                    key={common.id}
-                    className="hover cursor-pointer"
-                    onClick={() => handleCheckboxChange(common.id)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === "") {
-                        handleCheckboxChange(common.id)
-                      }
-                    }}
-                    hidden={common.id < 0}
-                  >
-                    <th>
-                      <label>
-                        <input
-                          type="checkbox"
-                          name="selectedCommon"
-                          value={common.id}
-                          checked={commonId?.includes(common.id)}
-                          onChange={() => handleCheckboxChange(common.id)}
-                          className="h-4 w-4"
-                        />
-                      </label>
-                    </th>
-                    <TableComponent type={type} common={common} />
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={5} className="text-center">
-                    {type === "player"
-                      ? "選手"
-                      : type === "umpire"
-                        ? "採点者"
-                        : type === "course"
-                          ? "コース"
-                          : type === "competition"
-                            ? "大会"
-                            : "割当"}
-                    が登録されていません。
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </>
+    <CommonSelectionList
+      props={props}
+      selectionMode="checkbox"
+      selectedId={commonId}
+      onSelect={handleToggle}
+    />
   )
 }
