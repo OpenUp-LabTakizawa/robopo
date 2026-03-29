@@ -1,12 +1,8 @@
-import { afterAll, describe, expect, test } from "bun:test"
+import { describe, expect, test } from "bun:test"
 import { eq } from "drizzle-orm"
 import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import { db } from "@/app/lib/db/db"
 import { course, umpire } from "@/app/lib/db/schema"
-
-afterAll(async () => {
-  await db.$client.end()
-})
 
 describe("seed data", () => {
   test("reserved courses exist in database", async () => {

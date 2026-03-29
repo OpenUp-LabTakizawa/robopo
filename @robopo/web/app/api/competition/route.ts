@@ -1,15 +1,6 @@
 import { getCompetitionList } from "@/app/components/server/db"
-import { db } from "@/app/lib/db/db"
 import { createCompetition } from "@/app/lib/db/queries/insert"
 import { deleteCompetitionById } from "@/app/lib/db/queries/queries"
-import { competition, type SelectCompetition } from "@/app/lib/db/schema"
-
-export const revalidate = 0
-
-export async function GET() {
-  const competitions: SelectCompetition[] = await db.select().from(competition)
-  return Response.json({ competitions })
-}
 
 export async function POST(req: Request) {
   const { name } = await req.json()
