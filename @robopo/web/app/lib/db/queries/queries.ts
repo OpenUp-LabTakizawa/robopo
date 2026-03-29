@@ -1,4 +1,4 @@
-import { and, eq, or, sql } from "drizzle-orm"
+import { and, eq, or, type SQLWrapper, sql } from "drizzle-orm"
 import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import type { CourseSummary } from "@/app/components/summary/utils"
 import { db } from "@/app/lib/db/db"
@@ -108,6 +108,106 @@ export const getCompetitionById = async (id: number) => {
   return result.length > 0 ? result[0] : null
 }
 
+// SQL helper: subquery for count of attempts until the max result is achieved
+function firstCountSubquery(
+  playerIdRef: SQLWrapper,
+  competitionId: number,
+  courseId: number,
+) {
+  return sql`
+    (SELECT SUM(attempts_up_to_max) FROM (
+      SELECT ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
+      GREATEST(result1, COALESCE(result2, 0)) AS result,
+      CASE WHEN result1 IS NOT NULL THEN 1 ELSE 0 END + CASE WHEN result2 IS NOT NULL THEN 1 ELSE 0 END AS attempts_up_to_max
+      FROM challenge
+      WHERE player_id = ${playerIdRef}
+      AND course_id = ${courseId}
+      AND (result1 IS NOT NULL OR result2 IS NOT NULL)
+    ) AS RankedAttempts
+      WHERE attempt_number <= (
+        SELECT MIN(attempt_number)
+        FROM (
+          SELECT ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
+          GREATEST(result1, COALESCE(result2, 0)) AS result
+          FROM challenge
+          WHERE player_id = ${playerIdRef}
+          AND course_id = ${courseId}
+          AND competition_id = ${competitionId}
+        ) AS Attempts
+        WHERE result = (
+          SELECT MAX(GREATEST(result1, COALESCE(result2, 0)))
+          FROM challenge
+          WHERE player_id = ${playerIdRef}
+          AND course_id = ${courseId}
+          AND competition_id = ${competitionId}
+        )
+      )
+    )`
+}
+
+// SQL helper: subquery for the time when the max result was first achieved
+function firstTimeSubquery(
+  playerIdRef: SQLWrapper,
+  competitionId: number,
+  courseId: number,
+) {
+  return sql`
+    (
+      SELECT created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo' FROM (
+        SELECT
+          ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
+          created_at,
+          GREATEST(result1, COALESCE(result2, 0)) AS result
+        FROM challenge
+        WHERE
+          player_id = ${playerIdRef}
+          AND course_id = ${courseId}
+          AND (result1 IS NOT NULL OR result2 IS NOT NULL)
+      ) AS RankedAttemptsWithDate
+      WHERE attempt_number = (
+        SELECT MIN(attempt_number) FROM (
+          SELECT
+            ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
+            GREATEST(result1, COALESCE(result2, 0)) AS result
+          FROM challenge
+          WHERE
+            player_id = ${playerIdRef}
+            AND course_id = ${courseId}
+            AND competition_id = ${competitionId}
+        ) AS Attempts
+        WHERE result = (
+          SELECT MAX(GREATEST(result1, COALESCE(result2, 0)))
+          FROM challenge
+          WHERE
+            player_id = ${playerIdRef}
+            AND course_id = ${courseId}
+            AND competition_id = ${competitionId}
+        )
+      )
+    )
+  `
+}
+
+// SQL helper: max result across result1 and result2 for a specific course
+function maxResultExpr(courseIdExpr: number | ReturnType<typeof sql>) {
+  return sql`MAX(CASE WHEN ${challenge.courseId} = ${courseIdExpr} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`
+}
+
+// SQL helper: total challenge count (counting retries as 2) across the given course, Ippon Bashi, and Sensor courses
+function totalChallengeCountExpr(courseId: number) {
+  return sql`SUM(CASE
+    WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
+    WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.IPPON} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
+    WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.SENSOR} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
+    ELSE 0
+  END)`
+}
+
+// SQL helper: course attempt count (counting retries as 2) for a specific course
+function tCourseCountExpr(courseId: number) {
+  return sql`SUM(CASE WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END) ELSE 0 END)`
+}
+
 // Get data based on specific competition_id and course_id
 // firstTCourseCount gets the max from result1 and result2,
 // then sums the count of result1 and result2 (ordered by created_at and id asc) until the max is reached.
@@ -123,93 +223,25 @@ export async function getCourseSummary(
       playerName: player.name,
       playerFurigana: player.furigana,
       playerZekken: player.zekken,
-      firstTCourseCount: sql`
-        (SELECT SUM(attempts_up_to_max) FROM (
-          SELECT ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
-          GREATEST(result1, COALESCE(result2, 0)) AS result,
-          CASE WHEN result1 IS NOT NULL THEN 1 ELSE 0 END + CASE WHEN result2 IS NOT NULL THEN 1 ELSE 0 END AS attempts_up_to_max
-          FROM challenge
-          WHERE player_id = ${player.id}
-          AND course_id = ${courseId}
-          AND (result1 IS NOT NULL OR result2 IS NOT NULL)
-        ) AS RankedAttempts
-          WHERE attempt_number <= (
-            SELECT MIN(attempt_number) 
-            FROM (
-              SELECT ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
-              GREATEST(result1, COALESCE(result2, 0)) AS result
-              FROM challenge
-              WHERE player_id = ${player.id}
-              AND course_id = ${courseId}
-              AND competition_id = ${competitionId}
-            ) AS Attempts
-            WHERE result = (
-              SELECT MAX(GREATEST(result1, COALESCE(result2, 0)))
-              FROM challenge
-              WHERE player_id = ${player.id}
-              AND course_id = ${courseId}
-              AND competition_id = ${competitionId}
-            )
-          )
-        )`.as("firstTCourseCount"),
-      firstTCourseTime: sql`
-        (
-          SELECT created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo' FROM (
-            SELECT
-              ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
-              created_at,
-              GREATEST(result1, COALESCE(result2, 0)) AS result
-            FROM challenge
-            WHERE
-              player_id = ${player.id}
-              AND course_id = ${courseId}
-              AND (result1 IS NOT NULL OR result2 IS NOT NULL)
-          ) AS RankedAttemptsWithDate
-          WHERE attempt_number = (
-            SELECT MIN(attempt_number) FROM (
-              SELECT
-                ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
-                GREATEST(result1, COALESCE(result2, 0)) AS result
-              FROM challenge
-              WHERE
-                player_id = ${player.id}
-                AND course_id = ${courseId}
-                AND competition_id = ${competitionId}
-            ) AS Attempts
-            WHERE result = (
-              SELECT MAX(GREATEST(result1, COALESCE(result2, 0)))
-              FROM challenge
-              WHERE
-                player_id = ${player.id}
-                AND course_id = ${courseId}
-                AND competition_id = ${competitionId}
-            )
-          )
-        )
-      `.as("firstTCourseTime"),
-      tCourseCount:
-        // Simply summing the count of result1 and result2.
-        sql`SUM(CASE WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END) ELSE 0 END)`.as(
-          "tCourseCount",
-        ),
-      tCourseMaxResult:
-        sql`MAX(CASE WHEN ${challenge.courseId} = ${courseId} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`.as(
-          "tCourseMaxResult",
-        ),
-      sensorMaxResult:
-        sql`MAX(CASE WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.SENSOR} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`.as(
-          "sensorMaxResult",
-        ),
-      ipponMaxResult:
-        sql`MAX(CASE WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.IPPON} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0))ELSE NULL END)`.as(
-          "ipponMaxResult",
-        ),
-      challengeCount: sql`SUM(CASE
-            WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-            WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.IPPON} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-            WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.SENSOR} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-            ELSE 0
-          END)`.as("challengeCount"),
+      firstTCourseCount: firstCountSubquery(
+        player.id,
+        competitionId,
+        courseId,
+      ).as("firstTCourseCount"),
+      firstTCourseTime: firstTimeSubquery(
+        player.id,
+        competitionId,
+        courseId,
+      ).as("firstTCourseTime"),
+      tCourseCount: tCourseCountExpr(courseId).as("tCourseCount"),
+      tCourseMaxResult: maxResultExpr(courseId).as("tCourseMaxResult"),
+      sensorMaxResult: maxResultExpr(RESERVED_COURSE_IDS.SENSOR).as(
+        "sensorMaxResult",
+      ),
+      ipponMaxResult: maxResultExpr(RESERVED_COURSE_IDS.IPPON).as(
+        "ipponMaxResult",
+      ),
+      challengeCount: totalChallengeCountExpr(courseId).as("challengeCount"),
     })
     .from(player)
     .leftJoin(challenge, eq(player.id, challenge.playerId))
@@ -251,63 +283,21 @@ export async function getPlayerResult(
 ) {
   const result = await db
     .select({
-      maxResult:
-        sql`MAX(GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)))`.as(
-          "maxResult",
-        ), // Get max of result1 and result2
-      firstCount: sql`
-        (SELECT SUM(attempts_up_to_max) FROM (
-          SELECT ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
-          GREATEST(result1, COALESCE(result2, 0)) AS result,
-          CASE WHEN result1 IS NOT NULL THEN 1 ELSE 0 END + CASE WHEN result2 IS NOT NULL THEN 1 ELSE 0 END AS attempts_up_to_max
-          FROM ${challenge}
-          WHERE ${challenge.competitionId} = ${competitionId}
-          AND ${challenge.playerId} = ${playerId}
-          AND ${challenge.courseId} = ${courseId}
-          AND (result1 IS NOT NULL OR result2 IS NOT NULL)
-        ) AS RankedAttempts
-        WHERE attempt_number <= (
-          SELECT MIN(attempt_number) 
-          FROM (
-            SELECT ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
-            GREATEST(result1, COALESCE(result2, 0)) AS result
-            FROM ${challenge}
-            WHERE  ${challenge.competitionId} = ${competitionId}
-            AND ${challenge.playerId} = ${playerId}
-            AND ${challenge.courseId} = ${courseId}
-          ) AS Attempts
-          WHERE result = (
-            SELECT MAX(GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)))
-            FROM ${challenge}
-            WHERE  ${challenge.competitionId} = ${competitionId}
-            AND ${challenge.playerId} = ${playerId}
-            AND ${challenge.courseId} = ${courseId}
-          )
-        )
-      )`.as("firstCount"),
-
-      tCourseCount:
-        sql`SUM(CASE WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END) ELSE 0 END)`.as(
-          "tCourseCount",
-        ),
-      tCourseMaxResult:
-        sql`MAX(CASE WHEN ${challenge.courseId} = ${courseId} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`.as(
-          "tCourseMaxResult",
-        ),
-      ipponMaxResult:
-        sql`MAX(CASE WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.IPPON} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0))ELSE NULL END)`.as(
-          "ipponMaxResult",
-        ),
-      sensorMaxResult:
-        sql`MAX(CASE WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.SENSOR} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`.as(
-          "sensorMaxResult",
-        ),
-      challengeCount: sql`SUM(CASE
-            WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-            WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.IPPON} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-            WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.SENSOR} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-            ELSE 0
-          END)`.as("challengeCount"),
+      maxResult: maxResultExpr(courseId).as("maxResult"),
+      firstCount: firstCountSubquery(
+        sql`${playerId}`,
+        competitionId,
+        courseId,
+      ).as("firstCount"),
+      tCourseCount: tCourseCountExpr(courseId).as("tCourseCount"),
+      tCourseMaxResult: maxResultExpr(courseId).as("tCourseMaxResult"),
+      ipponMaxResult: maxResultExpr(RESERVED_COURSE_IDS.IPPON).as(
+        "ipponMaxResult",
+      ),
+      sensorMaxResult: maxResultExpr(RESERVED_COURSE_IDS.SENSOR).as(
+        "sensorMaxResult",
+      ),
+      challengeCount: totalChallengeCountExpr(courseId).as("challengeCount"),
     })
     .from(challenge)
     .where(
@@ -328,10 +318,7 @@ export async function getMaxResult(
 ) {
   const result = await db
     .select({
-      maxResult:
-        sql`MAX(GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)))`.as(
-          "maxResult",
-        ), // Get max of result1 and result2
+      maxResult: maxResultExpr(courseId).as("maxResult"),
     })
     .from(challenge)
     .where(
@@ -353,36 +340,11 @@ export async function getFirstCount(
 ) {
   const result = await db
     .select({
-      firstCount: sql`
-        (SELECT SUM(attempts_up_to_max) FROM (
-          SELECT ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
-          GREATEST(result1, COALESCE(result2, 0)) AS result,
-          CASE WHEN result1 IS NOT NULL THEN 1 ELSE 0 END + CASE WHEN result2 IS NOT NULL THEN 1 ELSE 0 END AS attempts_up_to_max
-          FROM ${challenge}
-          WHERE ${challenge.competitionId} = ${competitionId}
-          AND ${challenge.playerId} = ${playerId}
-          AND ${challenge.courseId} = ${courseId}
-          AND (result1 IS NOT NULL OR result2 IS NOT NULL)
-        ) AS RankedAttempts
-        WHERE attempt_number <= (
-          SELECT MIN(attempt_number) 
-          FROM (
-            SELECT ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
-            GREATEST(result1, COALESCE(result2, 0)) AS result
-            FROM ${challenge}
-            WHERE  ${challenge.competitionId} = ${competitionId}
-            AND ${challenge.playerId} = ${playerId}
-            AND ${challenge.courseId} = ${courseId}
-          ) AS Attempts
-          WHERE result = (
-            SELECT MAX(GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)))
-            FROM ${challenge}
-            WHERE  ${challenge.competitionId} = ${competitionId}
-            AND ${challenge.playerId} = ${playerId}
-            AND ${challenge.courseId} = ${courseId}
-          )
-        )
-      )`.as("firstCount"),
+      firstCount: firstCountSubquery(
+        sql`${playerId}`,
+        competitionId,
+        courseId,
+      ).as("firstCount"),
     })
     .from(challenge)
     .where(
