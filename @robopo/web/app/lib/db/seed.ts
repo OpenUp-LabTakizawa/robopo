@@ -44,7 +44,9 @@ async function seed() {
     `)
     await db.execute(sql`DELETE FROM competition WHERE name = 'テスト大会'`)
     await db.execute(sql`DELETE FROM course WHERE name = 'TestCourse'`)
-    await db.execute(sql`DELETE FROM player WHERE zekken IN ('001', '002', '003')`)
+    await db.execute(
+      sql`DELETE FROM player WHERE zekken IN ('001', '002', '003')`,
+    )
 
     // Test T-course
     const courseResult = await db.execute<{ id: number }>(sql`

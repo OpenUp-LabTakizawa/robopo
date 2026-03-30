@@ -29,10 +29,10 @@ jobs:
       - name: 📦 Update dependencies
         run: mise update
 
-      # - name: Run Biome
-      #   run: biome check --write
+      - name: 🔷 Run Biome
+        run: bun check
 
-      - name: Commit
+      - name: 💾 Commit
         if: success() || failure()
         uses: autofix-ci/action@v1.3.3
         with:

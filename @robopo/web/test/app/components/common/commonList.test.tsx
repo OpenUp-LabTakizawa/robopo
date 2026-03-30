@@ -1,5 +1,5 @@
-import { cleanup, render, fireEvent } from "@testing-library/react"
 import { afterEach, describe, expect, mock, test } from "bun:test"
+import { cleanup, fireEvent, render } from "@testing-library/react"
 import {
   CommonCheckboxList,
   CommonRadioList,
@@ -9,8 +9,22 @@ import {
 afterEach(cleanup)
 
 const players = [
-  { id: 1, name: "Alice", furigana: "ありす", zekken: 10, qr: "", createdAt: new Date() },
-  { id: 2, name: "Bob", furigana: "ぼぶ", zekken: 20, qr: "", createdAt: new Date() },
+  {
+    id: 1,
+    name: "Alice",
+    furigana: "ありす",
+    zekken: 10,
+    qr: "",
+    createdAt: new Date(),
+  },
+  {
+    id: 2,
+    name: "Bob",
+    furigana: "ぼぶ",
+    zekken: 20,
+    qr: "",
+    createdAt: new Date(),
+  },
 ]
 
 const competitions = [
@@ -153,9 +167,7 @@ describe("CommonRadioList", () => {
         setCommonId={setCommonId}
       />,
     )
-    expect(
-      container.querySelectorAll('input[type="radio"]'),
-    ).toHaveLength(3)
+    expect(container.querySelectorAll('input[type="radio"]')).toHaveLength(3)
 
     const rows = container.querySelectorAll("tbody tr")
     fireEvent.click(rows[0])
@@ -166,9 +178,11 @@ describe("CommonRadioList", () => {
 describe("CommonCheckboxList", () => {
   test("toggles selection on click", () => {
     let ids: number[] = [1]
-    const setCommonId = mock((updater: number[] | ((prev: number[]) => number[])) => {
-      ids = typeof updater === "function" ? updater(ids) : updater
-    })
+    const setCommonId = mock(
+      (updater: number[] | ((prev: number[]) => number[])) => {
+        ids = typeof updater === "function" ? updater(ids) : updater
+      },
+    )
     const { container } = render(
       <CommonCheckboxList
         props={{ type: "player", commonDataList: players }}
@@ -176,9 +190,7 @@ describe("CommonCheckboxList", () => {
         setCommonId={setCommonId}
       />,
     )
-    expect(
-      container.querySelectorAll('input[type="checkbox"]'),
-    ).toHaveLength(3)
+    expect(container.querySelectorAll('input[type="checkbox"]')).toHaveLength(3)
 
     // Click row for id=2 → add
     const rows = container.querySelectorAll("tbody tr")

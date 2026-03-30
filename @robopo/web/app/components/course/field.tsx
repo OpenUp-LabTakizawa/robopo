@@ -34,17 +34,18 @@ export function Field({
     gridTemplateColumns: `repeat(${MAX_FIELD_WIDTH}, ${PANEL_SIZE}px)`,
     gridTemplateRows: `repeat(${MAX_FIELD_HEIGHT}, ${PANEL_SIZE}px)`,
   }
+  const cells = field.flatMap((row, r) =>
+    row.map((panel, c) => ({ key: `${r}-${c}-${String(panel)}`, panel, r, c })),
+  )
   return (
     <div className="relative mx-auto grid" style={styles}>
-      {field.map((row, rowIndex) =>
-        row.map((panel, colIndex) => (
-          <Panel
-            key={`panel-${rowIndex}-${colIndex}-${String(panel)}`}
-            value={panel}
-            onClick={() => onPanelClick(rowIndex, colIndex)}
-          />
-        )),
-      )}
+      {cells.map((cell) => (
+        <Panel
+          key={cell.key}
+          value={cell.panel}
+          onClick={() => onPanelClick(cell.r, cell.c)}
+        />
+      ))}
       {/* Show bot during challenge */}
       {(type === "challenge" || type === "ipponBashi") &&
         botPosition &&

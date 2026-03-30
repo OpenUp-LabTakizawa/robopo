@@ -74,16 +74,25 @@ export function TCourseTable({
   const visibleResults: {
     result: { results1: number; results2: number | null }
     type: string
+    columnIndex: number
   }[] = []
   let columnCount = 0
   for (let i = 0; i < resultArray.length; i++) {
     if (columnCount >= startIndex && columnCount < endIndex) {
-      visibleResults.push({ result: resultArray[i], type: "results1" })
+      visibleResults.push({
+        result: resultArray[i],
+        type: "results1",
+        columnIndex: columnCount,
+      })
     }
     columnCount++
     if (resultArray[i].results2 !== null) {
       if (columnCount >= startIndex && columnCount < endIndex) {
-        visibleResults.push({ result: resultArray[i], type: "results2" })
+        visibleResults.push({
+          result: resultArray[i],
+          type: "results2",
+          columnIndex: columnCount,
+        })
       }
       columnCount++
     }
@@ -101,18 +110,20 @@ export function TCourseTable({
         >
           «
         </button>
-        {Array.from({ length: totalPages }).map((_, index) => (
-          <input
-            key={index}
-            className="join-item btn btn-square"
-            type="radio"
-            name="options"
-            aria-label={(index + 1).toString()}
-            checked={currentTab === index}
-            onClick={() => setCurrentTab(index)}
-            onChange={() => {}}
-          />
-        ))}
+        {Array.from({ length: totalPages }, (_, i) => `page-${i}`).map(
+          (pageKey, i) => (
+            <input
+              key={pageKey}
+              className="join-item btn btn-square"
+              type="radio"
+              name="options"
+              aria-label={(i + 1).toString()}
+              checked={currentTab === i}
+              onClick={() => setCurrentTab(i)}
+              onChange={() => {}}
+            />
+          ),
+        )}
         <button
           type="button"
           className="join-item btn btn-square"
@@ -135,23 +146,24 @@ export function TCourseTable({
                 colSpan={3}
                 className="border border-gray-400 p-2 text-center"
               ></td>
-              {visibleResults.map((_, index: number) => (
-                <React.Fragment key={index}>
+              {visibleResults.map((item, index: number) => (
+                <React.Fragment key={`col-${item.columnIndex}`}>
                   <td className="min-w-9 border border-gray-400 p-2 text-center">
                     {currentTab * itemsPerTab + index + 1}
                   </td>
                 </React.Fragment>
               ))}
-              {Array.from({ length: itemsPerTab - visibleResults.length }).map(
-                (_, index: number) => (
-                  <React.Fragment key={index}>
-                    <td className="min-w-9"></td>
-                  </React.Fragment>
-                ),
-              )}
+              {Array.from(
+                { length: itemsPerTab - visibleResults.length },
+                (_, i) => `pad-${i}`,
+              ).map((padKey) => (
+                <React.Fragment key={padKey}>
+                  <td className="min-w-9"></td>
+                </React.Fragment>
+              ))}
             </tr>
             {missionPair.map((pair, index: number) => (
-              <tr key={index}>
+              <tr key={`mission-${String(pair[0])}-${String(pair[1])}`}>
                 <td className="border border-gray-400 p-2">{index + 1}</td>
                 <th className="border border-gray-400 p-2">
                   {pair[0] !== null && MissionString[pair[0]]}
@@ -161,8 +173,8 @@ export function TCourseTable({
                 <td className="border border-gray-400 p-2">
                   {point[index + 2]}
                 </td>
-                {visibleResults.map((result, visibleIndex: number) => (
-                  <React.Fragment key={visibleIndex}>
+                {visibleResults.map((result, _visibleIndex: number) => (
+                  <React.Fragment key={`col-${result.columnIndex}`}>
                     <td className="min-w-9 border border-gray-400 p-2 text-center">
                       {result.type === "results1" &&
                       result.result.results1 > index
@@ -186,8 +198,8 @@ export function TCourseTable({
                 Goal(六足)
               </td>
               <td className="border border-gray-400 p-2">{point[1]}</td>
-              {visibleResults.map((result, index2: number) => (
-                <React.Fragment key={index2}>
+              {visibleResults.map((result, _index2: number) => (
+                <React.Fragment key={`col-${result.columnIndex}`}>
                   <td className="min-w-9 border border-gray-400 p-2 text-center">
                     {result.type === "results1" &&
                     isCompletedCourse(point, result.result.results1)
@@ -208,8 +220,8 @@ export function TCourseTable({
               >
                 コースポイント
               </td>
-              {visibleResults.map((result, visibleIndex: number) => (
-                <React.Fragment key={visibleIndex}>
+              {visibleResults.map((result, _visibleIndex: number) => (
+                <React.Fragment key={`col-${result.columnIndex}`}>
                   <td className="min-w-9 border border-gray-400 p-2 text-center">
                     {result.type === "results1" &&
                       calcPoint(point, result.result.results1)}

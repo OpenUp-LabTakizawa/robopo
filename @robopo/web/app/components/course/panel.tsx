@@ -36,7 +36,7 @@ export function Panel({
           // When Start and Goal overlap
           <>
             <div
-              className="flex items-center justify-center rounded-t-sm bg-pink-300 text-lg font-bold"
+              className="flex items-center justify-center rounded-t-sm bg-pink-300 font-bold text-lg"
               style={{
                 width: `${PANEL_SIZE - 10}px`,
                 height: `${PANEL_SIZE / 2 - 5}px`,
@@ -45,7 +45,7 @@ export function Panel({
               {PanelString.start}
             </div>
             <div
-              className="flex items-center justify-center rounded-b-sm bg-green-300 text-lg font-bold"
+              className="flex items-center justify-center rounded-b-sm bg-green-300 font-bold text-lg"
               style={{
                 width: `${PANEL_SIZE - 10}px`,
                 height: `${PANEL_SIZE / 2 - 5}px`,
@@ -56,7 +56,7 @@ export function Panel({
           </>
         ) : (
           <div
-            className={`${routeStyle} flex items-center justify-center rounded-sm text-lg font-bold`}
+            className={`${routeStyle} flex items-center justify-center rounded-sm font-bold text-lg`}
             style={{
               width: `${PANEL_SIZE - 10}px`,
               height: `${PANEL_SIZE - 10}px`,

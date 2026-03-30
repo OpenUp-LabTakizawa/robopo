@@ -35,7 +35,7 @@ export function BackModal() {
           <button type="button" className="btn btn-accent" onClick={handleYes}>
             はい
           </button>
-                    {/* Neither router.push("/course") nor Link navigation closes the modal, even when /course/@modal/page.tsx and /course/@modal/[...catchAll]/page.tsx return null.
+          {/* Neither router.push("/course") nor Link navigation closes the modal, even when /course/@modal/page.tsx and /course/@modal/[...catchAll]/page.tsx return null.
               As a workaround, using window.location.replace("/course") for navigation. */}
           <button
             type="button"
