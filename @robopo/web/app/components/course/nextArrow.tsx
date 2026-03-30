@@ -1,8 +1,7 @@
 import {
   getNextPosition,
-  getPanelHeight,
-  getPanelWidth,
   type MissionValue,
+  PANEL_SIZE,
 } from "@/app/components/course/utils"
 
 export function NextArrow({
@@ -11,14 +10,12 @@ export function NextArrow({
   direction,
   nextMissionPair,
   duration = 1,
-  type,
 }: {
   row: number
   col: number
   direction: MissionValue
   nextMissionPair: MissionValue[] | undefined
   duration?: number // Blink speed (seconds)
-  type?: string
 }) {
   if (
     !nextMissionPair ||
@@ -45,7 +42,6 @@ export function NextArrow({
         nextRow={nextRow}
         nextCol={nextCol}
         duration={duration}
-        type={type}
       />
     )
   }
@@ -56,7 +52,6 @@ export function NextArrow({
       direction={direction}
       nextMissionPair={nextMissionPair}
       duration={duration}
-      type={type}
     />
   )
 }
@@ -67,17 +62,14 @@ function NextMoveArrow({
   nextRow,
   nextCol,
   duration = 1, // Blink speed
-  type,
 }: {
   row: number
   col: number
   nextRow: number
   nextCol: number
   duration?: number // Blink speed (seconds)
-  type?: string
 }) {
   // Determine arrow placement and direction
-  // Vector from panel top-left to arrow origin (colAdd, rowAdd) in units of [2/panelWidth] or [2/panelHeight]
   let colAdd = 0
   let rowAdd = 0
   // Arrow direction
@@ -104,8 +96,8 @@ function NextMoveArrow({
     rotate = 180
   }
 
-  const midX = ((2 * col + colAdd) * getPanelWidth(type)) / 2
-  const midY = ((2 * row + rowAdd) * getPanelHeight(type)) / 2
+  const midX = ((2 * col + colAdd) * PANEL_SIZE) / 2
+  const midY = ((2 * row + rowAdd) * PANEL_SIZE) / 2
 
   const arrowStyle: React.CSSProperties = {
     position: "absolute",
@@ -187,21 +179,16 @@ function NextTurnArrow({
   direction,
   nextMissionPair,
   duration = 1, // Rotation speed
-  type,
 }: {
   row: number
   col: number
   direction: MissionValue
   nextMissionPair: MissionValue[]
   duration?: number // Rotation speed (seconds)
-  type?: string
 }) {
-  // Get panel width and height
-  const panelWidth = getPanelWidth(type)
-  const panelHeight = getPanelHeight(type)
   // Calculate circle center
-  const midX = (2 * col * panelWidth) / 2
-  const midY = (2 * row * panelHeight) / 2
+  const midX = (2 * col * PANEL_SIZE) / 2
+  const midY = (2 * row * PANEL_SIZE) / 2
 
   // Arrow starting point
   let startDeg: number
@@ -249,10 +236,10 @@ function NextTurnArrow({
         position: relative;
         display: inline-block;
         width: ` +
-          `${panelWidth}` +
+          `${PANEL_SIZE}` +
           `px;
         height: ` +
-          `${panelHeight}` +
+          `${PANEL_SIZE}` +
           `px;
         border: 0px solid #FF0033;
 
@@ -294,10 +281,10 @@ function NextTurnArrow({
         position: absolute;
         display: inline-block;
         width: ` +
-          `${panelWidth}` +
+          `${PANEL_SIZE}` +
           `px;
         height: ` +
-          `${panelHeight}` +
+          `${PANEL_SIZE}` +
           `px;
         border: 2px solid #FF0033;
         border-radius: 50%; /* Make circular */

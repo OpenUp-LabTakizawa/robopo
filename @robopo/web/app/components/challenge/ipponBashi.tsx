@@ -2,10 +2,9 @@ import type React from "react"
 import { Field } from "@/app/components/course/field"
 import {
   type FieldState,
-  getPanelHeight,
-  getPanelWidth,
   IPPON_BASHI_SIZE,
   type MissionValue,
+  PANEL_SIZE,
 } from "@/app/components/course/utils"
 
 // Component representing THE Ippon Bashi
@@ -21,7 +20,7 @@ export function IpponBashiUI({
   onPanelClick: (row: number, col: number) => void
 }): React.JSX.Element {
   const type: "ipponBashi" = "ipponBashi"
-  // Ippon Bashi size: 1 panel wide, 5 panels long, 60x60 per panel
+  // Ippon Bashi size: 1 panel wide, 5 panels long
   const width: number = 1
   const length: number = IPPON_BASHI_SIZE
 
@@ -33,8 +32,8 @@ export function IpponBashiUI({
 
   const ipponBashiStyle: React.CSSProperties = {
     position: "relative",
-    width: `${width * getPanelWidth(type)}px`,
-    height: `${length * getPanelHeight(type)}px`,
+    width: `${width * PANEL_SIZE}px`,
+    height: `${length * PANEL_SIZE}px`,
     transform: "rotate(30deg)",
   }
 
