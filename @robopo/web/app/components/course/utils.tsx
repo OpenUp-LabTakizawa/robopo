@@ -1,10 +1,5 @@
-// Default panel size (T-course)
-const PANEL_WIDTH: number = 85
-const PANEL_HEIGHT: number = 85
-
-// THE Ippon Bashi panel size
-const BASHI_PANEL_WIDTH: number = 85
-const BASHI_PANEL_HEIGHT: number = 85
+// Panel size (shared by all course types)
+export const PANEL_SIZE: number = 85
 
 // Max size for course creation
 export const MAX_FIELD_WIDTH: number = 3
@@ -17,22 +12,6 @@ export const RESERVED_COURSE_IDS = {
   IPPON: -1,
   SENSOR: -2,
 } as const
-
-// Get panel width
-export function getPanelWidth(type?: string): number {
-  if (type === "ipponBashi") {
-    return BASHI_PANEL_WIDTH
-  }
-  return PANEL_WIDTH
-}
-
-// Get panel height
-export function getPanelHeight(type?: string): number {
-  if (type === "ipponBashi") {
-    return BASHI_PANEL_HEIGHT
-  }
-  return PANEL_HEIGHT
-}
 
 // Panel types
 export type PanelValue = "start" | "goal" | "route" | "startGoal" | null

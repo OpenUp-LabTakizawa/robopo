@@ -1,23 +1,18 @@
 import Image from "next/image"
 import {
-  getPanelHeight,
-  getPanelWidth,
   type MissionValue,
+  PANEL_SIZE,
 } from "@/app/components/course/utils"
 
 export function Robot({
   row,
   col,
   direction,
-  type,
 }: {
   row: number
   col: number
   direction: MissionValue
-  type?: string
 }) {
-  const panelWidth = getPanelWidth(type)
-  const panelHeight = getPanelHeight(type)
   function rotationAngle(dir: MissionValue) {
     switch (dir) {
       case "u":
@@ -35,10 +30,10 @@ export function Robot({
 
   const botStyle: React.CSSProperties = {
     position: "absolute",
-    top: `${row * panelHeight}px`,
-    left: `${col * panelWidth}px`,
-    height: `${panelHeight}px`,
-    width: `${panelWidth}px`,
+    top: `${row * PANEL_SIZE}px`,
+    left: `${col * PANEL_SIZE}px`,
+    height: `${PANEL_SIZE}px`,
+    width: `${PANEL_SIZE}px`,
     transition: "top 0.5s ease, left 0.5s ease, transform 0.5s ease",
     transform: rotationAngle(direction),
     pointerEvents: "none",

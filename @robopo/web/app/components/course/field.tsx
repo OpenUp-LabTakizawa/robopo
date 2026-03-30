@@ -4,11 +4,10 @@ import { Panel } from "@/app/components/course/panel"
 import { Robot } from "@/app/components/course/robot"
 import {
   type FieldState,
-  getPanelHeight,
-  getPanelWidth,
   MAX_FIELD_HEIGHT,
   MAX_FIELD_WIDTH,
   type MissionValue,
+  PANEL_SIZE,
 } from "@/app/components/course/utils"
 
 type FieldProps = {
@@ -32,8 +31,8 @@ export function Field({
   customStyle,
 }: FieldProps): React.JSX.Element {
   const styles = customStyle ?? {
-    gridTemplateColumns: `repeat(${MAX_FIELD_WIDTH}, ${getPanelWidth()}px)`,
-    gridTemplateRows: `repeat(${MAX_FIELD_HEIGHT}, ${getPanelHeight()}px)`,
+    gridTemplateColumns: `repeat(${MAX_FIELD_WIDTH}, ${PANEL_SIZE}px)`,
+    gridTemplateRows: `repeat(${MAX_FIELD_HEIGHT}, ${PANEL_SIZE}px)`,
   }
   return (
     <div className="relative mx-auto grid" style={styles}>
