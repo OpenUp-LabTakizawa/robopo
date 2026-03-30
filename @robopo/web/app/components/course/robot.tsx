@@ -1,8 +1,5 @@
 import Image from "next/image"
-import {
-  type MissionValue,
-  PANEL_SIZE,
-} from "@/app/components/course/utils"
+import { type MissionValue, PANEL_SIZE } from "@/app/components/course/utils"
 
 export function Robot({
   row,

@@ -1,11 +1,11 @@
 import { afterAll, beforeEach, describe, expect, spyOn, test } from "bun:test"
+import { assignById, unassignById } from "@/app/api/assign/assign"
 import { db } from "@/app/lib/db/db"
 import {
   competitionCourse,
   competitionPlayer,
   competitionUmpire,
 } from "@/app/lib/db/schema"
-import { assignById, unassignById } from "@/app/api/assign/assign"
 
 type Operation = {
   type: "select" | "insert" | "delete"
@@ -38,13 +38,18 @@ function createChain(op: Operation) {
 }
 
 const selectSpy = spyOn(db, "select").mockImplementation(
-  () => createChain({ type: "select", table: null }) as ReturnType<typeof db.select>,
+  () =>
+    createChain({ type: "select", table: null }) as ReturnType<
+      typeof db.select
+    >,
 )
 const insertSpy = spyOn(db, "insert").mockImplementation(
-  (table: unknown) => createChain({ type: "insert", table }) as ReturnType<typeof db.insert>,
+  (table: unknown) =>
+    createChain({ type: "insert", table }) as ReturnType<typeof db.insert>,
 )
 const deleteSpy = spyOn(db, "delete").mockImplementation(
-  (table: unknown) => createChain({ type: "delete", table }) as ReturnType<typeof db.delete>,
+  (table: unknown) =>
+    createChain({ type: "delete", table }) as ReturnType<typeof db.delete>,
 )
 
 afterAll(() => {

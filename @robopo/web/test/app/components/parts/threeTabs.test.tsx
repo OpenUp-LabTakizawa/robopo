@@ -1,5 +1,5 @@
-import { cleanup, render, within } from "@testing-library/react"
 import { afterEach, describe, expect, test } from "bun:test"
+import { cleanup, render, within } from "@testing-library/react"
 import { ThreeTabs } from "@/app/components/parts/threeTabs"
 
 afterEach(cleanup)
@@ -13,6 +13,14 @@ const defaultProps = {
   tab3: <div>Content3</div>,
 }
 
+function queryOrThrow(container: HTMLElement, selector: string): HTMLElement {
+  const el = container.querySelector(selector)
+  if (!el) {
+    throw new Error(`Element not found: ${selector}`)
+  }
+  return el as HTMLElement
+}
+
 describe("ThreeTabs", () => {
   test("renders both desktop and mobile layouts in DOM", () => {
     const { container } = render(<ThreeTabs {...defaultProps} />)
@@ -24,7 +32,7 @@ describe("ThreeTabs", () => {
 
   test("desktop layout contains all tab titles as level-1 headings", () => {
     const { container } = render(<ThreeTabs {...defaultProps} />)
-    const desktop = container.querySelector(".md\\:flex")!
+    const desktop = queryOrThrow(container, ".md\\:flex")
     const headings = within(desktop).getAllByRole("heading", { level: 1 })
     expect(headings).toHaveLength(3)
     const texts = headings.map((h) => h.textContent)
@@ -33,7 +41,7 @@ describe("ThreeTabs", () => {
 
   test("desktop layout contains all tab contents", () => {
     const { container } = render(<ThreeTabs {...defaultProps} />)
-    const desktop = container.querySelector(".md\\:flex")!
+    const desktop = queryOrThrow(container, ".md\\:flex")
     expect(desktop.textContent).toContain("Content1")
     expect(desktop.textContent).toContain("Content2")
     expect(desktop.textContent).toContain("Content3")
@@ -41,15 +49,17 @@ describe("ThreeTabs", () => {
 
   test("mobile layout renders radio tabs", () => {
     const { container } = render(<ThreeTabs {...defaultProps} />)
-    const mobile = container.querySelector(".md\\:hidden")!
+    const mobile = queryOrThrow(container, ".md\\:hidden")
     const radios = within(mobile).getAllByRole("tab")
     expect(radios).toHaveLength(3)
   })
 
   test("first tab is checked by default in mobile layout", () => {
     const { container } = render(<ThreeTabs {...defaultProps} />)
-    const mobile = container.querySelector(".md\\:hidden")!
-    const radios = mobile.querySelectorAll<HTMLInputElement>('input[type="radio"]')
+    const mobile = queryOrThrow(container, ".md\\:hidden")
+    const radios = mobile.querySelectorAll<HTMLInputElement>(
+      'input[type="radio"]',
+    )
     expect(radios[0].defaultChecked).toBe(true)
     expect(radios[1].defaultChecked).toBe(false)
     expect(radios[2].defaultChecked).toBe(false)
@@ -71,7 +81,9 @@ describe("ThreeTabs", () => {
         <ThreeTabs {...defaultProps} />
       </>,
     )
-    const radios = container.querySelectorAll<HTMLInputElement>('input[type="radio"]')
+    const radios = container.querySelectorAll<HTMLInputElement>(
+      'input[type="radio"]',
+    )
     const names = new Set(Array.from(radios).map((r) => r.name))
     // Two instances should produce two distinct radio group names
     expect(names.size).toBe(2)

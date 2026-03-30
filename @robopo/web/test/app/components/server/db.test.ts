@@ -1,11 +1,11 @@
 import { afterAll, beforeEach, describe, expect, spyOn, test } from "bun:test"
-import { db } from "@/app/lib/db/db"
 import {
   getCompetitionList,
   getCourseList,
   getPlayerList,
   getUmpireList,
 } from "@/app/components/server/db"
+import { db } from "@/app/lib/db/db"
 import { competition, course, player, umpire } from "@/app/lib/db/schema"
 
 let lastFromTable: unknown = null

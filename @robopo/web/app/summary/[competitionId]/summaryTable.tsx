@@ -67,7 +67,10 @@ export function SummaryTable({ id, courseList, ipponBashiPoint }: Props) {
     const order = sortKey === key && sortOrder === "asc" ? "desc" : "asc"
     setSortKey(key)
     setSortOrder(order)
-    function parseDateValue(value: any, tCourseMaxResult: any): number {
+    function parseDateValue(
+      value: CourseSummary[keyof CourseSummary],
+      tCourseMaxResult: number | null,
+    ): number {
       if (
         !value ||
         value === "-" ||
@@ -79,12 +82,16 @@ export function SummaryTable({ id, courseList, ipponBashiPoint }: Props) {
       return Number.isNaN(t) ? (order === "asc" ? Infinity : -Infinity) : t
     }
 
-    const parseZekken = (value: any): number | string => {
+    const parseZekken = (
+      value: CourseSummary[keyof CourseSummary],
+    ): number | string => {
       const num = Number(value)
       return !Number.isNaN(num) ? num : typeof value === "string" ? value : ""
     }
 
-    const parseNumberFallback = (value: any): number => {
+    const parseNumberFallback = (
+      value: CourseSummary[keyof CourseSummary],
+    ): number => {
       if (typeof value === "number") {
         return value
       }
@@ -157,8 +164,16 @@ export function SummaryTable({ id, courseList, ipponBashiPoint }: Props) {
   ) {
     return (
       <td
-        className={`border border-gray-400 p-2 ${key ? "cursor-pointer" : ""}}`}
+        className={`border border-gray-400 p-2 ${key ? "cursor-pointer" : ""}`}
         onClick={() => key && handleSort(key)}
+        onKeyDown={(e) => {
+          if (key && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault()
+            handleSort(key)
+          }
+        }}
+        role={key ? "button" : undefined}
+        tabIndex={key ? 0 : undefined}
       >
         <div className="flex-none flex-row 2xl:flex">
           <p>

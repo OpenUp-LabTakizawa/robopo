@@ -7,7 +7,9 @@ export default async function HeaderServer(): Promise<{
   const session = await auth.api.getSession({
     headers: await headers(),
   })
-  if (!session) return { session: null }
+  if (!session) {
+    return { session: null }
+  }
   return {
     session: {
       user: {
