@@ -1,10 +1,15 @@
 import {
+  deleteCompetitionById,
   deleteCourseById,
   deletePlayerById,
   deleteUmpireById,
 } from "@/app/lib/db/queries/queries"
 
-export async function deleteById(req: Request, mode: string) {
+export async function deleteById(
+  req: Request,
+  mode: string,
+  afterDelete?: () => Promise<Record<string, unknown>>,
+) {
   const { id } = await req.json()
 
   try {
@@ -17,8 +22,9 @@ export async function deleteById(req: Request, mode: string) {
     } else {
       await deleteMode(mode, id)
     }
+    const extra = afterDelete ? await afterDelete() : {}
     return Response.json(
-      { success: true, message: `${mode} deleted successfully.` },
+      { success: true, message: `${mode} deleted successfully.`, ...extra },
       { status: 200 },
     )
   } catch (error) {
@@ -42,6 +48,9 @@ export async function deleteById(req: Request, mode: string) {
         break
       case "course":
         await deleteCourseById(id)
+        break
+      case "competition":
+        await deleteCompetitionById(id)
         break
       default:
         throw new Error(`Invalid mode: ${mode}`)
