@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import type React from "react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { CommonCheckboxList } from "@/app/components/common/commonList"
 import { CommonRegister } from "@/app/components/common/commonRegister"
 import type {
@@ -50,10 +50,6 @@ export function View({
     }
     return ids.map((id) => `${id}`).join("/")
   }
-
-  useEffect(() => {
-    setCommonDataList(commonDataList)
-  }, [commonDataList])
 
   // Action options for selected items
   function ItemManager({ commonId }: { commonId: number[] | null }) {
