@@ -1,6 +1,6 @@
+import { deleteById } from "@/app/api/delete"
 import { getCompetitionList } from "@/app/components/server/db"
 import { createCompetition } from "@/app/lib/db/queries/insert"
-import { deleteCompetitionById } from "@/app/lib/db/queries/queries"
 
 export async function POST(req: Request) {
   const { name } = await req.json()
@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     return Response.json(
       {
         success: false,
-        message: "An error occurred while creating the course.",
+        message: "An error occurred while creating the competition.",
         error: error,
       },
       { status: 500 },
@@ -24,22 +24,7 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  const { id } = await req.json()
-  try {
-    const result = await deleteCompetitionById(id)
-    const newList = await getCompetitionList()
-    return Response.json(
-      { success: true, data: result, newList: newList },
-      { status: 200 },
-    )
-  } catch (error) {
-    return Response.json(
-      {
-        success: false,
-        message: "An error occurred while deleting the course.",
-        error: error,
-      },
-      { status: 500 },
-    )
-  }
+  return await deleteById(req, "competition", async () => ({
+    newList: await getCompetitionList(),
+  }))
 }
