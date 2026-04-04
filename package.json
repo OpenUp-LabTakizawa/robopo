@@ -37,8 +37,8 @@
     "docs-build": "bun --filter @robopo/docs build",
     "lint": "biome lint --write",
     "format": "biome format --write",
-    "check": "biome check --write",
-    "test:app": "bun --filter @robopo/web test:app",
+    "lint:fix": "biome check --write",
+    "test:unit": "bun --filter @robopo/web test:unit",
     "test:e2e": "bun --filter @robopo/web test:e2e",
     "test:report": "bun --filter @robopo/web test:report",
     "db:seed": "bun --filter @robopo/web db:seed"

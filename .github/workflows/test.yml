@@ -65,7 +65,7 @@ jobs:
         env:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
         run: |
-          bun test:app &> >(tee -p test.log) || STATUS=$?
+          bun test:unit &> >(tee -p test.log) || STATUS=$?
           if [ ${STATUS:-0} -ne 0 ]; then
             echo "is_success=false" >> $GITHUB_OUTPUT
           else
