@@ -31,8 +31,8 @@
     "start": "next start",
     "lint": "biome lint --write",
     "format": "biome format --write",
-    "check": "biome check --write",
-    "test:app": "bun test test/app --preload ./happydom.tsx",
+    "lint:fix": "biome check --write",
+    "test:unit": "bun test test/unit --preload ./happydom.ts",
     "test:e2e": "playwright test",
     "test:report": "playwright show-report",
     "db:seed": "bun run app/lib/db/seed.ts"

@@ -2,7 +2,9 @@
 
 ## Project Overview
 
-ROBOPO is a scoring and calculation web application for the "Robosava" robotics competition held at Kodomo Tech Caravan events. It handles course scoring, result aggregation, and competition management (course/player/umpire registration).
+ROBOPO is a scoring and calculation web application for the "Robosava"
+robotics competition held at Kodomo Tech Caravan events.
+It handles course scoring, result aggregation, and competition management (course/player/umpire registration).
 
 ## Repository Structure
 
@@ -26,7 +28,7 @@ Bun workspace monorepo with two packages:
 
 ### Code Style
 
-- Biome enforces formatting and linting. Run `bun run check` before committing.
+- Biome enforces formatting and linting. Run `bun lint:fix` before committing.
 - Indent with spaces, no semicolons (ASI), sorted Tailwind classes (`useSortedClasses`).
 - All comments in English. UI-facing strings (labels, messages) are in Japanese.
 - Use `@/` path alias for imports within `@robopo/web` (maps to project root).
@@ -36,7 +38,7 @@ Bun workspace monorepo with two packages:
 - Schema defined in `@robopo/web/app/lib/db/schema.ts` (single file for all tables including Better Auth).
 - Drizzle config at `@robopo/web/drizzle.config.ts`.
 - Apply schema changes with `bunx drizzle-kit push`.
-- Seed data with `bun run db:seed`.
+- Seed data with `bun db:seed`.
 - Reserved course IDs: `-1` (THE Ippon Bashi), `-2` (Sensor Course).
 
 ### Authentication
@@ -51,7 +53,7 @@ Bun workspace monorepo with two packages:
 
 ### File Organization (`@robopo/web`)
 
-```
+```bash
 app/
   @auth/           — Auth modal routes (parallel route)
   api/             — API route handlers
@@ -83,8 +85,8 @@ lib/
 ```bash
 bun run dev          # Start Next.js dev server
 bun run build        # Production build
-bun run check        # Biome lint + format
-bun run test:app     # Unit tests
+bun run lint:fix     # Biome lint + format
+bun run test:unit    # Unit tests
 bun run test:e2e     # Playwright e2e tests
 bun run db:seed      # Seed database with test data
 bun run docs-dev     # Start docs dev server
