@@ -10,6 +10,10 @@ run = ["bun lint:fix --unsafe", "mise lint:md"]
 description = "Check markdown files for linting issues"
 run = "markdownlint-cli2 '**/*.md'"
 
+[tasks.setup-env]
+description = "Setup environment variables for @robopo/web"
+run = "bun run setup-env"
+
 [tasks.update]
 description = "Update bun dependencies and reinstall with isolated linker"
 run = ["bun update", "bun i --linker=isolated", "mise prep"]

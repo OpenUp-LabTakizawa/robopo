@@ -41,7 +41,8 @@
     "test:unit": "bun --filter @robopo/web test:unit",
     "test:e2e": "bun --filter @robopo/web test:e2e",
     "test:report": "bun --filter @robopo/web test:report",
-    "db:seed": "bun --filter @robopo/web db:seed"
+    "db:seed": "bun --filter @robopo/web db:seed",
+    "setup-env": "bun run scripts/setup-env.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.10",
