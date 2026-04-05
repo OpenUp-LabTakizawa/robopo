@@ -34,37 +34,53 @@ git clone https://github.com/OpenUp-LabTakizawa/robopo
 cd robopo && bun i
 ```
 
-### 3. Develop the app
+### 3. Set up environment variables
+
+`@robopo/web/.env` requires the following environment variables.
+
+| Variable | Description | Default |
+|---|---|---|
+| `BETTER_AUTH_URL` | Better Auth authentication server URL | `http://localhost:3000` |
+| `BETTER_AUTH_SECRET` | Better Auth secret key (random string) | None (auto-generated) |
+| `DATABASE_URL` | Neon Serverless Postgres connection URL | None |
+
+Run the following command to create the `.env` file interactively.
+
+```bash
+bun run setup-env
+```
+
+### 4. Develop the app
 
 ```bash
 bun dev
 ```
 
-### 4. Test the app
+### 5. Test the app
 
 ```bash
 bun test:unit
 ```
 
-### 5. E2E Test
+### 6. E2E Test
 
 ```bash
 bun test:e2e
 ```
 
-### 6. Format and Lint the files
+### 7. Format and Lint the files
 
 ```bash
 bun lint:fix
 ```
 
-### 7. Build the app
+### 8. Build the app
 
 ```bash
 bun run build
 ```
 
-### 8. Start the app
+### 9. Start the app
 
 ```bash
 bun start

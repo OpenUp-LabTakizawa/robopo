@@ -84,6 +84,30 @@ sidebar_position: 1
 - ドキュメント生成
   - [Docusaurus](https://docusaurus.io/)
 
+## 環境変数
+
+`@robopo/web` パッケージでは以下の環境変数が必要となる。
+
+| 変数名 | 説明 | 必須 |
+|---|---|---|
+| `BETTER_AUTH_URL` | Better Auth の認証サーバー URL。ローカル開発では `http://localhost:3000` | ✅ |
+| `BETTER_AUTH_SECRET` | Better Auth の認証用シークレットキー。ランダムな文字列を設定する | ✅ |
+| `DATABASE_URL` | Neon Serverless Postgres の接続 URL | ✅ |
+
+### セットアップ方法
+
+以下のコマンドで対話的に `.env` ファイルを作成できる。
+
+```bash
+bun run setup-env
+```
+
+mise を使用している場合は以下でも実行可能。
+
+```bash
+mise run setup-env
+```
+
 ## サイトマップ
 
 <div id="iframe-container" style={{ position: "relative", width: "100%", paddingBottom: "66.67%" }}>
