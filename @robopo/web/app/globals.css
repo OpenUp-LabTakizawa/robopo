@@ -1,5 +1,7 @@
 @import "tailwindcss";
-@plugin "daisyui";
+@plugin "daisyui" {
+  themes: robopo --default;
+}
 
 @source "./**/*.{js,ts,jsx,tsx,mdx}";
 
@@ -11,14 +13,39 @@
   );
 }
 
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
+/* DaisyUI custom theme */
+@plugin "daisyui/theme" {
+  name: "robopo";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+  --color-base-100: #f8fafc;
+  --color-base-200: #f1f5f9;
+  --color-base-300: #e2e8f0;
+  --color-base-content: #1e293b;
+  --color-primary: #0f766e;
+  --color-primary-content: #ffffff;
+  --color-secondary: #14b8a6;
+  --color-secondary-content: #ffffff;
+  --color-accent: #f97316;
+  --color-accent-content: #ffffff;
+  --color-neutral: #1f2937;
+  --color-neutral-content: #f8fafc;
+  --color-info: #0ea5e9;
+  --color-info-content: #ffffff;
+  --color-success: #22c55e;
+  --color-success-content: #ffffff;
+  --color-warning: #f59e0b;
+  --color-warning-content: #ffffff;
+  --color-error: #ef4444;
+  --color-error-content: #ffffff;
+  --rounded-box: 0.75rem;
+  --rounded-btn: 0.5rem;
+  --animation-btn: 0.2s;
+  --animation-input: 0.2s;
+  --btn-focus-scale: 0.97;
+}
 
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
   *,
   ::after,
@@ -35,68 +62,19 @@
 
 @layer utilities {
   :root {
-    --foreground-rgb: 0, 0, 0;
-    /* --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255; */
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --foreground-rgb: 255, 255, 255;
-      --background-start-rgb: 0, 0, 0;
-      --background-end-rgb: 0, 0, 0;
-    }
+    --foreground-rgb: 30, 41, 59;
   }
 
   body {
     color: rgb(var(--foreground-rgb));
-    background: linear-gradient(
-        to bottom,
-        transparent,
-        rgb(var(--background-end-rgb))
-      )
-      rgb(var(--background-start-rgb));
+    background-color: #f8fafc;
   }
 }
 
-.gradient-button {
-  background: radial-gradient(
-    circle,
-    rgba(144, 238, 144, 1) 0%,
-    rgba(0, 128, 0, 1) 100%
-  );
-  border: none;
-  padding: 0;
-  color: #fff;
-  text-align: center;
-  cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s;
-  position: relative;
-  overflow: hidden;
-}
-
-.gradient-button:hover {
-  transform: scale(1.05);
-}
-
-.gradient-button:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(
-    circle,
-    rgba(144, 238, 144, 1) 0%,
-    rgba(0, 128, 0, 1) 100%
-  );
-  z-index: 0;
-}
-
-.gradient-button span {
-  z-index: 1; /* 文字を前面に表示 */
+/* Score display - tabular numbers for alignment */
+.score-display {
+  font-variant-numeric: tabular-nums;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 /* hide default password visibility toggle button */

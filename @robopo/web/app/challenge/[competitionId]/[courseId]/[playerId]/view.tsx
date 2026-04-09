@@ -11,14 +11,15 @@ export function View({
   playerData,
   competitionId,
   courseId,
+  umpireId,
 }: {
   courseData: SelectCourse
   playerData: SelectPlayer
   competitionId: number
   courseId: number
+  umpireId: number
 }) {
   const playerId = playerData.id
-  const umpireId = 1 // 一旦1
   const [isEnabled, setIsEnabled] = useState(true)
   useEffect(() => {
     if (!isEnabled) {

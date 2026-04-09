@@ -81,79 +81,80 @@ function IpponBashiSection({
   handleNext,
 }: IpponBashiSectionProps) {
   return (
-    <div className="relative flex h-[calc(100vh-100px)] w-full flex-col justify-items-center">
-      <div className="grid w-full justify-items-center">
-        <p className="font-bold text-xl">THE 一本橋</p>
-      </div>
-      <div className="grid h-1/2 w-full grid-cols-2 justify-items-center">
-        <div className="flex flex-col">
-          <div className="stats shadow-sm">
-            <div className="stat">
-              <div className="stat-title font-bold text-3xl text-orange-600">
-                現在:
-              </div>
-              <div className="stat-value font-bold text-3xl text-orange-600">
-                {pointCount}ポイント
-              </div>
-              <p className="font-bold text-3xl text-orange-600">
-                {isRetry ? "2回目" : "1回目"}
-                {nowMission < IPPON_BASHI_SIZE - 1 ? "行き" : "帰り"}
-              </p>
-            </div>
-          </div>
-          <p className="mt-5 ml-3 text-lg">パネルをタップ</p>
-          <p className="ml-3 text-lg">で進みます</p>
+    <div className="flex h-[calc(100dvh-3.5rem)] w-full flex-col">
+      {/* Status bar */}
+      <div className="flex items-center justify-between border-base-300 border-b bg-base-100 px-4 py-2">
+        <div className="flex items-center gap-3">
+          <span className="rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary text-sm">
+            THE 一本橋
+          </span>
+          <span className="rounded-full bg-accent/10 px-3 py-1 font-semibold text-accent text-sm">
+            {isRetry ? "2回目" : "1回目"}
+            {nowMission < IPPON_BASHI_SIZE - 1 ? " 行き" : " 帰り"}
+          </span>
+        </div>
+        <div className="score-display text-right">
+          <p className="text-base-content/50 text-xs">現在のスコア</p>
+          <p className="font-bold text-2xl text-accent">
+            {pointCount}
+            <span className="text-sm">pt</span>
+          </p>
         </div>
       </div>
-      <div className="grid h-1/2 w-full grid-cols-2 justify-items-center">
-        <div className="flex w-full flex-col" />
-        <div className="flex w-full flex-col justify-items-end">
-          <button
-            type="button"
-            className="btn btn-primary m-3 mx-auto"
-            onClick={handleBack}
-            disabled={nowMission === 0}
-          >
-            1つ
-            <BackLabelWithIcon />
-          </button>
-          <button
-            type="button"
-            className="btn btn-accent m-3 mx-auto"
-            onClick={() => setModalOpen(1)}
-          >
-            結果送信
-            <SendIcon />
-          </button>
-          <div className="grid grid-cols-2">
-            <button
-              type="button"
-              className="btn btn-primary m-3 mx-auto"
-              onClick={() => setModalOpen(3)}
-            >
-              コース
-              <br />
-              アウト
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary m-3 mx-auto"
-              onClick={() => setModalOpen(2)}
-              disabled={isRetry}
-            >
-              再挑戦
-            </button>
-          </div>
-          <SoundController />
-        </div>
+
+      {/* Mission hint */}
+      <div className="px-4 py-2 text-center text-base-content/60 text-sm">
+        パネルをタップで進みます
       </div>
-      <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 transform">
+
+      {/* Field - centered */}
+      <div className="flex flex-1 items-center justify-center overflow-hidden px-4">
         <IpponBashiUI
           botPosition={botPosition}
           botDirection={botDirection}
           nextMissionPair={isGoal ? [null, null] : missionPair[nowMission]}
           onPanelClick={handleNext}
         />
+      </div>
+
+      {/* Action bar */}
+      <div className="border-base-300 border-t bg-base-100 px-4 py-3">
+        <div className="flex items-center justify-between gap-3">
+          <button
+            type="button"
+            className="btn btn-outline btn-sm flex-1"
+            onClick={handleBack}
+            disabled={nowMission === 0}
+          >
+            <BackLabelWithIcon />
+          </button>
+          <button
+            type="button"
+            className="btn btn-error btn-sm flex-1"
+            onClick={() => setModalOpen(3)}
+          >
+            コースアウト
+          </button>
+          <button
+            type="button"
+            className="btn btn-warning btn-sm flex-1"
+            onClick={() => setModalOpen(2)}
+            disabled={isRetry}
+          >
+            再挑戦
+          </button>
+          <button
+            type="button"
+            className="btn btn-accent btn-sm flex-1"
+            onClick={() => setModalOpen(1)}
+          >
+            結果送信
+            <SendIcon />
+          </button>
+        </div>
+        <div className="mt-2 flex justify-center">
+          <SoundController />
+        </div>
       </div>
     </div>
   )
@@ -171,7 +172,7 @@ interface NormalChallengeSectionProps {
   loading: boolean
   isSuccess: boolean
   message: string
-  FieldProps: FieldPropsType // You can further type this if you know the shape
+  FieldProps: FieldPropsType
 }
 
 function NormalChallengeSection({
@@ -188,19 +189,36 @@ function NormalChallengeSection({
   FieldProps,
 }: NormalChallengeSectionProps) {
   return (
-    <div className="grid h-full w-screen justify-items-center sm:w-5/6">
+    <div className="flex h-[calc(100dvh-3.5rem)] w-full flex-col">
+      {/* Status bar */}
+      <div className="flex items-center justify-between border-base-300 border-b bg-base-100 px-4 py-2">
+        <span className="rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary text-sm">
+          チャレンジ {FieldProps.isRetry ? "2回目" : "1回目"}
+        </span>
+        <div className="score-display text-right">
+          <p className="text-base-content/50 text-xs">
+            {isGoal ? "クリア" : "現在"}
+          </p>
+          <p className="font-bold text-2xl text-accent">
+            {pointCount}
+            <span className="text-sm">pt</span>
+          </p>
+        </div>
+      </div>
+
+      {/* Goal celebration or Mission info */}
       {isGoal ? (
-        <div className="grid max-h-32 w-full justify-items-center">
-          <p className="font-bold text-2xl text-orange-600">おめでとう!</p>
+        <div className="flex flex-col items-center gap-3 bg-success/5 px-4 py-4">
+          <p className="font-bold text-2xl text-success">おめでとう!</p>
           {pointState[1] !== null && pointState[1] > 0 && (
-            <p className="font-bold text-2xl text-orange-600">
-              ゴールポイント: {pointState[1]}ポイント
+            <p className="text-sm text-success/80">
+              ゴールボーナス: +{pointState[1]}pt
             </p>
           )}
           {isSuccess ? (
             <button
               type="button"
-              className="btn btn-accent mx-auto text-2xl"
+              className="btn btn-success"
               onClick={() => window.location.reload()}
             >
               コース一覧に
@@ -209,64 +227,76 @@ function NormalChallengeSection({
           ) : (
             <button
               type="button"
-              className="btn btn-accent m-3 mx-auto text-2xl"
+              className="btn btn-accent btn-lg"
               onClick={() => setModalOpen(1)}
               disabled={loading}
             >
               {loading ? (
                 <span className="loading loading-spinner" />
               ) : (
-                "結果送信"
+                <>
+                  結果送信
+                  <SendIcon />
+                </>
               )}
             </button>
           )}
-          {message && <p className="mx-auto mt-12">{message}</p>}
+          {message && <p className="text-base-content/60 text-sm">{message}</p>}
         </div>
       ) : (
-        <div className="grid h-full min-h-32 w-full justify-items-center">
-          <p className="font-bold text-3xl text-orange-600">
-            チャレンジ{FieldProps.isRetry ? "2回目" : "1回目"}
-          </p>
-          <p>↓ミッション↓</p>
-          <p className="font-bold text-3xl text-orange-600">
-            {nowMission + 1} :{" "}
-            {missionPair[nowMission][0] === null
-              ? "-"
-              : MissionString[missionPair[nowMission][0]]}
-            {missionPair[nowMission][1] === null
-              ? "-"
-              : missionPair[nowMission][1]}
-            {missionPair[nowMission][0] === null
-              ? "-"
-              : panelOrDegree(missionPair[nowMission][0])}
-          </p>
-          <p>{pointState[nowMission + 2]}ポイント</p>
+        <div className="flex items-center justify-center gap-4 bg-base-200/50 px-4 py-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-bold text-primary-content text-sm">
+            {nowMission + 1}
+          </div>
+          <div>
+            <p className="font-bold text-lg text-primary">
+              {missionPair[nowMission][0] === null
+                ? "-"
+                : MissionString[missionPair[nowMission][0]]}
+              {missionPair[nowMission][1] === null
+                ? ""
+                : ` ${missionPair[nowMission][1]}`}
+              {missionPair[nowMission][0] === null
+                ? ""
+                : panelOrDegree(missionPair[nowMission][0])}
+            </p>
+            <p className="text-accent text-xs">
+              +{pointState[nowMission + 2]}pt
+            </p>
+          </div>
         </div>
       )}
-      <Field {...FieldProps} />
-      <p className="font-bold text-3xl text-orange-600">
-        {isGoal ? "クリア" : "現在"}: {pointCount}ポイント
-      </p>
-      <SoundController />
-      <div className="grid grid-cols-2 gap-4 p-4">
-        <button
-          type="button"
-          className="btn btn-primary mx-auto"
-          onClick={handleBack}
-          disabled={FieldProps.nowMission === 0}
-        >
-          1つ
-          <BackLabelWithIcon />
-        </button>
-        <button
-          type="button"
-          className="btn btn-neutral mx-auto"
-          onClick={() => setModalOpen(1)}
-          disabled={isGoal}
-        >
-          失敗
-        </button>
+
+      {/* Field - centered */}
+      <div className="flex flex-1 items-center justify-center overflow-auto px-4">
+        <Field {...FieldProps} />
       </div>
+
+      {/* Action bar */}
+      {!isGoal && (
+        <div className="border-base-300 border-t bg-base-100 px-4 py-3">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              className="btn btn-outline flex-1"
+              onClick={handleBack}
+              disabled={FieldProps.nowMission === 0}
+            >
+              <BackLabelWithIcon />
+            </button>
+            <button
+              type="button"
+              className="btn btn-error flex-1"
+              onClick={() => setModalOpen(1)}
+            >
+              失敗
+            </button>
+          </div>
+          <div className="mt-2 flex justify-center">
+            <SoundController />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

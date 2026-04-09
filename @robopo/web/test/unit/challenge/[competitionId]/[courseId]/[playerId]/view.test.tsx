@@ -51,6 +51,7 @@ describe("View", () => {
         playerData={playerData}
         competitionId={1}
         courseId={1}
+        umpireId={1}
       />,
     )
 
@@ -65,6 +66,7 @@ describe("View", () => {
         playerData={playerData}
         competitionId={1}
         courseId={1}
+        umpireId={1}
       />,
     )
     expect(getByTestId("challenge")).toBeDefined()
@@ -78,9 +80,23 @@ describe("View", () => {
         playerData={playerData}
         competitionId={1}
         courseId={-2}
+        umpireId={1}
       />,
     )
     expect(getByTestId("sensor-course")).toBeDefined()
     expect(queryByTestId("challenge")).toBeNull()
+  })
+
+  test("passes umpireId to Challenge component", () => {
+    const { getByTestId } = render(
+      <View
+        courseData={courseData}
+        playerData={playerData}
+        competitionId={1}
+        courseId={1}
+        umpireId={5}
+      />,
+    )
+    expect(getByTestId("challenge")).toBeDefined()
   })
 })

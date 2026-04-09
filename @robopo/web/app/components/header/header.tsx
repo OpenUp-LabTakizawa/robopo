@@ -2,7 +2,6 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { DropdownMenu } from "@/app/components/parts/dropdownMenu"
 import { SIGN_IN_CONST, SIGN_OUT_CONST } from "@/app/lib/const"
 import { signOut } from "@/lib/auth-client"
 
@@ -12,57 +11,47 @@ type Props = {
 
 export function Header({ session }: Props) {
   return (
-    <header className="relative flex h-24 flex-row items-center md:h-14">
-      <div className="flex w-full items-center">
-        <Link href="/">
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            className="dark:invert"
-            width={50}
-            height={50}
-            style={{
-              maxWidth: "100%",
-              height: "100%",
-            }}
-          />
-        </Link>
-        <div className="ml-3 hidden lg:inline-block">
-          {session?.user ? (
-            <button
-              onClick={() =>
-                signOut({
-                  fetchOptions: {
-                    onSuccess: () => {
-                      window.location.href = "/"
-                    },
+    <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-base-300 border-b bg-base-100/95 px-4 backdrop-blur-sm sm:px-0">
+      <Link href="/" className="flex items-center gap-2">
+        <Image
+          src="/logo.png"
+          alt="ROBOPO Logo"
+          width={36}
+          height={36}
+          style={{ maxWidth: "100%", height: "auto" }}
+        />
+        <span className="font-bold text-lg text-primary">ROBOPO</span>
+      </Link>
+
+      <div className="flex items-center gap-3">
+        {session?.user && (
+          <span className="hidden text-base-content/60 text-sm sm:inline">
+            {session.user.name}
+          </span>
+        )}
+        {session?.user ? (
+          <button
+            onClick={() =>
+              signOut({
+                fetchOptions: {
+                  onSuccess: () => {
+                    window.location.href = "/"
                   },
-                })
-              }
-              type="button"
-              className="btn btn-primary p-2 text-xl"
-            >
-              {SIGN_OUT_CONST.icon}
-              {SIGN_OUT_CONST.label}
-            </button>
-          ) : (
-            <Link
-              href={SIGN_IN_CONST.href}
-              className="btn btn-primary min-w-0 p-2 text-xl"
-            >
-              {SIGN_IN_CONST.icon}
-              {SIGN_IN_CONST.label}
-            </Link>
-          )}
-        </div>
-      </div>
-      <h1 className="absolute left-1/2 -translate-x-1/2 transform whitespace-nowrap text-center font-semibold text-xl md:text-3xl">
-        ロボサバ大会集計アプリ
-        <br className="md:hidden" />
-        ROBOPO
-      </h1>
-      <div className="flex w-full justify-end">
-        <DropdownMenu session={session} />
+                },
+              })
+            }
+            type="button"
+            className="btn btn-ghost btn-sm"
+          >
+            {SIGN_OUT_CONST.icon}
+            <span className="hidden sm:inline">{SIGN_OUT_CONST.label}</span>
+          </button>
+        ) : (
+          <Link href={SIGN_IN_CONST.href} className="btn btn-primary btn-sm">
+            {SIGN_IN_CONST.icon}
+            <span className="hidden sm:inline">{SIGN_IN_CONST.label}</span>
+          </Link>
+        )}
       </div>
     </header>
   )

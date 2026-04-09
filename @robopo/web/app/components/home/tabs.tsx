@@ -1,36 +1,59 @@
 "use client"
 
-import { CalculatorIcon } from "@heroicons/react/24/outline"
+import {
+  CalculatorIcon,
+  ExclamationTriangleIcon,
+  PlayIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline"
 import type { Route } from "next"
 import Link from "next/link"
 import type React from "react"
-import { useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
 import { COMPETITION_MANAGEMENT_LIST } from "@/app/lib/const"
 import type {
   SelectCompetition,
   SelectCompetitionCourse,
+  SelectCompetitionUmpire,
   SelectCourse,
+  SelectUmpire,
 } from "@/app/lib/db/schema"
 
-function ContentButton({
+function CourseCard({
   name,
   link,
-  icon,
   disabled,
+  onDisabledClick,
 }: {
   name: string
   link: Route
-  icon?: React.JSX.Element
   disabled: boolean
+  onDisabledClick?: () => void
 }) {
+  if (disabled) {
+    return (
+      <button
+        type="button"
+        onClick={onDisabledClick}
+        className="group flex min-h-[72px] w-full cursor-pointer items-center gap-3 rounded-xl border border-base-300 bg-base-200 px-4 py-3 opacity-50 transition-all"
+      >
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-base-300 text-base-content/30 transition-colors">
+          <PlayIcon className="h-5 w-5" />
+        </div>
+        <span className="text-left font-medium text-base">{name}</span>
+      </button>
+    )
+  }
   return (
     <Link
-      href={disabled ? ("" as Route) : link}
-      className={`btn m-3 flex min-h-20 min-w-40 max-w-fit text-2xl ${disabled ? "btn-disabled" : "btn-primary"}`}
+      href={link}
+      className="group flex min-h-[72px] items-center gap-3 rounded-xl border border-base-300 bg-base-100 px-4 py-3 shadow-sm transition-all hover:border-primary/30 hover:shadow-md active:scale-[0.98]"
     >
-      {icon}
-      {name}
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-content">
+        <PlayIcon className="h-5 w-5" />
+      </div>
+      <span className="font-medium text-base">{name}</span>
     </Link>
   )
 }
@@ -39,6 +62,8 @@ type ChallengeTabProps = {
   competitionList: { competitions: SelectCompetition[] }
   courseList: { courses: SelectCourse[] }
   competitionCourseList: { competitionCourseList: SelectCompetitionCourse[] }
+  umpireList: SelectUmpire[]
+  competitionUmpireList: { competitionUmpireList: SelectCompetitionUmpire[] }
 }
 
 type SummaryTabProps = {
@@ -49,9 +74,9 @@ export function ChallengeTab({
   competitionList,
   courseList,
   competitionCourseList,
+  umpireList,
+  competitionUmpireList,
 }: ChallengeTabProps): React.JSX.Element {
-  // 1) Move all “step === 1” filtering into a single memoized array,
-  //    so you don’t repeat .filter() three times or use an inline IIFE:
   const activeCompetitions = useMemo(
     () => competitionList.competitions.filter((c) => c.step === 1),
     [competitionList.competitions],
@@ -59,11 +84,29 @@ export function ChallengeTab({
   const singleCompetition =
     activeCompetitions.length === 1 ? activeCompetitions[0] : null
 
-  // 2) Initialize state from the singleCompetition (if any):
   const [competitionId, setCompetitionId] = useState(singleCompetition?.id ?? 0)
-  const disableCondition = competitionId === 0
+  const [umpireId, setUmpireId] = useState(0)
+  const [showAlert, setShowAlert] = useState(false)
+  const umpireSelectRef = useRef<HTMLSelectElement>(null)
+  const disableCondition = competitionId === 0 || umpireId === 0
 
-  // 3) Memoize filteredCourses as before:
+  const handleDisabledClick = useCallback(() => {
+    if (umpireId === 0) {
+      setShowAlert(true)
+      umpireSelectRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      })
+    }
+  }, [umpireId])
+
+  useEffect(() => {
+    if (showAlert) {
+      const timer = setTimeout(() => setShowAlert(false), 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [showAlert])
+
   const filteredCourses = useMemo(() => {
     if (competitionId === 0) {
       return []
@@ -74,58 +117,132 @@ export function ChallengeTab({
     return courseList.courses.filter((c) => assigned.includes(c.id))
   }, [competitionId, competitionCourseList, courseList.courses])
 
+  const filteredUmpires = useMemo(() => {
+    if (competitionId === 0) {
+      return umpireList
+    }
+    const assignedIds = competitionUmpireList.competitionUmpireList
+      .filter((cu) => cu.competitionId === competitionId)
+      .map((cu) => cu.umpireId)
+    return umpireList.filter((u) => assignedIds.includes(u.id))
+  }, [competitionId, competitionUmpireList, umpireList])
+
   return (
-    <div>
-      {/* 4) Flatten the competition UI into two clear branches */}
+    <div className="space-y-4">
+      {/* Competition selection */}
       {singleCompetition ? (
-        <div className="... flex flex-col">
-          <h2 className="text-xl">開催中大会: {singleCompetition.name}</h2>
+        <div className="flex items-center gap-2 rounded-lg bg-primary/5 px-3 py-2">
+          <span className="text-base-content/60 text-sm">開催中:</span>
+          <span className="font-semibold text-primary">
+            {singleCompetition.name}
+          </span>
         </div>
       ) : (
+        <div>
+          <label
+            htmlFor="competition-select"
+            className="mb-1 block text-base-content/60 text-sm"
+          >
+            大会を選択
+          </label>
+          <select
+            id="competition-select"
+            className="select select-bordered w-full"
+            value={competitionId}
+            onChange={(e) => {
+              setCompetitionId(Number(e.target.value))
+              setUmpireId(0)
+            }}
+          >
+            <option value={0} disabled>
+              大会を選んでください
+            </option>
+            {activeCompetitions.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {/* Umpire selection */}
+      <div>
+        <label
+          htmlFor="umpire-select"
+          className="mb-1 flex items-center gap-1 text-base-content/60 text-sm"
+        >
+          <UserCircleIcon className="h-4 w-4" />
+          採点者を選択
+        </label>
         <select
-          className="select select-bordered m-3 w-50"
-          value={competitionId}
-          onChange={(e) => setCompetitionId(Number(e.target.value))}
+          id="umpire-select"
+          ref={umpireSelectRef}
+          className={`select select-bordered w-full ${showAlert ? "select-warning" : ""}`}
+          value={umpireId}
+          onChange={(e) => {
+            setUmpireId(Number(e.target.value))
+            setShowAlert(false)
+          }}
         >
           <option value={0} disabled>
-            大会を選んでください
+            採点者を選んでください
           </option>
-          {activeCompetitions.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
+          {filteredUmpires.map((u) => (
+            <option key={u.id} value={u.id}>
+              {u.name}
             </option>
           ))}
         </select>
-      )}
+        {showAlert && (
+          <div role="alert" className="alert alert-warning mt-2 py-2">
+            <ExclamationTriangleIcon className="h-5 w-5 shrink-0" />
+            <span className="font-medium text-sm">
+              先に採点者を選択してください
+            </span>
+          </div>
+        )}
+      </div>
 
-      {/* 5) Same for courses: a clear conditional */}
+      {/* Course cards */}
       {filteredCourses.length > 0 ? (
-        <div className="... flex flex-col">
-          {filteredCourses.map((course) => (
-            <ContentButton
-              key={course.id}
-              name={course.name}
-              link={`/challenge/${competitionId}/${course.id}` as Route}
+        <div className="grid gap-3 sm:grid-cols-2">
+          {filteredCourses.map((c) => (
+            <CourseCard
+              key={c.id}
+              name={c.name}
+              link={
+                `/challenge/${competitionId}/${c.id}?umpireId=${umpireId}` as Route
+              }
               disabled={disableCondition}
+              onDisabledClick={handleDisabledClick}
             />
           ))}
-          <ContentButton
+          <CourseCard
             name="THE一本橋"
             link={
-              `/challenge/${competitionId}/${RESERVED_COURSE_IDS.IPPON}` as Route
+              `/challenge/${competitionId}/${RESERVED_COURSE_IDS.IPPON}?umpireId=${umpireId}` as Route
             }
             disabled={disableCondition}
+            onDisabledClick={handleDisabledClick}
           />
-          <ContentButton
+          <CourseCard
             name="センサーコース"
             link={
-              `/challenge/${competitionId}/${RESERVED_COURSE_IDS.SENSOR}` as Route
+              `/challenge/${competitionId}/${RESERVED_COURSE_IDS.SENSOR}?umpireId=${umpireId}` as Route
             }
             disabled={disableCondition}
+            onDisabledClick={handleDisabledClick}
           />
         </div>
+      ) : competitionId === 0 ? (
+        <p className="py-4 text-center text-base-content/40 text-sm">
+          大会を選択するとコースが表示されます
+        </p>
       ) : (
-        <p className="m-3">コース未割り当てです</p>
+        <p className="py-4 text-center text-base-content/40 text-sm">
+          コースが割り当てられていません
+        </p>
       )}
     </div>
   )
@@ -136,47 +253,66 @@ export function SummaryTab({
 }: SummaryTabProps): React.JSX.Element {
   const [competitionId, setCompetitionId] = useState(0)
   const disableCondition = !competitionId || competitionId === 0
+
   return (
-    <div>
-      <select
-        className="select select-bordered m-3 w-50"
-        onChange={(event) => setCompetitionId(Number(event.target.value))}
-        value={competitionId || 0}
-      >
-        <option value={0} disabled>
-          大会を選んでください
-        </option>
-        {competitionList?.competitions?.map((competition) => (
-          <option
-            key={competition.id}
-            value={competition.id}
-            hidden={competition.step === 0}
-          >
-            {competition.name}
+    <div className="space-y-3">
+      <div>
+        <label
+          htmlFor="summary-competition-select"
+          className="mb-1 block text-base-content/60 text-sm"
+        >
+          大会を選択
+        </label>
+        <select
+          id="summary-competition-select"
+          className="select select-bordered w-full"
+          onChange={(event) => setCompetitionId(Number(event.target.value))}
+          value={competitionId || 0}
+        >
+          <option value={0} disabled>
+            大会を選んでください
           </option>
-        ))}
-      </select>
-      <ContentButton
-        name="集計結果"
-        link={`/summary/${competitionId}` as Route}
-        icon={<CalculatorIcon className="h-6 w-6" />}
-        disabled={disableCondition}
-      />
+          {competitionList?.competitions?.map((competition) => (
+            <option
+              key={competition.id}
+              value={competition.id}
+              hidden={competition.step === 0}
+            >
+              {competition.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      {disableCondition ? (
+        <button type="button" className="btn btn-disabled w-full" disabled>
+          <CalculatorIcon className="h-5 w-5" />
+          集計結果を見る
+        </button>
+      ) : (
+        <Link
+          href={`/summary/${competitionId}` as Route}
+          className="btn btn-secondary w-full"
+        >
+          <CalculatorIcon className="h-5 w-5" />
+          集計結果を見る
+        </Link>
+      )}
     </div>
   )
 }
 
 export const ManageTab = (): React.JSX.Element => {
   return (
-    <div className="grid justify-center sm:grid-cols-2 md:flex md:flex-col">
+    <div className="grid gap-2">
       {COMPETITION_MANAGEMENT_LIST.map((btn) => (
-        <ContentButton
+        <Link
           key={btn.href}
-          name={btn.label}
-          link={btn.href}
-          icon={btn.icon}
-          disabled={false}
-        />
+          href={btn.href}
+          className="btn btn-ghost justify-start gap-3 border border-base-300"
+        >
+          {btn.icon}
+          {btn.label}
+        </Link>
       ))}
     </div>
   )
