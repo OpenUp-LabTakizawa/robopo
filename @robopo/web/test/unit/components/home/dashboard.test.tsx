@@ -1,0 +1,59 @@
+import { afterEach, describe, expect, test } from "bun:test"
+import { cleanup, render, screen } from "@testing-library/react"
+import { Dashboard } from "@/app/components/home/dashboard"
+
+afterEach(cleanup)
+
+const defaultProps = {
+  competitionList: {
+    competitions: [
+      { id: 1, name: "Test Competition", step: 1, createdAt: null },
+    ],
+  },
+  courseList: {
+    courses: [
+      {
+        id: 1,
+        name: "Course A",
+        field: null,
+        fieldValid: false,
+        mission: null,
+        missionValid: false,
+        point: null,
+        createdAt: null,
+      },
+    ],
+  },
+  competitionCourseList: {
+    competitionCourseList: [
+      { id: 1, competitionId: 1, courseId: 1, createdAt: null },
+    ],
+  },
+  umpireList: [{ id: 1, name: "Judge A", createdAt: null }],
+  competitionUmpireList: {
+    competitionUmpireList: [
+      { id: 1, competitionId: 1, umpireId: 1, createdAt: null },
+    ],
+  },
+}
+
+describe("Dashboard", () => {
+  test("renders three dashboard cards", () => {
+    const { container } = render(<Dashboard {...defaultProps} />)
+    const cards = container.querySelectorAll(".rounded-box")
+    expect(cards.length).toBe(3)
+  })
+
+  test("renders scoring card with primary variant", () => {
+    const { container } = render(<Dashboard {...defaultProps} />)
+    const primaryCard = container.querySelector(".ring-primary\\/10")
+    expect(primaryCard).toBeTruthy()
+  })
+
+  test("renders card titles", () => {
+    render(<Dashboard {...defaultProps} />)
+    expect(screen.getByText("採点")).toBeTruthy()
+    expect(screen.getByText("集計結果")).toBeTruthy()
+    expect(screen.getByText("大会管理")).toBeTruthy()
+  })
+})
