@@ -35,14 +35,9 @@ export function ChallengeModal({
         {isSuccess ? (
           <div className="flex flex-col items-center gap-4">
             <p className="text-base text-base-content/70">{message}</p>
-            <button
-              type="button"
-              className="btn btn-success w-full"
-              onClick={() => window.location.reload()}
-            >
-              コース一覧に
-              <BackLabelWithIcon />
-            </button>
+            <p className="text-base-content/50 text-sm">
+              ホーム画面へ自動遷移します
+            </p>
           </div>
         ) : (
           <div className="flex flex-col gap-4">
@@ -190,14 +185,9 @@ export function CourseOutModal({
         {isSuccess ? (
           <div className="flex flex-col items-center gap-4">
             <p className="text-base text-base-content/70">{message}</p>
-            <button
-              type="button"
-              className="btn btn-success w-full"
-              onClick={() => window.location.reload()}
-            >
-              コース一覧に
-              <BackLabelWithIcon />
-            </button>
+            <p className="text-base-content/50 text-sm">
+              ホーム画面へ自動遷移します
+            </p>
           </div>
         ) : (
           <div className="flex flex-col gap-4">

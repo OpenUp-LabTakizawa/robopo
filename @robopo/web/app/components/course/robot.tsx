@@ -38,7 +38,7 @@ export function Robot({
 
   return (
     <div style={botStyle}>
-      <Image src="/robot.png" alt="bot" fill sizes="100vw" />
+      <Image src="/robot.png" alt="bot" fill sizes={`${PANEL_SIZE}px`} />
     </div>
   )
 }

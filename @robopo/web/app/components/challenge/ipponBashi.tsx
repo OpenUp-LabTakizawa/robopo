@@ -28,7 +28,7 @@ export function IpponBashiUI({
   for (let i = 0; i < length - 1; i++) {
     field.push(["route"])
   }
-  field.push(["start"])
+  field.push(["startGoal"])
 
   const ipponBashiStyle: React.CSSProperties = {
     position: "relative",

@@ -1,5 +1,12 @@
 import type { NextRequest } from "next/server"
 import { deleteById } from "@/app/api/delete"
+import {
+  checkValidity,
+  deserializeField,
+  deserializeMission,
+  isGoal,
+  isStart,
+} from "@/app/components/course/utils"
 import { createCourse } from "@/app/lib/db/queries/insert"
 import { getCourseById } from "@/app/lib/db/queries/queries"
 import { updateCourse } from "@/app/lib/db/queries/update"
@@ -19,17 +26,27 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { name, field, fieldvalid, mission, missionvalid, point } =
-    await req.json()
+  const { name, field, mission, point } = await req.json()
   const searchParams = req.nextUrl.searchParams
   const rawId = searchParams.get("id")
   const id = rawId ? Number.parseInt(rawId, 10) : null
+
+  const parsedField = field ? deserializeField(field) : null
+  const parsedMission = mission ? deserializeMission(mission) : null
+  const computedFieldValid = parsedField
+    ? isStart(parsedField) && isGoal(parsedField)
+    : false
+  const computedMissionValid =
+    parsedField && parsedMission
+      ? checkValidity(parsedField, parsedMission)
+      : false
+
   const courseData = {
     name: name,
     field: field,
-    fieldValid: fieldvalid,
+    fieldValid: computedFieldValid,
     mission: mission,
-    missionValid: missionvalid,
+    missionValid: computedMissionValid,
     point: point,
   }
 

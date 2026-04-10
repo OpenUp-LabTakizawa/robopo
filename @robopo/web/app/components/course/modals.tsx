@@ -7,6 +7,8 @@ import { useState } from "react"
 import { useFormStatus } from "react-dom"
 import {
   checkValidity,
+  isGoal,
+  isStart,
   serializeField,
   serializeMission,
   serializePoint,
@@ -83,9 +85,9 @@ export function SaveModal({ courseId }: { courseId: number | null }) {
     const courseData = {
       name: name,
       field: serializeField(field),
-      fieldValid: true,
+      fieldvalid: isStart(field) && isGoal(field),
       mission: serializeMission(mission),
-      missionValid: true,
+      missionvalid: checkValidity(field, mission),
       point: serializePoint(point),
     }
 
