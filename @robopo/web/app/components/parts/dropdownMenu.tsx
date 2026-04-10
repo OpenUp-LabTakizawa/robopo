@@ -17,6 +17,7 @@ type Props = {
 
 export function DropdownMenu({ session }: Props) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [signingOut, setSigningOut] = useState(false)
   const status = session?.user ? "authenticated" : "unauthenticated"
 
   return (
@@ -84,20 +85,34 @@ export function DropdownMenu({ session }: Props) {
               {status === "authenticated" ? (
                 <button
                   type="button"
+                  disabled={signingOut}
                   onClick={() => {
+                    setSigningOut(true)
                     setIsMenuOpen(false)
                     signOut({
                       fetchOptions: {
                         onSuccess: () => {
                           window.location.href = "/"
                         },
+                        onError: () => {
+                          setSigningOut(false)
+                        },
                       },
                     })
                   }}
-                  className="mt-10 flex w-fit cursor-pointer rounded-md px-3 py-1 font-medium text-[1.1rem] text-sm text-white hover:bg-slate-500 hover:text-zinc/60"
+                  className="mt-10 flex w-fit cursor-pointer rounded-md px-3 py-1 font-medium text-[1.1rem] text-sm text-white hover:bg-slate-500 hover:text-zinc/60 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {SIGN_OUT_CONST.icon}
-                  {SIGN_OUT_CONST.label}
+                  {signingOut ? (
+                    <>
+                      <span className="loading loading-spinner loading-xs" />
+                      切り替え中
+                    </>
+                  ) : (
+                    <>
+                      {SIGN_OUT_CONST.icon}
+                      {SIGN_OUT_CONST.label}
+                    </>
+                  )}
                 </button>
               ) : (
                 <Link

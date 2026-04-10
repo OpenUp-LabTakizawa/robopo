@@ -77,6 +77,42 @@
   font-family: "Inter", system-ui, sans-serif;
 }
 
+/* Modern modal glassmorphism */
+.modal-box {
+  background: color-mix(in oklch, var(--color-base-100) 85%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid color-mix(in oklch, white 15%, transparent);
+  box-shadow:
+    0 25px 50px -12px oklch(0 0 0 / 0.25),
+    0 0 0 1px oklch(1 0 0 / 0.05);
+  border-radius: 1.5rem;
+  animation: modalIn 0.25s ease-out;
+}
+
+.modal-backdrop {
+  background: oklch(0 0 0 / 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-box {
+    animation: none;
+  }
+}
+
 /* hide default password visibility toggle button */
 input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear,

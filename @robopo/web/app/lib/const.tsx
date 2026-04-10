@@ -26,13 +26,13 @@ export const HOME_CONST: NavItem = {
 }
 
 export const SIGN_IN_CONST: NavItem = {
-  label: "サインイン",
+  label: "ログイン",
   href: "/signIn",
   icon: <ArrowRightEndOnRectangleIcon className="size-6" />,
 }
 
 export const SIGN_OUT_CONST: NavItem = {
-  label: "サインアウト",
+  label: "ログアウト",
   href: "/signOut" as Route,
   icon: <ArrowRightStartOnRectangleIcon className="size-6" />,
 }
