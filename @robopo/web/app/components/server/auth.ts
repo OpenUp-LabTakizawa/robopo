@@ -39,13 +39,13 @@ export async function signInAction(_state: FormState, formData: FormData) {
     })
     return {
       success: true,
-      message: "サインインに成功しました",
+      message: "ログインに成功しました",
     }
   } catch (error) {
     console.error("signInAction error:", error)
     return {
       success: false,
-      message: "サインインに失敗しました",
+      message: "ログインに失敗しました",
     }
   }
 }

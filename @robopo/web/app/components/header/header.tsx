@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import { useState } from "react"
 import { SIGN_IN_CONST, SIGN_OUT_CONST } from "@/app/lib/const"
 import { signOut } from "@/lib/auth-client"
 
@@ -10,6 +11,8 @@ type Props = {
 }
 
 export function Header({ session }: Props) {
+  const [signingOut, setSigningOut] = useState(false)
+
   return (
     <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-base-300 border-b bg-base-100/95 px-4 backdrop-blur-sm sm:px-0">
       <Link href="/" className="flex items-center gap-2">
@@ -31,20 +34,34 @@ export function Header({ session }: Props) {
         )}
         {session?.user ? (
           <button
-            onClick={() =>
+            onClick={() => {
+              setSigningOut(true)
               signOut({
                 fetchOptions: {
                   onSuccess: () => {
                     window.location.href = "/"
                   },
+                  onError: () => {
+                    setSigningOut(false)
+                  },
                 },
               })
-            }
+            }}
             type="button"
+            disabled={signingOut}
             className="btn btn-ghost btn-sm rounded-full"
           >
-            {SIGN_OUT_CONST.icon}
-            <span className="hidden sm:inline">{SIGN_OUT_CONST.label}</span>
+            {signingOut ? (
+              <>
+                <span className="loading loading-spinner loading-xs" />
+                切り替え中
+              </>
+            ) : (
+              <>
+                {SIGN_OUT_CONST.icon}
+                {SIGN_OUT_CONST.label}
+              </>
+            )}
           </button>
         ) : (
           <Link
@@ -53,7 +70,7 @@ export function Header({ session }: Props) {
             aria-label={SIGN_IN_CONST.label}
           >
             {SIGN_IN_CONST.icon}
-            <span className="hidden sm:inline">{SIGN_IN_CONST.label}</span>
+            {SIGN_IN_CONST.label}
           </Link>
         )}
       </div>
