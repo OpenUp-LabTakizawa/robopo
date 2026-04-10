@@ -7,7 +7,6 @@ import {
 } from "@heroicons/react/24/outline"
 import Link from "next/link"
 import { useMemo, useState } from "react"
-import { HomeButton, ReloadButton } from "@/app/components/parts/buttons"
 import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 
 export function View({
@@ -42,15 +41,9 @@ export function View({
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col px-4 py-6">
       {/* Header */}
-      <div className="mb-4 flex items-center justify-between">
-        <div>
-          <p className="text-base-content/60 text-sm">選択中コース</p>
-          <h2 className="font-bold text-primary text-xl">{courseData.name}</h2>
-        </div>
-        <Link href="/" className="btn btn-ghost btn-sm gap-1">
-          <ArrowUturnLeftIcon className="h-4 w-4" />
-          戻る
-        </Link>
+      <div className="mb-4">
+        <p className="text-base-content/60 text-sm">選択中コース</p>
+        <h2 className="font-bold text-primary text-xl">{courseData.name}</h2>
       </div>
 
       {/* Search */}
@@ -103,9 +96,11 @@ export function View({
         </p>
       )}
 
-      <div className="mt-6 flex justify-center gap-3">
-        <ReloadButton />
-        <HomeButton />
+      <div className="mt-6 flex justify-center">
+        <Link href="/" className="btn btn-ghost gap-1">
+          <ArrowUturnLeftIcon className="h-5 w-5" />
+          戻る
+        </Link>
       </div>
     </div>
   )

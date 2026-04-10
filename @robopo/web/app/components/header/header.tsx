@@ -41,13 +41,17 @@ export function Header({ session }: Props) {
               })
             }
             type="button"
-            className="btn btn-ghost btn-sm"
+            className="btn btn-ghost btn-sm rounded-full"
           >
             {SIGN_OUT_CONST.icon}
             <span className="hidden sm:inline">{SIGN_OUT_CONST.label}</span>
           </button>
         ) : (
-          <Link href={SIGN_IN_CONST.href} className="btn btn-primary btn-sm">
+          <Link
+            href={SIGN_IN_CONST.href}
+            className="btn btn-ghost btn-sm rounded-full border border-primary/20 text-primary hover:bg-primary hover:text-primary-content"
+            aria-label={SIGN_IN_CONST.label}
+          >
             {SIGN_IN_CONST.icon}
             <span className="hidden sm:inline">{SIGN_IN_CONST.label}</span>
           </Link>
