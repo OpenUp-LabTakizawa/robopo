@@ -8,10 +8,13 @@ async function seed() {
     // Reserved courses
     await db.execute(sql`
       INSERT INTO course (id, name, field, fieldvalid, mission, missionvalid, point)
-      VALUES (-1, 'THE IpponBashi', 'route;route;route;route;start', TRUE,
+      VALUES (-1, 'THE IpponBashi', 'route;route;route;route;startGoal', TRUE,
         'u;null;mf;1;mf;1;mf;1;mf;1;tr;180;mf;1;mf;1;mf;1;mf;1', TRUE,
         '0;20;1;1;1;1;0;2;2;2;2')
-      ON CONFLICT (id) DO NOTHING
+      ON CONFLICT (id) DO UPDATE SET
+        field = EXCLUDED.field,
+        mission = EXCLUDED.mission,
+        point = EXCLUDED.point
     `)
     await db.execute(sql`
       INSERT INTO course (id, name, fieldvalid, missionvalid)
@@ -68,7 +71,7 @@ async function seed() {
     const courseResult = await db.execute<{ id: number }>(sql`
       INSERT INTO course (name, field, fieldvalid, mission, missionvalid, point)
       VALUES ('TestCourse',
-        'start,null,null;route,null,null;route,null,null',
+        'goal,null,null;route,null,null;start,null,null',
         TRUE,
         'u;null;mf;1;mf;1',
         TRUE,
@@ -123,11 +126,11 @@ async function seed() {
     const course2Result = await db.execute<{ id: number }>(sql`
       INSERT INTO course (name, field, fieldvalid, mission, missionvalid, point)
       VALUES ('TestCourse2',
-        'start,null,null;route,null,null;route,null,null;route,null,null',
+        'goal,route,null;null,route,null;null,start,null',
         TRUE,
-        'u;null;mf;1;mf;1;mr;90',
+        'u;null;mf;1;mf;1;tl;90;mf;1',
         TRUE,
-        '0;15;5;5;10')
+        '0;15;5;5;0;10')
       RETURNING id
     `)
     const testCourse2Id = course2Result.rows[0].id

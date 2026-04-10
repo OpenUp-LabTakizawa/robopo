@@ -216,14 +216,9 @@ function NormalChallengeSection({
             </p>
           )}
           {isSuccess ? (
-            <button
-              type="button"
-              className="btn btn-success"
-              onClick={() => window.location.reload()}
-            >
-              コース一覧に
-              <BackLabelWithIcon />
-            </button>
+            <p className="text-base-content/50 text-sm">
+              ホーム画面へ自動遷移します
+            </p>
           ) : (
             <button
               type="button"
@@ -273,17 +268,17 @@ function NormalChallengeSection({
       </div>
 
       {/* Action bar */}
-      {!isGoal && (
-        <div className="border-base-300 border-t bg-base-100 px-4 py-3">
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              className="btn btn-outline flex-1"
-              onClick={handleBack}
-              disabled={FieldProps.nowMission === 0}
-            >
-              <BackLabelWithIcon />
-            </button>
+      <div className="border-base-300 border-t bg-base-100 px-4 py-3">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            className="btn btn-outline flex-1"
+            onClick={handleBack}
+            disabled={FieldProps.nowMission === 0}
+          >
+            <BackLabelWithIcon />
+          </button>
+          {!isGoal && (
             <button
               type="button"
               className="btn btn-error flex-1"
@@ -291,12 +286,12 @@ function NormalChallengeSection({
             >
               失敗
             </button>
-          </div>
-          <div className="mt-2 flex justify-center">
-            <SoundController />
-          </div>
+          )}
         </div>
-      )}
+        <div className="mt-2 flex justify-center">
+          <SoundController />
+        </div>
+      </div>
     </div>
   )
 }
