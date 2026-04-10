@@ -52,30 +52,34 @@ describe("seed data", () => {
       .where(eq(course.id, RESERVED_COURSE_IDS.IPPON))
       .limit(1)
     expect(ippon).toHaveLength(1)
+    expect(ippon[0].fieldValid).toBe(true)
+    expect(ippon[0].missionValid).toBe(true)
     const field = deserializeField(ippon[0].field ?? "")
     const mission = deserializeMission(ippon[0].mission ?? "")
     expect(checkValidity(field, mission)).toBe(true)
   })
 
-  test("test courses pass checkValidity", async () => {
+  test("TestCourse passes checkValidity", async () => {
     const testCourses = await db
       .select()
       .from(course)
       .where(eq(course.name, "TestCourse"))
       .limit(1)
     expect(testCourses).toHaveLength(1)
-    const field1 = deserializeField(testCourses[0].field ?? "")
-    const mission1 = deserializeMission(testCourses[0].mission ?? "")
-    expect(checkValidity(field1, mission1)).toBe(true)
+    const field = deserializeField(testCourses[0].field ?? "")
+    const mission = deserializeMission(testCourses[0].mission ?? "")
+    expect(checkValidity(field, mission)).toBe(true)
+  })
 
+  test("TestCourse2 passes checkValidity", async () => {
     const testCourses2 = await db
       .select()
       .from(course)
       .where(eq(course.name, "TestCourse2"))
       .limit(1)
     expect(testCourses2).toHaveLength(1)
-    const field2 = deserializeField(testCourses2[0].field ?? "")
-    const mission2 = deserializeMission(testCourses2[0].mission ?? "")
-    expect(checkValidity(field2, mission2)).toBe(true)
+    const field = deserializeField(testCourses2[0].field ?? "")
+    const mission = deserializeMission(testCourses2[0].mission ?? "")
+    expect(checkValidity(field, mission)).toBe(true)
   })
 })

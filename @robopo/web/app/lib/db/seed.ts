@@ -13,7 +13,9 @@ async function seed() {
         '0;20;1;1;1;1;0;2;2;2;2')
       ON CONFLICT (id) DO UPDATE SET
         field = EXCLUDED.field,
+        fieldvalid = EXCLUDED.fieldvalid,
         mission = EXCLUDED.mission,
+        missionvalid = EXCLUDED.missionvalid,
         point = EXCLUDED.point
     `)
     await db.execute(sql`
