@@ -139,20 +139,26 @@ export function RetryButton({
 export function CourseOutButton({
   onClick,
   disabled = false,
+  variant = "solid",
   className: extraClassName,
 }: {
   onClick: () => void
   disabled?: boolean
+  variant?: "solid" | "outline"
   className?: string
 }) {
+  const base =
+    variant === "outline"
+      ? "btn btn-outline btn-error rounded-xl transition-all duration-200"
+      : "btn btn-error rounded-xl transition-all duration-200"
   return (
     <button
       type="button"
-      className={`btn btn-error rounded-xl transition-all duration-200 ${extraClassName ?? ""}`.trim()}
+      className={`${base} ${extraClassName ?? ""}`.trim()}
       onClick={onClick}
       disabled={disabled}
     >
-      <ExclamationTriangleIcon className="size-5" />
+      <ExclamationTriangleIcon className="size-4" />
       コースアウト
     </button>
   )

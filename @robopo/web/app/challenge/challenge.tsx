@@ -125,26 +125,29 @@ function IpponBashiSection({
 
       {/* Action bar */}
       <div className="border-base-300 border-t bg-base-100 px-4 py-3">
-        <div className="flex items-center justify-between gap-3">
+        <div className="grid grid-cols-2 gap-2">
+          {/* 上段: 補助アクション（控えめ） */}
           <BackButton
             onClick={handleBack}
             disabled={nowMission === 0}
             variant="outline"
-            className="btn-sm flex-1"
+            className="btn-sm"
           />
           <CourseOutButton
             onClick={() => setModalOpen(3)}
-            className="btn-sm flex-1"
+            variant="outline"
+            className="btn-sm"
           />
+          {/* 下段: メインアクション（目立つ） */}
           <RetryButton
             onClick={() => setModalOpen(2)}
             label="再挑戦"
             disabled={isRetry}
-            className="btn-sm flex-1"
+            className="min-h-[44px]"
           />
           <SubmitButton
             onClick={() => setModalOpen(1)}
-            className="btn-sm flex-1"
+            className="min-h-[44px] shadow-accent/25 shadow-lg"
           />
         </div>
         <div className="mt-2 flex justify-center">
