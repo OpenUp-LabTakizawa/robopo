@@ -1,8 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useAudioContext } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/audioContext"
 import { Challenge } from "@/app/challenge/challenge"
+import { useNavigationGuard } from "@/app/hooks/useNavigationGuard"
 import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 
 export function View({
@@ -20,26 +21,15 @@ export function View({
 }) {
   const playerId = playerData.id
   const { started } = useAudioContext()
-  const [isEnabled, setIsEnabled] = useState(false)
+  const { setDirty } = useNavigationGuard()
 
   // スタートボタンが押されたら離脱警告を有効化
   useEffect(() => {
     if (started) {
-      setIsEnabled(true)
+      setDirty(true)
     }
-  }, [started])
-
-  useEffect(() => {
-    if (!isEnabled) {
-      return
-    }
-    const handler = (e: BeforeUnloadEvent) => {
-      e.preventDefault()
-      e.returnValue = ""
-    }
-    window.addEventListener("beforeunload", handler)
-    return () => window.removeEventListener("beforeunload", handler)
-  }, [isEnabled])
+    return () => setDirty(false)
+  }, [started, setDirty])
 
   return (
     <div className="flex w-full flex-col items-center justify-center overflow-y-auto pt-10 sm:pt-px">
@@ -52,7 +42,7 @@ export function View({
           courseId={courseId}
           playerId={playerId}
           judgeId={judgeId}
-          setIsEnabled={setIsEnabled}
+          setIsEnabled={setDirty}
         />
       )}
     </div>

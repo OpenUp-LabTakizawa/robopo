@@ -8,7 +8,7 @@ import {
   isStart,
 } from "@/app/components/course/utils"
 import { createCourse } from "@/app/lib/db/queries/insert"
-import { getCourseById } from "@/app/lib/db/queries/queries"
+import { getCourseById, getCourseByName } from "@/app/lib/db/queries/queries"
 import { updateCourse } from "@/app/lib/db/queries/update"
 
 export const revalidate = 0
@@ -33,6 +33,15 @@ export async function POST(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams
   const rawId = searchParams.get("id")
   const id = rawId ? Number.parseInt(rawId, 10) : null
+
+  // Check for duplicate course name
+  const existingCourse = await getCourseByName(name, id ?? undefined)
+  if (existingCourse) {
+    return Response.json(
+      { success: false, message: "このコース名は既に使用されています" },
+      { status: 409 },
+    )
+  }
 
   const parsedField = field ? deserializeField(field) : null
   const parsedMission = mission ? deserializeMission(mission) : null

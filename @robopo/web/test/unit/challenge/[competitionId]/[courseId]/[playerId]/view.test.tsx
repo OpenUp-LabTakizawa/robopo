@@ -11,6 +11,9 @@ const { AudioProvider } = await import(
 const { View } = await import(
   "@/app/challenge/[competitionId]/[courseId]/[playerId]/view"
 )
+const { NavigationGuardProvider } = await import(
+  "@/app/hooks/useNavigationGuard"
+)
 
 const courseData = {
   id: 1,
@@ -36,15 +39,17 @@ const playerData = {
 
 function renderView(courseId = 1) {
   return render(
-    <AudioProvider>
-      <View
-        courseData={courseData}
-        playerData={playerData}
-        competitionId={1}
-        courseId={courseId}
-        judgeId={1}
-      />
-    </AudioProvider>,
+    <NavigationGuardProvider>
+      <AudioProvider>
+        <View
+          courseData={courseData}
+          playerData={playerData}
+          competitionId={1}
+          courseId={courseId}
+          judgeId={1}
+        />
+      </AudioProvider>
+    </NavigationGuardProvider>,
   )
 }
 
@@ -74,15 +79,17 @@ describe("View", () => {
 
   test("passes judgeId to Challenge component", () => {
     const { getByTestId } = render(
-      <AudioProvider>
-        <View
-          courseData={courseData}
-          playerData={playerData}
-          competitionId={1}
-          courseId={1}
-          judgeId={5}
-        />
-      </AudioProvider>,
+      <NavigationGuardProvider>
+        <AudioProvider>
+          <View
+            courseData={courseData}
+            playerData={playerData}
+            competitionId={1}
+            courseId={1}
+            judgeId={5}
+          />
+        </AudioProvider>
+      </NavigationGuardProvider>,
     )
     expect(getByTestId("challenge")).toBeDefined()
   })

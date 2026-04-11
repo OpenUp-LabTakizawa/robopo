@@ -41,7 +41,7 @@ type ChallengeProps = {
   courseId: number
   playerId: number
   judgeId: number
-  setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>
+  setIsEnabled: (value: boolean) => void
 }
 
 type FieldPropsType = {

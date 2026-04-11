@@ -17,7 +17,7 @@ export const competition = pgTable("competition", {
 
 export const course = pgTable("course", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
+  name: text("name").notNull().unique(),
   description: text("description"),
   field: text("field"),
   fieldValid: boolean("fieldvalid").default(false).notNull(),

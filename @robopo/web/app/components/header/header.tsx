@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
+import { useNavigationGuard } from "@/app/hooks/useNavigationGuard"
 import { SIGN_IN_CONST, SIGN_OUT_CONST } from "@/app/lib/const"
 import { signOut } from "@/lib/auth-client"
 
@@ -12,19 +13,32 @@ type Props = {
 
 export function Header({ session }: Props) {
   const [signingOut, setSigningOut] = useState(false)
+  const { isDirty } = useNavigationGuard()
+
+  const logoContent = (
+    <>
+      <Image
+        src="/logo.png"
+        alt="ROBOPO Logo"
+        width={36}
+        height={36}
+        style={{ maxWidth: "100%", height: "auto" }}
+      />
+      <span className="font-bold text-lg text-primary">ROBOPO</span>
+    </>
+  )
 
   return (
     <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-base-300 border-b bg-base-100/95 px-4 backdrop-blur-sm sm:px-0">
-      <Link href="/" className="flex items-center gap-2">
-        <Image
-          src="/logo.png"
-          alt="ROBOPO Logo"
-          width={36}
-          height={36}
-          style={{ maxWidth: "100%", height: "auto" }}
-        />
-        <span className="font-bold text-lg text-primary">ROBOPO</span>
-      </Link>
+      {isDirty ? (
+        <a href="/" className="flex items-center gap-2">
+          {logoContent}
+        </a>
+      ) : (
+        <Link href="/" className="flex items-center gap-2">
+          {logoContent}
+        </Link>
+      )}
 
       <div className="flex items-center gap-3">
         {session?.user && (

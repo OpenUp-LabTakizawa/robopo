@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Inter, Noto_Sans_JP } from "next/font/google"
 import Header from "@/app/components/header/header"
 import HeaderServer from "@/app/components/header/headerServer"
+import { NavigationGuardProvider } from "@/app/hooks/useNavigationGuard"
 import "./globals.css"
 
 const inter = Inter({
@@ -27,11 +28,13 @@ export default async function RootLayout(props: LayoutProps<"/">) {
   return (
     <html lang="ja" className={`${notoSansJP.variable} ${inter.variable}`}>
       <body className="font-[family-name:var(--font-noto-sans-jp)] antialiased">
-        <main className="mx-auto min-h-dvh w-full text-sm sm:px-6 lg:px-12 lg:text-base">
-          <Header session={session} />
-          {props.children}
-          {props.auth}
-        </main>
+        <NavigationGuardProvider>
+          <main className="mx-auto min-h-dvh w-full text-sm sm:px-6 lg:px-12 lg:text-base">
+            <Header session={session} />
+            {props.children}
+            {props.auth}
+          </main>
+        </NavigationGuardProvider>
       </body>
     </html>
   )
