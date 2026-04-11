@@ -38,6 +38,7 @@ export function View({
           field={courseData.field}
           mission={courseData.mission}
           point={courseData.point}
+          courseOutRule={courseData.courseOutRule}
           competitionId={competitionId}
           courseId={courseId}
           playerId={playerId}

@@ -81,6 +81,15 @@ function TableComponent({
           <td className="py-3 font-medium">
             {(common as SelectCourseWithCompetition).name}
           </td>
+          <td className="py-3">
+            {(common as SelectCourseWithCompetition).competitionName?.map(
+              (name) => (
+                <span key={name} className="badge badge-ghost badge-sm mr-1">
+                  {name}
+                </span>
+              ),
+            )}
+          </td>
           <td className="max-w-48 py-3">
             {(common as SelectCourseWithCompetition).description ? (
               <span className="line-clamp-2 text-base-content/70 text-sm">
@@ -96,15 +105,6 @@ function TableComponent({
           >
             {(common as SelectCourseWithCompetition).createdAt?.toLocaleString(
               "ja-JP",
-            )}
-          </td>
-          <td className="py-3">
-            {(common as SelectCourseWithCompetition).competitionName?.map(
-              (name) => (
-                <span key={name} className="badge badge-ghost badge-sm mr-1">
-                  {name}
-                </span>
-              ),
             )}
           </td>
         </>
@@ -139,7 +139,7 @@ function itemNames(type: CommonListProps["type"]): string[] {
   } else if (type === "judge") {
     itemNames.push("ID", "名前", "参加大会")
   } else if (type === "course") {
-    itemNames.push("ID", "コース名", "説明", "作成日時", "使用大会")
+    itemNames.push("ID", "コース名", "使用大会", "説明", "作成日時")
   } else if (type === "competition") {
     itemNames.push("ID", "名前", "開催状況")
   }

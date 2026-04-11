@@ -258,6 +258,7 @@ export async function getCourseSummaryByPlayerId(
     .select({
       firstResult: challenge.firstResult,
       retryResult: challenge.retryResult,
+      detail: challenge.detail,
     })
     .from(challenge)
     .where(

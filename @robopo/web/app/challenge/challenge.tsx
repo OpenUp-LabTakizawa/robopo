@@ -10,7 +10,13 @@ import {
   CourseOutModal,
   RetryModal,
 } from "@/app/challenge/challengeModal"
-import { calcPoint, resultSubmit } from "@/app/components/challenge/utils"
+import {
+  COURSE_OUT_FIRST,
+  COURSE_OUT_RETRY,
+  calcPoint,
+  parseCourseOutRule,
+  resultSubmit,
+} from "@/app/components/challenge/utils"
 import { Field } from "@/app/components/course/field"
 import {
   deserializeField,
@@ -37,6 +43,7 @@ type ChallengeProps = {
   field: string | null
   mission: string | null
   point: string | null
+  courseOutRule: string
   competitionId: number
   courseId: number
   playerId: number
@@ -212,6 +219,7 @@ export function Challenge({
   field,
   mission,
   point,
+  courseOutRule,
   competitionId,
   courseId,
   playerId,
@@ -431,6 +439,22 @@ export function Challenge({
     nowMission,
     isRetry,
   }
+  // Pre-compute course-out submission values
+  const parsedCourseOutRule = parseCourseOutRule(courseOutRule)
+  const courseOutDetail = isRetry ? COURSE_OUT_RETRY : COURSE_OUT_FIRST
+  const courseOutSubmitFirst =
+    parsedCourseOutRule.type === "zero"
+      ? isRetry
+        ? firstResult
+        : 0
+      : firstResult
+  const courseOutSubmitRetry =
+    parsedCourseOutRule.type === "zero"
+      ? isRetry
+        ? 0
+        : retryResult
+      : retryResult
+
   if (field === null || mission === null || point === null) {
     return (
       <>
@@ -501,8 +525,8 @@ export function Challenge({
           setFirstResult={setFirstResult}
           handleSubmit={() =>
             resultSubmit(
-              isRetry ? firstResult : 0,
-              isRetry ? 0 : retryResult,
+              courseOutSubmitFirst,
+              courseOutSubmitRetry,
               competitionId,
               courseId,
               playerId,
@@ -512,6 +536,7 @@ export function Challenge({
               setLoading,
               router,
               setIsEnabled,
+              courseOutDetail,
             )
           }
           handleRetry={handleRetry}
@@ -522,6 +547,7 @@ export function Challenge({
             isRetry ? calcPoint(pointState, firstResult) : pointCount
           }
           retryResultPoint={isRetry ? pointCount : null}
+          courseOutRule={courseOutRule}
         />
       )}
     </>

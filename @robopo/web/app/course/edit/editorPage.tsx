@@ -1,6 +1,7 @@
 "use client"
 
 import {
+  ArrowDownTrayIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline"
@@ -301,7 +302,7 @@ export function EditorPage({
             <button
               type="button"
               disabled
-              className="btn btn-success min-w-28 max-w-fit"
+              className="btn btn-success min-w-28 max-w-fit rounded-xl shadow-lg shadow-success/20 transition-all duration-200"
             >
               保存成功
               <CheckCircleIcon className="size-5" />
@@ -309,7 +310,7 @@ export function EditorPage({
           ) : (
             <button
               type="button"
-              className={`btn min-w-28 max-w-fit ${validation.canSave && !isBusy ? "btn-primary" : "btn-disabled"}`}
+              className={`btn min-w-28 max-w-fit rounded-xl transition-all duration-200 ${validation.canSave && !isBusy ? "btn-primary shadow-lg shadow-primary/20 hover:shadow-primary/30 hover:shadow-xl" : "btn-disabled"}`}
               disabled={!validation.canSave || isBusy}
               onClick={handleSave}
             >
@@ -319,7 +320,10 @@ export function EditorPage({
                   <span className="loading loading-spinner loading-sm" />
                 </>
               ) : (
-                "保存"
+                <>
+                  <ArrowDownTrayIcon className="size-5" />
+                  保存
+                </>
               )}
             </button>
           )}

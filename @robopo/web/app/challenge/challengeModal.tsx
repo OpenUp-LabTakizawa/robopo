@@ -1,5 +1,9 @@
 import type React from "react"
 import {
+  applyCourseOutRule,
+  parseCourseOutRule,
+} from "@/app/components/challenge/utils"
+import {
   BackButton,
   RetryButton,
   SubmitButton,
@@ -152,6 +156,7 @@ export function CourseOutModal({
   message,
   firstResultPoint,
   retryResultPoint,
+  courseOutRule,
 }: {
   setModalOpen: React.Dispatch<React.SetStateAction<number>>
   setFirstResult: React.Dispatch<React.SetStateAction<number>>
@@ -162,12 +167,23 @@ export function CourseOutModal({
   message: string
   firstResultPoint: number | null
   retryResultPoint: number | null
+  courseOutRule: string
 }) {
   function thisHandleRetry() {
     setFirstResult(0)
     handleRetry()
     setModalOpen(0)
   }
+
+  const parsed = parseCourseOutRule(courseOutRule)
+
+  // The course-out attempt score
+  const courseOutEarned =
+    retryResultPoint === null
+      ? (firstResultPoint ?? 0)
+      : (retryResultPoint ?? 0)
+  const courseOutAttemptScore = applyCourseOutRule(courseOutEarned, parsed)
+
   return (
     <dialog className="modal modal-open" onClose={() => setModalOpen(0)}>
       <div className="modal-box max-w-sm">
@@ -188,13 +204,25 @@ export function CourseOutModal({
               <div className="flex items-center justify-between">
                 <span className="text-base-content/60 text-sm">1回目</span>
                 <span className="score-display font-bold text-xl">
-                  {retryResultPoint === null ? 0 : firstResultPoint}pt
+                  {retryResultPoint === null
+                    ? courseOutAttemptScore
+                    : firstResultPoint}
+                  pt
                 </span>
               </div>
               {retryResultPoint !== null && (
                 <div className="mt-2 flex items-center justify-between border-base-300 border-t pt-2">
                   <span className="text-base-content/60 text-sm">2回目</span>
-                  <span className="score-display font-bold text-xl">0pt</span>
+                  <span className="score-display font-bold text-xl">
+                    {courseOutAttemptScore}pt
+                  </span>
+                </div>
+              )}
+              {parsed.type === "penalty" && parsed.penalty > 0 && (
+                <div className="mt-2 border-base-300 border-t pt-2 text-center">
+                  <span className="font-semibold text-error text-xs">
+                    コースアウト減点: -{parsed.penalty}pt
+                  </span>
                 </div>
               )}
             </div>
