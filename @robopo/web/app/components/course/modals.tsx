@@ -69,7 +69,8 @@ export function BackModal() {
 
 // Modal for saving a course
 export function SaveModal({ courseId }: { courseId: number | null }) {
-  const { name, setName, field, mission, point } = useCourseEdit()
+  const { name, setName, description, setDescription, field, mission, point } =
+    useCourseEdit()
   const router = useRouter()
   const [isSuccess, setIsSuccess] = useState<boolean>(false)
   const { pending } = useFormStatus()
@@ -82,6 +83,7 @@ export function SaveModal({ courseId }: { courseId: number | null }) {
 
     const courseData = {
       name: name,
+      description: description.trim() || null,
       field: serializeField(field),
       mission: serializeMission(mission),
       point: serializePoint(point),
@@ -119,6 +121,16 @@ export function SaveModal({ courseId }: { courseId: number | null }) {
               className="input input-bordered w-full max-w-xs"
               value={name}
               onChange={(e) => setName(e.target.value)}
+            />
+          </label>
+          <label htmlFor="description" className="label">
+            説明（任意）
+            <textarea
+              placeholder="コースの説明を入力"
+              className="textarea textarea-bordered w-full max-w-xs"
+              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </label>
           {isSuccess ? <p>コース一覧に戻りますか?</p> : <p>保存しますか?</p>}

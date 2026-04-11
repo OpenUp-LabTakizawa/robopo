@@ -12,10 +12,12 @@ import {
 // Form contents
 export type CourseEditState = {
   name: string
+  description: string
   field: FieldState
   mission: MissionState
   point: PointState
   setName: React.Dispatch<React.SetStateAction<string>>
+  setDescription: React.Dispatch<React.SetStateAction<string>>
   setField: React.Dispatch<React.SetStateAction<FieldState>>
   setMission: React.Dispatch<React.SetStateAction<MissionState>>
   setPoint: React.Dispatch<React.SetStateAction<PointState>>
@@ -24,10 +26,12 @@ export type CourseEditState = {
 // Dummy initial values
 const dummy: CourseEditState = {
   name: "",
+  description: "",
   field: initializeField(),
   mission: [],
   point: [],
   setName: () => {},
+  setDescription: () => {},
   setField: () => {},
   setMission: () => {},
   setPoint: () => {},
@@ -43,6 +47,7 @@ export function CourseEditProvider({
   children: React.ReactNode
 }) {
   const [name, setName] = useState<string>("")
+  const [description, setDescription] = useState<string>("")
   const [field, setField] = useState<FieldState>(initializeField())
   const [mission, setMission] = useState<MissionState>([])
   const [point, setPoint] = useState<PointState>([0, 10])
@@ -51,10 +56,12 @@ export function CourseEditProvider({
     <CourseEditContext.Provider
       value={{
         name,
+        description,
         field,
         mission,
         point,
         setName,
+        setDescription,
         setField,
         setMission,
         setPoint,
