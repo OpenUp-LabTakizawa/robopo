@@ -71,6 +71,21 @@
   }
 }
 
+/* Modern table styling */
+.table th {
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+.table tbody tr {
+  transition: background-color 150ms ease;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
 /* Score display - tabular numbers for alignment */
 .score-display {
   font-variant-numeric: tabular-nums;

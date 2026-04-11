@@ -34,28 +34,40 @@ function TableComponent({
     <>
       {type === "player" && (
         <>
-          {/* <td>{(common as SelectPlayerWithCompetition).id}</td> */}
-          <td>{(common as SelectPlayerWithCompetition).zekken}</td>
-          <td>{(common as SelectPlayerWithCompetition).furigana}</td>
-          <td>{(common as SelectPlayerWithCompetition).name}</td>
-          <td>
+          <td className="py-3">
+            {(common as SelectPlayerWithCompetition).zekken}
+          </td>
+          <td className="py-3">
+            {(common as SelectPlayerWithCompetition).furigana}
+          </td>
+          <td className="py-3 font-medium">
+            {(common as SelectPlayerWithCompetition).name}
+          </td>
+          <td className="py-3">
             {(common as SelectPlayerWithCompetition).competitionName?.map(
               (name) => (
-                <div key={name}>{name}</div>
+                <span key={name} className="badge badge-ghost badge-sm mr-1">
+                  {name}
+                </span>
               ),
             )}
           </td>
-          {/* <td>{(common as SelectPlayerWithCompetition).qr}</td> */}
         </>
       )}
       {type === "umpire" && (
         <>
-          <td>{(common as SelectUmpireWithCompetition).id}</td>
-          <td>{(common as SelectUmpireWithCompetition).name}</td>
-          <td>
+          <td className="py-3 font-mono text-base-content/50 text-xs">
+            {(common as SelectUmpireWithCompetition).id}
+          </td>
+          <td className="py-3 font-medium">
+            {(common as SelectUmpireWithCompetition).name}
+          </td>
+          <td className="py-3">
             {(common as SelectUmpireWithCompetition).competitionName?.map(
               (name) => (
-                <div key={name}>{name}</div>
+                <span key={name} className="badge badge-ghost badge-sm mr-1">
+                  {name}
+                </span>
               ),
             )}
           </td>
@@ -63,17 +75,35 @@ function TableComponent({
       )}
       {type === "course" && (
         <>
-          <td>{(common as SelectCourseWithCompetition).id}</td>
-          <td>{(common as SelectCourseWithCompetition).name}</td>
-          <td suppressHydrationWarning={true}>
+          <td className="py-3 font-mono text-base-content/50 text-xs">
+            {(common as SelectCourseWithCompetition).id}
+          </td>
+          <td className="py-3 font-medium">
+            {(common as SelectCourseWithCompetition).name}
+          </td>
+          <td className="max-w-48 py-3">
+            {(common as SelectCourseWithCompetition).description ? (
+              <span className="line-clamp-2 text-base-content/70 text-sm">
+                {(common as SelectCourseWithCompetition).description}
+              </span>
+            ) : (
+              <span className="text-base-content/30 text-sm">-</span>
+            )}
+          </td>
+          <td
+            className="py-3 text-base-content/60 text-sm"
+            suppressHydrationWarning={true}
+          >
             {(common as SelectCourseWithCompetition).createdAt?.toLocaleString(
               "ja-JP",
             )}
           </td>
-          <td>
+          <td className="py-3">
             {(common as SelectCourseWithCompetition).competitionName?.map(
               (name) => (
-                <div key={name}>{name}</div>
+                <span key={name} className="badge badge-ghost badge-sm mr-1">
+                  {name}
+                </span>
               ),
             )}
           </td>
@@ -81,14 +111,20 @@ function TableComponent({
       )}
       {type === "competition" && (
         <>
-          <td>{(common as SelectCompetition).id}</td>
-          <td>{(common as SelectCompetition).name}</td>
-          <td>
-            {(common as SelectCompetition).step === 0
-              ? "開催前"
-              : (common as SelectCompetition).step === 1
-                ? "開催中"
-                : "終了済"}
+          <td className="py-3 font-mono text-base-content/50 text-xs">
+            {(common as SelectCompetition).id}
+          </td>
+          <td className="py-3 font-medium">
+            {(common as SelectCompetition).name}
+          </td>
+          <td className="py-3">
+            {(common as SelectCompetition).step === 0 ? (
+              <span className="badge badge-outline badge-sm">開催前</span>
+            ) : (common as SelectCompetition).step === 1 ? (
+              <span className="badge badge-primary badge-sm">開催中</span>
+            ) : (
+              <span className="badge badge-ghost badge-sm">終了済</span>
+            )}
           </td>
         </>
       )}
@@ -103,7 +139,7 @@ function itemNames(type: CommonListProps["type"]): string[] {
   } else if (type === "umpire") {
     itemNames.push("ID", "名前", "参加大会")
   } else if (type === "course") {
-    itemNames.push("ID", "コース名", "作成日時", "使用大会")
+    itemNames.push("ID", "コース名", "説明", "作成日時", "使用大会")
   } else if (type === "competition") {
     itemNames.push("ID", "名前", "開催状況")
   }
@@ -155,24 +191,29 @@ export function CommonSelectionList({
 
   return (
     <>
-      {type !== "competition" && (
+      {type !== "competition" && type !== "course" && (
         <h2 className="text-center font-semibold text-xl">
           {typeLabel(type)}一覧
         </h2>
       )}
       <div className="w-full">
-        <div className="m-3 max-h-96 overflow-x-auto overflow-y-auto border sm:h-96">
-          <table className="table-pin-rows table">
+        <div className="m-3 max-h-[28rem] overflow-x-auto overflow-y-auto rounded-xl border border-base-300/50 sm:h-96">
+          <table className="table-pin-rows table-zebra table">
             <thead>
-              <tr>
-                <th>
+              <tr className="border-base-300/50 border-b bg-base-200/60">
+                <th className="w-12">
                   <label>
-                    <input type={selectionMode} disabled={true} />
+                    <input
+                      type={selectionMode}
+                      disabled={true}
+                      className="opacity-0"
+                    />
                   </label>
                 </th>
                 {itemNames(type).map((name) => (
                   <th
                     key={name}
+                    className="py-3 font-semibold text-base-content/50 text-xs uppercase tracking-wider"
                     hidden={
                       selectionMode === "radio" &&
                       type === "player" &&
@@ -189,7 +230,7 @@ export function CommonSelectionList({
                 commonDataList.map((common) => (
                   <tr
                     key={common.id}
-                    className="hover cursor-pointer"
+                    className="cursor-pointer transition-colors duration-150 hover:bg-primary/5"
                     onClick={() => onSelect(common.id)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
@@ -199,7 +240,7 @@ export function CommonSelectionList({
                     }}
                     hidden={common.id < 0}
                   >
-                    <th>
+                    <th className="w-12">
                       <label>
                         <input
                           type={selectionMode}
@@ -207,7 +248,7 @@ export function CommonSelectionList({
                           value={common.id}
                           checked={isChecked(common.id)}
                           onChange={() => onSelect(common.id)}
-                          className="size-4"
+                          className={`size-4 ${selectionMode === "checkbox" ? "checkbox checkbox-primary" : ""}`}
                         />
                       </label>
                     </th>
@@ -216,7 +257,10 @@ export function CommonSelectionList({
                 ))
               ) : (
                 <tr>
-                  <td colSpan={5} className="text-center">
+                  <td
+                    colSpan={itemNames(type).length + 1}
+                    className="py-12 text-center text-base-content/40"
+                  >
                     {emptyLabel(type, selectionMode)}が登録されていません。
                   </td>
                 </tr>

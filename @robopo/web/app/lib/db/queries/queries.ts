@@ -531,6 +531,7 @@ export async function getCourseWithCompetition() {
     .select({
       id: course.id,
       name: course.name,
+      description: course.description,
       createdAt: course.createdAt,
       competitionId: competition.id,
       competitionName: competition.name,
@@ -546,6 +547,7 @@ export function groupByCourse(
   flatRows: {
     id: number
     name: string
+    description: string | null
     createdAt: Date | null
     competitionId: number | null
     competitionName: string | null
@@ -554,6 +556,7 @@ export function groupByCourse(
   return groupByIdWithCompetitions(flatRows, (row) => ({
     id: row.id,
     name: row.name,
+    description: row.description,
     createdAt: row.createdAt,
     competitionId: row.competitionId,
     competitionName: [],

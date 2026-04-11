@@ -52,6 +52,7 @@ export async function getCompetitionCourseList(competitionId: number): Promise<{
     .select({
       id: course.id,
       name: course.name,
+      description: course.description,
       field: course.field,
       fieldValid: course.fieldValid,
       mission: course.mission,

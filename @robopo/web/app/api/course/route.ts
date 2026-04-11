@@ -26,7 +26,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { name, field, mission, point } = await req.json()
+  const { name, description, field, mission, point } = await req.json()
+  const normalizedDescription =
+    typeof description === "string" ? description.trim() || null : null
   const searchParams = req.nextUrl.searchParams
   const rawId = searchParams.get("id")
   const id = rawId ? Number.parseInt(rawId, 10) : null
@@ -43,6 +45,7 @@ export async function POST(req: NextRequest) {
 
   const courseData = {
     name: name,
+    description: normalizedDescription,
     field: field,
     fieldValid: computedFieldValid,
     mission: mission,

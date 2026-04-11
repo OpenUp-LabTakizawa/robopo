@@ -18,6 +18,7 @@ export const competition = pgTable("competition", {
 export const course = pgTable("course", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
+  description: text("description"),
   field: text("field"),
   fieldValid: boolean("fieldvalid").default(false).notNull(),
   mission: text("mission"),
@@ -187,6 +188,7 @@ export type SelectUmpireWithCompetition = {
 export type SelectCourseWithCompetition = {
   id: number
   name: string
+  description: string | null
   createdAt: Date | null
   competitionId: number | null
   competitionName: string[] | null

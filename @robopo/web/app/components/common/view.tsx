@@ -1,5 +1,10 @@
 "use client"
 
+import {
+  LinkIcon,
+  PencilSquareIcon,
+  TrashIcon,
+} from "@heroicons/react/24/outline"
 import Link from "next/link"
 import type React from "react"
 import { useState } from "react"
@@ -54,22 +59,30 @@ export function View({
   // Action options for selected items
   function ItemManager({ commonId }: { commonId: number[] | null }) {
     return (
-      <>
+      <div className="px-4 pt-2 pb-4">
         {successMessage && (
-          <div className="font-semibold text-green-500">{successMessage}</div>
+          <div className="mb-3 rounded-lg bg-success/10 px-4 py-2 font-medium text-sm text-success">
+            {successMessage}
+          </div>
         )}
         {errorMessage && (
-          <div className="font-semibold text-red-500">{errorMessage}</div>
+          <div className="mb-3 rounded-lg bg-error/10 px-4 py-2 font-medium text-error text-sm">
+            {errorMessage}
+          </div>
         )}
-        <div className="flex w-fit">
-          <p className="m-3 flex">選択した{commonString}を</p>
+        <div className="flex flex-wrap items-center gap-2">
+          {type !== "course" && (
+            <span className="text-base-content/60 text-sm">
+              選択した{commonString}を
+            </span>
+          )}
           {type === "course" && (
             <Link
               href={`/course/edit/${createQueryParams(commonId)}`}
-              className={`btn m-3 mx-auto flex ${
+              className={`btn btn-sm gap-1.5 rounded-lg ${
                 commonId?.length !== 1
                   ? "btn-disabled pointer-events-none"
-                  : "btn-primary"
+                  : "btn-primary btn-outline"
               }`}
               aria-disabled={commonId?.length !== 1}
               tabIndex={commonId?.length !== 1 ? -1 : undefined}
@@ -77,6 +90,7 @@ export function View({
                 setSuccessMessage(null)
               }}
             >
+              <PencilSquareIcon className="size-4" />
               編集
             </Link>
           )}
@@ -88,10 +102,10 @@ export function View({
                   ? `/umpire/assign/${createQueryParams(commonId)}`
                   : `/course/assign/${createQueryParams(commonId)}`
             }
-            className={`btn m-3 mx-auto ml-5 flex ${
+            className={`btn btn-sm gap-1.5 rounded-lg ${
               commonId === null || commonId?.length === 0
                 ? "btn-disabled pointer-events-none"
-                : "btn-primary"
+                : "btn-primary btn-outline"
             }`}
             aria-disabled={commonId === null || commonId?.length === 0}
             tabIndex={
@@ -99,6 +113,7 @@ export function View({
             }
             onClick={() => setSuccessMessage(null)}
           >
+            <LinkIcon className="size-4" />
             大会割当
           </Link>
           <Link
@@ -109,10 +124,10 @@ export function View({
                   ? `/umpire/delete/${createQueryParams(commonId)}`
                   : `/course/delete/${createQueryParams(commonId)}`
             }
-            className={`btn m-3 mx-auto ml-5 flex ${
+            className={`btn btn-sm gap-1.5 rounded-lg ${
               commonId === null || commonId?.length === 0
                 ? "btn-disabled pointer-events-none"
-                : "btn-warning"
+                : "btn-error btn-outline"
             }`}
             aria-disabled={commonId === null || commonId?.length === 0}
             tabIndex={
@@ -120,10 +135,11 @@ export function View({
             }
             onClick={() => setSuccessMessage(null)}
           >
+            <TrashIcon className="size-4" />
             削除
           </Link>
         </div>
-      </>
+      </div>
     )
   }
 
@@ -156,17 +172,17 @@ export function View({
     )
   }
 
-  // View without registration UI
+  // View without registration UI (course)
   function ViewNoRegister() {
     const [commonId, setCommonId] = useState<number[]>([])
     return (
       <>
+        <ItemManager commonId={commonId} />
         <CommonCheckboxList
           props={{ type: type, commonDataList: commonDataList }}
           commonId={commonId}
           setCommonId={setCommonId}
         />
-        <ItemManager commonId={commonId} />
       </>
     )
   }
