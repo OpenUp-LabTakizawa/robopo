@@ -7,12 +7,12 @@ import {
 
 // Calculate total score for a course (sum of all attempts)
 export async function sumCoursePoint(
-  compeId: number,
+  competitionId: number,
   playerId: number,
   courseId: number,
 ): Promise<number> {
   const resultArray = await getCourseSummaryByPlayerId(
-    compeId,
+    competitionId,
     courseId,
     playerId,
   )
@@ -20,9 +20,9 @@ export async function sumCoursePoint(
   const pointState = deserializePoint(course?.point || "")
 
   const sum = resultArray.reduce((sum, result) => {
-    let temp: number = calcPoint(pointState, result.results1)
-    if (result.results2 !== null) {
-      temp += calcPoint(pointState, result.results2)
+    let temp: number = calcPoint(pointState, result.firstResult)
+    if (result.retryResult !== null) {
+      temp += calcPoint(pointState, result.retryResult)
     }
     return sum + temp
   }, 0)
@@ -32,12 +32,12 @@ export async function sumCoursePoint(
 
 // Calculate max score for a course (best single attempt)
 export async function maxCoursePoint(
-  compeId: number,
+  competitionId: number,
   playerId: number,
   courseId: number,
 ): Promise<number> {
   const resultArray = await getCourseSummaryByPlayerId(
-    compeId,
+    competitionId,
     courseId,
     playerId,
   )
@@ -46,9 +46,11 @@ export async function maxCoursePoint(
 
   let max = 0
   for (const result of resultArray) {
-    const p1 = calcPoint(pointState, result.results1)
+    const p1 = calcPoint(pointState, result.firstResult)
     const p2 =
-      result.results2 !== null ? calcPoint(pointState, result.results2) : 0
+      result.retryResult !== null
+        ? calcPoint(pointState, result.retryResult)
+        : 0
     max = Math.max(max, p1, p2)
   }
 

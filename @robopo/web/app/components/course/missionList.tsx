@@ -1,28 +1,28 @@
 import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline"
 import { Fragment, useEffect, useState } from "react"
 import {
+  getMissionParameterUnit,
   type MissionState,
   MissionString,
   type MissionValue,
   missionStatePair,
   type PointState,
-  panelOrDegree,
 } from "@/app/components/course/utils"
 
 export function MissionList({
   mission,
   point,
-  radio,
-  handleRadioChange,
-  addOrder,
-  setAddOrder,
+  selectedMissionIndex,
+  handleMissionSelect,
+  insertPosition,
+  setInsertPosition,
 }: {
   mission: MissionState
   point: PointState
-  radio: number | null
-  handleRadioChange: (selectedIndex: number) => void
-  addOrder: number
-  setAddOrder: (mode: number) => void
+  selectedMissionIndex: number | null
+  handleMissionSelect: (selectedIndex: number) => void
+  insertPosition: number
+  setInsertPosition: (mode: number) => void
 }) {
   const [statePair, setMissionStatePair] = useState<
     { id: string; mission: MissionValue[] }[]
@@ -66,10 +66,10 @@ export function MissionList({
           <tbody>
             <tr
               className="hover relative cursor-pointer"
-              onClick={() => handleRadioChange(-2)}
+              onClick={() => handleMissionSelect(-2)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === "Space") {
-                  handleRadioChange(-2)
+                  handleMissionSelect(-2)
                 }
               }}
             >
@@ -79,7 +79,7 @@ export function MissionList({
                   name="radio-1"
                   className="radio"
                   value={-2}
-                  checked={radio === -2}
+                  checked={selectedMissionIndex === -2}
                   readOnly={true}
                 />
               </th>
@@ -102,27 +102,27 @@ export function MissionList({
                       <tr>
                         <th colSpan={4} className="relative h-0 p-0">
                           <AddMissionButton
-                            addOrder={addOrder}
-                            setAddOrder={setAddOrder}
+                            insertPosition={insertPosition}
+                            setInsertPosition={setInsertPosition}
                             index={TOP_INSERT_INDEX} // For top insertion only
-                            handleRadioChange={handleRadioChange}
+                            handleMissionSelect={handleMissionSelect}
                           />
                         </th>
                       </tr>
-                      {addOrder === TOP_INSERT_INDEX && (
+                      {insertPosition === TOP_INSERT_INDEX && (
                         <AddMissionItem
-                          radio={radio}
-                          handleRadioChange={handleRadioChange}
+                          selectedMissionIndex={selectedMissionIndex}
+                          handleMissionSelect={handleMissionSelect}
                         />
                       )}
                     </>
                   )}
                   <tr
                     className="hover relative cursor-pointer"
-                    onClick={() => handleRadioChange(index)}
+                    onClick={() => handleMissionSelect(index)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === "Space") {
-                        handleRadioChange(index)
+                        handleMissionSelect(index)
                       }
                     }}
                   >
@@ -132,21 +132,21 @@ export function MissionList({
                         name="radio-1"
                         className="radio"
                         value={index}
-                        checked={radio === index}
+                        checked={selectedMissionIndex === index}
                         readOnly={true}
                       />
                       <AddMissionButton
-                        addOrder={addOrder}
-                        setAddOrder={setAddOrder}
+                        insertPosition={insertPosition}
+                        setInsertPosition={setInsertPosition}
                         index={index}
-                        handleRadioChange={handleRadioChange}
+                        handleMissionSelect={handleMissionSelect}
                       />
                     </th>
                     <td>{index + 1}</td>
                     <td>
                       {mission[0] === null ? "-" : MissionString[mission[0]]}
                       {mission[1] === null ? "-" : mission[1]}
-                      {panelOrDegree(mission[0])}
+                      {getMissionParameterUnit(mission[0])}
                     </td>
                     <td>
                       {Array.isArray(point[index + 2])
@@ -154,26 +154,26 @@ export function MissionList({
                         : point[index + 2]}
                     </td>
                   </tr>
-                  {addOrder === index && (
+                  {insertPosition === index && (
                     <AddMissionItem
-                      radio={radio}
-                      handleRadioChange={handleRadioChange}
+                      selectedMissionIndex={selectedMissionIndex}
+                      handleMissionSelect={handleMissionSelect}
                     />
                   )}
                 </Fragment>
               ))
             ) : (
               <AddMissionItem
-                radio={radio}
-                handleRadioChange={handleRadioChange}
+                selectedMissionIndex={selectedMissionIndex}
+                handleMissionSelect={handleMissionSelect}
               />
             )}
             <tr
               className="hover cursor-pointer"
-              onClick={() => handleRadioChange(-3)}
+              onClick={() => handleMissionSelect(-3)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === "Space") {
-                  handleRadioChange(-3)
+                  handleMissionSelect(-3)
                 }
               }}
             >
@@ -183,7 +183,7 @@ export function MissionList({
                   name="radio-1"
                   className="radio"
                   value={-3}
-                  checked={radio === -3}
+                  checked={selectedMissionIndex === -3}
                   readOnly={true}
                 />
               </th>
@@ -206,15 +206,15 @@ export function MissionList({
 }
 
 const AddMissionButton = ({
-  addOrder,
-  setAddOrder,
+  insertPosition,
+  setInsertPosition,
   index,
-  handleRadioChange,
+  handleMissionSelect,
 }: {
-  addOrder: number
-  setAddOrder: (mode: number) => void
+  insertPosition: number
+  setInsertPosition: (mode: number) => void
   index: number
-  handleRadioChange: (index: number) => void
+  handleMissionSelect: (index: number) => void
 }) => {
   return (
     <button
@@ -222,15 +222,14 @@ const AddMissionButton = ({
       className="absolute -bottom-4 -left-4 cursor-pointer rounded-full border bg-white shadow"
       onClick={(e) => {
         e.stopPropagation()
-        setAddOrder(addOrder === -1 ? index : -1)
-        handleRadioChange(-1) // Select row to add
-        console.log("addOrder", addOrder)
+        setInsertPosition(insertPosition === -1 ? index : -1)
+        handleMissionSelect(-1) // Select row to add
       }}
     >
-      {addOrder === -1 ? (
+      {insertPosition === -1 ? (
         <PlusCircleIcon className="size-5 text-blue-500" />
       ) : (
-        addOrder === index && (
+        insertPosition === index && (
           <MinusCircleIcon className="size-5 text-red-500" />
         )
       )}
@@ -239,19 +238,19 @@ const AddMissionButton = ({
 }
 
 const AddMissionItem = ({
-  radio,
-  handleRadioChange,
+  selectedMissionIndex,
+  handleMissionSelect,
 }: {
-  radio: number | null
-  handleRadioChange: (index: number) => void
+  selectedMissionIndex: number | null
+  handleMissionSelect: (index: number) => void
 }) => {
   return (
     <tr
       className="hover cursor-pointer"
-      onClick={() => handleRadioChange(-1)}
+      onClick={() => handleMissionSelect(-1)}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === "Space") {
-          handleRadioChange(-1)
+          handleMissionSelect(-1)
         }
       }}
     >
@@ -261,7 +260,7 @@ const AddMissionItem = ({
           name="radio-1"
           className="radio"
           value={-1}
-          checked={radio === -1}
+          checked={selectedMissionIndex === -1}
           readOnly={true}
         />
       </th>

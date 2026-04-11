@@ -2,20 +2,16 @@ import { AssignModal } from "@/app/components/common/commonModal"
 import { getCompetitionList } from "@/app/components/server/db"
 import type { SelectCompetition } from "@/app/lib/db/schema"
 
-export default async function AssignUmpire({
+export default async function AssignJudge({
   params,
 }: {
-  params: Promise<{ umpireId: number[] }>
+  params: Promise<{ judgeId: number[] }>
 }) {
-  const { umpireId } = await params
+  const { judgeId } = await params
   const competitionList: { competitions: SelectCompetition[] } =
     await getCompetitionList()
 
   return (
-    <AssignModal
-      ids={umpireId}
-      type="umpire"
-      competitionList={competitionList}
-    />
+    <AssignModal ids={judgeId} type="judge" competitionList={competitionList} />
   )
 }

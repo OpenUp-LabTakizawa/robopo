@@ -1,4 +1,4 @@
-export default function Layout(props: LayoutProps<"/umpire">) {
+export default function Layout(props: LayoutProps<"/judge">) {
   return (
     <>
       {props.children}

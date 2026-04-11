@@ -31,10 +31,10 @@ const defaultProps = {
       { id: 1, competitionId: 1, courseId: 1, createdAt: null },
     ],
   },
-  umpireList: [{ id: 1, name: "Judge A", createdAt: null }],
-  competitionUmpireList: {
-    competitionUmpireList: [
-      { id: 1, competitionId: 1, umpireId: 1, createdAt: null },
+  judgeList: [{ id: 1, name: "Judge A", createdAt: null }],
+  competitionJudgeList: {
+    competitionJudgeList: [
+      { id: 1, competitionId: 1, judgeId: 1, createdAt: null },
     ],
   },
 }

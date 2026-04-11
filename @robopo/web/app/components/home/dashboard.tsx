@@ -10,17 +10,17 @@ import { ChallengeTab, ManageTab, SummaryTab } from "@/app/components/home/tabs"
 import type {
   SelectCompetition,
   SelectCompetitionCourse,
-  SelectCompetitionUmpire,
+  SelectCompetitionJudge,
   SelectCourse,
-  SelectUmpire,
+  SelectJudge,
 } from "@/app/lib/db/schema"
 
 type DashboardProps = {
   competitionList: { competitions: SelectCompetition[] }
   courseList: { courses: SelectCourse[] }
   competitionCourseList: { competitionCourseList: SelectCompetitionCourse[] }
-  umpireList: SelectUmpire[]
-  competitionUmpireList: { competitionUmpireList: SelectCompetitionUmpire[] }
+  judgeList: SelectJudge[]
+  competitionJudgeList: { competitionJudgeList: SelectCompetitionJudge[] }
 }
 
 function DashboardCard({
@@ -63,8 +63,8 @@ export function Dashboard({
   competitionList,
   courseList,
   competitionCourseList,
-  umpireList,
-  competitionUmpireList,
+  judgeList,
+  competitionJudgeList,
 }: DashboardProps) {
   return (
     <div className="mx-auto max-w-4xl px-4 py-6">
@@ -80,8 +80,8 @@ export function Dashboard({
               competitionList={competitionList}
               courseList={courseList}
               competitionCourseList={competitionCourseList}
-              umpireList={umpireList}
-              competitionUmpireList={competitionUmpireList}
+              judgeList={judgeList}
+              competitionJudgeList={competitionJudgeList}
             />
           </DashboardCard>
         </div>

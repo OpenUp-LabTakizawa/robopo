@@ -2,8 +2,8 @@ import { and, eq } from "drizzle-orm"
 import { db } from "@/app/lib/db/db"
 import {
   competitionCourse,
+  competitionJudge,
   competitionPlayer,
-  competitionUmpire,
 } from "@/app/lib/db/schema"
 
 const tableMap = {
@@ -19,11 +19,11 @@ const tableMap = {
     compCol: competitionCourse.competitionId,
     idKey: "courseId" as const,
   },
-  umpire: {
-    table: competitionUmpire,
-    idCol: competitionUmpire.umpireId,
-    compCol: competitionUmpire.competitionId,
-    idKey: "umpireId" as const,
+  judge: {
+    table: competitionJudge,
+    idCol: competitionJudge.judgeId,
+    compCol: competitionJudge.competitionId,
+    idKey: "judgeId" as const,
   },
 } as const
 

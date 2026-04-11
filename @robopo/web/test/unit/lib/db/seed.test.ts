@@ -6,17 +6,13 @@ import {
   deserializeMission,
 } from "@/app/components/course/utils"
 import { db } from "@/app/lib/db/db"
-import { course, umpire } from "@/app/lib/db/schema"
+import { course, judge } from "@/app/lib/db/schema"
 
 describe("seed data", () => {
-  test("test umpire exists in database", async () => {
-    const result = await db
-      .select()
-      .from(umpire)
-      .where(eq(umpire.id, 1))
-      .limit(1)
+  test("test judge exists in database", async () => {
+    const result = await db.select().from(judge).where(eq(judge.id, 1)).limit(1)
     expect(result).toHaveLength(1)
-    expect(result[0].name).toBe("TestUmpire")
+    expect(result[0].name).toBe("TestJudge")
   })
 
   for (const courseName of ["TestCourse", "TestCourse2"]) {

@@ -5,15 +5,15 @@ import {
   challenge,
   competition,
   competitionCourse,
+  competitionJudge,
   competitionPlayer,
-  competitionUmpire,
   course,
+  judge,
   player,
   type SelectCourse,
   type SelectCourseWithCompetition,
+  type SelectJudgeWithCompetition,
   type SelectPlayerWithCompetition,
-  type SelectUmpireWithCompetition,
-  umpire,
 } from "@/app/lib/db/schema"
 
 // Delete course from DB by ID
@@ -71,21 +71,17 @@ export async function deleteChallengeById(id: number) {
     .returning({ deletedId: challenge.id })
 }
 
-// Delete umpire from DB by ID
-export async function deleteUmpireById(id: number) {
+// Delete judge from DB by ID
+export async function deleteJudgeById(id: number) {
   return await db
-    .delete(umpire)
-    .where(eq(umpire.id, id))
-    .returning({ deletedId: umpire.id })
+    .delete(judge)
+    .where(eq(judge.id, id))
+    .returning({ deletedId: judge.id })
 }
 
-// Get umpire by ID
-export async function getUmpireById(id: number) {
-  const result = await db
-    .select()
-    .from(umpire)
-    .where(eq(umpire.id, id))
-    .limit(1)
+// Get judge by ID
+export async function getJudgeById(id: number) {
+  const result = await db.select().from(judge).where(eq(judge.id, id)).limit(1)
   return result.length > 0 ? result[0] : null
 }
 
@@ -116,25 +112,25 @@ function firstCountSubquery(
   return sql`
     (SELECT SUM(attempts_up_to_max) FROM (
       SELECT ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
-      GREATEST(result1, COALESCE(result2, 0)) AS result,
-      CASE WHEN result1 IS NOT NULL THEN 1 ELSE 0 END + CASE WHEN result2 IS NOT NULL THEN 1 ELSE 0 END AS attempts_up_to_max
+      GREATEST(first_result, COALESCE(retry_result, 0)) AS result,
+      CASE WHEN first_result IS NOT NULL THEN 1 ELSE 0 END + CASE WHEN retry_result IS NOT NULL THEN 1 ELSE 0 END AS attempts_up_to_max
       FROM challenge
       WHERE player_id = ${playerIdRef}
       AND course_id = ${courseId}
-      AND (result1 IS NOT NULL OR result2 IS NOT NULL)
+      AND (first_result IS NOT NULL OR retry_result IS NOT NULL)
     ) AS RankedAttempts
       WHERE attempt_number <= (
         SELECT MIN(attempt_number)
         FROM (
           SELECT ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
-          GREATEST(result1, COALESCE(result2, 0)) AS result
+          GREATEST(first_result, COALESCE(retry_result, 0)) AS result
           FROM challenge
           WHERE player_id = ${playerIdRef}
           AND course_id = ${courseId}
           AND competition_id = ${competitionId}
         ) AS Attempts
         WHERE result = (
-          SELECT MAX(GREATEST(result1, COALESCE(result2, 0)))
+          SELECT MAX(GREATEST(first_result, COALESCE(retry_result, 0)))
           FROM challenge
           WHERE player_id = ${playerIdRef}
           AND course_id = ${courseId}
@@ -156,18 +152,18 @@ function firstTimeSubquery(
         SELECT
           ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
           created_at,
-          GREATEST(result1, COALESCE(result2, 0)) AS result
+          GREATEST(first_result, COALESCE(retry_result, 0)) AS result
         FROM challenge
         WHERE
           player_id = ${playerIdRef}
           AND course_id = ${courseId}
-          AND (result1 IS NOT NULL OR result2 IS NOT NULL)
+          AND (first_result IS NOT NULL OR retry_result IS NOT NULL)
       ) AS RankedAttemptsWithDate
       WHERE attempt_number = (
         SELECT MIN(attempt_number) FROM (
           SELECT
             ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
-            GREATEST(result1, COALESCE(result2, 0)) AS result
+            GREATEST(first_result, COALESCE(retry_result, 0)) AS result
           FROM challenge
           WHERE
             player_id = ${playerIdRef}
@@ -175,7 +171,7 @@ function firstTimeSubquery(
             AND competition_id = ${competitionId}
         ) AS Attempts
         WHERE result = (
-          SELECT MAX(GREATEST(result1, COALESCE(result2, 0)))
+          SELECT MAX(GREATEST(first_result, COALESCE(retry_result, 0)))
           FROM challenge
           WHERE
             player_id = ${playerIdRef}
@@ -187,29 +183,21 @@ function firstTimeSubquery(
   `
 }
 
-// SQL helper: max result across result1 and result2 for a specific course
+// SQL helper: max result across firstResult and retryResult for a specific course
 function maxResultExpr(courseIdExpr: number | ReturnType<typeof sql>) {
-  return sql`MAX(CASE WHEN ${challenge.courseId} = ${courseIdExpr} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`
+  return sql`MAX(CASE WHEN ${challenge.courseId} = ${courseIdExpr} THEN GREATEST(${challenge.firstResult}, COALESCE(${challenge.retryResult}, 0)) ELSE NULL END)`
 }
 
-// SQL helper: total challenge count (counting retries as 2) for a specific course
-function totalChallengeCountExpr(courseId: number) {
-  return sql`SUM(CASE
-    WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-    ELSE 0
-  END)`
-}
-
-// SQL helper: course attempt count (counting retries as 2) for a specific course
-function tCourseCountExpr(courseId: number) {
-  return sql`SUM(CASE WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END) ELSE 0 END)`
+// SQL helper: attempt count (counting retries as 2) for a specific course
+function attemptCountExpr(courseId: number) {
+  return sql`SUM(CASE WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.retryResult} IS NULL THEN 1 ELSE 2 END) ELSE 0 END)`
 }
 
 // Get data based on specific competition_id and course_id
-// firstTCourseCount gets the max from result1 and result2,
-// then sums the count of result1 and result2 (ordered by created_at and id asc) until the max is reached.
+// firstMaxAttemptCount gets the max from firstResult and retryResult,
+// then sums the count of firstResult and retryResult (ordered by created_at and id asc) until the max is reached.
 // Even when not completed, it shows the count up to the current max result, so display should toggle based on completion status.
-// firstTCourseTime gets the created_at of the entry found by firstTCourseCount.
+// firstMaxAttemptTime gets the created_at of the entry found by firstMaxAttemptCount.
 export async function getCourseSummary(
   competitionId: number,
   courseId: number,
@@ -219,20 +207,20 @@ export async function getCourseSummary(
       playerId: player.id,
       playerName: player.name,
       playerFurigana: player.furigana,
-      playerZekken: player.zekken,
-      firstTCourseCount: firstCountSubquery(
+      playerBibNumber: player.bibNumber,
+      firstMaxAttemptCount: firstCountSubquery(
         player.id,
         competitionId,
         courseId,
-      ).as("firstTCourseCount"),
-      firstTCourseTime: firstTimeSubquery(
+      ).as("firstMaxAttemptCount"),
+      firstMaxAttemptTime: firstTimeSubquery(
         player.id,
         competitionId,
         courseId,
-      ).as("firstTCourseTime"),
-      tCourseCount: tCourseCountExpr(courseId).as("tCourseCount"),
-      tCourseMaxResult: maxResultExpr(courseId).as("tCourseMaxResult"),
-      challengeCount: totalChallengeCountExpr(courseId).as("challengeCount"),
+      ).as("firstMaxAttemptTime"),
+      attemptCount: attemptCountExpr(courseId).as("attemptCount"),
+      maxResult: maxResultExpr(courseId).as("maxResult"),
+      challengeCount: attemptCountExpr(courseId).as("challengeCount"),
     })
     .from(player)
     .leftJoin(challenge, eq(player.id, challenge.playerId))
@@ -251,8 +239,8 @@ export async function getCourseSummaryByPlayerId(
   // Get results as array
   return await db
     .select({
-      results1: challenge.result1,
-      results2: challenge.result2,
+      firstResult: challenge.firstResult,
+      retryResult: challenge.retryResult,
     })
     .from(challenge)
     .where(
@@ -280,9 +268,9 @@ export async function getPlayerResult(
         competitionId,
         courseId,
       ).as("firstCount"),
-      tCourseCount: tCourseCountExpr(courseId).as("tCourseCount"),
-      tCourseMaxResult: maxResultExpr(courseId).as("tCourseMaxResult"),
-      challengeCount: totalChallengeCountExpr(courseId).as("challengeCount"),
+      attemptCount: attemptCountExpr(courseId).as("attemptCount"),
+      maxResultForCourse: maxResultExpr(courseId).as("maxResultForCourse"),
+      challengeCount: attemptCountExpr(courseId).as("challengeCount"),
     })
     .from(challenge)
     .where(
@@ -351,7 +339,7 @@ export async function getChallengeCount(
   const result = await db
     .select({
       challengeCount:
-        sql`SUM(CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)`.as(
+        sql`SUM(CASE WHEN ${challenge.retryResult} IS NULL THEN 1 ELSE 2 END)`.as(
           "challengeCount",
         ),
     })
@@ -414,7 +402,7 @@ export async function getPlayersWithCompetition() {
       id: player.id,
       name: player.name,
       furigana: player.furigana,
-      zekken: player.zekken,
+      bibNumber: player.bibNumber,
       competitionId: competition.id,
       competitionName: competition.name,
     })
@@ -459,7 +447,7 @@ export function groupByPlayer(
     id: number
     name: string
     furigana: string | null
-    zekken: string | null
+    bibNumber: string | null
     competitionId: number | null
     competitionName: string | null
   }[],
@@ -468,36 +456,36 @@ export function groupByPlayer(
     id: row.id,
     name: row.name,
     furigana: row.furigana,
-    zekken: row.zekken,
+    bibNumber: row.bibNumber,
     competitionId: row.competitionId,
     competitionName: [],
   }))
 }
 
-// Get umpires with their competitions
-export async function getUmpireWithCompetition() {
+// Get judges with their competitions
+export async function getJudgeWithCompetition() {
   return await db
     .select({
-      id: umpire.id,
-      name: umpire.name,
+      id: judge.id,
+      name: judge.name,
       competitionId: competition.id,
       competitionName: competition.name,
     })
-    .from(umpire)
-    .leftJoin(competitionUmpire, eq(umpire.id, competitionUmpire.umpireId))
-    .leftJoin(competition, eq(competitionUmpire.competitionId, competition.id))
-    .orderBy(umpire.id)
+    .from(judge)
+    .leftJoin(competitionJudge, eq(judge.id, competitionJudge.judgeId))
+    .leftJoin(competition, eq(competitionJudge.competitionId, competition.id))
+    .orderBy(judge.id)
 }
 
-// Group flat rows by umpire
-export function groupByUmpire(
+// Group flat rows by judge
+export function groupByJudge(
   flatRows: {
     id: number
     name: string
     competitionId: number | null
     competitionName: string | null
   }[],
-): SelectUmpireWithCompetition[] {
+): SelectJudgeWithCompetition[] {
   return groupByIdWithCompetitions(flatRows, (row) => ({
     id: row.id,
     name: row.name,

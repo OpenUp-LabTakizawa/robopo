@@ -2,11 +2,11 @@ import { afterAll, beforeEach, describe, expect, spyOn, test } from "bun:test"
 import {
   getCompetitionList,
   getCourseList,
+  getJudgeList,
   getPlayerList,
-  getUmpireList,
 } from "@/app/components/server/db"
 import { db } from "@/app/lib/db/db"
-import { competition, course, player, umpire } from "@/app/lib/db/schema"
+import { competition, course, judge, player } from "@/app/lib/db/schema"
 
 let lastFromTable: unknown = null
 let mockResult: unknown[] = []
@@ -43,10 +43,10 @@ describe("server/db.ts data fetching functions", () => {
     expect(result).toHaveLength(1)
   })
 
-  test("getUmpireList queries umpire table", async () => {
+  test("getJudgeList queries judge table", async () => {
     mockResult = [{ id: 1, name: "U1" }]
-    const result = await getUmpireList()
-    expect(lastFromTable).toBe(umpire)
+    const result = await getJudgeList()
+    expect(lastFromTable).toBe(judge)
     expect(result).toHaveLength(1)
   })
 

@@ -3,15 +3,21 @@ import { createChallenge } from "@/app/lib/db/queries/insert"
 export const revalidate = 0
 
 export async function POST(req: Request) {
-  const { result1, result2, competitionId, courseId, playerId, umpireId } =
-    await req.json()
+  const {
+    firstResult,
+    retryResult,
+    competitionId,
+    courseId,
+    playerId,
+    judgeId,
+  } = await req.json()
   const challengeData = {
-    result1: result1,
-    result2: result2,
+    firstResult: firstResult,
+    retryResult: retryResult,
     competitionId: competitionId,
     courseId: courseId,
     playerId: playerId,
-    umpireId: umpireId,
+    judgeId: judgeId,
   }
   try {
     const result = await createChallenge(challengeData)

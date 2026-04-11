@@ -9,13 +9,13 @@ export default async function Challenge({
   searchParams,
 }: {
   params: Promise<{ competitionId: number; courseId: number }>
-  searchParams: Promise<{ umpireId?: string }>
+  searchParams: Promise<{ judgeId?: string }>
 }) {
   const { competitionId, courseId } = await params
-  const { umpireId } = await searchParams
+  const { judgeId } = await searchParams
 
-  const parsedUmpireId = umpireId ? Number(umpireId) : null
-  if (!parsedUmpireId || Number.isNaN(parsedUmpireId) || parsedUmpireId <= 0) {
+  const parsedJudgeId = judgeId ? Number(judgeId) : null
+  if (!parsedJudgeId || Number.isNaN(parsedJudgeId) || parsedJudgeId <= 0) {
     redirect("/")
   }
 
@@ -30,7 +30,7 @@ export default async function Challenge({
       initialPlayerDataList={initialPlayerDataList}
       competitionId={competitionId}
       courseId={courseId}
-      umpireId={parsedUmpireId}
+      judgeId={parsedJudgeId}
     />
   ) : (
     <div className="flex w-full flex-col items-center justify-center overflow-y-auto">

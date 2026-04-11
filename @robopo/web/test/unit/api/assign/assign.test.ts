@@ -3,8 +3,8 @@ import { assignById, unassignById } from "@/app/api/assign/assign"
 import { db } from "@/app/lib/db/db"
 import {
   competitionCourse,
+  competitionJudge,
   competitionPlayer,
-  competitionUmpire,
 } from "@/app/lib/db/schema"
 
 type Operation = {
@@ -116,15 +116,15 @@ describe("assignById", () => {
     expect(insertOp?.values).toEqual({ competitionId: 2, courseId: 20 })
   })
 
-  test("inserts into competitionUmpire for mode=umpire", async () => {
+  test("inserts into competitionJudge for mode=judge", async () => {
     mockSelectResult = []
     const req = makeRequest({ ids: [30], competitionId: 3 })
-    const res = await assignById(req, "umpire")
+    const res = await assignById(req, "judge")
     expect(res.status).toBe(200)
 
     const insertOp = operations.find((o) => o.type === "insert")
-    expect(insertOp?.table).toBe(competitionUmpire)
-    expect(insertOp?.values).toEqual({ competitionId: 3, umpireId: 30 })
+    expect(insertOp?.table).toBe(competitionJudge)
+    expect(insertOp?.values).toEqual({ competitionId: 3, judgeId: 30 })
   })
 
   test("handles multiple ids in a single request", async () => {
@@ -203,14 +203,14 @@ describe("unassignById", () => {
     expect(deleteOp?.table).toBe(competitionCourse)
   })
 
-  test("deletes from competitionUmpire for mode=umpire", async () => {
+  test("deletes from competitionJudge for mode=judge", async () => {
     mockSelectResult = [{ id: 1 }]
     const req = makeRequest({ ids: [30], competitionId: 3 })
-    const res = await unassignById(req, "umpire")
+    const res = await unassignById(req, "judge")
     expect(res.status).toBe(200)
 
     const deleteOp = operations.find((o) => o.type === "delete")
-    expect(deleteOp?.table).toBe(competitionUmpire)
+    expect(deleteOp?.table).toBe(competitionJudge)
   })
 
   test("handles multiple ids in a single request", async () => {

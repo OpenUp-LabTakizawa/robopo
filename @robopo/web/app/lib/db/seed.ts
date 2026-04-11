@@ -5,23 +5,28 @@ async function seed() {
   await db.execute(sql`BEGIN`)
 
   try {
-    // Test umpires
+    // Test judges
     await db.execute(sql`
-      INSERT INTO umpire (id, name)
-      VALUES (1, 'TestUmpire')
-      ON CONFLICT (id) DO NOTHING
+      INSERT INTO judge (id, name)
+      VALUES (1, 'TestJudge')
+      ON CONFLICT (id) DO UPDATE SET name = 'TestJudge'
     `)
     await db.execute(sql`
-      DELETE FROM competition_umpire WHERE umpire_id IN (
-        SELECT id FROM umpire WHERE name IN ('審判B', '審判C')
+      UPDATE challenge SET judge_id = NULL WHERE judge_id IN (
+        SELECT id FROM judge WHERE name IN ('審判B', '審判C')
       )
     `)
-    await db.execute(sql`DELETE FROM umpire WHERE name IN ('審判B', '審判C')`)
     await db.execute(sql`
-      SELECT setval('umpire_id_seq', (SELECT COALESCE(MAX(id), 0) FROM umpire))
+      DELETE FROM competition_judge WHERE judge_id IN (
+        SELECT id FROM judge WHERE name IN ('審判B', '審判C')
+      )
+    `)
+    await db.execute(sql`DELETE FROM judge WHERE name IN ('審判B', '審判C')`)
+    await db.execute(sql`
+      SELECT setval('judge_id_seq', (SELECT COALESCE(MAX(id), 0) FROM judge))
     `)
     await db.execute(sql`
-      INSERT INTO umpire (name) VALUES ('審判B'), ('審判C')
+      INSERT INTO judge (name) VALUES ('審判B'), ('審判C')
     `)
 
     // Delete existing data to prevent test data duplication
@@ -36,7 +41,7 @@ async function seed() {
       )
     `)
     await db.execute(sql`
-      DELETE FROM competition_umpire WHERE competition_id IN (
+      DELETE FROM competition_judge WHERE competition_id IN (
         SELECT id FROM competition WHERE name IN ('テスト大会', 'ロボサバ2026')
       )
     `)
@@ -47,7 +52,7 @@ async function seed() {
       sql`DELETE FROM course WHERE name IN ('TestCourse', 'TestCourse2')`,
     )
     await db.execute(
-      sql`DELETE FROM player WHERE zekken IN ('001', '002', '003')`,
+      sql`DELETE FROM player WHERE bib_number IN ('001', '002', '003')`,
     )
 
     // Test T-course
@@ -73,7 +78,7 @@ async function seed() {
 
     // Test players
     const playerResult = await db.execute<{ id: number }>(sql`
-      INSERT INTO player (name, furigana, zekken) VALUES
+      INSERT INTO player (name, furigana, bib_number) VALUES
         ('選手A', 'センシュエー', '001'),
         ('選手B', 'センシュビー', '002'),
         ('選手C', 'センシュシー', '003')
@@ -94,13 +99,13 @@ async function seed() {
       `)
     }
 
-    // Assign umpires to competition
-    const umpireRows = await db.execute<{ id: number }>(sql`
-      SELECT id FROM umpire ORDER BY id
+    // Assign judges to competition
+    const judgeRows = await db.execute<{ id: number }>(sql`
+      SELECT id FROM judge ORDER BY id
     `)
-    for (const u of umpireRows.rows) {
+    for (const u of judgeRows.rows) {
       await db.execute(sql`
-        INSERT INTO competition_umpire (competition_id, umpire_id)
+        INSERT INTO competition_judge (competition_id, judge_id)
         VALUES (${competitionId}, ${u.id})
       `)
     }
@@ -139,10 +144,10 @@ async function seed() {
       `)
     }
 
-    // Assign umpires to second competition
-    for (const u of umpireRows.rows) {
+    // Assign judges to second competition
+    for (const u of judgeRows.rows) {
       await db.execute(sql`
-        INSERT INTO competition_umpire (competition_id, umpire_id)
+        INSERT INTO competition_judge (competition_id, judge_id)
         VALUES (${competition2Id}, ${u.id})
       `)
     }

@@ -48,15 +48,15 @@ const competitionCourseList = {
   ],
 }
 
-const umpireList = [
+const judgeList = [
   { id: 1, name: "Judge A", createdAt: null },
   { id: 2, name: "Judge B", createdAt: null },
 ]
 
-const competitionUmpireList = {
-  competitionUmpireList: [
-    { id: 1, competitionId: 1, umpireId: 1, createdAt: null },
-    { id: 2, competitionId: 1, umpireId: 2, createdAt: null },
+const competitionJudgeList = {
+  competitionJudgeList: [
+    { id: 1, competitionId: 1, judgeId: 1, createdAt: null },
+    { id: 2, competitionId: 1, judgeId: 2, createdAt: null },
   ],
 }
 
@@ -70,28 +70,28 @@ describe("ChallengeTab", () => {
         competitionList={singleCompe}
         courseList={courseList}
         competitionCourseList={competitionCourseList}
-        umpireList={umpireList}
-        competitionUmpireList={competitionUmpireList}
+        judgeList={judgeList}
+        competitionJudgeList={competitionJudgeList}
       />,
     )
     expect(screen.getByText("Only Comp")).toBeTruthy()
   })
 
-  test("renders umpire selection dropdown", () => {
+  test("renders judge selection dropdown", () => {
     render(
       <ChallengeTab
         competitionList={competitionList}
         courseList={courseList}
         competitionCourseList={competitionCourseList}
-        umpireList={umpireList}
-        competitionUmpireList={competitionUmpireList}
+        judgeList={judgeList}
+        competitionJudgeList={competitionJudgeList}
       />,
     )
     expect(screen.getByText("Judge A")).toBeTruthy()
     expect(screen.getByText("Judge B")).toBeTruthy()
   })
 
-  test("shows warning when course card clicked without umpire selected", () => {
+  test("shows warning when course card clicked without judge selected", () => {
     const singleCompe = {
       competitions: [{ id: 1, name: "Comp", step: 1, createdAt: null }],
     }
@@ -100,8 +100,8 @@ describe("ChallengeTab", () => {
         competitionList={singleCompe}
         courseList={courseList}
         competitionCourseList={competitionCourseList}
-        umpireList={umpireList}
-        competitionUmpireList={competitionUmpireList}
+        judgeList={judgeList}
+        competitionJudgeList={competitionJudgeList}
       />,
     )
     expect(container.querySelector(".alert-warning")).toBeNull()
@@ -123,8 +123,8 @@ describe("ChallengeTab", () => {
         competitionList={singleCompe}
         courseList={courseList}
         competitionCourseList={competitionCourseList}
-        umpireList={umpireList}
-        competitionUmpireList={competitionUmpireList}
+        judgeList={judgeList}
+        competitionJudgeList={competitionJudgeList}
       />,
     )
     expect(screen.getByText("Course A")).toBeTruthy()
@@ -143,8 +143,8 @@ describe("ChallengeTab", () => {
         competitionList={multiActive}
         courseList={courseList}
         competitionCourseList={competitionCourseList}
-        umpireList={umpireList}
-        competitionUmpireList={competitionUmpireList}
+        judgeList={judgeList}
+        competitionJudgeList={competitionJudgeList}
       />,
     )
     expect(
@@ -152,7 +152,7 @@ describe("ChallengeTab", () => {
     ).toBeTruthy()
   })
 
-  test("renders course links with umpireId in href when umpire is selected", () => {
+  test("renders course links with judgeId in href when judge is selected", () => {
     const singleCompe = {
       competitions: [{ id: 1, name: "Comp", step: 1, createdAt: null }],
     }
@@ -161,22 +161,22 @@ describe("ChallengeTab", () => {
         competitionList={singleCompe}
         courseList={courseList}
         competitionCourseList={competitionCourseList}
-        umpireList={umpireList}
-        competitionUmpireList={competitionUmpireList}
+        judgeList={judgeList}
+        competitionJudgeList={competitionJudgeList}
       />,
     )
 
-    // Select umpire
-    const umpireSelect = screen.getByRole("combobox", {
+    // Select judge
+    const judgeSelect = screen.getByRole("combobox", {
       name: "採点者を選択",
     })
-    fireEvent.change(umpireSelect, { target: { value: "1" } })
+    fireEvent.change(judgeSelect, { target: { value: "1" } })
 
-    // Course card should now render as a link with umpireId
+    // Course card should now render as a link with judgeId
     const courseLink = screen.getByText("Course A").closest("a")
     expect(courseLink).toBeTruthy()
     const href = courseLink?.getAttribute("href")
-    expect(href).toContain("umpireId=1")
+    expect(href).toContain("judgeId=1")
   })
 })
 

@@ -4,13 +4,13 @@ import type React from "react"
 import { useCallback, useState } from "react"
 import {
   getCompetitionList,
+  getJudgeList,
   getPlayerList,
-  getUmpireList,
 } from "@/app/components/server/db"
 import type {
   SelectCompetition,
+  SelectJudge,
   SelectPlayer,
-  SelectUmpire,
 } from "@/app/lib/db/schema"
 
 export function CommonRegister({
@@ -19,17 +19,17 @@ export function CommonRegister({
   setErrorMessage,
   setCommonDataList,
 }: {
-  type: "player" | "umpire" | "course" | "competition"
+  type: "player" | "judge" | "course" | "competition"
   setSuccessMessage: React.Dispatch<React.SetStateAction<string | null>>
   setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>
   setCommonDataList: React.Dispatch<
-    React.SetStateAction<SelectPlayer[] | SelectUmpire[] | SelectCompetition[]>
+    React.SetStateAction<SelectPlayer[] | SelectJudge[] | SelectCompetition[]>
   >
 }) {
   const [loading, setLoading] = useState(false)
   const [name, setName] = useState("")
   const [furigana, setFurigana] = useState("")
-  const [zekken, setZekken] = useState("")
+  const [bibNumber, setBibNumber] = useState("")
   const [qr, setQr] = useState("")
 
   const formItems = [
@@ -45,10 +45,10 @@ export function CommonRegister({
             setValue: setFurigana,
           },
           {
-            label: "zekken",
+            label: "bibNumber",
             dispName: "ゼッケン番号",
-            value: zekken,
-            setValue: setZekken,
+            value: bibNumber,
+            setValue: setBibNumber,
           },
           // { label: "qr", dispName: "QR Code", value: qr, setValue: setQr },
         ]
@@ -63,7 +63,7 @@ export function CommonRegister({
 
     const commonData = {
       name,
-      ...(type === "player" ? { furigana, zekken, qr } : {}),
+      ...(type === "player" ? { furigana, bibNumber, qr } : {}),
     }
 
     try {
@@ -71,8 +71,8 @@ export function CommonRegister({
       const url =
         type === "player"
           ? "/api/player"
-          : type === "umpire"
-            ? "/api/umpire"
+          : type === "judge"
+            ? "/api/judge"
             : "/api/competition"
       const response = await fetch(url, {
         method: "POST",
@@ -90,14 +90,14 @@ export function CommonRegister({
         if (type === "player") {
           setSuccessMessage("プレイヤーが正常に登録されました")
           setFurigana("")
-          setZekken("")
+          setBibNumber("")
           setQr("")
           const players: SelectPlayer[] = await getPlayerList()
           setCommonDataList(players)
-        } else if (type === "umpire") {
+        } else if (type === "judge") {
           setSuccessMessage("採点者が正常に登録されました")
-          const umpires: SelectUmpire[] = await getUmpireList()
-          setCommonDataList(umpires)
+          const judges: SelectJudge[] = await getJudgeList()
+          setCommonDataList(judges)
         } else {
           setSuccessMessage("大会が正常に登録されました")
           const newCommonDataList: { competitions: SelectCompetition[] } =

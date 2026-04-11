@@ -6,8 +6,8 @@ import { CommonRegister } from "@/app/components/common/commonRegister"
 import { BackLabelWithIcon } from "@/app/lib/const"
 import type {
   SelectCompetition,
+  SelectJudge,
   SelectPlayer,
-  SelectUmpire,
 } from "@/app/lib/db/schema"
 
 type CompetitionListTabProps = {
@@ -191,7 +191,7 @@ export function NewCompetitionTab({
         setCommonDataList={
           setCompetitionList as React.Dispatch<
             React.SetStateAction<
-              SelectPlayer[] | SelectUmpire[] | SelectCompetition[]
+              SelectPlayer[] | SelectJudge[] | SelectCompetition[]
             >
           >
         }

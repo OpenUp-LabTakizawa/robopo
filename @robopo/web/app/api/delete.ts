@@ -1,8 +1,8 @@
 import {
   deleteCompetitionById,
   deleteCourseById,
+  deleteJudgeById,
   deletePlayerById,
-  deleteUmpireById,
 } from "@/app/lib/db/queries/queries"
 
 export async function deleteById(
@@ -43,8 +43,8 @@ export async function deleteById(
       case "player":
         await deletePlayerById(id)
         break
-      case "umpire":
-        await deleteUmpireById(id)
+      case "judge":
+        await deleteJudgeById(id)
         break
       case "course":
         await deleteCourseById(id)

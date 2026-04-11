@@ -21,16 +21,18 @@ export default function MissionEdit({
   point,
   setPoint,
 }: MissionEditProps) {
-  const [radio, setRadio] = useState<number | null>(null)
+  const [selectedMissionIndex, setSelectedMissionIndex] = useState<
+    number | null
+  >(null)
   const [selectedMission, setSelectedMission] = useState<MissionValue | null>(
     null,
   )
-  const [selectedParam, setSelectedParam] = useState<number | null>(null) // 選択されたミッションのパラメータ
+  const [selectedParam, setSelectedParam] = useState<number | null>(null) // 選択されたミッションのパラメータ
   const [selectedPoint, setSelectedPoint] = useState<PointValue | null>(null)
-  const [addOrder, setAddOrder] = useState<number>(-1)
+  const [insertPosition, setInsertPosition] = useState<number>(-1)
 
-  function handleRadioChange(selectedIndex: number) {
-    setRadio(selectedIndex) // Save selected index as state
+  function handleMissionSelect(selectedIndex: number) {
+    setSelectedMissionIndex(selectedIndex) // Save selected index as state
     setSelectedMission(null) // Reset selected mission
     setSelectedParam(null) // Reset selected parameter
     setSelectedPoint(null) // Reset selected point
@@ -48,10 +50,10 @@ export default function MissionEdit({
           <MissionList
             mission={mission}
             point={point}
-            radio={radio}
-            handleRadioChange={handleRadioChange}
-            addOrder={addOrder}
-            setAddOrder={setAddOrder}
+            selectedMissionIndex={selectedMissionIndex}
+            handleMissionSelect={handleMissionSelect}
+            insertPosition={insertPosition}
+            setInsertPosition={setInsertPosition}
           />
         </div>
       </div>
@@ -61,17 +63,21 @@ export default function MissionEdit({
             mission={mission}
             setMission={setMission}
             point={point}
-            radio={radio}
+            selectedMissionIndex={selectedMissionIndex}
             setPoint={setPoint}
-            selectedId={radio === -1 ? addOrder : radio}
+            selectedId={
+              selectedMissionIndex === -1
+                ? insertPosition
+                : selectedMissionIndex
+            }
             selectedMission={selectedMission}
             setSelectedMission={setSelectedMission}
             selectedParam={selectedParam}
             setSelectedParam={setSelectedParam}
             selectedPoint={selectedPoint}
             setSelectedPoint={setSelectedPoint}
-            setRadio={setRadio}
-            setAddOrder={setAddOrder}
+            setSelectedMissionIndex={setSelectedMissionIndex}
+            setInsertPosition={setInsertPosition}
           />
         </div>
       </div>

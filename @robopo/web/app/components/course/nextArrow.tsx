@@ -8,32 +8,32 @@ export function NextArrow({
   row,
   col,
   direction,
-  nextMissionPair,
+  nextMission,
   duration = 1,
 }: {
   row: number
   col: number
   direction: MissionValue
-  nextMissionPair: MissionValue[] | undefined
+  nextMission: MissionValue[] | undefined
   duration?: number // Blink speed (seconds)
 }) {
   if (
-    !nextMissionPair ||
-    nextMissionPair[0] === null ||
-    nextMissionPair[1] === null ||
-    nextMissionPair[0] === undefined ||
-    nextMissionPair[1] === undefined
+    !nextMission ||
+    nextMission[0] === null ||
+    nextMission[1] === null ||
+    nextMission[0] === undefined ||
+    nextMission[1] === undefined
   ) {
     // Show nothing if there is no next mission
     return null
   }
-  if (nextMissionPair[0] === "mf" || nextMissionPair[0] === "mb") {
+  if (nextMission[0] === "mf" || nextMission[0] === "mb") {
     const [nextRow, nextCol] = getNextPosition(
       row,
       col,
       direction,
-      nextMissionPair[0],
-      nextMissionPair[1],
+      nextMission[0],
+      nextMission[1],
     )
     return (
       <NextMoveArrow
@@ -50,7 +50,7 @@ export function NextArrow({
       row={row}
       col={col}
       direction={direction}
-      nextMissionPair={nextMissionPair}
+      nextMission={nextMission}
       duration={duration}
     />
   )
@@ -177,13 +177,13 @@ function NextTurnArrow({
   row,
   col,
   direction,
-  nextMissionPair,
+  nextMission,
   duration = 1, // Rotation speed
 }: {
   row: number
   col: number
   direction: MissionValue
-  nextMissionPair: MissionValue[]
+  nextMission: MissionValue[]
   duration?: number // Rotation speed (seconds)
 }) {
   // Calculate circle center
@@ -198,22 +198,22 @@ function NextTurnArrow({
   let initArr: number = 0
   // Arrow head draw position initArr: left 100% for right rotation, 0% for left rotation
   // For left rotation, rotate coordinate system 180 degrees so negative direction becomes rotation direction
-  if (nextMissionPair[0] === "tr") {
+  if (nextMission[0] === "tr") {
     // Right rotation
     initArr = 100
     startDeg = getStartDeg(direction)
-    finDeg = startDeg + Number(nextMissionPair[1])
+    finDeg = startDeg + Number(nextMission[1])
     clipDeg = startDeg + 90
   } else {
     // Left rotation
     initArr = 0
     startDeg = getStartDeg(direction) + 180
-    finDeg = startDeg - Number(nextMissionPair[1])
+    finDeg = startDeg - Number(nextMission[1])
     clipDeg = startDeg + 180
   }
 
   // Clip path to trim the arrow line
-  const clipPath: string = getClipPath(Number(nextMissionPair[1]))
+  const clipPath: string = getClipPath(Number(nextMission[1]))
 
   const arrowStyle: React.CSSProperties = {
     position: "absolute",

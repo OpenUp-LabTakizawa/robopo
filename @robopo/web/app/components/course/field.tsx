@@ -16,7 +16,7 @@ type FieldProps = {
   type: "edit" | "challenge"
   botPosition?: { row: number; col: number }
   botDirection?: MissionValue
-  nextMissionPair?: MissionValue[]
+  nextMission?: MissionValue[]
   onPanelClick: (row: number, col: number) => void
   onPanelPointerDown?: (row: number, col: number) => void
   onPanelPointerEnter?: (row: number, col: number) => void
@@ -29,7 +29,7 @@ export function Field({
   type,
   botPosition,
   botDirection,
-  nextMissionPair,
+  nextMission,
   onPanelClick,
   onPanelPointerDown,
   onPanelPointerEnter,
@@ -107,7 +107,7 @@ export function Field({
             row={botPosition.row - renderMinR}
             col={botPosition.col - renderMinC}
             direction={botDirection}
-            nextMissionPair={nextMissionPair}
+            nextMission={nextMission}
             duration={1.5}
           />
         </>

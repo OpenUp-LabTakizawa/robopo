@@ -18,12 +18,12 @@ import {
   deserializePoint,
   type FieldState,
   findStart,
+  getMissionParameterUnit,
   getRobotPosition,
   MissionString,
   type MissionValue,
   missionStatePair,
   type PointState,
-  panelOrDegree,
 } from "@/app/components/course/utils"
 import {
   BackButton,
@@ -37,10 +37,10 @@ type ChallengeProps = {
   field: string | null
   mission: string | null
   point: string | null
-  compeId: number
+  competitionId: number
   courseId: number
   playerId: number
-  umpireId: number
+  judgeId: number
   setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -49,7 +49,7 @@ type FieldPropsType = {
   field: FieldState
   botPosition: { row: number; col: number }
   botDirection: MissionValue
-  nextMissionPair: MissionValue[]
+  nextMission: MissionValue[]
   onPanelClick: (row: number, col: number) => void
   nowMission: number
   isRetry: boolean
@@ -146,7 +146,7 @@ function NormalChallengeSection({
                 : ` ${missionPair[nowMission][1]}`}
               {missionPair[nowMission][0] === null
                 ? ""
-                : panelOrDegree(missionPair[nowMission][0])}
+                : getMissionParameterUnit(missionPair[nowMission][0])}
             </p>
             {!isTierMission && (
               <p className="text-accent text-xs">
@@ -212,10 +212,10 @@ export function Challenge({
   field,
   mission,
   point,
-  compeId,
+  competitionId,
   courseId,
   playerId,
-  umpireId,
+  judgeId,
   setIsEnabled,
 }: ChallengeProps): React.JSX.Element {
   const router = useRouter()
@@ -233,8 +233,8 @@ export function Challenge({
   const [isGoal, setIsGoal] = useState(false)
   const [nowMission, setNowMission] = useState(0)
   const [pointCount, setPointCount] = useState<number | null>(0)
-  const [result1, setResult1] = useState(0)
-  const [result2, setResult2] = useState<number | null>(null)
+  const [firstResult, setFirstResult] = useState(0)
+  const [retryResult, setRetryResult] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [message, setMessage] = useState("")
@@ -285,9 +285,9 @@ export function Challenge({
             !muted && nextSound?.play()
           }
           if (!isRetry && !isGoal) {
-            setResult1(result1 + 1)
-          } else if (result2 !== null && !isGoal) {
-            setResult2(result2 + 1)
+            setFirstResult(firstResult + 1)
+          } else if (retryResult !== null && !isGoal) {
+            setRetryResult(retryResult + 1)
           }
           setBotPosition({ row: newRow, col: newCol })
           setBotDirection(direction)
@@ -305,8 +305,8 @@ export function Challenge({
       strictMode,
       isRetry,
       isGoal,
-      result1,
-      result2,
+      firstResult,
+      retryResult,
       muted,
       goalSound,
       nextSound,
@@ -316,9 +316,9 @@ export function Challenge({
   const handleBack = useCallback(() => {
     if (nowMission > 0) {
       if (!isRetry) {
-        setResult1(result1 - 1)
-      } else if (result2 !== null) {
-        setResult2(result2 - 1)
+        setFirstResult(firstResult - 1)
+      } else if (retryResult !== null) {
+        setRetryResult(retryResult - 1)
       }
       const turnBackMission = isGoal ? nowMission : nowMission - 1
       const point = calcPoint(pointState, turnBackMission)
@@ -340,8 +340,8 @@ export function Challenge({
   }, [
     nowMission,
     isRetry,
-    result1,
-    result2,
+    firstResult,
+    retryResult,
     isGoal,
     pointState,
     start,
@@ -352,7 +352,7 @@ export function Challenge({
 
   const handleRetry = useCallback(() => {
     setIsRetry(true)
-    setResult2(0)
+    setRetryResult(0)
     setPointCount(0)
     setNowMission(0)
     setIsGoal(false)
@@ -400,9 +400,9 @@ export function Challenge({
       setBotDirection(direction)
 
       if (!isRetry && !isGoal) {
-        setResult1(result1 + 1)
-      } else if (result2 !== null && !isGoal) {
-        setResult2(result2 + 1)
+        setFirstResult(firstResult + 1)
+      } else if (retryResult !== null && !isGoal) {
+        setRetryResult(retryResult + 1)
       }
     },
     [
@@ -413,8 +413,8 @@ export function Challenge({
       missionState,
       isRetry,
       isGoal,
-      result1,
-      result2,
+      firstResult,
+      retryResult,
       muted,
       goalSound,
       nextSound,
@@ -426,7 +426,7 @@ export function Challenge({
     field: fieldState,
     botPosition,
     botDirection,
-    nextMissionPair: isGoal ? [null, null] : missionPair[nowMission],
+    nextMission: isGoal ? [null, null] : missionPair[nowMission],
     onPanelClick: handleNext,
     nowMission,
     isRetry,
@@ -464,12 +464,12 @@ export function Challenge({
           setModalOpen={setModalOpen}
           handleSubmit={() =>
             resultSubmit(
-              result1,
-              result2,
-              compeId,
+              firstResult,
+              retryResult,
+              competitionId,
               courseId,
               playerId,
-              umpireId,
+              judgeId,
               setMessage,
               setIsSuccess,
               setLoading,
@@ -481,8 +481,10 @@ export function Challenge({
           loading={loading}
           isSuccess={isSuccess}
           message={message}
-          result1Point={isRetry ? calcPoint(pointState, result1) : pointCount}
-          result2Point={isRetry ? pointCount : null}
+          firstResultPoint={
+            isRetry ? calcPoint(pointState, firstResult) : pointCount
+          }
+          retryResultPoint={isRetry ? pointCount : null}
           isGoal={isGoal}
         />
       )}
@@ -490,21 +492,21 @@ export function Challenge({
         <RetryModal
           setModalOpen={setModalOpen}
           handleRetry={handleRetry}
-          result1Point={pointCount}
+          firstResultPoint={pointCount}
         />
       )}
       {modalOpen === 3 && (
         <CourseOutModal
           setModalOpen={setModalOpen}
-          setResult1={setResult1}
+          setFirstResult={setFirstResult}
           handleSubmit={() =>
             resultSubmit(
-              isRetry ? result1 : 0,
-              isRetry ? 0 : result2,
-              compeId,
+              isRetry ? firstResult : 0,
+              isRetry ? 0 : retryResult,
+              competitionId,
               courseId,
               playerId,
-              umpireId,
+              judgeId,
               setMessage,
               setIsSuccess,
               setLoading,
@@ -516,8 +518,10 @@ export function Challenge({
           loading={loading}
           isSuccess={isSuccess}
           message={message}
-          result1Point={isRetry ? calcPoint(pointState, result1) : pointCount}
-          result2Point={isRetry ? pointCount : null}
+          firstResultPoint={
+            isRetry ? calcPoint(pointState, firstResult) : pointCount
+          }
+          retryResultPoint={isRetry ? pointCount : null}
         />
       )}
     </>

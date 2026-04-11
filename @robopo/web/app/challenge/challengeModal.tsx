@@ -12,8 +12,8 @@ export function ChallengeModal({
   loading,
   isSuccess,
   message,
-  result1Point,
-  result2Point,
+  firstResultPoint,
+  retryResultPoint,
   isGoal,
 }: {
   setModalOpen: React.Dispatch<React.SetStateAction<number>>
@@ -22,8 +22,8 @@ export function ChallengeModal({
   loading: boolean
   isSuccess: boolean
   message: string
-  result1Point: number | null
-  result2Point: number | null
+  firstResultPoint: number | null
+  retryResultPoint: number | null
   isGoal: boolean
 }) {
   function handleClick() {
@@ -54,14 +54,14 @@ export function ChallengeModal({
               <div className="flex items-center justify-between">
                 <span className="text-base-content/60 text-sm">1回目</span>
                 <span className="score-display font-bold text-primary text-xl">
-                  {result1Point}pt
+                  {firstResultPoint}pt
                 </span>
               </div>
-              {result2Point !== null && (
+              {retryResultPoint !== null && (
                 <div className="mt-2 flex items-center justify-between border-base-300 border-t pt-2">
                   <span className="text-base-content/60 text-sm">2回目</span>
                   <span className="score-display font-bold text-primary text-xl">
-                    {result2Point}pt
+                    {retryResultPoint}pt
                   </span>
                 </div>
               )}
@@ -78,7 +78,7 @@ export function ChallengeModal({
               />
 
               {/* Secondary action */}
-              {result2Point === null && !isGoal && (
+              {retryResultPoint === null && !isGoal && (
                 <RetryButton
                   onClick={thisHandleRetry}
                   disabled={loading}
@@ -104,11 +104,11 @@ export function ChallengeModal({
 export function RetryModal({
   setModalOpen,
   handleRetry,
-  result1Point,
+  firstResultPoint,
 }: {
   setModalOpen: React.Dispatch<React.SetStateAction<number>>
   handleRetry: () => void
-  result1Point: number | null
+  firstResultPoint: number | null
 }) {
   function thisHandleRetry() {
     handleRetry()
@@ -122,7 +122,7 @@ export function RetryModal({
           <div className="rounded-lg bg-base-200 p-4 text-center">
             <p className="text-base-content/60 text-sm">1回目のスコア</p>
             <p className="score-display font-bold text-2xl text-primary">
-              {result1Point}pt
+              {firstResultPoint}pt
             </p>
           </div>
           <p className="text-center text-base-content/60 text-sm">
@@ -146,25 +146,25 @@ export function CourseOutModal({
   setModalOpen,
   handleSubmit,
   handleRetry,
-  setResult1,
+  setFirstResult,
   loading,
   isSuccess,
   message,
-  result1Point,
-  result2Point,
+  firstResultPoint,
+  retryResultPoint,
 }: {
   setModalOpen: React.Dispatch<React.SetStateAction<number>>
-  setResult1: React.Dispatch<React.SetStateAction<number>>
+  setFirstResult: React.Dispatch<React.SetStateAction<number>>
   handleSubmit: () => void
   handleRetry: () => void
   loading: boolean
   isSuccess: boolean
   message: string
-  result1Point: number | null
-  result2Point: number | null
+  firstResultPoint: number | null
+  retryResultPoint: number | null
 }) {
   function thisHandleRetry() {
-    setResult1(0)
+    setFirstResult(0)
     handleRetry()
     setModalOpen(0)
   }
@@ -188,10 +188,10 @@ export function CourseOutModal({
               <div className="flex items-center justify-between">
                 <span className="text-base-content/60 text-sm">1回目</span>
                 <span className="score-display font-bold text-xl">
-                  {result2Point === null ? 0 : result1Point}pt
+                  {retryResultPoint === null ? 0 : firstResultPoint}pt
                 </span>
               </div>
-              {result2Point !== null && (
+              {retryResultPoint !== null && (
                 <div className="mt-2 flex items-center justify-between border-base-300 border-t pt-2">
                   <span className="text-base-content/60 text-sm">2回目</span>
                   <span className="score-display font-bold text-xl">0pt</span>
@@ -206,7 +206,7 @@ export function CourseOutModal({
                 disabled={loading}
                 fullWidth
               />
-              {result2Point === null && (
+              {retryResultPoint === null && (
                 <RetryButton
                   onClick={thisHandleRetry}
                   disabled={loading}

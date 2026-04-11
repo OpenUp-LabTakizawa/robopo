@@ -16,10 +16,10 @@ import { CommonCheckboxList } from "@/app/components/common/commonList"
 import { CommonRegister } from "@/app/components/common/commonRegister"
 import type {
   SelectCourseWithCompetition,
+  SelectJudge,
+  SelectJudgeWithCompetition,
   SelectPlayer,
   SelectPlayerWithCompetition,
-  SelectUmpire,
-  SelectUmpireWithCompetition,
 } from "@/app/lib/db/schema"
 
 type SortKey = "createdAt" | "name" | "id"
@@ -29,9 +29,9 @@ type PlayerProps = {
   initialCommonDataList: SelectPlayerWithCompetition[]
 }
 
-type UmpireProps = {
-  type: "umpire"
-  initialCommonDataList: SelectUmpireWithCompetition[]
+type JudgeProps = {
+  type: "judge"
+  initialCommonDataList: SelectJudgeWithCompetition[]
 }
 
 type CourseProps = {
@@ -42,17 +42,17 @@ type CourseProps = {
 export function View({
   type,
   initialCommonDataList,
-}: PlayerProps | UmpireProps | CourseProps) {
+}: PlayerProps | JudgeProps | CourseProps) {
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const commonString =
-    type === "player" ? "選手" : type === "umpire" ? "採点者" : "コース"
+    type === "player" ? "選手" : type === "judge" ? "採点者" : "コース"
   const [commonDataList, setCommonDataList] = useState<
     | SelectPlayerWithCompetition[]
-    | SelectUmpireWithCompetition[]
+    | SelectJudgeWithCompetition[]
     | SelectCourseWithCompetition[]
     | SelectPlayer[]
-    | SelectUmpire[]
+    | SelectJudge[]
   >(initialCommonDataList)
   // Convert array to query string
   function createQueryParams(ids: number[] | null) {
@@ -104,8 +104,8 @@ export function View({
             href={
               type === "player"
                 ? `/player/assign/${createQueryParams(commonId)}`
-                : type === "umpire"
-                  ? `/umpire/assign/${createQueryParams(commonId)}`
+                : type === "judge"
+                  ? `/judge/assign/${createQueryParams(commonId)}`
                   : `/course/assign/${createQueryParams(commonId)}`
             }
             className={`btn btn-sm gap-1.5 rounded-lg ${
@@ -126,8 +126,8 @@ export function View({
             href={
               type === "player"
                 ? `/player/delete/${createQueryParams(commonId)}`
-                : type === "umpire"
-                  ? `/umpire/delete/${createQueryParams(commonId)}`
+                : type === "judge"
+                  ? `/judge/delete/${createQueryParams(commonId)}`
                   : `/course/delete/${createQueryParams(commonId)}`
             }
             className={`btn btn-sm gap-1.5 rounded-lg ${
@@ -169,7 +169,7 @@ export function View({
             setErrorMessage={setErrorMessage}
             setCommonDataList={
               setCommonDataList as React.Dispatch<
-                React.SetStateAction<SelectPlayer[] | SelectUmpire[]>
+                React.SetStateAction<SelectPlayer[] | SelectJudge[]>
               >
             }
           />
@@ -345,7 +345,7 @@ export function View({
     )
   }
 
-  return type === "player" || type === "umpire" ? (
+  return type === "player" || type === "judge" ? (
     <ViewWithRegister />
   ) : (
     <ViewNoRegister />

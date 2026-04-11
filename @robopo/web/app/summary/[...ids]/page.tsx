@@ -18,7 +18,7 @@ import {
   getMaxResult,
   getPlayerById,
 } from "@/app/lib/db/queries/queries"
-import { TCourseTable } from "@/app/summary/[...ids]/tCourseTable"
+import { CourseDetailTable } from "@/app/summary/[...ids]/courseDetailTable"
 
 export const revalidate = 0
 
@@ -93,7 +93,7 @@ export default async function SummaryPlayer({
       <div className="mb-5 flex">
         <h1 className="mt-2 mr-5 font-bold text-3xl">個人成績シート</h1>
         <h1 className="mt-2 mr-5 font-bold text-3xl text-violet-800">
-          {player?.zekken}
+          {player?.bibNumber}
         </h1>
         <h1 className="mt-2 mr-5 font-bold text-3xl text-violet-800">
           {player?.name}
@@ -106,11 +106,11 @@ export default async function SummaryPlayer({
 
       {/* Selected course detail */}
       <div className="divider">{selectedCourse?.name}コース</div>
-      <TCourseTable
+      <CourseDetailTable
         missionPair={selectedMissionPair}
         point={selectedPoint}
         resultArray={selectedResultArray}
-        firstTCourseCount={selectedFirstCount}
+        firstMaxAttemptCount={selectedFirstCount}
         maxResult={selectedMaxResult}
       />
 

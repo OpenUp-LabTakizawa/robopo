@@ -10,10 +10,10 @@ import { useState } from "react"
 import { BackButton } from "@/app/components/parts/buttons"
 import type { SelectCompetition } from "@/app/lib/db/schema"
 
-type InputType = "player" | "umpire" | "course"
+type InputType = "player" | "judge" | "course"
 
 function getCommonString(type: InputType): string {
-  return type === "player" ? "選手" : type === "umpire" ? "採点者" : "コース"
+  return type === "player" ? "選手" : type === "judge" ? "採点者" : "コース"
 }
 
 export function ModalBackdrop() {

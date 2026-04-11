@@ -3,17 +3,17 @@ import { Dashboard } from "@/app/components/home/dashboard"
 import { ChallengeTab } from "@/app/components/home/tabs"
 import {
   getCompetitionCourseAssignList,
+  getCompetitionJudgeAssignList,
   getCompetitionList,
-  getCompetitionUmpireAssignList,
   getCourseList,
-  getUmpireList,
+  getJudgeList,
 } from "@/app/components/server/db"
 import type {
   SelectCompetition,
   SelectCompetitionCourse,
-  SelectCompetitionUmpire,
+  SelectCompetitionJudge,
   SelectCourse,
-  SelectUmpire,
+  SelectJudge,
 } from "@/app/lib/db/schema"
 import { auth } from "@/lib/auth"
 
@@ -30,18 +30,18 @@ export default async function Home() {
   const competitionCourseList: {
     competitionCourseList: SelectCompetitionCourse[]
   } = await getCompetitionCourseAssignList()
-  const umpireList: SelectUmpire[] = await getUmpireList()
-  const competitionUmpireList: {
-    competitionUmpireList: SelectCompetitionUmpire[]
-  } = await getCompetitionUmpireAssignList()
+  const judgeList: SelectJudge[] = await getJudgeList()
+  const competitionJudgeList: {
+    competitionJudgeList: SelectCompetitionJudge[]
+  } = await getCompetitionJudgeAssignList()
 
   return session?.user ? (
     <Dashboard
       competitionList={competitionList}
       courseList={courseList}
       competitionCourseList={competitionCourseList}
-      umpireList={umpireList}
-      competitionUmpireList={competitionUmpireList}
+      judgeList={judgeList}
+      competitionJudgeList={competitionJudgeList}
     />
   ) : (
     <div className="mx-auto mt-8 max-w-lg">
@@ -51,8 +51,8 @@ export default async function Home() {
           competitionList={competitionList}
           courseList={courseList}
           competitionCourseList={competitionCourseList}
-          umpireList={umpireList}
-          competitionUmpireList={competitionUmpireList}
+          judgeList={judgeList}
+          competitionJudgeList={competitionJudgeList}
         />
       </div>
     </div>

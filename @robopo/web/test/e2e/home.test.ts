@@ -18,9 +18,9 @@ test.describe("Home page - Dashboard layout", () => {
     expect(hasDropdown + hasActiveName).toBeGreaterThan(0)
   })
 
-  test("displays umpire selection dropdown", async ({ page }) => {
+  test("displays judge selection dropdown", async ({ page }) => {
     await page.goto("/")
-    await expect(page.locator("#umpire-select")).toBeVisible()
+    await expect(page.locator("#judge-select")).toBeVisible()
   })
 
   test("displays scoring card for unauthenticated users", async ({ page }) => {
