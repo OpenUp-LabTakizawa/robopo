@@ -1,4 +1,7 @@
-import { MissionList } from "@/app/components/course/missionList"
+import {
+  type InsertPreview,
+  MissionList,
+} from "@/app/components/course/missionList"
 import type {
   FieldState,
   MissionState,
@@ -20,6 +23,7 @@ type MissionEditProps = {
   pushMissionHistory: () => void
   missionPanelHints: (number | null)[]
   setMissionPanelHints: React.Dispatch<React.SetStateAction<(number | null)[]>>
+  onInsertPreview?: (preview: InsertPreview | null) => void
 }
 
 export default function MissionEdit({
@@ -37,6 +41,7 @@ export default function MissionEdit({
   pushMissionHistory,
   missionPanelHints,
   setMissionPanelHints,
+  onInsertPreview,
 }: MissionEditProps) {
   return (
     <div className="container mx-auto">
@@ -57,6 +62,7 @@ export default function MissionEdit({
             pushMissionHistory={pushMissionHistory}
             missionPanelHints={missionPanelHints}
             setMissionPanelHints={setMissionPanelHints}
+            onInsertPreview={onInsertPreview}
           />
         </div>
       </div>
