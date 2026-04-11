@@ -1,5 +1,9 @@
 import type React from "react"
-import { BackLabelWithIcon, RETRY_CONST, SendIcon } from "@/app/lib/const"
+import {
+  BackButton,
+  RetryButton,
+  SubmitButton,
+} from "@/app/components/parts/buttons"
 
 export function ChallengeModal({
   setModalOpen,
@@ -65,37 +69,30 @@ export function ChallengeModal({
 
             <div className="flex flex-col gap-2">
               {/* Primary action */}
-              <button
-                type="button"
-                className="btn btn-accent w-full"
+              <SubmitButton
                 onClick={handleSubmit}
+                label="結果を送信して終了"
+                loading={loading}
                 disabled={loading}
-              >
-                {loading ? (
-                  <span className="loading loading-spinner" />
-                ) : (
-                  <>
-                    結果を送信して終了
-                    <SendIcon />
-                  </>
-                )}
-              </button>
+                fullWidth
+              />
 
               {/* Secondary action */}
               {result2Point === null && !isGoal && (
-                <RetryButton handleRetry={thisHandleRetry} loading={loading} />
+                <RetryButton
+                  onClick={thisHandleRetry}
+                  disabled={loading}
+                  fullWidth
+                />
               )}
 
               {/* Tertiary action */}
-              <button
-                type="button"
-                className="btn btn-ghost w-full"
+              <BackButton
                 onClick={handleClick}
+                label="採点に戻る"
                 disabled={loading}
-              >
-                採点に
-                <BackLabelWithIcon />
-              </button>
+                fullWidth
+              />
             </div>
           </div>
         )}
@@ -132,20 +129,12 @@ export function RetryModal({
             1回目のポイントを保存して再チャレンジしますか?
           </p>
           <div className="flex flex-col gap-2">
-            <button
-              type="button"
-              className="btn btn-warning w-full"
+            <RetryButton
               onClick={thisHandleRetry}
-            >
-              再チャレンジする{RETRY_CONST.icon}
-            </button>
-            <button
-              type="button"
-              className="btn btn-ghost w-full"
-              onClick={() => setModalOpen(0)}
-            >
-              <BackLabelWithIcon />
-            </button>
+              label="再チャレンジする"
+              fullWidth
+            />
+            <BackButton onClick={() => setModalOpen(0)} fullWidth />
           </div>
         </div>
       </div>
@@ -211,57 +200,29 @@ export function CourseOutModal({
             </div>
 
             <div className="flex flex-col gap-2">
-              <button
-                type="button"
-                className="btn btn-accent w-full"
+              <SubmitButton
                 onClick={handleSubmit}
+                loading={loading}
                 disabled={loading}
-              >
-                {loading ? (
-                  <span className="loading loading-spinner" />
-                ) : (
-                  <>
-                    結果送信
-                    <SendIcon />
-                  </>
-                )}
-              </button>
+                fullWidth
+              />
               {result2Point === null && (
-                <RetryButton handleRetry={thisHandleRetry} loading={loading} />
+                <RetryButton
+                  onClick={thisHandleRetry}
+                  disabled={loading}
+                  fullWidth
+                />
               )}
-              <button
-                type="button"
-                className="btn btn-ghost w-full"
+              <BackButton
                 onClick={() => setModalOpen(0)}
+                label="採点に戻る"
                 disabled={loading}
-              >
-                採点に
-                <BackLabelWithIcon />
-              </button>
+                fullWidth
+              />
             </div>
           </div>
         )}
       </div>
     </dialog>
-  )
-}
-
-function RetryButton({
-  handleRetry,
-  loading,
-}: {
-  handleRetry: () => void
-  loading: boolean
-}) {
-  return (
-    <button
-      type="button"
-      className="btn btn-warning w-full"
-      onClick={handleRetry}
-      disabled={loading}
-    >
-      {RETRY_CONST.label}
-      {RETRY_CONST.icon}
-    </button>
   )
 }

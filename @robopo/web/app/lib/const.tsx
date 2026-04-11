@@ -73,8 +73,8 @@ const BACK_CONST = {
 export function BackLabelWithIcon(): JSX.Element {
   return (
     <>
-      {BACK_CONST.label}
       {BACK_CONST.icon}
+      {BACK_CONST.label}
     </>
   )
 }

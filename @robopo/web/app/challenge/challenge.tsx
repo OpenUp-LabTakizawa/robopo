@@ -28,8 +28,14 @@ import {
   panelOrDegree,
   RESERVED_COURSE_IDS,
 } from "@/app/components/course/utils"
-import { ReloadButton } from "@/app/components/parts/buttons"
-import { BackLabelWithIcon, SendIcon } from "@/app/lib/const"
+import {
+  BackButton,
+  CourseOutButton,
+  FailButton,
+  ReloadButton,
+  RetryButton,
+  SubmitButton,
+} from "@/app/components/parts/buttons"
 
 // Type definitions
 type ChallengeProps = {
@@ -120,37 +126,26 @@ function IpponBashiSection({
       {/* Action bar */}
       <div className="border-base-300 border-t bg-base-100 px-4 py-3">
         <div className="flex items-center justify-between gap-3">
-          <button
-            type="button"
-            className="btn btn-outline btn-sm flex-1"
+          <BackButton
             onClick={handleBack}
             disabled={nowMission === 0}
-          >
-            <BackLabelWithIcon />
-          </button>
-          <button
-            type="button"
-            className="btn btn-error btn-sm flex-1"
+            variant="outline"
+            className="btn-sm flex-1"
+          />
+          <CourseOutButton
             onClick={() => setModalOpen(3)}
-          >
-            コースアウト
-          </button>
-          <button
-            type="button"
-            className="btn btn-warning btn-sm flex-1"
+            className="btn-sm flex-1"
+          />
+          <RetryButton
             onClick={() => setModalOpen(2)}
+            label="再挑戦"
             disabled={isRetry}
-          >
-            再挑戦
-          </button>
-          <button
-            type="button"
-            className="btn btn-accent btn-sm flex-1"
+            className="btn-sm flex-1"
+          />
+          <SubmitButton
             onClick={() => setModalOpen(1)}
-          >
-            結果送信
-            <SendIcon />
-          </button>
+            className="btn-sm flex-1"
+          />
         </div>
         <div className="mt-2 flex justify-center">
           <SoundController />
@@ -220,21 +215,12 @@ function NormalChallengeSection({
               ホーム画面へ自動遷移します
             </p>
           ) : (
-            <button
-              type="button"
-              className="btn btn-accent btn-lg"
+            <SubmitButton
               onClick={() => setModalOpen(1)}
+              loading={loading}
               disabled={loading}
-            >
-              {loading ? (
-                <span className="loading loading-spinner" />
-              ) : (
-                <>
-                  結果送信
-                  <SendIcon />
-                </>
-              )}
-            </button>
+              className="btn-lg"
+            />
           )}
           {message && <p className="text-base-content/60 text-sm">{message}</p>}
         </div>
@@ -270,22 +256,14 @@ function NormalChallengeSection({
       {/* Action bar */}
       <div className="border-base-300 border-t bg-base-100 px-4 py-3">
         <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="btn btn-outline flex-1"
+          <BackButton
             onClick={handleBack}
             disabled={FieldProps.nowMission === 0}
-          >
-            <BackLabelWithIcon />
-          </button>
+            variant="outline"
+            className="flex-1"
+          />
           {!isGoal && (
-            <button
-              type="button"
-              className="btn btn-error flex-1"
-              onClick={() => setModalOpen(1)}
-            >
-              失敗
-            </button>
+            <FailButton onClick={() => setModalOpen(1)} className="flex-1" />
           )}
         </div>
         <div className="mt-2 flex justify-center">
