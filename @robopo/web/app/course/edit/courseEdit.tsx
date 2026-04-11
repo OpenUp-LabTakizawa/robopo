@@ -74,10 +74,10 @@ export default function CourseEdit({
       const res = await fetch(`/api/course/check-name?${params}`)
       const data = await res.json()
       // Discard stale results if the name changed while the request was in flight
-      if (name.trim() !== checkedName) return
-      setNameError(
-        data.exists ? "このコース名は既に使用されています" : "",
-      )
+      if (name.trim() !== checkedName) {
+        return
+      }
+      setNameError(data.exists ? "このコース名は既に使用されています" : "")
     } catch {
       // ignore network errors during validation
     }
