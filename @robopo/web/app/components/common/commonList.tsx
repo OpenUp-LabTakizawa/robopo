@@ -262,7 +262,6 @@ export function CommonSelectionList({
                         onSelect(common.id)
                       }
                     }}
-                    hidden={common.id < 0}
                   >
                     <th className="w-12">
                       <label>

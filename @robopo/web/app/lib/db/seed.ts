@@ -5,6 +5,52 @@ async function seed() {
   await db.execute(sql`BEGIN`)
 
   try {
+    // --- Insert special courses with positive IDs ---
+    // THE一本橋 (ID: 1)
+    await db.execute(sql`
+      INSERT INTO course (id, name, field, fieldvalid, mission, missionvalid, point, course_out_rule)
+      VALUES (1, 'THE一本橋',
+        'route,null,null,null,null;route,null,null,null,null;route,null,null,null,null;route,null,null,null,null;startGoal,null,null,null,null',
+        TRUE,
+        'u;null;mf;1;mf;1;mf;1;mf;1;tr;180;mf;1;mf;1;mf;1;mf;1',
+        TRUE,
+        '0;20;1;1;1;1;0;2;2;2;2',
+        'zero')
+      ON CONFLICT (id) DO UPDATE SET
+        name = EXCLUDED.name,
+        field = EXCLUDED.field,
+        fieldvalid = EXCLUDED.fieldvalid,
+        mission = EXCLUDED.mission,
+        missionvalid = EXCLUDED.missionvalid,
+        point = EXCLUDED.point,
+        course_out_rule = EXCLUDED.course_out_rule
+    `)
+
+    // センサーコース (ID: 2)
+    await db.execute(sql`
+      INSERT INTO course (id, name, field, fieldvalid, mission, missionvalid, point, course_out_rule)
+      VALUES (2, 'センサーコース',
+        'null,null,null,null,null;null,null,null,null,null;null,null,null,null,null;null,null,null,null,null;start,route,route,route,goal',
+        TRUE,
+        'r;r;mf;2;ps;0;mf;2;ps;0',
+        TRUE,
+        '0;0;0;10;0;(10,3,5,20,-5)',
+        'keep')
+      ON CONFLICT (id) DO UPDATE SET
+        name = EXCLUDED.name,
+        field = EXCLUDED.field,
+        fieldvalid = EXCLUDED.fieldvalid,
+        mission = EXCLUDED.mission,
+        missionvalid = EXCLUDED.missionvalid,
+        point = EXCLUDED.point,
+        course_out_rule = EXCLUDED.course_out_rule
+    `)
+
+    // Reset course_id_seq to avoid conflicts with auto-increment
+    await db.execute(sql`
+      SELECT setval('course_id_seq', (SELECT COALESCE(MAX(id), 0) FROM course))
+    `)
+
     // Test judges
     await db.execute(sql`
       INSERT INTO judge (id, name)
@@ -151,6 +197,18 @@ async function seed() {
         VALUES (${competition2Id}, ${u.id})
       `)
     }
+
+    // --- Associate special courses (ID 1, 2) with ALL competitions ---
+    await db.execute(sql`
+      INSERT INTO competition_course (competition_id, course_id)
+      SELECT c.id, sc.id
+      FROM competition c
+      CROSS JOIN (SELECT id FROM course WHERE id IN (1, 2)) sc
+      WHERE NOT EXISTS (
+        SELECT 1 FROM competition_course cc
+        WHERE cc.competition_id = c.id AND cc.course_id = sc.id
+      )
+    `)
 
     await db.execute(sql`COMMIT`)
 
