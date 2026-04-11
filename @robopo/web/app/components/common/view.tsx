@@ -1,13 +1,17 @@
 "use client"
 
 import {
+  BarsArrowDownIcon,
+  BarsArrowUpIcon,
+  FunnelIcon,
   LinkIcon,
+  MagnifyingGlassIcon,
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline"
 import Link from "next/link"
 import type React from "react"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { CommonCheckboxList } from "@/app/components/common/commonList"
 import { CommonRegister } from "@/app/components/common/commonRegister"
 import type {
@@ -175,14 +179,134 @@ export function View({
   // View without registration UI (course)
   function ViewNoRegister() {
     const [commonId, setCommonId] = useState<number[]>([])
+    const [searchQuery, setSearchQuery] = useState("")
+    const [sortKey, setSortKey] = useState<"createdAt" | "name" | "id">(
+      "createdAt",
+    )
+    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
+    const [competitionFilter, setCompetitionFilter] = useState("")
+
+    const competitionNames = useMemo(() => {
+      const names = new Set<string>()
+      for (const c of commonDataList as SelectCourseWithCompetition[]) {
+        for (const name of c.competitionName ?? []) {
+          names.add(name)
+        }
+      }
+      return [...names].sort((a, b) => a.localeCompare(b, "ja"))
+    }, [])
+
+    const filteredAndSortedList = useMemo(() => {
+      let list = commonDataList as SelectCourseWithCompetition[]
+      if (searchQuery.trim()) {
+        const q = searchQuery.trim().toLowerCase()
+        list = list.filter(
+          (c) =>
+            c.name.toLowerCase().includes(q) ||
+            (c.description?.toLowerCase().includes(q) ?? false),
+        )
+      }
+      if (competitionFilter) {
+        list = list.filter((c) =>
+          c.competitionName?.includes(competitionFilter),
+        )
+      }
+      return [...list].sort((a, b) => {
+        let cmp = 0
+        if (sortKey === "name") {
+          cmp = a.name.localeCompare(b.name, "ja")
+        } else if (sortKey === "createdAt") {
+          cmp = (a.createdAt?.getTime() ?? 0) - (b.createdAt?.getTime() ?? 0)
+        } else {
+          cmp = a.id - b.id
+        }
+        return sortOrder === "asc" ? cmp : -cmp
+      })
+    }, [searchQuery, sortKey, sortOrder, competitionFilter])
+
     return (
       <>
         <ItemManager commonId={commonId} />
-        <CommonCheckboxList
-          props={{ type: type, commonDataList: commonDataList }}
-          commonId={commonId}
-          setCommonId={setCommonId}
-        />
+        <div className="flex flex-col gap-3 px-4 pb-4">
+          <label className="input input-bordered flex items-center gap-2 rounded-xl bg-base-200/40 transition-colors focus-within:bg-base-100">
+            <MagnifyingGlassIcon className="size-4 shrink-0 text-base-content/40" />
+            <input
+              type="text"
+              placeholder="コース名・説明で検索"
+              className="grow"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </label>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex shrink-0 items-center gap-1.5 rounded-lg bg-base-200/50 px-2.5 py-1.5">
+              <FunnelIcon className="size-3.5 shrink-0 text-base-content/40" />
+              <span className="shrink-0 text-xs">大会</span>
+              <select
+                className="select select-ghost select-xs bg-transparent pe-0 font-medium focus:outline-none [&>option]:bg-base-100 [&>option]:text-base-content"
+                style={{ backgroundImage: "none" }}
+                value={competitionFilter}
+                onChange={(e) => setCompetitionFilter(e.target.value)}
+              >
+                <option value="">すべて</option>
+                {competitionNames.map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-center gap-1.5 rounded-lg bg-base-200/50 px-2.5 py-1.5">
+              <select
+                className="select select-ghost select-xs bg-transparent font-medium focus:outline-none [&>option]:bg-base-100 [&>option]:text-base-content"
+                value={sortKey}
+                onChange={(e) =>
+                  setSortKey(e.target.value as "createdAt" | "name" | "id")
+                }
+              >
+                <option value="createdAt">作成日時</option>
+                <option value="name">コース名</option>
+                <option value="id">ID</option>
+              </select>
+              <button
+                type="button"
+                className="flex shrink-0 items-center gap-1 rounded-md bg-base-100 px-2 py-1 text-xs shadow-sm transition-colors hover:bg-base-300/40"
+                onClick={() =>
+                  setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+                }
+              >
+                {sortOrder === "desc" ? (
+                  <BarsArrowDownIcon className="size-3.5" />
+                ) : (
+                  <BarsArrowUpIcon className="size-3.5" />
+                )}
+                {sortKey === "createdAt"
+                  ? sortOrder === "desc"
+                    ? "新しい順"
+                    : "古い順"
+                  : sortKey === "name"
+                    ? sortOrder === "desc"
+                      ? "Z→A"
+                      : "A→Z"
+                    : sortOrder === "desc"
+                      ? "大きい順"
+                      : "小さい順"}
+              </button>
+            </div>
+          </div>
+        </div>
+        {(searchQuery || competitionFilter) &&
+        filteredAndSortedList.length === 0 ? (
+          <div className="py-8 text-center text-base-content/40">
+            条件に一致するコースが見つかりません
+          </div>
+        ) : (
+          <CommonCheckboxList
+            props={{ type: type, commonDataList: filteredAndSortedList }}
+            commonId={commonId}
+            setCommonId={setCommonId}
+          />
+        )}
       </>
     )
   }
