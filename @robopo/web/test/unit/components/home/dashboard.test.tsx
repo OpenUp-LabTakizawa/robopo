@@ -15,11 +15,13 @@ const defaultProps = {
       {
         id: 1,
         name: "Course A",
+        description: null,
         field: null,
         fieldValid: false,
         mission: null,
         missionValid: false,
         point: null,
+        courseOutRule: "keep",
         createdAt: null,
       },
     ],

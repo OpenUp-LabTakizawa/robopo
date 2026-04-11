@@ -4,6 +4,7 @@ import { Panel } from "@/app/components/course/panel"
 import { Robot } from "@/app/components/course/robot"
 import {
   type FieldState,
+  getFieldBounds,
   MAX_FIELD_HEIGHT,
   MAX_FIELD_WIDTH,
   type MissionValue,
@@ -12,11 +13,13 @@ import {
 
 type FieldProps = {
   field: FieldState
-  type: "edit" | "challenge" | "ipponBashi"
+  type: "edit" | "challenge"
   botPosition?: { row: number; col: number }
   botDirection?: MissionValue
   nextMissionPair?: MissionValue[]
   onPanelClick: (row: number, col: number) => void
+  onPanelPointerDown?: (row: number, col: number) => void
+  onPanelPointerEnter?: (row: number, col: number) => void
   customStyle?: React.CSSProperties
 }
 
@@ -28,43 +31,87 @@ export function Field({
   botDirection,
   nextMissionPair,
   onPanelClick,
+  onPanelPointerDown,
+  onPanelPointerEnter,
   customStyle,
 }: FieldProps): React.JSX.Element {
+  // In challenge mode, render only the bounding box of non-null cells
+  // In edit mode, render the full grid
+  const bounds = type === "challenge" ? getFieldBounds(field) : null
+  const renderMinR = bounds ? bounds.minR : 0
+  const renderMaxR = bounds ? bounds.maxR : MAX_FIELD_HEIGHT - 1
+  const renderMinC = bounds ? bounds.minC : 0
+  const renderMaxC = bounds ? bounds.maxC : MAX_FIELD_WIDTH - 1
+  const renderWidth = renderMaxC - renderMinC + 1
+  const renderHeight = renderMaxR - renderMinR + 1
+
+  // In edit mode, use responsive sizing that fits within viewport
+  // (100vw - 80px padding) / 5 columns, capped at PANEL_SIZE
+  const responsiveCellSize =
+    type === "edit"
+      ? `min(${PANEL_SIZE}px, (100vw - 80px) / ${renderWidth})`
+      : `${PANEL_SIZE}px`
+
   const styles = customStyle ?? {
-    gridTemplateColumns: `repeat(${MAX_FIELD_WIDTH}, ${PANEL_SIZE}px)`,
-    gridTemplateRows: `repeat(${MAX_FIELD_HEIGHT}, ${PANEL_SIZE}px)`,
+    gridTemplateColumns: `repeat(${renderWidth}, ${responsiveCellSize})`,
+    gridTemplateRows: `repeat(${renderHeight}, ${responsiveCellSize})`,
   }
-  const cells = field.flatMap((row, r) =>
-    row.map((panel, c) => ({ key: `${r}-${c}-${String(panel)}`, panel, r, c })),
-  )
+
+  // Build cells for the visible portion
+  const cells: {
+    key: string
+    panel: FieldState[0][0]
+    r: number
+    c: number
+  }[] = []
+  for (let r = renderMinR; r <= renderMaxR; r++) {
+    for (let c = renderMinC; c <= renderMaxC; c++) {
+      cells.push({
+        key: `${r}-${c}-${String(field[r]?.[c])}`,
+        panel: field[r]?.[c] ?? null,
+        r,
+        c,
+      })
+    }
+  }
+
   return (
-    <div className="relative mx-auto grid" style={styles}>
+    <div className="relative mx-auto grid w-fit" style={styles}>
       {cells.map((cell) => (
         <Panel
           key={cell.key}
           value={cell.panel}
+          isEditMode={type === "edit"}
           onClick={() => onPanelClick(cell.r, cell.c)}
+          onPointerDown={
+            onPanelPointerDown
+              ? () => onPanelPointerDown(cell.r, cell.c)
+              : undefined
+          }
+          onPointerEnter={
+            onPanelPointerEnter
+              ? () => onPanelPointerEnter(cell.r, cell.c)
+              : undefined
+          }
         />
       ))}
       {/* Show bot during challenge */}
-      {(type === "challenge" || type === "ipponBashi") &&
-        botPosition &&
-        botDirection && (
-          <>
-            <Robot
-              row={botPosition.row}
-              col={botPosition.col}
-              direction={botDirection}
-            />
-            <NextArrow
-              row={botPosition.row}
-              col={botPosition.col}
-              direction={botDirection}
-              nextMissionPair={nextMissionPair}
-              duration={1.5}
-            />
-          </>
-        )}
+      {type === "challenge" && botPosition && botDirection && (
+        <>
+          <Robot
+            row={botPosition.row - renderMinR}
+            col={botPosition.col - renderMinC}
+            direction={botDirection}
+          />
+          <NextArrow
+            row={botPosition.row - renderMinR}
+            col={botPosition.col - renderMinC}
+            direction={botDirection}
+            nextMissionPair={nextMissionPair}
+            duration={1.5}
+          />
+        </>
+      )}
     </div>
   )
 }

@@ -10,7 +10,6 @@ import {
   CourseOutModal,
   RetryModal,
 } from "@/app/challenge/challengeModal"
-import { IpponBashiUI } from "@/app/components/challenge/ipponBashi"
 import { calcPoint, resultSubmit } from "@/app/components/challenge/utils"
 import { Field } from "@/app/components/course/field"
 import {
@@ -20,20 +19,16 @@ import {
   type FieldState,
   findStart,
   getRobotPosition,
-  IPPON_BASHI_SIZE,
   MissionString,
   type MissionValue,
   missionStatePair,
   type PointState,
   panelOrDegree,
-  RESERVED_COURSE_IDS,
 } from "@/app/components/course/utils"
 import {
   BackButton,
-  CourseOutButton,
   FailButton,
   ReloadButton,
-  RetryButton,
   SubmitButton,
 } from "@/app/components/parts/buttons"
 
@@ -60,105 +55,7 @@ type FieldPropsType = {
   isRetry: boolean
 }
 
-// Ippon Bashi section
-interface IpponBashiSectionProps {
-  pointCount: number | null
-  isRetry: boolean
-  nowMission: number
-  handleBack: () => void
-  setModalOpen: (value: number) => void
-  isGoal: boolean
-  botPosition: { row: number; col: number }
-  botDirection: MissionValue
-  missionPair: MissionValue[][]
-  handleNext: (row: number, col: number) => void
-}
-
-function IpponBashiSection({
-  pointCount,
-  isRetry,
-  nowMission,
-  handleBack,
-  setModalOpen,
-  isGoal,
-  botPosition,
-  botDirection,
-  missionPair,
-  handleNext,
-}: IpponBashiSectionProps) {
-  return (
-    <div className="flex h-[calc(100dvh-3.5rem)] w-full flex-col">
-      {/* Status bar */}
-      <div className="flex items-center justify-between border-base-300 border-b bg-base-100 px-4 py-2">
-        <div className="flex items-center gap-3">
-          <span className="rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary text-sm">
-            THE 一本橋
-          </span>
-          <span className="rounded-full bg-accent/10 px-3 py-1 font-semibold text-accent text-sm">
-            {isRetry ? "2回目" : "1回目"}
-            {nowMission < IPPON_BASHI_SIZE - 1 ? " 行き" : " 帰り"}
-          </span>
-        </div>
-        <div className="score-display text-right">
-          <p className="text-base-content/50 text-xs">現在のスコア</p>
-          <p className="font-bold text-2xl text-accent">
-            {pointCount}
-            <span className="text-sm">pt</span>
-          </p>
-        </div>
-      </div>
-
-      {/* Mission hint */}
-      <div className="px-4 py-2 text-center text-base-content/60 text-sm">
-        パネルをタップで進みます
-      </div>
-
-      {/* Field - centered */}
-      <div className="flex flex-1 items-center justify-center overflow-hidden px-4">
-        <IpponBashiUI
-          botPosition={botPosition}
-          botDirection={botDirection}
-          nextMissionPair={isGoal ? [null, null] : missionPair[nowMission]}
-          onPanelClick={handleNext}
-        />
-      </div>
-
-      {/* Action bar */}
-      <div className="border-base-300 border-t bg-base-100 px-4 py-3">
-        <div className="grid grid-cols-2 gap-2">
-          {/* 上段: 補助アクション（控えめ） */}
-          <BackButton
-            onClick={handleBack}
-            disabled={nowMission === 0}
-            variant="outline"
-            className="btn-sm"
-          />
-          <CourseOutButton
-            onClick={() => setModalOpen(3)}
-            variant="outline"
-            className="btn-sm"
-          />
-          {/* 下段: メインアクション（目立つ） */}
-          <RetryButton
-            onClick={() => setModalOpen(2)}
-            label="再挑戦"
-            disabled={isRetry}
-            className="min-h-[44px]"
-          />
-          <SubmitButton
-            onClick={() => setModalOpen(1)}
-            className="min-h-[44px] shadow-accent/25 shadow-lg"
-          />
-        </div>
-        <div className="mt-2 flex justify-center">
-          <SoundController />
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// 通常チャレンジ用セクション
+// チャレンジ用セクション
 interface NormalChallengeSectionProps {
   isGoal: boolean
   pointState: PointState
@@ -166,6 +63,7 @@ interface NormalChallengeSectionProps {
   missionPair: MissionValue[][]
   pointCount: number | null
   handleBack: () => void
+  handleTierSelect: (tierIndex: number) => void
   setModalOpen: (value: number) => void
   loading: boolean
   isSuccess: boolean
@@ -180,12 +78,16 @@ function NormalChallengeSection({
   missionPair,
   pointCount,
   handleBack,
+  handleTierSelect,
   setModalOpen,
   loading,
   isSuccess,
   message,
   FieldProps,
 }: NormalChallengeSectionProps) {
+  // Check if current mission has tier points
+  const currentPointEntry = !isGoal ? pointState[nowMission + 2] : null
+  const isTierMission = Array.isArray(currentPointEntry)
   return (
     <div className="flex h-[calc(100dvh-3.5rem)] w-full flex-col">
       {/* Status bar */}
@@ -208,11 +110,13 @@ function NormalChallengeSection({
       {isGoal ? (
         <div className="flex flex-col items-center gap-3 bg-success/5 px-4 py-4">
           <p className="font-bold text-2xl text-success">おめでとう!</p>
-          {pointState[1] !== null && pointState[1] > 0 && (
-            <p className="text-sm text-success/80">
-              ゴールボーナス: +{pointState[1]}pt
-            </p>
-          )}
+          {pointState[1] !== null &&
+            !Array.isArray(pointState[1]) &&
+            pointState[1] > 0 && (
+              <p className="text-sm text-success/80">
+                ゴールボーナス: +{pointState[1]}pt
+              </p>
+            )}
           {isSuccess ? (
             <p className="text-base-content/50 text-sm">
               ホーム画面へ自動遷移します
@@ -244,17 +148,44 @@ function NormalChallengeSection({
                 ? ""
                 : panelOrDegree(missionPair[nowMission][0])}
             </p>
-            <p className="text-accent text-xs">
-              +{pointState[nowMission + 2]}pt
-            </p>
+            {!isTierMission && (
+              <p className="text-accent text-xs">
+                +{pointState[nowMission + 2] as number}pt
+              </p>
+            )}
+            {isTierMission && <p className="text-accent text-xs">段階評価</p>}
           </div>
         </div>
       )}
 
-      {/* Field - centered */}
-      <div className="flex flex-1 items-center justify-center overflow-auto px-4">
-        <Field {...FieldProps} />
-      </div>
+      {/* Tier selection UI - shown instead of field for tier missions */}
+      {!isGoal && isTierMission ? (
+        <div className="flex flex-1 flex-col items-center justify-center gap-2 overflow-auto px-4 py-4">
+          <p className="mb-2 font-bold text-base-content/60 text-sm">
+            審判が評価を選択してください
+          </p>
+          <div className="grid w-full max-w-xs gap-2">
+            {(currentPointEntry as number[]).map((pt, i) => (
+              <button
+                // biome-ignore lint/suspicious/noArrayIndexKey: tiers may have duplicate values, need index for uniqueness
+                key={i}
+                type="button"
+                className={`btn min-h-[48px] text-lg ${
+                  i === 0 ? "btn-success" : pt < 0 ? "btn-error" : "btn-outline"
+                }`}
+                onClick={() => handleTierSelect(i)}
+              >
+                {pt}pt
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        /* Field - centered */
+        <div className="flex flex-1 items-center justify-center overflow-auto px-4">
+          <Field {...FieldProps} />
+        </div>
+      )}
 
       {/* Action bar */}
       <div className="border-base-300 border-t bg-base-100 px-4 py-3">
@@ -429,6 +360,67 @@ export function Challenge({
     setBotDirection(missionState[0])
   }, [start, missionState])
 
+  // Handle tier point selection (for graded scoring missions)
+  const handleTierSelect = useCallback(
+    (tierIndex: number) => {
+      const currentEntry = pointState[nowMission + 2]
+      if (!Array.isArray(currentEntry)) {
+        return
+      }
+
+      const tierPoint = currentEntry[tierIndex] ?? 0
+      // Calculate point manually: base + tier point for this mission
+      const basePoint = calcPoint(pointState, nowMission)
+      const newPoint = basePoint + tierPoint
+      // Add goal bonus if this is the last mission
+      if (nowMission === missionPair.length - 1) {
+        const goalEntry = pointState[1]
+        const goalPt =
+          goalEntry !== null && !Array.isArray(goalEntry)
+            ? Number(goalEntry)
+            : 0
+        setPointCount(newPoint + goalPt)
+        setIsGoal(true)
+        setModalOpen(1)
+        !muted && goalSound?.play()
+      } else {
+        setPointCount(newPoint)
+        setNowMission(nowMission + 1)
+        !muted && nextSound?.play()
+      }
+
+      // Update robot position
+      const [newRow, newCol, direction] = getRobotPosition(
+        start?.[0] || 0,
+        start?.[1] || 0,
+        missionState,
+        nowMission + 1,
+      )
+      setBotPosition({ row: newRow, col: newCol })
+      setBotDirection(direction)
+
+      if (!isRetry && !isGoal) {
+        setResult1(result1 + 1)
+      } else if (result2 !== null && !isGoal) {
+        setResult2(result2 + 1)
+      }
+    },
+    [
+      nowMission,
+      missionPair.length,
+      pointState,
+      start,
+      missionState,
+      isRetry,
+      isGoal,
+      result1,
+      result2,
+      muted,
+      goalSound,
+      nextSound,
+    ],
+  )
+
   const FieldProps = {
     type: "challenge" as FieldPropsType["type"],
     field: fieldState,
@@ -453,34 +445,20 @@ export function Challenge({
       <audio src="/sound/02_next.mp3" ref={nextAudioRef} muted={muted} />
       <audio src="/sound/03_back.mp3" ref={backAudioRef} muted={muted} />
       <audio src="/sound/04_goal.mp3" ref={goalAudioRef} muted={muted} />
-      {Number(courseId) === RESERVED_COURSE_IDS.IPPON ? (
-        <IpponBashiSection
-          pointCount={pointCount}
-          isRetry={isRetry}
-          nowMission={nowMission}
-          handleBack={handleBack}
-          setModalOpen={setModalOpen}
-          isGoal={isGoal}
-          botPosition={botPosition}
-          botDirection={botDirection}
-          missionPair={missionPair}
-          handleNext={handleNext}
-        />
-      ) : (
-        <NormalChallengeSection
-          isGoal={isGoal}
-          pointState={pointState}
-          nowMission={nowMission}
-          missionPair={missionPair}
-          pointCount={pointCount}
-          handleBack={handleBack}
-          setModalOpen={setModalOpen}
-          loading={loading}
-          isSuccess={isSuccess}
-          message={message}
-          FieldProps={FieldProps}
-        />
-      )}
+      <NormalChallengeSection
+        isGoal={isGoal}
+        pointState={pointState}
+        nowMission={nowMission}
+        missionPair={missionPair}
+        pointCount={pointCount}
+        handleBack={handleBack}
+        handleTierSelect={handleTierSelect}
+        setModalOpen={setModalOpen}
+        loading={loading}
+        isSuccess={isSuccess}
+        message={message}
+        FieldProps={FieldProps}
+      />
       {modalOpen === 1 && (
         <ChallengeModal
           setModalOpen={setModalOpen}

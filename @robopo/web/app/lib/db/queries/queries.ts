@@ -1,5 +1,4 @@
-import { and, eq, or, type SQLWrapper, sql } from "drizzle-orm"
-import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
+import { and, eq, type SQLWrapper, sql } from "drizzle-orm"
 import type { CourseSummary } from "@/app/components/summary/utils"
 import { db } from "@/app/lib/db/db"
 import {
@@ -193,12 +192,10 @@ function maxResultExpr(courseIdExpr: number | ReturnType<typeof sql>) {
   return sql`MAX(CASE WHEN ${challenge.courseId} = ${courseIdExpr} THEN GREATEST(${challenge.result1}, COALESCE(${challenge.result2}, 0)) ELSE NULL END)`
 }
 
-// SQL helper: total challenge count (counting retries as 2) across the given course, Ippon Bashi, and Sensor courses
+// SQL helper: total challenge count (counting retries as 2) for a specific course
 function totalChallengeCountExpr(courseId: number) {
   return sql`SUM(CASE
     WHEN ${challenge.courseId} = ${courseId} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-    WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.IPPON} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
-    WHEN ${challenge.courseId} = ${RESERVED_COURSE_IDS.SENSOR} THEN (CASE WHEN ${challenge.result2} IS NULL THEN 1 ELSE 2 END)
     ELSE 0
   END)`
 }
@@ -235,12 +232,6 @@ export async function getCourseSummary(
       ).as("firstTCourseTime"),
       tCourseCount: tCourseCountExpr(courseId).as("tCourseCount"),
       tCourseMaxResult: maxResultExpr(courseId).as("tCourseMaxResult"),
-      sensorMaxResult: maxResultExpr(RESERVED_COURSE_IDS.SENSOR).as(
-        "sensorMaxResult",
-      ),
-      ipponMaxResult: maxResultExpr(RESERVED_COURSE_IDS.IPPON).as(
-        "ipponMaxResult",
-      ),
       challengeCount: totalChallengeCountExpr(courseId).as("challengeCount"),
     })
     .from(player)
@@ -291,12 +282,6 @@ export async function getPlayerResult(
       ).as("firstCount"),
       tCourseCount: tCourseCountExpr(courseId).as("tCourseCount"),
       tCourseMaxResult: maxResultExpr(courseId).as("tCourseMaxResult"),
-      ipponMaxResult: maxResultExpr(RESERVED_COURSE_IDS.IPPON).as(
-        "ipponMaxResult",
-      ),
-      sensorMaxResult: maxResultExpr(RESERVED_COURSE_IDS.SENSOR).as(
-        "sensorMaxResult",
-      ),
       challengeCount: totalChallengeCountExpr(courseId).as("challengeCount"),
     })
     .from(challenge)
@@ -375,11 +360,7 @@ export async function getChallengeCount(
       and(
         eq(challenge.competitionId, competitionId),
         eq(challenge.playerId, playerId),
-        or(
-          eq(challenge.courseId, courseId),
-          eq(challenge.courseId, RESERVED_COURSE_IDS.IPPON),
-          eq(challenge.courseId, RESERVED_COURSE_IDS.SENSOR),
-        ),
+        eq(challenge.courseId, courseId),
       ),
     )
   return result as { challengeCount: number }[]

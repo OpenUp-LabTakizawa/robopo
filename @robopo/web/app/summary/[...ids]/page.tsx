@@ -5,11 +5,10 @@ import {
   deserializeMission,
   deserializePoint,
   missionStatePair,
-  RESERVED_COURSE_IDS,
 } from "@/app/components/course/utils"
 import { HomeButton } from "@/app/components/parts/buttons"
-import { sumIpponPoint } from "@/app/components/summary/utilServer"
-import { isCompletedCourse } from "@/app/components/summary/utils"
+import { getCompetitionCourseList } from "@/app/components/server/db"
+import { maxCoursePoint } from "@/app/components/summary/utilServer"
 import { BackLabelWithIcon } from "@/app/lib/const"
 import {
   getChallengeCount,
@@ -29,60 +28,65 @@ export default async function SummaryPlayer({
   params: Promise<{ ids: number[] }>
 }) {
   const { ids } = await params
-  // ids[0]:competitionId, ids[1]:courseId, ids[2]:playerId
-  // 個人成績を取得する
-  const player = await getPlayerById(ids[2])
+  // ids[0]:competitionId, ids[1]:courseId (selected), ids[2]:playerId
+  const competitionId = ids[0]
+  const selectedCourseId = ids[1]
+  const playerId = ids[2]
 
-  const resultArray = await getCourseSummaryByPlayerId(ids[0], ids[1], ids[2])
-  const firstTCourseCount = await getFirstCount(ids[0], ids[1], ids[2])
-  const maxResult: { maxResult: number }[] = await getMaxResult(
-    ids[0],
-    ids[1],
-    ids[2],
+  const player = await getPlayerById(playerId)
+
+  // Get all courses for this competition
+  const { competitionCourses } = await getCompetitionCourseList(competitionId)
+
+  // Selected course data
+  const selectedCourse = await getCourseById(selectedCourseId)
+  const selectedMissionPair = missionStatePair(
+    deserializeMission(selectedCourse?.mission || ""),
+  )
+  const selectedPoint = deserializePoint(selectedCourse?.point || "")
+  const selectedResultArray = await getCourseSummaryByPlayerId(
+    competitionId,
+    selectedCourseId,
+    playerId,
+  )
+  const selectedFirstCount = await getFirstCount(
+    competitionId,
+    selectedCourseId,
+    playerId,
+  )
+  const selectedMaxResult = await getMaxResult(
+    competitionId,
+    selectedCourseId,
+    playerId,
   )
 
-  const resultIpponArray = await getCourseSummaryByPlayerId(
-    ids[0],
-    RESERVED_COURSE_IDS.IPPON,
-    ids[2],
+  // Calculate total score across all competition courses
+  let totalPoint = 0
+  for (const c of competitionCourses) {
+    const maxPt = await maxCoursePoint(competitionId, playerId, c.id)
+    totalPoint += maxPt
+  }
+
+  // Pre-resolve other courses data (avoid async in JSX)
+  const otherCourses = competitionCourses.filter(
+    (c) => c.id !== selectedCourseId,
   )
-  const firstIpponCount = await getFirstCount(
-    ids[0],
-    RESERVED_COURSE_IDS.IPPON,
-    ids[2],
-  )
-  const maxIpponResult: { maxResult: number }[] = await getMaxResult(
-    ids[0],
-    RESERVED_COURSE_IDS.IPPON,
-    ids[2],
+  const otherCoursesData = await Promise.all(
+    otherCourses.map(async (c) => {
+      const coursePoint = deserializePoint(c.point || "")
+      const maxRes = await getMaxResult(competitionId, c.id, playerId)
+      const maxPt =
+        maxRes.length > 0 ? calcPoint(coursePoint, maxRes[0].maxResult) : null
+      return { id: c.id, name: c.name, maxPt }
+    }),
   )
 
-  const resultSensorArray = await getCourseSummaryByPlayerId(
-    ids[0],
-    RESERVED_COURSE_IDS.SENSOR,
-    ids[2],
+  // Challenge count for selected course
+  const challengeCount = await getChallengeCount(
+    competitionId,
+    selectedCourseId,
+    playerId,
   )
-  const maxSensorResult: { maxResult: number }[] = await getMaxResult(
-    ids[0],
-    RESERVED_COURSE_IDS.SENSOR,
-    ids[2],
-  )
-
-  const challengeCount = await getChallengeCount(ids[0], ids[1], ids[2])
-
-  // コースデータを取得する
-  const course = await getCourseById(ids[1])
-  const missionPair = missionStatePair(
-    deserializeMission(course?.mission || ""),
-  )
-  const point = deserializePoint(course?.point || "")
-
-  // 一本橋のデータを取得する
-  const ipponBashi = await getCourseById(RESERVED_COURSE_IDS.IPPON)
-  const ipponPoint = deserializePoint(ipponBashi?.point || "")
-
-  // 一本橋コースで得た総得点
-  const sumIpponPoints = await sumIpponPoint(ids[0], ids[2])
 
   return (
     <>
@@ -99,108 +103,37 @@ export default async function SummaryPlayer({
         </h1>
         <h1 className="mt-2 mr-5 font-bold text-3xl">{player ? "選手" : ""}</h1>
       </div>
-      <div className="divider">{course?.name}コース</div>
 
+      {/* Selected course detail */}
+      <div className="divider">{selectedCourse?.name}コース</div>
       <TCourseTable
-        missionPair={missionPair}
-        point={point}
-        resultArray={resultArray}
-        firstTCourseCount={firstTCourseCount}
-        maxResult={maxResult}
+        missionPair={selectedMissionPair}
+        point={selectedPoint}
+        resultArray={selectedResultArray}
+        firstTCourseCount={selectedFirstCount}
+        maxResult={selectedMaxResult}
       />
 
-      <div className="divider">THE一本橋</div>
-      <div className="grid w-full justify-center">
-        <table>
-          <tbody>
-            <tr className="grid grid-cols-5 justify-center text-base sm:grid-cols-10 lg:grid-cols-20">
-              {resultIpponArray.map((result, index: number) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: elements have no id, using index as key
-                <React.Fragment key={index}>
-                  <td className="min-w-9 border border-gray-400 p-2 text-center">
-                    {calcPoint(ipponPoint, result.results1)}
+      {/* Other courses summary */}
+      {otherCoursesData.map((c) => (
+        <React.Fragment key={c.id}>
+          <div className="divider">{c.name}</div>
+          <div className="m-5 grid justify-end">
+            <table className="table-pin-rows table">
+              <tbody>
+                <tr>
+                  <td className="border border-gray-400 bg-cyan-50 p-2 text-center">
+                    MAXポイント
                   </td>
-                  {result.results2 !== null && (
-                    <td className="min-w-9 border border-gray-400 p-2 text-center">
-                      {calcPoint(ipponPoint, result.results2)}
-                    </td>
-                  )}
-                </React.Fragment>
-              ))}
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div className="m-5 grid justify-end">
-        <table className="table-pin-rows table">
-          <tbody>
-            <tr>
-              <td className="border border-gray-400 bg-cyan-50 p-2 text-center">
-                一本橋の合計得点
-              </td>
-              <td className="border border-gray-400 p-2">
-                {maxIpponResult.length > 0 ? sumIpponPoints : "-"}
-              </td>
-              <td className="border border-gray-400 bg-cyan-50 p-2 text-center">
-                成功までの回数
-              </td>
-              <td className="border border-gray-400 p-2">
-                {maxIpponResult.length > 0 &&
-                isCompletedCourse(ipponPoint, maxIpponResult[0].maxResult)
-                  ? firstIpponCount[0].firstCount
-                  : "-"}
-              </td>
-              <td className="border border-gray-400 bg-cyan-50 p-2 text-center">
-                MAXポイント
-              </td>
-              <td className="border border-gray-400 p-2">
-                {maxIpponResult.length > 0
-                  ? calcPoint(ipponPoint, maxIpponResult[0].maxResult)
-                  : "-"}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div className="divider">センサーコース</div>
-      <div className="grid w-full justify-center">
-        <table>
-          <tbody>
-            <tr className="grid grid-cols-5 justify-center text-base sm:grid-cols-10 lg:grid-cols-20">
-              {resultSensorArray.map((result, index: number) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: elements have no id, using index as key
-                <React.Fragment key={index}>
-                  <td className="min-w-9 border border-gray-400 p-2 text-center">
-                    {result.results1}
+                  <td className="border border-gray-400 p-2">
+                    {c.maxPt !== null ? c.maxPt : "-"}
                   </td>
-                  {result.results2 !== null && (
-                    <td className="min-w-9 border border-gray-400 p-2 text-center">
-                      {result.results2}
-                    </td>
-                  )}
-                </React.Fragment>
-              ))}
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div className="m-5 grid justify-end">
-        <table className="table-pin-rows table">
-          <tbody>
-            <tr>
-              <td className="border border-gray-400 bg-cyan-50 p-2 text-center">
-                MAXポイント
-              </td>
-              <td className="border border-gray-400 p-2">
-                {maxSensorResult.length > 0
-                  ? maxSensorResult[0].maxResult
-                  : "-"}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </React.Fragment>
+      ))}
 
       <div className="divider">試行回数</div>
       <div className="m-5 grid justify-end">
@@ -211,7 +144,7 @@ export default async function SummaryPlayer({
                 トータル回数
               </td>
               <td className="border border-gray-400 p-2">
-                {challengeCount[0].challengeCount}
+                {challengeCount[0]?.challengeCount ?? 0}
               </td>
             </tr>
           </tbody>
@@ -226,22 +159,14 @@ export default async function SummaryPlayer({
                 トータルポイント
               </td>
               <td className="border border-gray-400 p-2 text-2xl">
-                {(maxResult.length > 0
-                  ? calcPoint(point, maxResult[0].maxResult)
-                  : 0) +
-                  (maxIpponResult.length > 0
-                    ? calcPoint(ipponPoint, maxIpponResult[0].maxResult)
-                    : 0) +
-                  (maxSensorResult.length > 0
-                    ? maxSensorResult[0].maxResult
-                    : 0)}
+                {totalPoint}
               </td>
             </tr>
           </tbody>
         </table>
       </div>
       <Link
-        href={`/summary/${ids[0]}`}
+        href={`/summary/${competitionId}`}
         className="btn btn-primary mx-auto mr-5 min-w-28 max-w-fit"
       >
         集計結果一覧へ

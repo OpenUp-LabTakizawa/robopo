@@ -2,16 +2,8 @@
 export const PANEL_SIZE: number = 85
 
 // Max size for course creation
-export const MAX_FIELD_WIDTH: number = 3
-export const MAX_FIELD_HEIGHT: number = 3
-
-// Ippon Bashi size
-export const IPPON_BASHI_SIZE: number = 5
-
-export const RESERVED_COURSE_IDS = {
-  IPPON: -1,
-  SENSOR: -2,
-} as const
+export const MAX_FIELD_WIDTH: number = 5
+export const MAX_FIELD_HEIGHT: number = 5
 
 // Panel types
 export type PanelValue = "start" | "goal" | "route" | "startGoal" | null
@@ -34,6 +26,7 @@ export type MissionValue =
   | "mb"
   | "tr"
   | "tl"
+  | "ps"
   | ""
   | number
   | null
@@ -48,6 +41,7 @@ export const MissionString: {
   mb: "後進",
   tr: "右回転",
   tl: "左回転",
+  ps: "一時停止",
   "": "空",
 }
 
@@ -58,7 +52,9 @@ export type MissionState = MissionValue[]
 // Point
 // start時のポイント(ハンデ的な?機能), goal時のポイント, 以後missionクリア毎ポイント…
 export type PointValue = number | null
-export type PointState = PointValue[]
+export type PointTier = number[] // 段階別ポイント（例: [20, 10, 5, 3, 0, -5]）
+export type PointEntry = PointValue | PointTier // 単一値 or 段階選択
+export type PointState = PointEntry[]
 
 // Display panel count or degrees
 export function panelOrDegree(mission: MissionValue): string {
@@ -68,15 +64,45 @@ export function panelOrDegree(mission: MissionValue): string {
   if (mission === "tr" || mission === "tl") {
     return "度"
   }
+  if (mission === "ps") {
+    return ""
+  }
   return "-"
 }
 
 // Initialize field layout.
 export function initializeField(): FieldState {
-  const field: FieldState = Array(MAX_FIELD_WIDTH)
+  const field: FieldState = Array(MAX_FIELD_HEIGHT)
     .fill(null)
-    .map(() => Array(MAX_FIELD_HEIGHT).fill(null))
+    .map(() => Array(MAX_FIELD_WIDTH).fill(null))
   return field
+}
+
+// Get bounding box of non-null cells in the field
+export function getFieldBounds(field: FieldState): {
+  minR: number
+  maxR: number
+  minC: number
+  maxC: number
+} {
+  let minR = field.length
+  let maxR = 0
+  let minC = field[0]?.length ?? 0
+  let maxC = 0
+  for (let r = 0; r < field.length; r++) {
+    for (let c = 0; c < field[r].length; c++) {
+      if (field[r][c] !== null) {
+        minR = Math.min(minR, r)
+        maxR = Math.max(maxR, r)
+        minC = Math.min(minC, c)
+        maxC = Math.max(maxC, c)
+      }
+    }
+  }
+  if (minR > maxR) {
+    return { minR: 0, maxR: 0, minC: 0, maxC: 0 }
+  }
+  return { minR, maxR, minC, maxC }
 }
 
 // Check if start exists on the field
@@ -105,11 +131,8 @@ export function isGoal(field: FieldState): boolean {
 
 // Get start position on the field
 export function findStart(field: FieldState): [number, number] | null {
-  // Adjust to be at least Ippon Bashi size
-  const height =
-    MAX_FIELD_HEIGHT >= IPPON_BASHI_SIZE ? MAX_FIELD_HEIGHT : IPPON_BASHI_SIZE
-  for (let i = 0; i < height; i++) {
-    for (let j = 0; j < MAX_FIELD_WIDTH; j++) {
+  for (let i = 0; i < field.length; i++) {
+    for (let j = 0; j < field[i].length; j++) {
       if (field[i][j] === "start" || field[i][j] === "startGoal") {
         return [i, j]
       }
@@ -184,15 +207,23 @@ export function serializeField(fieldState: FieldState): string {
     .join(";")
 }
 
-// Convert String to FieldState
+// Convert String to FieldState (with backward-compatible padding to MAX size)
 export function deserializeField(str: string): FieldState {
-  return str
+  const raw = str
     .split(";")
     .map((row) =>
       row
         .split(",")
         .map((panel) => (panel === "null" ? null : (panel as PanelValue))),
     )
+  // Pad to MAX_FIELD_HEIGHT x MAX_FIELD_WIDTH if smaller
+  const field = initializeField()
+  for (let r = 0; r < raw.length && r < MAX_FIELD_HEIGHT; r++) {
+    for (let c = 0; c < raw[r].length && c < MAX_FIELD_WIDTH; c++) {
+      field[r][c] = raw[r][c]
+    }
+  }
+  return field
 }
 
 // Convert MissionState to String
@@ -225,8 +256,19 @@ export function missionStatePair(missionState: MissionState): MissionValue[][] {
 }
 
 // Convert PointState to String
+// Single values: number, Tier values: (n1,n2,n3,...)
 export function serializePoint(pointState: PointState): string {
-  return pointState.map((point) => (point === null ? "null" : point)).join(";")
+  return pointState
+    .map((entry) => {
+      if (entry === null) {
+        return "null"
+      }
+      if (Array.isArray(entry)) {
+        return `(${entry.join(",")})`
+      }
+      return String(entry)
+    })
+    .join(";")
 }
 
 // Convert String to PointState
@@ -234,11 +276,43 @@ export function deserializePoint(str: string | null): PointState {
   if (!str) {
     return []
   }
-  return str
-    .split(";")
-    .map((point) =>
-      point === "null" ? null : (point as unknown as PointValue),
-    )
+  const result: PointState = []
+  // Parse with support for (...) tier format
+  let i = 0
+  const parts: string[] = []
+  let current = ""
+  let inParens = false
+  for (i = 0; i < str.length; i++) {
+    const ch = str[i]
+    if (ch === "(" && !inParens) {
+      inParens = true
+      current += ch
+    } else if (ch === ")" && inParens) {
+      inParens = false
+      current += ch
+    } else if (ch === ";" && !inParens) {
+      parts.push(current)
+      current = ""
+    } else {
+      current += ch
+    }
+  }
+  if (current) {
+    parts.push(current)
+  }
+
+  for (const part of parts) {
+    if (part === "null") {
+      result.push(null)
+    } else if (part.startsWith("(") && part.endsWith(")")) {
+      // Tier: (20,10,5,3,0,-5)
+      const inner = part.slice(1, -1)
+      result.push(inner.split(",").map(Number))
+    } else {
+      result.push(Number(part))
+    }
+  }
+  return result
 }
 
 // Get next position and direction from current row, col, direction, and mission pair
@@ -342,6 +416,8 @@ export function getNextPosition(
       return [row, col, getDirection(direction, "tr", mission1Num)]
     case "tl":
       return [row, col, getDirection(direction, "tl", mission1Num)]
+    case "ps":
+      return [row, col, direction] // Pause: no position change
     default:
       return [row, col, direction]
   }
@@ -398,6 +474,15 @@ export function checkValidity(
       mission,
       i,
     )
+    // Bounds check
+    if (
+      row < 0 ||
+      row >= field.length ||
+      col < 0 ||
+      col >= (field[0]?.length ?? 0)
+    ) {
+      return false
+    }
     // False if not on the course
     if (
       field[row][col] !== "start" &&
@@ -416,6 +501,15 @@ export function checkValidity(
         missionPair[i][0],
         missionPair[i][1],
       )
+      // Bounds check for final position
+      if (
+        lastRow < 0 ||
+        lastRow >= field.length ||
+        lastCol < 0 ||
+        lastCol >= (field[0]?.length ?? 0)
+      ) {
+        return false
+      }
       if (
         field[lastRow][lastCol] !== "goal" &&
         field[lastRow][lastCol] !== "startGoal"

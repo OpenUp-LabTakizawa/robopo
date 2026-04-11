@@ -96,6 +96,7 @@ describe("groupByCourse", () => {
       {
         id: 1,
         name: "C1",
+        description: null,
         createdAt: now,
         competitionId: 10,
         competitionName: "Comp1",
@@ -103,6 +104,7 @@ describe("groupByCourse", () => {
       {
         id: 1,
         name: "C1",
+        description: null,
         createdAt: now,
         competitionId: 20,
         competitionName: "Comp2",
@@ -110,6 +112,7 @@ describe("groupByCourse", () => {
       {
         id: 2,
         name: "C2",
+        description: null,
         createdAt: null,
         competitionId: 10,
         competitionName: "Comp1",
@@ -128,6 +131,7 @@ describe("groupByCourse", () => {
       {
         id: 1,
         name: "C1",
+        description: null,
         createdAt: null,
         competitionId: null,
         competitionName: null,
@@ -160,6 +164,7 @@ describe("groupByCourse", () => {
       {
         id: 1,
         name: "C",
+        description: null,
         createdAt: new Date("2025-01-01"),
         competitionId: null,
         competitionName: null,

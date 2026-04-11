@@ -4,9 +4,6 @@ import { cleanup, render } from "@testing-library/react"
 mock.module("@/app/challenge/challenge", () => ({
   Challenge: () => <div data-testid="challenge" />,
 }))
-mock.module("@/app/components/challenge/sensorCourse", () => ({
-  SensorCourse: () => <div data-testid="sensor-course" />,
-}))
 
 const { AudioProvider } = await import(
   "@/app/challenge/[competitionId]/[courseId]/[playerId]/audioContext"
@@ -18,11 +15,13 @@ const { View } = await import(
 const courseData = {
   id: 1,
   name: "test",
+  description: null,
   field: null,
   fieldValid: false,
   mission: null,
   missionValid: false,
   point: null,
+  courseOutRule: "keep",
   createdAt: null,
 }
 
@@ -68,16 +67,9 @@ describe("View", () => {
     window.addEventListener = original
   })
 
-  test("renders Challenge for non-sensor course", () => {
-    const { getByTestId, queryByTestId } = renderView()
+  test("renders Challenge for any course", () => {
+    const { getByTestId } = renderView()
     expect(getByTestId("challenge")).toBeDefined()
-    expect(queryByTestId("sensor-course")).toBeNull()
-  })
-
-  test("renders SensorCourse for sensor course (id: -2)", () => {
-    const { getByTestId, queryByTestId } = renderView(-2)
-    expect(getByTestId("sensor-course")).toBeDefined()
-    expect(queryByTestId("challenge")).toBeNull()
   })
 
   test("passes umpireId to Challenge component", () => {

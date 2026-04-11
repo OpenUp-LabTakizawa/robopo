@@ -20,8 +20,24 @@ export function EditorPage({
 }) {
   const courseId = courseData?.id || null
 
-  const { setName, field, setField, mission, setMission, point, setPoint } =
-    useCourseEdit()
+  const {
+    setName,
+    field,
+    setField,
+    mission,
+    setMission,
+    point,
+    setPoint,
+    courseOutRule,
+    setCourseOutRule,
+    selectedTool,
+    setSelectedTool,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    pushHistory,
+  } = useCourseEdit()
 
   useEffect(() => {
     async function fetchCourseData() {
@@ -38,16 +54,31 @@ export function EditorPage({
         if (courseData.name) {
           setName(courseData.name)
         }
+        if (courseData.courseOutRule) {
+          setCourseOutRule(courseData.courseOutRule)
+        }
       }
     }
     fetchCourseData()
-  }, [courseData, setField, setMission, setPoint, setName])
+  }, [courseData, setField, setMission, setPoint, setName, setCourseOutRule])
 
   return (
     <div className="h-full w-full">
       <div className="gap-4 sm:grid sm:max-h-screen sm:grid-cols-2">
         <div className="sm:w-full sm:justify-self-end">
-          <CourseEdit field={field} setField={setField} />
+          <CourseEdit
+            field={field}
+            setField={setField}
+            courseOutRule={courseOutRule}
+            setCourseOutRule={setCourseOutRule}
+            selectedTool={selectedTool}
+            setSelectedTool={setSelectedTool}
+            undo={undo}
+            redo={redo}
+            canUndo={canUndo}
+            canRedo={canRedo}
+            pushHistory={pushHistory}
+          />
         </div>
         <div className="sm:mx-4 sm:w-full sm:justify-self-start">
           <MissionEdit

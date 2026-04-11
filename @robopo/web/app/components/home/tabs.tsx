@@ -10,7 +10,7 @@ import type { Route } from "next"
 import Link from "next/link"
 import type React from "react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
+
 import { COMPETITION_MANAGEMENT_LIST } from "@/app/lib/const"
 import type {
   SelectCompetition,
@@ -218,22 +218,6 @@ export function ChallengeTab({
               onDisabledClick={handleDisabledClick}
             />
           ))}
-          <CourseCard
-            name="THE一本橋"
-            link={
-              `/challenge/${competitionId}/${RESERVED_COURSE_IDS.IPPON}?umpireId=${umpireId}` as Route
-            }
-            disabled={disableCondition}
-            onDisabledClick={handleDisabledClick}
-          />
-          <CourseCard
-            name="センサーコース"
-            link={
-              `/challenge/${competitionId}/${RESERVED_COURSE_IDS.SENSOR}?umpireId=${umpireId}` as Route
-            }
-            disabled={disableCondition}
-            onDisabledClick={handleDisabledClick}
-          />
         </div>
       ) : competitionId === 0 ? (
         <p className="py-4 text-center text-base-content/40 text-sm">

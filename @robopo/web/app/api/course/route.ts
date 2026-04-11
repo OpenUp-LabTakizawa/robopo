@@ -26,7 +26,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { name, description, field, mission, point } = await req.json()
+  const { name, description, field, mission, point, courseOutRule } =
+    await req.json()
   const normalizedDescription =
     typeof description === "string" ? description.trim() || null : null
   const searchParams = req.nextUrl.searchParams
@@ -51,6 +52,7 @@ export async function POST(req: NextRequest) {
     mission: mission,
     missionValid: computedMissionValid,
     point: point,
+    courseOutRule: courseOutRule || "keep",
   }
 
   const method = id ? "update" : "create"

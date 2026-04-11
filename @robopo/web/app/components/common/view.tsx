@@ -22,6 +22,8 @@ import type {
   SelectUmpireWithCompetition,
 } from "@/app/lib/db/schema"
 
+type SortKey = "createdAt" | "name" | "id"
+
 type PlayerProps = {
   type: "player"
   initialCommonDataList: SelectPlayerWithCompetition[]
@@ -176,13 +178,102 @@ export function View({
     )
   }
 
+  function CourseFilterBar({
+    searchQuery,
+    setSearchQuery,
+    competitionFilter,
+    setCompetitionFilter,
+    competitionNames,
+    sortKey,
+    setSortKey,
+    sortOrder,
+    setSortOrder,
+  }: {
+    searchQuery: string
+    setSearchQuery: (v: string) => void
+    competitionFilter: string
+    setCompetitionFilter: (v: string) => void
+    competitionNames: string[]
+    sortKey: SortKey
+    setSortKey: (v: SortKey) => void
+    sortOrder: "asc" | "desc"
+    setSortOrder: React.Dispatch<React.SetStateAction<"asc" | "desc">>
+  }) {
+    return (
+      <div className="flex flex-col gap-3 px-4 pb-4">
+        <label className="input input-bordered flex items-center gap-2 rounded-xl bg-base-200/40 transition-colors focus-within:bg-base-100">
+          <MagnifyingGlassIcon className="size-4 shrink-0 text-base-content/40" />
+          <input
+            type="text"
+            placeholder="コース名・説明で検索"
+            className="grow"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </label>
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex shrink-0 items-center gap-1.5 rounded-lg bg-base-200/50 px-2.5 py-1.5">
+            <FunnelIcon className="size-3.5 shrink-0 text-base-content/40" />
+            <span className="shrink-0 text-xs">大会</span>
+            <select
+              className="select select-ghost select-xs bg-transparent pe-0 font-medium focus:outline-none [&>option]:bg-base-100 [&>option]:text-base-content"
+              style={{ backgroundImage: "none" }}
+              value={competitionFilter}
+              onChange={(e) => setCompetitionFilter(e.target.value)}
+            >
+              <option value="">すべて</option>
+              {competitionNames.map((name) => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex items-center gap-1.5 rounded-lg bg-base-200/50 px-2.5 py-1.5">
+            <select
+              className="select select-ghost select-xs bg-transparent font-medium focus:outline-none [&>option]:bg-base-100 [&>option]:text-base-content"
+              value={sortKey}
+              onChange={(e) => setSortKey(e.target.value as SortKey)}
+            >
+              <option value="createdAt">作成日時</option>
+              <option value="name">コース名</option>
+              <option value="id">ID</option>
+            </select>
+            <button
+              type="button"
+              className="flex shrink-0 items-center gap-1 rounded-md bg-base-100 px-2 py-1 text-xs shadow-sm transition-colors hover:bg-base-300/40"
+              onClick={() =>
+                setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+              }
+            >
+              {sortOrder === "desc" ? (
+                <BarsArrowDownIcon className="size-3.5" />
+              ) : (
+                <BarsArrowUpIcon className="size-3.5" />
+              )}
+              {sortKey === "createdAt"
+                ? sortOrder === "desc"
+                  ? "新しい順"
+                  : "古い順"
+                : sortKey === "name"
+                  ? sortOrder === "desc"
+                    ? "Z→A"
+                    : "A→Z"
+                  : sortOrder === "desc"
+                    ? "大きい順"
+                    : "小さい順"}
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   // View without registration UI (course)
   function ViewNoRegister() {
     const [commonId, setCommonId] = useState<number[]>([])
     const [searchQuery, setSearchQuery] = useState("")
-    const [sortKey, setSortKey] = useState<"createdAt" | "name" | "id">(
-      "createdAt",
-    )
+    const [sortKey, setSortKey] = useState<SortKey>("createdAt")
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
     const [competitionFilter, setCompetitionFilter] = useState("")
 
@@ -227,74 +318,17 @@ export function View({
     return (
       <>
         <ItemManager commonId={commonId} />
-        <div className="flex flex-col gap-3 px-4 pb-4">
-          <label className="input input-bordered flex items-center gap-2 rounded-xl bg-base-200/40 transition-colors focus-within:bg-base-100">
-            <MagnifyingGlassIcon className="size-4 shrink-0 text-base-content/40" />
-            <input
-              type="text"
-              placeholder="コース名・説明で検索"
-              className="grow"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </label>
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="flex shrink-0 items-center gap-1.5 rounded-lg bg-base-200/50 px-2.5 py-1.5">
-              <FunnelIcon className="size-3.5 shrink-0 text-base-content/40" />
-              <span className="shrink-0 text-xs">大会</span>
-              <select
-                className="select select-ghost select-xs bg-transparent pe-0 font-medium focus:outline-none [&>option]:bg-base-100 [&>option]:text-base-content"
-                style={{ backgroundImage: "none" }}
-                value={competitionFilter}
-                onChange={(e) => setCompetitionFilter(e.target.value)}
-              >
-                <option value="">すべて</option>
-                {competitionNames.map((name) => (
-                  <option key={name} value={name}>
-                    {name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex items-center gap-1.5 rounded-lg bg-base-200/50 px-2.5 py-1.5">
-              <select
-                className="select select-ghost select-xs bg-transparent font-medium focus:outline-none [&>option]:bg-base-100 [&>option]:text-base-content"
-                value={sortKey}
-                onChange={(e) =>
-                  setSortKey(e.target.value as "createdAt" | "name" | "id")
-                }
-              >
-                <option value="createdAt">作成日時</option>
-                <option value="name">コース名</option>
-                <option value="id">ID</option>
-              </select>
-              <button
-                type="button"
-                className="flex shrink-0 items-center gap-1 rounded-md bg-base-100 px-2 py-1 text-xs shadow-sm transition-colors hover:bg-base-300/40"
-                onClick={() =>
-                  setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
-                }
-              >
-                {sortOrder === "desc" ? (
-                  <BarsArrowDownIcon className="size-3.5" />
-                ) : (
-                  <BarsArrowUpIcon className="size-3.5" />
-                )}
-                {sortKey === "createdAt"
-                  ? sortOrder === "desc"
-                    ? "新しい順"
-                    : "古い順"
-                  : sortKey === "name"
-                    ? sortOrder === "desc"
-                      ? "Z→A"
-                      : "A→Z"
-                    : sortOrder === "desc"
-                      ? "大きい順"
-                      : "小さい順"}
-              </button>
-            </div>
-          </div>
-        </div>
+        <CourseFilterBar
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          competitionFilter={competitionFilter}
+          setCompetitionFilter={setCompetitionFilter}
+          competitionNames={competitionNames}
+          sortKey={sortKey}
+          setSortKey={setSortKey}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+        />
         {(searchQuery || competitionFilter) &&
         filteredAndSortedList.length === 0 ? (
           <div className="py-8 text-center text-base-content/40">

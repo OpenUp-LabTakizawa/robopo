@@ -6,8 +6,6 @@ import { calcPoint } from "@/app/components/challenge/utils"
 import {
   deserializePoint,
   type PointState,
-  type PointValue,
-  RESERVED_COURSE_IDS,
 } from "@/app/components/course/utils"
 import {
   type CourseSummary,
@@ -18,24 +16,22 @@ import type { SelectCourse } from "@/app/lib/db/schema"
 type Props = {
   id: number
   courseList: { courses: SelectCourse[] }
-  ipponBashiPoint: PointValue[]
 }
 
-export function SummaryTable({ id, courseList, ipponBashiPoint }: Props) {
+export function SummaryTable({ id, courseList }: Props) {
   const competitionId: number = id
   const courseData: { courses: SelectCourse[] } = courseList
-  const initialCourseId = courseData.courses
-    .filter((course) => course.id > 0)
-    .reduce((mincourse, currentCourse) =>
-      currentCourse.id < mincourse.id ? currentCourse : mincourse,
-    ).id
+  const initialCourseId =
+    courseData.courses.length > 0
+      ? courseData.courses.reduce((min, c) => (c.id < min.id ? c : min)).id
+      : null
 
-  const [pointData, setPointData] = useState<PointValue[]>([])
+  const [pointData, setPointData] = useState<PointState>([])
   const [courseId, setCourseId] = useState<number | null>(initialCourseId)
   const [courseSummary, setCourseSummary] = useState<CourseSummary[]>([])
   const [loading, setLoading] = useState<boolean>(true)
-  const [sortKey, setSortKey] = useState<string>("") // Column name to sort by
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc") // Ascending or descending
+  const [sortKey, setSortKey] = useState<string>("")
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
 
   useEffect(() => {
     async function fetchData() {
@@ -62,7 +58,6 @@ export function SummaryTable({ id, courseList, ipponBashiPoint }: Props) {
     fetchData()
   }, [competitionId, courseData, courseId])
 
-  // Sort function
   function handleSort(key: keyof CourseSummary) {
     const order = sortKey === key && sortOrder === "asc" ? "desc" : "asc"
     setSortKey(key)
@@ -105,7 +100,6 @@ export function SummaryTable({ id, courseList, ipponBashiPoint }: Props) {
     const sortedData = [...courseSummary].sort((a, b) => {
       function getVal(item: CourseSummary) {
         const value = item[key]
-
         switch (key) {
           case "firstTCourseTime":
             return parseDateValue(value, item.tCourseMaxResult)
@@ -152,7 +146,7 @@ export function SummaryTable({ id, courseList, ipponBashiPoint }: Props) {
         <span className="text-blue-500">▲</span>
       ) : (
         <span className="text-red-500">▼</span>
-      ) // sortOrder === "asc" ? "▲" : "▼"
+      )
     }
     return "▲"
   }
@@ -207,15 +201,11 @@ export function SummaryTable({ id, courseList, ipponBashiPoint }: Props) {
             コースを選んでください
           </option>
           {courseData ? (
-            courseData.courses?.map(
-              (course) =>
-                course.id !== RESERVED_COURSE_IDS.IPPON &&
-                course.id !== RESERVED_COURSE_IDS.SENSOR && (
-                  <option key={course.id} value={course.id}>
-                    {course.name}
-                  </option>
-                ),
-            )
+            courseData.courses?.map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.name}
+              </option>
+            ))
           ) : (
             <option>コースがありません</option>
           )}
@@ -228,13 +218,10 @@ export function SummaryTable({ id, courseList, ipponBashiPoint }: Props) {
               <th className="border border-gray-400 p-2">名前</th>
               {itemTitle("ふりがな", "", "playerFurigana")}
               {itemTitle("ゼッケン", "", "playerZekken")}
-              {itemTitle("ベーシックコース", "完走時刻", "firstTCourseTime")}
+              {itemTitle("コース", "完走時刻", "firstTCourseTime")}
               {itemTitle("完走は何回", "で達成?", "firstTCourseCount")}
-              {itemTitle("ベーシックコース", "の最高得点", "tCourseMaxResult")}
-              {itemTitle("センサーコースの", "最高得点", "sensorMaxResult")}
-              {itemTitle("一本橋の", "合計得点", "sumIpponPoint")}
-              {itemTitle("一本橋の", "最高得点", "ipponMaxResult")}
-              {itemTitle("全てのチャレンジ", "の総得点", "totalPoint")}
+              {itemTitle("コースの", "最高得点", "tCourseMaxResult")}
+              {itemTitle("全コース", "総得点", "totalPoint")}
               {itemTitle("総得点", "の順位", "pointRank")}
               {itemTitle("チャレンジ", "回数", "challengeCount")}
               {itemTitle("回数の", "順位", "challengeRank")}
@@ -243,7 +230,7 @@ export function SummaryTable({ id, courseList, ipponBashiPoint }: Props) {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={4} className="text-center">
+                <td colSpan={10} className="text-center">
                   <span className="loading loading-spinner text-info"></span>
                 </td>
               </tr>
@@ -255,13 +242,12 @@ export function SummaryTable({ id, courseList, ipponBashiPoint }: Props) {
                   competitionId={Number(competitionId)}
                   courseId={Number(courseId)}
                   pointData={pointData}
-                  ipponBashiPoint={ipponBashiPoint}
                 />
               ))
             ) : (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={10}
                   className="border border-gray-400 p-2 text-center"
                 >
                   データがありません
@@ -280,7 +266,6 @@ type PlayerRowProps = {
   competitionId: number
   courseId: number
   pointData: PointState
-  ipponBashiPoint: PointValue[]
 }
 
 function PlayerRow({
@@ -288,12 +273,10 @@ function PlayerRow({
   competitionId,
   courseId,
   pointData,
-  ipponBashiPoint,
 }: PlayerRowProps) {
   const completed = isCompletedCourse(pointData, player.tCourseMaxResult)
   return (
     <tr>
-      {/* Name */}
       <th className="border border-gray-400 p-2">
         <Link
           href={`/summary/${competitionId}/${courseId}/${player.playerId}`}
@@ -302,49 +285,26 @@ function PlayerRow({
           {player.playerName ?? "-"}
         </Link>
       </th>
-      {/* Furigana */}
       <td className="border border-gray-400 p-2 sm:whitespace-nowrap">
         {player.playerFurigana ?? "-"}
       </td>
-      {/* Bib number */}
       <td className="border border-gray-400 p-2">
         {player.playerZekken ?? "-"}
       </td>
-      {/* Basic course completion time */}
       <td className="border border-gray-400 p-2">
         {completed ? player.firstTCourseTime : "-"}
       </td>
-      {/* How many attempts to complete? */}
       <td className="border border-gray-400 p-2">
         {completed && player.firstTCourseCount ? player.firstTCourseCount : "-"}
       </td>
-      {/* Basic course highest score */}
       <td className="border border-gray-400 p-2">
         {player.tCourseMaxResult || player.tCourseMaxResult === 0
           ? calcPoint(pointData, player.tCourseMaxResult)
           : "-"}
       </td>
-      {/* Sensor course highest score */}
-      <td className="border border-gray-400 p-2">
-        {player.sensorMaxResult ?? "-"}
-      </td>
-      {/* Ippon Bashi total score */}
-      <td className="border border-gray-400 p-2">
-        {player.sumIpponPoint ?? "-"}
-      </td>
-      {/* Ippon Bashi highest score */}
-      <td className="border border-gray-400 p-2">
-        {player.ipponMaxResult || player.ipponMaxResult === 0
-          ? calcPoint(ipponBashiPoint, player.ipponMaxResult)
-          : "-"}
-      </td>
-      {/* Total score across all challenges */}
       <td className="border border-gray-400 p-2">{player.totalPoint ?? "-"}</td>
-      {/* Total score rank */}
       <td className="border border-gray-400 p-2">{player.pointRank}</td>
-      {/* Challenge count */}
       <td className="border border-gray-400 p-2">{player.challengeCount}</td>
-      {/* Challenge count rank */}
       <td className="border border-gray-400 p-2">{player.challengeRank}</td>
     </tr>
   )

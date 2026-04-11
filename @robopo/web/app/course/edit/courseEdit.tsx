@@ -1,53 +1,172 @@
-import { useState } from "react"
+import { useCallback, useRef, useState } from "react"
 import { Field } from "@/app/components/course/field"
-import { SelectPanel } from "@/app/components/course/selectPanel"
+import { Toolbar } from "@/app/components/course/toolbar"
 import {
   type FieldState,
+  initializeField,
+  isGoal,
+  isStart,
   type PanelValue,
   putPanel,
 } from "@/app/components/course/utils"
+import type { ToolType } from "@/app/course/edit/courseEditContext"
 
 type CourseEditProps = {
   field: FieldState
   setField: React.Dispatch<React.SetStateAction<FieldState>>
+  courseOutRule: string
+  setCourseOutRule: React.Dispatch<React.SetStateAction<string>>
+  selectedTool: ToolType
+  setSelectedTool: React.Dispatch<React.SetStateAction<ToolType>>
+  undo: () => void
+  redo: () => void
+  canUndo: boolean
+  canRedo: boolean
+  pushHistory: () => void
 }
-export default function CourseEdit({ field, setField }: CourseEditProps) {
-  const [mode, setMode] = useState<PanelValue>(null)
+
+export default function CourseEdit({
+  field,
+  setField,
+  courseOutRule,
+  setCourseOutRule,
+  selectedTool,
+  setSelectedTool,
+  undo,
+  redo,
+  canUndo,
+  canRedo,
+  pushHistory,
+}: CourseEditProps) {
+  const [isDragging, setIsDragging] = useState(false)
+  const lastCellRef = useRef<{ r: number; c: number } | null>(null)
+  const pointerHandledRef = useRef(false)
+
+  // Apply tool to a cell
+  const applyTool = useCallback(
+    (row: number, col: number) => {
+      if (selectedTool === "eraser") {
+        if (field[row][col] !== null) {
+          const newField = field.map((r) => [...r])
+          newField[row][col] = null
+          setField(newField)
+        }
+        return
+      }
+      const mode = selectedTool as PanelValue
+      const newField = putPanel(field, row, col, mode)
+      if (newField) {
+        setField(newField)
+        // Auto-switch to route after placing start
+        if (mode === "start" && !isStart(field)) {
+          setSelectedTool("route")
+        }
+        // Auto-switch to route after placing goal
+        if (mode === "goal" && !isGoal(field)) {
+          setSelectedTool("route")
+        }
+      }
+    },
+    [field, setField, selectedTool, setSelectedTool],
+  )
 
   function handlePanelClick(row: number, col: number) {
-    // Check if panel can be placed
-    const newField = putPanel(field, row, col, mode)
-    // If panel was placed successfully
-    if (newField) {
-      setField(newField)
+    // Skip if already handled by pointerDown (prevents double-fire on touch)
+    if (pointerHandledRef.current) {
+      pointerHandledRef.current = false
+      return
+    }
+    pushHistory()
+    applyTool(row, col)
+  }
+
+  function handlePointerDown(row: number, col: number) {
+    pointerHandledRef.current = true
+    pushHistory()
+    setIsDragging(true)
+    lastCellRef.current = { r: row, c: col }
+    applyTool(row, col)
+  }
+
+  function handlePointerEnter(row: number, col: number) {
+    if (isDragging) {
+      const last = lastCellRef.current
+      if (last && (last.r !== row || last.c !== col)) {
+        lastCellRef.current = { r: row, c: col }
+        applyTool(row, col)
+      }
     }
   }
 
-  // Clear all
+  function handlePointerUp() {
+    setIsDragging(false)
+    lastCellRef.current = null
+  }
+
   function allClear() {
-    const newField = field.map((row) => row.map(() => null))
-    setField(newField)
+    pushHistory()
+    setField(initializeField())
   }
 
   return (
     <div className="container mx-auto">
       <div className="card w-full min-w-72 bg-base-100 shadow-xl">
         <div className="card-body">
-          <p>CourseEdit</p>
-          <Field type="edit" field={field} onPanelClick={handlePanelClick} />
+          <Toolbar
+            field={field}
+            selectedTool={selectedTool}
+            setSelectedTool={setSelectedTool}
+            onUndo={undo}
+            onRedo={redo}
+            canUndo={canUndo}
+            canRedo={canRedo}
+            onClearAll={allClear}
+          />
+          <div
+            className="mt-3"
+            onPointerUp={handlePointerUp}
+            onPointerLeave={handlePointerUp}
+            style={{ touchAction: "none" }}
+          >
+            <Field
+              type="edit"
+              field={field}
+              onPanelClick={handlePanelClick}
+              onPanelPointerDown={handlePointerDown}
+              onPanelPointerEnter={handlePointerEnter}
+            />
+          </div>
         </div>
       </div>
-      <div className="card w-full min-w-72 bg-base-100 shadow-xl">
-        <div className="card-body flex w-full flex-row">
-          <SelectPanel field={field} setmode={setMode} />
-          <button
-            type="button"
-            data-id="add"
-            className="btn btn-primary mx-auto"
-            onClick={allClear}
-          >
-            全クリア
-          </button>
+
+      {/* Course settings */}
+      <div className="card mt-3 w-full min-w-72 bg-base-100 shadow-xl">
+        <div className="card-body">
+          <p className="font-bold text-sm">コースアウト時</p>
+          <div className="flex gap-4">
+            <label className="label cursor-pointer gap-2">
+              <input
+                type="radio"
+                name="courseOutRule"
+                className="radio radio-sm radio-primary"
+                value="keep"
+                checked={courseOutRule === "keep"}
+                onChange={(e) => setCourseOutRule(e.target.value)}
+              />
+              <span className="label-text">獲得済ポイント維持</span>
+            </label>
+            <label className="label cursor-pointer gap-2">
+              <input
+                type="radio"
+                name="courseOutRule"
+                className="radio radio-sm radio-primary"
+                value="zero"
+                checked={courseOutRule === "zero"}
+                onChange={(e) => setCourseOutRule(e.target.value)}
+              />
+              <span className="label-text">0点</span>
+            </label>
+          </div>
         </div>
       </div>
     </div>
