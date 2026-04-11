@@ -1,7 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
+import { computeRobotPreview } from "@/app/components/course/robotPreview"
 import {
   deserializeField,
   deserializeMission,
@@ -37,7 +38,19 @@ export function EditorPage({
     canUndo,
     canRedo,
     pushHistory,
+    undoMission,
+    redoMission,
+    canUndoMission,
+    canRedoMission,
+    pushMissionHistory,
+    missionPanelHints,
+    setMissionPanelHints,
   } = useCourseEdit()
+
+  // Lifted from MissionEdit for cross-component access
+  const [selectedMissionIndex, setSelectedMissionIndex] = useState<
+    number | null
+  >(null)
 
   useEffect(() => {
     async function fetchCourseData() {
@@ -62,6 +75,55 @@ export function EditorPage({
     fetchCourseData()
   }, [courseData, setField, setMission, setPoint, setName, setCourseOutRule])
 
+  const robotPreview = useMemo(
+    () => computeRobotPreview(field, mission, selectedMissionIndex),
+    [field, mission, selectedMissionIndex],
+  )
+
+  // Auto-add an empty mission when a route panel is placed
+  // Inserts after the start action (pair 0) + any previously auto-added routes
+  const handleRouteAdded = useCallback(
+    (row: number, col: number) => {
+      pushMissionHistory()
+      const panelNumber = row * 5 + col + 1
+      // Insert position: after start action (pair 0) + existing auto-added count
+      const autoAddedCount = missionPanelHints.filter((h) => h !== null).length
+      setMission((prev) => {
+        const newMission = [...prev]
+        while (newMission.length < 4) {
+          newMission.push(null)
+        }
+        // Insert after pair 0 + autoAddedCount pairs
+        const insertAt = 4 + autoAddedCount * 2
+        newMission.splice(insertAt, 0, null, null)
+        return newMission
+      })
+      setPoint((prev) => {
+        const newPoint = [...prev]
+        while (newPoint.length < 3) {
+          newPoint.push(0)
+        }
+        const insertAt = 3 + autoAddedCount
+        newPoint.splice(insertAt, 0, 0)
+        return newPoint
+      })
+      // Hint index matches mission pair index: insert at 1 + autoAddedCount
+      setMissionPanelHints((prev) => {
+        const newHints = [...prev]
+        const hintInsertAt = 1 + autoAddedCount
+        newHints.splice(hintInsertAt, 0, panelNumber)
+        return newHints
+      })
+    },
+    [
+      pushMissionHistory,
+      setMission,
+      setPoint,
+      setMissionPanelHints,
+      missionPanelHints,
+    ],
+  )
+
   return (
     <div className="h-full w-full">
       <div className="gap-4 sm:grid sm:max-h-screen sm:grid-cols-2">
@@ -78,14 +140,38 @@ export function EditorPage({
             canUndo={canUndo}
             canRedo={canRedo}
             pushHistory={pushHistory}
+            botPosition={
+              robotPreview
+                ? { row: robotPreview.row, col: robotPreview.col }
+                : undefined
+            }
+            botDirection={robotPreview?.direction}
+            botAfterPosition={
+              robotPreview?.afterRow !== undefined &&
+              robotPreview?.afterCol !== undefined
+                ? { row: robotPreview.afterRow, col: robotPreview.afterCol }
+                : undefined
+            }
+            botAfterAngle={robotPreview?.afterAngle}
+            onRouteAdded={handleRouteAdded}
           />
         </div>
         <div className="sm:mx-4 sm:w-full sm:justify-self-start">
           <MissionEdit
+            field={field}
             mission={mission}
             setMission={setMission}
             point={point}
             setPoint={setPoint}
+            selectedMissionIndex={selectedMissionIndex}
+            setSelectedMissionIndex={setSelectedMissionIndex}
+            undoMission={undoMission}
+            redoMission={redoMission}
+            canUndoMission={canUndoMission}
+            canRedoMission={canRedoMission}
+            pushMissionHistory={pushMissionHistory}
+            missionPanelHints={missionPanelHints}
+            setMissionPanelHints={setMissionPanelHints}
           />
         </div>
       </div>

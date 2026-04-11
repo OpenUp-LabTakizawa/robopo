@@ -16,6 +16,8 @@ type FieldProps = {
   type: "edit" | "challenge"
   botPosition?: { row: number; col: number }
   botDirection?: MissionValue
+  botAfterPosition?: { row: number; col: number }
+  botAfterAngle?: number
   nextMission?: MissionValue[]
   onPanelClick: (row: number, col: number) => void
   onPanelPointerDown?: (row: number, col: number) => void
@@ -29,6 +31,8 @@ export function Field({
   type,
   botPosition,
   botDirection,
+  botAfterPosition,
+  botAfterAngle,
   nextMission,
   onPanelClick,
   onPanelPointerDown,
@@ -52,10 +56,13 @@ export function Field({
       ? `min(${PANEL_SIZE}px, (100vw - 80px) / ${renderWidth})`
       : `${PANEL_SIZE}px`
 
-  const styles = customStyle ?? {
-    gridTemplateColumns: `repeat(${renderWidth}, ${responsiveCellSize})`,
-    gridTemplateRows: `repeat(${renderHeight}, ${responsiveCellSize})`,
-  }
+  const styles =
+    customStyle ??
+    ({
+      gridTemplateColumns: `repeat(${renderWidth}, ${responsiveCellSize})`,
+      gridTemplateRows: `repeat(${renderHeight}, ${responsiveCellSize})`,
+      "--cell-size": responsiveCellSize,
+    } as React.CSSProperties)
 
   // Build cells for the visible portion
   const cells: {
@@ -82,6 +89,9 @@ export function Field({
           key={cell.key}
           value={cell.panel}
           isEditMode={type === "edit"}
+          panelNumber={
+            type === "edit" ? cell.r * MAX_FIELD_WIDTH + cell.c + 1 : undefined
+          }
           onClick={() => onPanelClick(cell.r, cell.c)}
           onPointerDown={
             onPanelPointerDown
@@ -111,6 +121,19 @@ export function Field({
             duration={1.5}
           />
         </>
+      )}
+      {/* Show bot preview during edit */}
+      {type === "edit" && botPosition && botDirection && (
+        <Robot
+          row={botPosition.row}
+          col={botPosition.col}
+          direction={botDirection}
+          afterRow={botAfterPosition?.row}
+          afterCol={botAfterPosition?.col}
+          afterAngle={botAfterAngle}
+          responsive
+          opacity={0.6}
+        />
       )}
     </div>
   )

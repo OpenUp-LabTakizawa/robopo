@@ -6,6 +6,7 @@ import {
   initializeField,
   isGoal,
   isStart,
+  type MissionValue,
   type PanelValue,
   putPanel,
 } from "@/app/components/course/utils"
@@ -23,6 +24,11 @@ type CourseEditProps = {
   canUndo: boolean
   canRedo: boolean
   pushHistory: () => void
+  botPosition?: { row: number; col: number }
+  botDirection?: MissionValue
+  botAfterPosition?: { row: number; col: number }
+  botAfterAngle?: number
+  onRouteAdded?: (row: number, col: number) => void
 }
 
 export default function CourseEdit({
@@ -37,6 +43,11 @@ export default function CourseEdit({
   canUndo,
   canRedo,
   pushHistory,
+  botPosition,
+  botDirection,
+  botAfterPosition,
+  botAfterAngle,
+  onRouteAdded,
 }: CourseEditProps) {
   const [isDragging, setIsDragging] = useState(false)
   const lastCellRef = useRef<{ r: number; c: number } | null>(null)
@@ -54,6 +65,7 @@ export default function CourseEdit({
         return
       }
       const mode = selectedTool as PanelValue
+      const wasEmpty = field[row][col] === null
       const newField = putPanel(field, row, col, mode)
       if (newField) {
         setField(newField)
@@ -65,9 +77,13 @@ export default function CourseEdit({
         if (mode === "goal" && !isGoal(field)) {
           setSelectedTool("route")
         }
+        // Auto-add empty mission when a route panel is newly placed
+        if (mode === "route" && wasEmpty && onRouteAdded) {
+          onRouteAdded(row, col)
+        }
       }
     },
-    [field, setField, selectedTool, setSelectedTool],
+    [field, setField, selectedTool, setSelectedTool, onRouteAdded],
   )
 
   function handlePanelClick(row: number, col: number) {
@@ -131,6 +147,10 @@ export default function CourseEdit({
             <Field
               type="edit"
               field={field}
+              botPosition={botPosition}
+              botDirection={botDirection}
+              botAfterPosition={botAfterPosition}
+              botAfterAngle={botAfterAngle}
               onPanelClick={handlePanelClick}
               onPanelPointerDown={handlePointerDown}
               onPanelPointerEnter={handlePointerEnter}

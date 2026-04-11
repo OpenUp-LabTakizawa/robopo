@@ -141,6 +141,18 @@ export function findStart(field: FieldState): [number, number] | null {
   return null
 }
 
+// Get goal position on the field
+export function findGoal(field: FieldState): [number, number] | null {
+  for (let i = 0; i < field.length; i++) {
+    for (let j = 0; j < field[i].length; j++) {
+      if (field[i][j] === "goal" || field[i][j] === "startGoal") {
+        return [i, j]
+      }
+    }
+  }
+  return null
+}
+
 // Place a panel at the specified position
 export function putPanel(
   field: FieldState,
@@ -242,15 +254,14 @@ export function deserializeMission(str: string): MissionState {
 
 // Get mission pairs excluding Start and Goal directions from String
 export function missionStatePair(missionState: MissionState): MissionValue[][] {
-  // Return empty array if no missions are set (excluding Start and Goal directions)
-  if (missionState[3] === null) {
+  // Return empty array if no mission pairs exist
+  if (missionState.length <= 2) {
     return []
   }
 
   const pairs = []
   for (let i = 2; i < missionState.length; i += 2) {
-    // The last pair is probably [goal direction, null]
-    pairs.push([missionState[i], missionState[i + 1]])
+    pairs.push([missionState[i], missionState[i + 1] ?? null])
   }
   return pairs
 }

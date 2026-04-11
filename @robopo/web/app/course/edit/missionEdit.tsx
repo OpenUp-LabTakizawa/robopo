@@ -1,83 +1,62 @@
-import { useState } from "react"
 import { MissionList } from "@/app/components/course/missionList"
-import { MissionUI } from "@/app/components/course/missionUI"
 import type {
+  FieldState,
   MissionState,
-  MissionValue,
   PointState,
-  PointValue,
 } from "@/app/components/course/utils"
 
 type MissionEditProps = {
+  field: FieldState
   mission: MissionState
   setMission: React.Dispatch<React.SetStateAction<MissionState>>
   point: PointState
   setPoint: React.Dispatch<React.SetStateAction<PointState>>
+  selectedMissionIndex: number | null
+  setSelectedMissionIndex: (index: number | null) => void
+  undoMission: () => void
+  redoMission: () => void
+  canUndoMission: boolean
+  canRedoMission: boolean
+  pushMissionHistory: () => void
+  missionPanelHints: (number | null)[]
+  setMissionPanelHints: React.Dispatch<React.SetStateAction<(number | null)[]>>
 }
 
 export default function MissionEdit({
+  field,
   mission,
   setMission,
   point,
   setPoint,
+  selectedMissionIndex,
+  setSelectedMissionIndex,
+  undoMission,
+  redoMission,
+  canUndoMission,
+  canRedoMission,
+  pushMissionHistory,
+  missionPanelHints,
+  setMissionPanelHints,
 }: MissionEditProps) {
-  const [selectedMissionIndex, setSelectedMissionIndex] = useState<
-    number | null
-  >(null)
-  const [selectedMission, setSelectedMission] = useState<MissionValue | null>(
-    null,
-  )
-  const [selectedParam, setSelectedParam] = useState<number | null>(null) // 選択されたミッションのパラメータ
-  const [selectedPoint, setSelectedPoint] = useState<PointValue | null>(null)
-  const [insertPosition, setInsertPosition] = useState<number>(-1)
-
-  function handleMissionSelect(selectedIndex: number) {
-    setSelectedMissionIndex(selectedIndex) // Save selected index as state
-    setSelectedMission(null) // Reset selected mission
-    setSelectedParam(null) // Reset selected parameter
-    setSelectedPoint(null) // Reset selected point
-  }
-  // Behavior when radio button is pressed
-  // Radio button value >= 0: mission order index
-  // Radio button value = -1: no mission set
-  // Radio button value = -2: Start
-  // Radio button value = -3: Goal
-
   return (
     <div className="container mx-auto">
       <div className="card w-full min-w-72 bg-base-100 shadow-xl">
         <div className="card-body">
           <MissionList
-            mission={mission}
-            point={point}
-            selectedMissionIndex={selectedMissionIndex}
-            handleMissionSelect={handleMissionSelect}
-            insertPosition={insertPosition}
-            setInsertPosition={setInsertPosition}
-          />
-        </div>
-      </div>
-      <div className="card w-full min-w-72 bg-base-100 shadow-xl">
-        <div className="card-body">
-          <MissionUI
+            field={field}
             mission={mission}
             setMission={setMission}
             point={point}
-            selectedMissionIndex={selectedMissionIndex}
             setPoint={setPoint}
-            selectedId={
-              selectedMissionIndex === -1
-                ? insertPosition
-                : selectedMissionIndex
-            }
-            selectedMission={selectedMission}
-            setSelectedMission={setSelectedMission}
-            selectedParam={selectedParam}
-            setSelectedParam={setSelectedParam}
-            selectedPoint={selectedPoint}
-            setSelectedPoint={setSelectedPoint}
+            selectedMissionIndex={selectedMissionIndex}
             setSelectedMissionIndex={setSelectedMissionIndex}
-            setInsertPosition={setInsertPosition}
+            undoMission={undoMission}
+            redoMission={redoMission}
+            canUndoMission={canUndoMission}
+            canRedoMission={canRedoMission}
+            pushMissionHistory={pushMissionHistory}
+            missionPanelHints={missionPanelHints}
+            setMissionPanelHints={setMissionPanelHints}
           />
         </div>
       </div>
