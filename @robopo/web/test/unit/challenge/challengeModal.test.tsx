@@ -112,6 +112,7 @@ describe("CourseOutModal", () => {
         message=""
         firstResultPoint={0}
         retryResultPoint={null}
+        courseOutRule="keep"
       />,
     )
     const errorTitle = container.querySelector(".text-error")

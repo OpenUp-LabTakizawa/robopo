@@ -113,7 +113,7 @@ export default function MissionEdit({
       <div className="card mt-3 w-full min-w-72 bg-base-100 shadow-xl">
         <div className="card-body">
           <p className="font-bold text-sm">コースアウト時</p>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-4">
             <label className="label cursor-pointer gap-2">
               <input
                 type="radio"
@@ -136,7 +136,41 @@ export default function MissionEdit({
               />
               <span className="label-text">0点</span>
             </label>
+            <label className="label cursor-pointer gap-2">
+              <input
+                type="radio"
+                name="courseOutRule"
+                className="radio radio-sm radio-primary"
+                checked={courseOutRule.startsWith("penalty:")}
+                onChange={() => {
+                  if (!courseOutRule.startsWith("penalty:")) {
+                    setCourseOutRule("penalty:0")
+                  }
+                }}
+              />
+              <span className="label-text">減点</span>
+            </label>
           </div>
+          {courseOutRule.startsWith("penalty:") && (
+            <div className="mt-2 flex items-center gap-1">
+              <span className="font-bold text-error text-sm">-</span>
+              <input
+                type="number"
+                min="0"
+                step="1"
+                className="input input-bordered input-sm w-20"
+                value={Number.parseInt(courseOutRule.split(":")[1], 10) || 0}
+                onChange={(e) => {
+                  const val = Math.max(
+                    0,
+                    Math.floor(Number(e.target.value) || 0),
+                  )
+                  setCourseOutRule(`penalty:${val}`)
+                }}
+              />
+              <span className="text-sm">pt</span>
+            </div>
+          )}
         </div>
       </div>
       <div className="card mt-3 w-full min-w-72 bg-base-100 shadow-xl">

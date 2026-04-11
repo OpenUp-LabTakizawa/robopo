@@ -10,10 +10,12 @@ export async function POST(req: Request) {
     courseId,
     playerId,
     judgeId,
+    detail,
   } = await req.json()
   const challengeData = {
     firstResult: firstResult,
     retryResult: retryResult,
+    detail: detail ?? null,
     competitionId: competitionId,
     courseId: courseId,
     playerId: playerId,
