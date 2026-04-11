@@ -18,10 +18,11 @@ import {
   ArrowUturnLeftIcon,
   ArrowUturnRightIcon,
   Bars3Icon,
+  ExclamationTriangleIcon,
   PlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline"
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   type FieldState,
   findGoal,
@@ -87,6 +88,7 @@ export function MissionList({
   missionPanelHints,
   setMissionPanelHints,
   onInsertPreview,
+  invalidMissionMap,
 }: {
   field: FieldState
   mission: MissionState
@@ -103,6 +105,7 @@ export function MissionList({
   missionPanelHints: (number | null)[]
   setMissionPanelHints: React.Dispatch<React.SetStateAction<(number | null)[]>>
   onInsertPreview?: (preview: InsertPreview | null) => void
+  invalidMissionMap?: Map<number, string>
 }) {
   const [items, setItems] = useState<MissionPairItem[]>([])
   const [insertingAt, setInsertingAt] = useState<number | null>(null)
@@ -391,6 +394,8 @@ export function MissionList({
                   }
                   point={point[idx + 2]}
                   isSelected={selectedMissionIndex === idx}
+                  isInvalid={invalidMissionMap?.has(idx) ?? false}
+                  invalidReason={invalidMissionMap?.get(idx)}
                   onSelect={() => setSelectedMissionIndex(idx)}
                   onDelete={() => handleDeleteMission(idx)}
                   onUpdate={(mt, p, pt) => handleUpdateMission(idx, mt, p, pt)}
@@ -618,6 +623,8 @@ function SortableMissionRow({
   panelNumber,
   point,
   isSelected,
+  isInvalid,
+  invalidReason,
   onSelect,
   onDelete,
   onUpdate,
@@ -628,6 +635,8 @@ function SortableMissionRow({
   panelNumber?: number
   point: PointEntry | undefined
   isSelected: boolean
+  isInvalid?: boolean
+  invalidReason?: string
   onSelect: () => void
   onDelete: () => void
   onUpdate: (
@@ -655,6 +664,24 @@ function SortableMissionRow({
   const missionType = item.mission[0]
   const missionParam = item.mission[1]
 
+  const [showMobileError, setShowMobileError] = useState(false)
+
+  useEffect(() => {
+    if (!isInvalid) {
+      setShowMobileError(false)
+    }
+  }, [isInvalid])
+
+  const errorMessage =
+    invalidReason === "not-at-goal"
+      ? "最終ミッションがゴールに到達していません"
+      : "コース外の移動です"
+
+  const handleErrorTap = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation()
+    setShowMobileError((prev) => !prev)
+  }, [])
+
   return (
     // biome-ignore lint/a11y/useSemanticElements: sortable container with drag handle
     <div
@@ -665,7 +692,9 @@ function SortableMissionRow({
       className={`group rounded-lg border-2 p-3 transition-all duration-150 ${
         isSelected
           ? "border-primary bg-primary/5"
-          : "cursor-pointer border-transparent bg-base-200/50 hover:bg-base-200"
+          : isInvalid
+            ? "cursor-pointer border-error border-l-4 bg-error/5 hover:bg-error/10"
+            : "cursor-pointer border-transparent bg-base-200/50 hover:bg-base-200"
       } ${isDragging ? "z-50 shadow-lg" : ""}`}
       onClick={onSelect}
       onKeyDown={(e) => {
@@ -751,10 +780,31 @@ function SortableMissionRow({
           </span>
         )}
 
+        {/* Invalid indicator */}
+        {isInvalid && !isSelected && (
+          <>
+            {/* PC: tooltip on hover */}
+            <div
+              className="tooltip tooltip-left hidden sm:block"
+              data-tip={errorMessage}
+            >
+              <ExclamationTriangleIcon className="size-4 text-error" />
+            </div>
+            {/* Mobile: tap to show message */}
+            <button
+              type="button"
+              className="sm:hidden"
+              onClick={handleErrorTap}
+            >
+              <ExclamationTriangleIcon className="size-4 text-error" />
+            </button>
+          </>
+        )}
+
         {/* Delete button */}
         <button
           type="button"
-          className="btn btn-ghost btn-xs text-error opacity-0 transition-opacity group-hover:opacity-100"
+          className="btn btn-ghost btn-xs text-error"
           onClick={(e) => {
             e.stopPropagation()
             onDelete()
@@ -764,6 +814,10 @@ function SortableMissionRow({
           <TrashIcon className="size-4" />
         </button>
       </div>
+      {/* Mobile error message */}
+      {isInvalid && showMobileError && !isSelected && (
+        <p className="mt-1 text-error text-xs sm:hidden">{errorMessage}</p>
+      )}
     </div>
   )
 }

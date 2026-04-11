@@ -1,3 +1,4 @@
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline"
 import { PanelString, type PanelValue } from "@/app/components/course/utils"
 
 // Panel component
@@ -5,6 +6,7 @@ export function Panel({
   value,
   isEditMode,
   panelNumber,
+  isIsolated,
   onClick,
   onPointerDown,
   onPointerEnter,
@@ -12,6 +14,7 @@ export function Panel({
   value: PanelValue
   isEditMode?: boolean
   panelNumber?: number
+  isIsolated?: boolean
   onClick: () => void
   onPointerDown?: () => void
   onPointerEnter?: () => void
@@ -66,6 +69,11 @@ export function Panel({
             {PanelString[value]}
           </div>
         ))}
+      {isIsolated && hasRole && (
+        <div className="pointer-events-none absolute inset-0 flex items-start justify-end border-2 border-error border-dashed bg-error/20 p-0.5">
+          <ExclamationTriangleIcon className="size-3.5 text-error sm:size-4" />
+        </div>
+      )}
     </button>
   )
 }

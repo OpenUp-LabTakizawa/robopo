@@ -22,6 +22,7 @@ type FieldProps = {
   onPanelClick: (row: number, col: number) => void
   onPanelPointerDown?: (row: number, col: number) => void
   onPanelPointerEnter?: (row: number, col: number) => void
+  isolatedPanels?: Set<string>
   customStyle?: React.CSSProperties
 }
 
@@ -37,6 +38,7 @@ export function Field({
   onPanelClick,
   onPanelPointerDown,
   onPanelPointerEnter,
+  isolatedPanels,
   customStyle,
 }: FieldProps): React.JSX.Element {
   // In challenge mode, render only the bounding box of non-null cells
@@ -89,6 +91,7 @@ export function Field({
           key={cell.key}
           value={cell.panel}
           isEditMode={type === "edit"}
+          isIsolated={isolatedPanels?.has(`${cell.r}-${cell.c}`) ?? false}
           panelNumber={
             type === "edit" ? cell.r * MAX_FIELD_WIDTH + cell.c + 1 : undefined
           }

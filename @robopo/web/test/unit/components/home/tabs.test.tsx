@@ -205,9 +205,9 @@ describe("SummaryTab", () => {
 describe("ManageTab", () => {
   test("renders all management links", () => {
     render(<ManageTab />)
-    expect(screen.getByText("コース作成")).toBeTruthy()
-    expect(screen.getByText("選手登録")).toBeTruthy()
-    expect(screen.getByText("採点者登録")).toBeTruthy()
-    expect(screen.getByText("大会設定")).toBeTruthy()
+    expect(screen.getByText("大会一覧")).toBeTruthy()
+    expect(screen.getByText("コース一覧")).toBeTruthy()
+    expect(screen.getByText("選手一覧")).toBeTruthy()
+    expect(screen.getByText("採点者一覧")).toBeTruthy()
   })
 })
