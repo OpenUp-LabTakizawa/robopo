@@ -5,25 +5,6 @@ async function seed() {
   await db.execute(sql`BEGIN`)
 
   try {
-    // Reserved courses
-    await db.execute(sql`
-      INSERT INTO course (id, name, field, fieldvalid, mission, missionvalid, point)
-      VALUES (-1, 'THE IpponBashi', 'route;route;route;route;startGoal', TRUE,
-        'u;null;mf;1;mf;1;mf;1;mf;1;tr;180;mf;1;mf;1;mf;1;mf;1', TRUE,
-        '0;20;1;1;1;1;0;2;2;2;2')
-      ON CONFLICT (id) DO UPDATE SET
-        field = EXCLUDED.field,
-        fieldvalid = EXCLUDED.fieldvalid,
-        mission = EXCLUDED.mission,
-        missionvalid = EXCLUDED.missionvalid,
-        point = EXCLUDED.point
-    `)
-    await db.execute(sql`
-      INSERT INTO course (id, name, fieldvalid, missionvalid)
-      VALUES (-2, 'SensorCourse', TRUE, TRUE)
-      ON CONFLICT (id) DO NOTHING
-    `)
-
     // Test umpires
     await db.execute(sql`
       INSERT INTO umpire (id, name)

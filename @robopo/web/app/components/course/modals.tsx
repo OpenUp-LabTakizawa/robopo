@@ -69,8 +69,16 @@ export function BackModal() {
 
 // Modal for saving a course
 export function SaveModal({ courseId }: { courseId: number | null }) {
-  const { name, setName, description, setDescription, field, mission, point } =
-    useCourseEdit()
+  const {
+    name,
+    setName,
+    description,
+    setDescription,
+    field,
+    mission,
+    point,
+    courseOutRule,
+  } = useCourseEdit()
   const router = useRouter()
   const [isSuccess, setIsSuccess] = useState<boolean>(false)
   const { pending } = useFormStatus()
@@ -87,6 +95,7 @@ export function SaveModal({ courseId }: { courseId: number | null }) {
       field: serializeField(field),
       mission: serializeMission(mission),
       point: serializePoint(point),
+      courseOutRule: courseOutRule,
     }
 
     const res = await fetch(id ? `/api/course?id=${id}` : "/api/course", {

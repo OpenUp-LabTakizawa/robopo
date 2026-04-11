@@ -1,16 +1,13 @@
 import type React from "react"
+import { useEffect, useState } from "react"
 import {
   type MissionState,
   MissionString,
   type MissionValue,
+  type PointEntry,
   type PointState,
   type PointValue,
 } from "@/app/components/course/utils"
-
-// Radio button value >= 0: mission order index
-// Radio button value = -1: no mission set
-// Radio button value = -2: Start
-// Radio button value = -3: Goal
 
 // Start select
 function StartSelect({
@@ -43,136 +40,243 @@ function StartSelect({
   )
 }
 
-// Goal select
+// Goal select - free number input
 function GoalSelect({
   selectedPoint,
-  onPointChange,
-  goalPointArray,
+  onPointInputChange,
 }: {
   selectedPoint: PointValue | null
-  onPointChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
-  goalPointArray: number[]
+  onPointInputChange: (value: number) => void
 }) {
   return (
     <>
       <p>ゴールポイント</p>
-      <div className="flex justify-start">
-        <select
-          className="select select-bordered ml-2"
+      <div className="flex items-center gap-2">
+        <input
+          type="number"
+          className="input input-bordered w-24"
           value={selectedPoint ?? ""}
-          onChange={onPointChange}
-        >
-          <option value="">選択</option>
-          {goalPointArray.map((num) => (
-            <option key={num} value={num}>
-              {num}
-            </option>
-          ))}
-        </select>
-        <p className="ml-2 self-center">ポイント</p>
+          onChange={(e) => {
+            const raw = e.target.value
+            const num = Number(raw)
+            onPointInputChange(raw === "" || Number.isNaN(num) ? 0 : num)
+          }}
+          placeholder="0"
+        />
+        <span>ポイント</span>
       </div>
     </>
   )
 }
 
-// Normal mission select
+// Normal mission select with free point input and tier support
 function MissionSelect({
   selectedMission,
   selectedParam,
-  selectedPoint,
+  selectedPointEntry,
   onMissionChange,
   onParamChange,
-  onPointChange,
-  pointArray,
+  onPointEntryChange,
 }: {
   selectedMission: MissionValue | null
   selectedParam: number | null
-  selectedPoint: PointValue | null
+  selectedPointEntry: PointEntry | null
   onMissionChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
   onParamChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
-  onPointChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
-  pointArray: number[]
+  onPointEntryChange: (entry: PointEntry) => void
 }) {
   const isMove = selectedMission === "mf" || selectedMission === "mb"
   const isTurn = selectedMission === "tr" || selectedMission === "tl"
+  const isPause = selectedMission === "ps"
+  const hasParam = isMove || isTurn
+
+  // Tier mode derived from props (single source of truth)
+  const tierMode = Array.isArray(selectedPointEntry)
+
+  // Single point value (for non-tier mode)
+  const singleValue =
+    selectedPointEntry !== null && !Array.isArray(selectedPointEntry)
+      ? selectedPointEntry
+      : null
+  // Tier values
+  const tierValues = Array.isArray(selectedPointEntry)
+    ? selectedPointEntry
+    : [0]
+
+  function handleTierModeChange(useTier: boolean) {
+    if (useTier) {
+      // Switch to tier: wrap existing single value in an array
+      const base =
+        selectedPointEntry !== null && !Array.isArray(selectedPointEntry)
+          ? selectedPointEntry
+          : 0
+      onPointEntryChange([base, 0])
+    } else {
+      // Switch to single: collapse array to first element
+      const first = Array.isArray(selectedPointEntry)
+        ? (selectedPointEntry[0] ?? 0)
+        : 0
+      onPointEntryChange(first)
+    }
+  }
+
+  function handleSinglePointChange(raw: string) {
+    const num = Number(raw)
+    onPointEntryChange(raw === "" || Number.isNaN(num) ? 0 : num)
+  }
+
+  function handleTierValueChange(index: number, raw: string) {
+    const num = Number(raw)
+    const newTiers = [...tierValues]
+    newTiers[index] = raw === "" || Number.isNaN(num) ? 0 : num
+    onPointEntryChange(newTiers)
+  }
+
+  function addTier() {
+    onPointEntryChange([...tierValues, 0])
+  }
+
+  function removeTier(index: number) {
+    if (tierValues.length <= 2) {
+      return
+    }
+    const newTiers = tierValues.filter((_, i) => i !== index)
+    onPointEntryChange(newTiers)
+  }
 
   return (
     <>
       <p>ミッション選択</p>
-      <div className="flex justify-start">
+      <div className="flex flex-wrap items-center gap-2">
         <select
           className="select select-bordered"
           value={selectedMission ?? ""}
           onChange={onMissionChange}
         >
           <option value="">選択</option>
-          {(["mf", "mb", "tr", "tl"] as Exclude<MissionValue, null>[]).map(
-            (v) => (
-              <option key={v} value={v}>
-                {MissionString[v]}
-              </option>
-            ),
-          )}
+          {(
+            ["mf", "mb", "tr", "tl", "ps"] as Exclude<MissionValue, null>[]
+          ).map((v) => (
+            <option key={v} value={v}>
+              {MissionString[v]}
+            </option>
+          ))}
         </select>
 
         {isMove && (
-          <>
-            <select
-              className="select select-bordered ml-2"
-              value={selectedParam ?? ""}
-              onChange={onParamChange}
-            >
-              <option value="">選択</option>
-              {[1, 2].map((num) => (
-                <option key={num} value={num}>
-                  {num}
-                </option>
-              ))}
-            </select>
-            <p className="ml-2 self-center">パネル</p>
-          </>
+          <select
+            className="select select-bordered"
+            value={selectedParam ?? ""}
+            onChange={onParamChange}
+          >
+            <option value="">選択</option>
+            {[1, 2, 3, 4].map((num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
+            ))}
+          </select>
         )}
+        {isMove && <span>パネル</span>}
 
         {isTurn && (
-          <>
-            <select
-              className="select select-bordered ml-2"
-              value={selectedParam ?? ""}
-              onChange={onParamChange}
-            >
-              <option value="">選択</option>
-              {[90, 180, 270, 360].map((num) => (
-                <option key={num} value={num}>
-                  {num}
-                </option>
-              ))}
-            </select>
-            <p className="ml-2 self-center">度</p>
-          </>
+          <select
+            className="select select-bordered"
+            value={selectedParam ?? ""}
+            onChange={onParamChange}
+          >
+            <option value="">選択</option>
+            {[90, 180, 270, 360].map((num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
+            ))}
+          </select>
+        )}
+        {isTurn && <span>度</span>}
+
+        {isPause && (
+          <span className="text-base-content/60">パラメータなし</span>
         )}
 
-        {(isMove || isTurn) && (
-          <>
-            <select
-              className="select select-bordered ml-2"
-              value={selectedPoint ?? ""}
-              onChange={onPointChange}
-            >
-              <option value="">選択</option>
-              {pointArray.map((num) => (
-                <option key={num} value={num}>
-                  {num}
-                </option>
-              ))}
-            </select>
-            <p className="ml-2 self-center">ポイント</p>
-          </>
-        )}
-
-        {!isMove && !isTurn && (
-          <p className="self-center">{"<"}-選択してください</p>
-        )}
+        {!hasParam && !isPause && <span>{"<"}-選択してください</span>}
       </div>
+
+      {/* Point settings - shown when mission type is selected */}
+      {(hasParam || isPause) && (
+        <div className="mt-3">
+          <div className="mb-2 flex items-center gap-3">
+            <span className="font-bold text-sm">ポイント方式:</span>
+            <label className="label cursor-pointer gap-1">
+              <input
+                type="radio"
+                name="pointMode"
+                className="radio radio-sm"
+                checked={!tierMode}
+                onChange={() => handleTierModeChange(false)}
+              />
+              <span className="label-text">単一値</span>
+            </label>
+            <label className="label cursor-pointer gap-1">
+              <input
+                type="radio"
+                name="pointMode"
+                className="radio radio-sm"
+                checked={tierMode}
+                onChange={() => handleTierModeChange(true)}
+              />
+              <span className="label-text">段階選択</span>
+            </label>
+          </div>
+
+          {!tierMode ? (
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                className="input input-bordered w-24"
+                value={singleValue ?? ""}
+                onChange={(e) => handleSinglePointChange(e.target.value)}
+                placeholder="0"
+              />
+              <span>ポイント</span>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              {tierValues.map((val, i) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: tiers may have duplicate values, need index for uniqueness
+                <div key={i} className="flex items-center gap-2">
+                  <span className="w-8 text-base-content/50 text-xs">
+                    {i + 1}.
+                  </span>
+                  <input
+                    type="number"
+                    className="input input-bordered input-sm w-20"
+                    value={val}
+                    onChange={(e) => handleTierValueChange(i, e.target.value)}
+                  />
+                  <span className="text-sm">pt</span>
+                  {tierValues.length > 2 && (
+                    <button
+                      type="button"
+                      className="btn btn-ghost btn-xs text-error"
+                      onClick={() => removeTier(i)}
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button
+                type="button"
+                className="btn btn-ghost btn-xs text-primary"
+                onClick={addTier}
+              >
+                + 段階追加
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </>
   )
 }
@@ -208,17 +312,36 @@ export function MissionUI({
   setRadio: React.Dispatch<React.SetStateAction<number | null>>
   setAddOrder: React.Dispatch<React.SetStateAction<number>>
 }) {
+  // Extended point entry state (supports tiers)
+  const [pointEntry, setPointEntry] = useState<PointEntry | null>(null)
+
+  // Sync pointEntry from existing point data when selectedId changes
+  useEffect(() => {
+    if (selectedId !== null && selectedId >= 0) {
+      const existingPoint = point[selectedId + 2]
+      if (existingPoint !== undefined) {
+        setPointEntry(existingPoint)
+      } else {
+        setPointEntry(null)
+      }
+    } else {
+      setPointEntry(null)
+    }
+  }, [selectedId, point])
+
   function handleMissionChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    // When changed to "select", set both Mission and Param to null to prevent input.
-    // You might think disabling "select" would work, but
-    // the behavior when switching radio buttons in the list is unsatisfactory,
-    // so we handle it here.
     if (event.target.value === "") {
       setSelectedMission(null)
       setSelectedParam(null)
       setSelectedPoint(null)
+      setPointEntry(null)
     } else {
-      setSelectedMission(event.target.value as MissionValue)
+      const val = event.target.value as MissionValue
+      setSelectedMission(val)
+      // Auto-set param for pause (no param needed)
+      if (val === "ps") {
+        setSelectedParam(0)
+      }
     }
   }
 
@@ -231,13 +354,19 @@ export function MissionUI({
     }
   }
 
-  function handlePointChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const value = Number(event.target.value)
-    if (Number.isNaN(value)) {
-      setSelectedPoint(null)
+  function handlePointEntryChange(entry: PointEntry) {
+    setPointEntry(entry)
+    // Keep selectedPoint in sync for compatibility
+    if (Array.isArray(entry)) {
+      setSelectedPoint(entry[0] ?? 0)
     } else {
-      setSelectedPoint(value as PointValue)
+      setSelectedPoint(entry)
     }
+  }
+
+  function handleGoalPointChange(value: number) {
+    setSelectedPoint(value)
+    setPointEntry(value)
   }
 
   // Reset UI
@@ -245,23 +374,30 @@ export function MissionUI({
     setSelectedMission(null)
     setSelectedParam(null)
     setSelectedPoint(null)
+    setPointEntry(null)
     setRadio(null)
     setAddOrder(-1)
   }
 
-  // Check if start or goal is selected
   function isStartGoal() {
-    if (selectedId === -2 || selectedId === -3) {
-      return true
+    return selectedId === -2 || selectedId === -3
+  }
+
+  function getEffectivePointEntry(): PointEntry {
+    if (pointEntry !== null) {
+      return pointEntry
     }
-    return false
+    if (selectedPoint !== null) {
+      return selectedPoint
+    }
+    return 0
   }
 
   function addMission(
     selectedId: number,
     selectedMission: MissionValue,
     selectedParam: number,
-    selectedPoint: PointValue,
+    effectivePoint: PointEntry,
     mission: MissionState,
     point: PointState,
   ) {
@@ -270,14 +406,13 @@ export function MissionUI({
     if (selectedId === -1) {
       newMissionState[2] = selectedMission
       newMissionState[3] = selectedParam
-      newPointState[2] = selectedPoint
+      newPointState[2] = effectivePoint
     } else {
-      // Special constant for handling the "insert at start" case in mission/point arrays.
-      const INSERT_AT_START_ID = -4 // When selectedId is -4, insert at the beginning (index 2).
+      const INSERT_AT_START_ID = -4
       const insertIndex =
         selectedId === INSERT_AT_START_ID ? 2 : 2 * selectedId + 4
       newMissionState.splice(insertIndex, 0, selectedMission, selectedParam)
-      newPointState.splice(selectedId + 3, 0, selectedPoint)
+      newPointState.splice(selectedId + 3, 0, effectivePoint)
     }
     return { newMissionState, newPointState }
   }
@@ -286,7 +421,7 @@ export function MissionUI({
     selectedId: number,
     selectedMission: MissionValue,
     selectedParam: number,
-    selectedPoint: PointValue,
+    effectivePoint: PointEntry,
     mission: MissionState,
     point: PointState,
   ) {
@@ -294,7 +429,7 @@ export function MissionUI({
     const newPointState = [...point]
     newMissionState[2 * selectedId + 2] = selectedMission
     newMissionState[2 * selectedId + 3] = selectedParam
-    newPointState[selectedId + 2] = selectedPoint
+    newPointState[selectedId + 2] = effectivePoint
     return { newMissionState, newPointState }
   }
 
@@ -305,6 +440,7 @@ export function MissionUI({
     }
 
     let newStates = { newMissionState: [...mission], newPointState: [...point] }
+    const effectivePoint = getEffectivePointEntry()
 
     if (isStartGoal() && id === "update") {
       const newMissionState = [...mission]
@@ -314,35 +450,29 @@ export function MissionUI({
         newPointState[0] = 0
       } else {
         newMissionState[1] = null
-        newPointState[1] = selectedPoint
+        newPointState[1] = effectivePoint
       }
       newStates = { newMissionState, newPointState }
-    } else if (
-      id === "add" &&
-      selectedMission &&
-      selectedParam &&
-      selectedPoint
-    ) {
+    } else if (id === "add" && selectedMission && selectedParam !== null) {
       newStates = addMission(
         selectedId,
         selectedMission,
         selectedParam,
-        selectedPoint,
+        effectivePoint,
         mission,
         point,
       )
     } else if (
       id === "update" &&
       selectedMission &&
-      selectedParam &&
-      selectedPoint &&
+      selectedParam !== null &&
       selectedId !== -1
     ) {
       newStates = updateMission(
         selectedId,
         selectedMission,
         selectedParam,
-        selectedPoint,
+        effectivePoint,
         mission,
         point,
       )
@@ -359,8 +489,9 @@ export function MissionUI({
     resetUi()
   }
 
-  const pointArray = [0, 1, 2]
-  const goalPointArray = [5, 10]
+  const isPause = selectedMission === "ps"
+  const hasValidMission =
+    selectedMission !== null && (selectedParam !== null || isPause)
 
   return (
     <div>
@@ -374,8 +505,7 @@ export function MissionUI({
         ) : selectedId === -3 ? (
           <GoalSelect
             selectedPoint={selectedPoint}
-            onPointChange={handlePointChange}
-            goalPointArray={goalPointArray}
+            onPointInputChange={handleGoalPointChange}
           />
         ) : selectedId === null ? (
           <p>上のいずれかを選択してください</p>
@@ -383,11 +513,10 @@ export function MissionUI({
           <MissionSelect
             selectedMission={selectedMission}
             selectedParam={selectedParam}
-            selectedPoint={selectedPoint}
+            selectedPointEntry={pointEntry}
             onMissionChange={handleMissionChange}
             onParamChange={handleParamChange}
-            onPointChange={handlePointChange}
-            pointArray={pointArray}
+            onPointEntryChange={handlePointEntryChange}
           />
         )}
       </div>
@@ -401,9 +530,7 @@ export function MissionUI({
             isStartGoal() ||
             radio !== -1 ||
             selectedId === null ||
-            selectedMission === null ||
-            selectedParam === null ||
-            selectedPoint == null
+            !hasValidMission
           }
           onClick={handleButtonClick}
         >
@@ -417,11 +544,9 @@ export function MissionUI({
           disabled={
             selectedId === null ||
             radio === -1 ||
-            (selectedId !== -2 &&
-              selectedId !== -3 &&
-              selectedParam === null) ||
-            (selectedId !== -2 && selectedPoint == null) ||
-            (selectedId !== -3 && selectedMission === null)
+            (selectedId !== -2 && selectedId !== -3 && !hasValidMission) ||
+            (selectedId === -3 && selectedPoint === null) ||
+            (selectedId === -2 && selectedMission === null)
           }
         >
           更新

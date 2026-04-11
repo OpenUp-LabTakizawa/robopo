@@ -10,9 +10,6 @@ export type CourseSummary = {
   firstTCourseTime: string | null
   tCourseCount: number | null
   tCourseMaxResult: number | null
-  sensorMaxResult: number | null
-  sumIpponPoint: number | null
-  ipponMaxResult: number | null
   totalPoint: number | null
   pointRank: number | null
   challengeCount: number | null
@@ -25,12 +22,15 @@ export function isCompletedCourse(
   result: number | null,
 ): boolean {
   const resultPoint = calcPoint(pointData, result)
-  // Sum all pointData values.
   let totalPoint = 0
   for (let i = 0; i < pointData.length; i++) {
-    totalPoint += Number(pointData[i])
+    const entry = pointData[i]
+    if (Array.isArray(entry)) {
+      totalPoint += entry[0] ?? 0
+    } else {
+      totalPoint += Number(entry)
+    }
   }
-  // If result score equals totalPoint, the course is completed
   if (totalPoint === resultPoint) {
     return true
   }

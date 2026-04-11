@@ -148,7 +148,11 @@ export function MissionList({
                       {mission[1] === null ? "-" : mission[1]}
                       {panelOrDegree(mission[0])}
                     </td>
-                    <td>{point[index + 2]}</td>
+                    <td>
+                      {Array.isArray(point[index + 2])
+                        ? `[${(point[index + 2] as number[]).join(",")}]`
+                        : point[index + 2]}
+                    </td>
                   </tr>
                   {addOrder === index && (
                     <AddMissionItem

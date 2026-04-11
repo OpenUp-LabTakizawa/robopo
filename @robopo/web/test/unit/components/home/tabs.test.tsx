@@ -17,21 +17,25 @@ const courseList = {
     {
       id: 1,
       name: "Course A",
+      description: null,
       field: null,
       fieldValid: false,
       mission: null,
       missionValid: false,
       point: null,
+      courseOutRule: "keep",
       createdAt: null,
     },
     {
       id: 2,
       name: "Course B",
+      description: null,
       field: null,
       fieldValid: false,
       mission: null,
       missionValid: false,
       point: null,
+      courseOutRule: "keep",
       createdAt: null,
     },
   ],
@@ -125,8 +129,6 @@ describe("ChallengeTab", () => {
     )
     expect(screen.getByText("Course A")).toBeTruthy()
     expect(screen.getByText("Course B")).toBeTruthy()
-    expect(screen.getByText("THE一本橋")).toBeTruthy()
-    expect(screen.getByText("センサーコース")).toBeTruthy()
   })
 
   test("shows placeholder when no competition selected", () => {

@@ -24,6 +24,7 @@ export const course = pgTable("course", {
   mission: text("mission"),
   missionValid: boolean("missionvalid").default(false).notNull(),
   point: text("point"),
+  courseOutRule: text("course_out_rule").default("keep").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 })
 
@@ -46,6 +47,7 @@ export const challenge = pgTable("challenge", {
   id: serial("id").primaryKey(),
   result1: integer("result1").notNull(),
   result2: integer("result2"),
+  detail: text("detail"),
   competitionId: integer("competition_id")
     .notNull()
     .references(() => competition.id, { onDelete: "cascade" }),

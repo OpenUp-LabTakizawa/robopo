@@ -1,14 +1,187 @@
+function SkeletonBlock({ className }: { className?: string }) {
+  return <div className={`skeleton-shimmer rounded-xl ${className ?? ""}`} />
+}
+
+function RobotIcon() {
+  return (
+    <div
+      className="absolute inset-0 flex items-center justify-center"
+      style={{ zIndex: 1 }}
+    >
+      <div
+        className="flex size-14 items-center justify-center rounded-2xl bg-base-100"
+        style={{ animation: "robotPulse 2s ease-out infinite" }}
+      >
+        <svg
+          width="32"
+          height="32"
+          viewBox="0 0 32 32"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="text-primary"
+          role="img"
+        >
+          <title>Loading robot icon</title>
+          {/* Antenna */}
+          <circle cx="16" cy="4" r="2" fill="currentColor" opacity="0.6" />
+          <line
+            x1="16"
+            y1="6"
+            x2="16"
+            y2="10"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            opacity="0.6"
+          />
+          {/* Head */}
+          <rect
+            x="7"
+            y="10"
+            width="18"
+            height="12"
+            rx="4"
+            fill="currentColor"
+            opacity="0.15"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          />
+          {/* Eyes */}
+          <circle cx="12" cy="16" r="2" fill="currentColor">
+            <animate
+              attributeName="opacity"
+              values="1;0.3;1"
+              dur="2s"
+              repeatCount="indefinite"
+            />
+          </circle>
+          <circle cx="20" cy="16" r="2" fill="currentColor">
+            <animate
+              attributeName="opacity"
+              values="1;0.3;1"
+              dur="2s"
+              repeatCount="indefinite"
+              begin="0.15s"
+            />
+          </circle>
+          {/* Body */}
+          <rect
+            x="9"
+            y="23"
+            width="14"
+            height="6"
+            rx="2"
+            fill="currentColor"
+            opacity="0.15"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          />
+          {/* Arms */}
+          <line
+            x1="7"
+            y1="25"
+            x2="4"
+            y2="27"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <line
+            x1="25"
+            y1="25"
+            x2="28"
+            y2="27"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
+    </div>
+  )
+}
+
+const gridCells = ["g0", "g1", "g2", "g3", "g4", "g5", "g6", "g7", "g8"]
+const panelItems = ["p0", "p1", "p2", "p3", "p4"]
+const missionItems = ["m0", "m1", "m2", "m3", "m4"]
+const uiItems = ["u0", "u1", "u2", "u3", "u4", "u5"]
+const btnItems = ["b0", "b1", "b2"]
+
 export function PageLoading() {
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <div className="absolute h-[16rem] w-[16rem] animate-ping rounded-full border-red-500 border-t-4 border-b-4"></div>
-      <div className="absolute h-[14rem] w-[14rem] animate-spin rounded-full border-purple-500 border-t-4 border-b-4"></div>
-      <div className="absolute h-[12rem] w-[12rem] animate-ping rounded-full border-pink-500 border-t-4 border-b-4"></div>
-      <div className="absolute h-[10rem] w-[10rem] animate-spin rounded-full border-yellow-500 border-t-4 border-b-4"></div>
-      <div className="absolute h-[8rem] w-[8rem] animate-ping rounded-full border-green-500 border-t-4 border-b-4"></div>
-      <div className="absolute h-[6rem] w-[6rem] animate-spin rounded-full border-blue-500 border-t-4 border-b-4"></div>
-      <div className="flex h-28 w-28 animate-bounce items-center justify-center rounded-full font-semibold text-gray-400 text-xl dark:text-black">
-        Loading...
+    <div className="h-full w-full animate-[skeletonFadeIn_0.3s_ease-out]">
+      <div className="gap-4 p-4 sm:grid sm:max-h-screen sm:grid-cols-2">
+        {/* Left column: Field editor skeleton */}
+        <div className="sm:w-full sm:justify-self-end">
+          {/* Field grid card */}
+          <div className="card w-full min-w-72 bg-base-100 shadow-xl">
+            <div className="card-body">
+              <SkeletonBlock className="mb-3 h-4 w-24" />
+              {/* 3x3 grid */}
+              <div
+                className="relative mx-auto grid gap-[1px]"
+                style={{
+                  gridTemplateColumns: "repeat(3, 85px)",
+                  gridTemplateRows: "repeat(3, 85px)",
+                }}
+              >
+                {gridCells.map((id, i) => (
+                  <div
+                    key={id}
+                    className="skeleton-shimmer rounded-lg border border-base-300/50"
+                    style={{
+                      width: 85,
+                      height: 85,
+                      animationDelay: `${i * 80}ms`,
+                    }}
+                  />
+                ))}
+                <RobotIcon />
+              </div>
+            </div>
+          </div>
+          {/* Panel select card */}
+          <div className="card mt-4 w-full min-w-72 bg-base-100 shadow-xl">
+            <div className="card-body flex w-full flex-row items-center gap-3">
+              {panelItems.map((id) => (
+                <SkeletonBlock key={id} className="size-10" />
+              ))}
+              <SkeletonBlock className="ml-auto h-10 w-20 rounded-lg" />
+            </div>
+          </div>
+        </div>
+
+        {/* Right column: Mission editor skeleton */}
+        <div className="mt-4 sm:mx-4 sm:mt-0 sm:w-full sm:justify-self-start">
+          {/* Mission list card */}
+          <div className="card w-full min-w-72 bg-base-100 shadow-xl">
+            <div className="card-body">
+              <SkeletonBlock className="mb-3 h-4 w-32" />
+              <div className="space-y-2">
+                {missionItems.map((id) => (
+                  <SkeletonBlock key={id} className="h-10 w-full" />
+                ))}
+              </div>
+            </div>
+          </div>
+          {/* Mission UI card */}
+          <div className="card mt-4 w-full min-w-72 bg-base-100 shadow-xl">
+            <div className="card-body">
+              <SkeletonBlock className="mb-3 h-4 w-28" />
+              <div className="grid grid-cols-3 gap-2">
+                {uiItems.map((id) => (
+                  <SkeletonBlock key={id} className="h-10 w-full" />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom buttons */}
+      <div className="mt-0 flex justify-center gap-4 p-4">
+        {btnItems.map((id) => (
+          <SkeletonBlock key={id} className="h-12 min-w-28 rounded-lg" />
+        ))}
       </div>
     </div>
   )

@@ -6,15 +6,26 @@ import type { PointState } from "@/app/components/course/utils"
 // pointState contains points in order: start, goal, mission...
 // First mission starts at index=2 with point pointState[2], point for index=i is pointState[i]
 // Last mission is at index=pointState.length-1, at which point goal points pointState[1] are added
+// Get numeric value from a PointEntry (for tier entries, defaults to first tier value)
+function pointEntryValue(entry: PointState[number]): number {
+  if (entry === null) {
+    return 0
+  }
+  if (Array.isArray(entry)) {
+    return entry[0] ?? 0 // Default to first tier for now
+  }
+  return Number(entry)
+}
+
 export function calcPoint(pointState: PointState, index: number | null) {
   if (index === null) {
     return 0
   }
-  let point = Number(pointState[0]) // Initial value is start value (handicap)
+  let point = pointEntryValue(pointState[0]) // Initial value is start value (handicap)
   for (let i = 2; i < index + 2; i++) {
-    point += Number(pointState[i])
+    point += pointEntryValue(pointState[i])
     if (i === pointState.length - 1) {
-      point += Number(pointState[1]) // Add goal points
+      point += pointEntryValue(pointState[1]) // Add goal points
     }
   }
   return point

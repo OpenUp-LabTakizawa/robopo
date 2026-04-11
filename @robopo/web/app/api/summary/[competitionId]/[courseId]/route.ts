@@ -1,8 +1,7 @@
-import { calcPoint } from "@/app/components/challenge/utils"
-import { deserializePoint } from "@/app/components/course/utils"
-import { sumIpponPoint } from "@/app/components/summary/utilServer"
+import { getCompetitionCourseList } from "@/app/components/server/db"
+import { maxCoursePoint } from "@/app/components/summary/utilServer"
 import type { CourseSummary } from "@/app/components/summary/utils"
-import { getCourseById, getCourseSummary } from "@/app/lib/db/queries/queries"
+import { getCourseSummary } from "@/app/lib/db/queries/queries"
 
 export const revalidate = 0
 
@@ -11,30 +10,30 @@ export async function GET(
   { params }: { params: Promise<{ competitionId: string; courseId: string }> },
 ) {
   const { competitionId, courseId } = await params
+  const compeId = Number(competitionId)
+  const cId = Number(courseId)
 
-  // Fetch data
-  const courseSummary = await getCourseSummary(
-    Number(competitionId),
-    Number(courseId),
-  )
-  const course = await getCourseById(Number(courseId))
-  const pointState = deserializePoint(course?.point as string)
+  // Fetch data for the selected course
+  const courseSummary = await getCourseSummary(compeId, cId)
 
-  // Calculate total score and Ippon Bashi total score for each player
+  // Get all courses for this competition to calculate total score
+  const { competitionCourses } = await getCompetitionCourseList(compeId)
+
+  // Calculate total score across all competition courses for each player
   const courseSummaryWithPoints = await Promise.all(
     courseSummary.map(async (player) => {
-      const sumIpponPoints = await sumIpponPoint(
-        Number(competitionId),
-        player.playerId || 0,
-      )
-      const totalPoint =
-        calcPoint(pointState, player.tCourseMaxResult) +
-        (player.sensorMaxResult || 0) +
-        sumIpponPoints
+      const playerId = player.playerId || 0
+
+      // Sum max score across all competition courses
+      let totalPoint = 0
+      for (const c of competitionCourses) {
+        const maxPt = await maxCoursePoint(compeId, playerId, c.id)
+        totalPoint += maxPt
+      }
+
       return {
         ...player,
         totalPoint,
-        sumIpponPoint: sumIpponPoints,
       }
     }),
   )
@@ -44,7 +43,7 @@ export async function GET(
     (a, b) => b.totalPoint - a.totalPoint,
   )
   sortedByTotalPoints.forEach((player, index) => {
-    player.pointRank = index + 1 // Total score rank
+    player.pointRank = index + 1
   })
 
   // Calculate challenge count ranking
@@ -52,16 +51,15 @@ export async function GET(
     (a, b) => (b.challengeCount || 0) - (a.challengeCount || 0),
   )
   sortedByChallengeCount.forEach((player, index) => {
-    player.challengeRank = index + 1 // Challenge count rank
+    player.challengeRank = index + 1
   })
 
   // Build response
   const resbody: CourseSummary[] = courseSummaryWithPoints.map((player) => ({
     ...player,
-    totalPoint: player.totalPoint, // Total score
-    sumIpponPoint: player.sumIpponPoint, // Ippon Bashi total score
-    pointRank: player.pointRank, // Total score rank
-    challengeRank: player.challengeRank, // Challenge count rank
+    totalPoint: player.totalPoint,
+    pointRank: player.pointRank,
+    challengeRank: player.challengeRank,
   }))
 
   return Response.json(resbody)

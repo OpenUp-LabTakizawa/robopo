@@ -5,14 +5,14 @@ import { calcPoint } from "@/app/components/challenge/utils"
 import {
   MissionString,
   type MissionValue,
-  type PointValue,
+  type PointState,
   panelOrDegree,
 } from "@/app/components/course/utils"
 import { isCompletedCourse } from "@/app/components/summary/utils"
 
 type TCourseTableProps = {
   missionPair: MissionValue[][]
-  point: PointValue[]
+  point: PointState
   resultArray: { results1: number; results2: number | null }[]
   firstTCourseCount: { firstCount: number }[]
   maxResult: { maxResult: number }[]
