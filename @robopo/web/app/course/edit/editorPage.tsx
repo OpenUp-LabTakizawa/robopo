@@ -2,6 +2,10 @@
 
 import Link from "next/link"
 import { useCallback, useEffect, useMemo, useState } from "react"
+import {
+  buildPreviewMission,
+  type InsertPreview,
+} from "@/app/components/course/missionList"
 import { computeRobotPreview } from "@/app/components/course/robotPreview"
 import {
   deserializeField,
@@ -51,6 +55,7 @@ export function EditorPage({
   const [selectedMissionIndex, setSelectedMissionIndex] = useState<
     number | null
   >(null)
+  const [insertPreview, setInsertPreview] = useState<InsertPreview | null>(null)
 
   useEffect(() => {
     async function fetchCourseData() {
@@ -75,10 +80,16 @@ export function EditorPage({
     fetchCourseData()
   }, [courseData, setField, setMission, setPoint, setName, setCourseOutRule])
 
-  const robotPreview = useMemo(
-    () => computeRobotPreview(field, mission, selectedMissionIndex),
-    [field, mission, selectedMissionIndex],
-  )
+  const robotPreview = useMemo(() => {
+    if (insertPreview) {
+      const { missionWithInsert, selectedIndex } = buildPreviewMission(
+        mission,
+        insertPreview,
+      )
+      return computeRobotPreview(field, missionWithInsert, selectedIndex)
+    }
+    return computeRobotPreview(field, mission, selectedMissionIndex)
+  }, [field, mission, selectedMissionIndex, insertPreview])
 
   // Auto-add an empty mission when a route panel is placed
   // Inserts after the start action (pair 0) + any previously auto-added routes
@@ -172,6 +183,7 @@ export function EditorPage({
             pushMissionHistory={pushMissionHistory}
             missionPanelHints={missionPanelHints}
             setMissionPanelHints={setMissionPanelHints}
+            onInsertPreview={setInsertPreview}
           />
         </div>
       </div>
