@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, mock, test } from "bun:test"
-import { act, cleanup, render } from "@testing-library/react"
+import { cleanup, render } from "@testing-library/react"
 
 mock.module("@/app/challenge/challenge", () => ({
   Challenge: () => <div data-testid="challenge" />,

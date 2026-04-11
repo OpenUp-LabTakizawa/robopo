@@ -88,7 +88,7 @@ export function Modal({
           {/* Start button - big, bold, energetic */}
           <button
             type="button"
-            className="btn btn-accent start-btn-glow w-full rounded-2xl py-7 font-bold text-2xl tracking-wide shadow-accent/30 shadow-xl transition-all duration-200 hover:shadow-2xl hover:shadow-accent/40 active:scale-[0.97] motion-reduce:transition-none motion-reduce:transform-none"
+            className="btn btn-accent start-btn-glow w-full rounded-2xl py-7 font-bold text-2xl tracking-wide shadow-accent/30 shadow-xl transition-all duration-200 hover:shadow-2xl hover:shadow-accent/40 active:scale-[0.97] motion-reduce:transform-none motion-reduce:transition-none"
             onClick={() => {
               !muted && startSound?.play()
               setStarted(true)
