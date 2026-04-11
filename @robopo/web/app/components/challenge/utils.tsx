@@ -43,7 +43,7 @@ export async function resultSubmit(
   setIsSuccess: React.Dispatch<React.SetStateAction<boolean>>,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
   router: ReturnType<typeof useRouter>,
-  setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>,
+  setIsEnabled: (value: boolean) => void,
 ) {
   setLoading(true)
   setIsEnabled(false)

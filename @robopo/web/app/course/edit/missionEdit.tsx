@@ -14,6 +14,8 @@ type MissionEditProps = {
   setMission: React.Dispatch<React.SetStateAction<MissionState>>
   point: PointState
   setPoint: React.Dispatch<React.SetStateAction<PointState>>
+  courseOutRule: string
+  setCourseOutRule: React.Dispatch<React.SetStateAction<string>>
   selectedMissionIndex: number | null
   setSelectedMissionIndex: (index: number | null) => void
   undoMission: () => void
@@ -32,6 +34,8 @@ export default function MissionEdit({
   setMission,
   point,
   setPoint,
+  courseOutRule,
+  setCourseOutRule,
   selectedMissionIndex,
   setSelectedMissionIndex,
   undoMission,
@@ -64,6 +68,35 @@ export default function MissionEdit({
             setMissionPanelHints={setMissionPanelHints}
             onInsertPreview={onInsertPreview}
           />
+        </div>
+      </div>
+      <div className="card mt-3 w-full min-w-72 bg-base-100 shadow-xl">
+        <div className="card-body">
+          <p className="font-bold text-sm">コースアウト時</p>
+          <div className="flex gap-4">
+            <label className="label cursor-pointer gap-2">
+              <input
+                type="radio"
+                name="courseOutRule"
+                className="radio radio-sm radio-primary"
+                value="keep"
+                checked={courseOutRule === "keep"}
+                onChange={(e) => setCourseOutRule(e.target.value)}
+              />
+              <span className="label-text">獲得済ポイント維持</span>
+            </label>
+            <label className="label cursor-pointer gap-2">
+              <input
+                type="radio"
+                name="courseOutRule"
+                className="radio radio-sm radio-primary"
+                value="zero"
+                checked={courseOutRule === "zero"}
+                onChange={(e) => setCourseOutRule(e.target.value)}
+              />
+              <span className="label-text">0点</span>
+            </label>
+          </div>
         </div>
       </div>
     </div>

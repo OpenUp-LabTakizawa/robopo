@@ -24,6 +24,20 @@ let testPlayerIds: number[] = []
 let testChallengeIds: number[] = []
 
 async function setupTestData() {
+  // Clean up any leftover test data from previous runs
+  const existing = await db
+    .select({ id: course.id })
+    .from(course)
+    .where(eq(course.name, "__test_query_course__"))
+    .limit(1)
+  if (existing.length > 0) {
+    await db.delete(challenge).where(eq(challenge.courseId, existing[0].id))
+    await db
+      .delete(competitionCourse)
+      .where(eq(competitionCourse.courseId, existing[0].id))
+    await db.delete(course).where(eq(course.id, existing[0].id))
+  }
+
   // Create test course
   const [c] = await db
     .insert(course)

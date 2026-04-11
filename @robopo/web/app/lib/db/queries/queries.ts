@@ -16,6 +16,23 @@ import {
   type SelectPlayerWithCompetition,
 } from "@/app/lib/db/schema"
 
+// Check if a course name already exists (optionally excluding a specific course ID)
+export async function getCourseByName(
+  name: string,
+  excludeId?: number,
+): Promise<{ id: number } | null> {
+  const conditions = [eq(course.name, name)]
+  if (excludeId) {
+    conditions.push(sql`${course.id} != ${excludeId}`)
+  }
+  const result = await db
+    .select({ id: course.id })
+    .from(course)
+    .where(and(...conditions))
+    .limit(1)
+  return result.length > 0 ? result[0] : null
+}
+
 // Delete course from DB by ID
 // Consider moving to @/app/lib/db/queries/delete.ts
 export async function deleteCourseById(id: number) {
