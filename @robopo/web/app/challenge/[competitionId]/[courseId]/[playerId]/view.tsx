@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useAudioContext } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/audioContext"
 import { Challenge } from "@/app/challenge/challenge"
 import { SensorCourse } from "@/app/components/challenge/sensorCourse"
 import { RESERVED_COURSE_IDS } from "@/app/components/course/utils"
@@ -20,7 +21,16 @@ export function View({
   umpireId: number
 }) {
   const playerId = playerData.id
-  const [isEnabled, setIsEnabled] = useState(true)
+  const { started } = useAudioContext()
+  const [isEnabled, setIsEnabled] = useState(false)
+
+  // スタートボタンが押されたら離脱警告を有効化
+  useEffect(() => {
+    if (started) {
+      setIsEnabled(true)
+    }
+  }, [started])
+
   useEffect(() => {
     if (!isEnabled) {
       return

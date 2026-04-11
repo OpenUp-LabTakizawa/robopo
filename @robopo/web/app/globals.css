@@ -107,8 +107,30 @@
   }
 }
 
+/* Start button pulsing glow */
+.start-btn-glow {
+  animation: startGlow 2s ease-in-out infinite;
+}
+
+@keyframes startGlow {
+  0%,
+  100% {
+    box-shadow:
+      0 10px 25px -5px oklch(0.7 0.18 55 / 0.3),
+      0 0 0 0 oklch(0.7 0.18 55 / 0);
+  }
+  50% {
+    box-shadow:
+      0 10px 25px -5px oklch(0.7 0.18 55 / 0.45),
+      0 0 20px 4px oklch(0.7 0.18 55 / 0.15);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .modal-box {
+    animation: none;
+  }
+  .start-btn-glow {
     animation: none;
   }
 }

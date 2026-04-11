@@ -2,17 +2,30 @@
 
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/outline"
 import type React from "react"
-import { createContext, useContext, useState } from "react"
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 
 export type AudioContextType = {
   muted: boolean
   setMuted: React.Dispatch<React.SetStateAction<boolean>>
+  started: boolean
+  setStarted: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const dummy: AudioContextType = {
   muted: true,
   setMuted: () => {
-    throw new Error("setSoundOn called outside of AudioContext provider")
+    throw new Error("setMuted called outside of AudioContext provider")
+  },
+  started: false,
+  setStarted: () => {
+    throw new Error("setStarted called outside of AudioContext provider")
   },
 }
 
@@ -24,9 +37,10 @@ export function useAudioContext() {
 
 export function AudioProvider({ children }: { children: React.ReactNode }) {
   const [muted, setMuted] = useState<boolean>(dummy.muted)
+  const [started, setStarted] = useState<boolean>(false)
 
   return (
-    <AudioContext.Provider value={{ muted, setMuted }}>
+    <AudioContext.Provider value={{ muted, setMuted, started, setStarted }}>
       {children}
     </AudioContext.Provider>
   )
@@ -34,20 +48,48 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
 
 export function SoundController() {
   const { muted, setMuted } = useAudioContext()
+  const previewRef = useRef<HTMLAudioElement | null>(null)
+
+  const handleToggle = useCallback(() => {
+    if (muted) {
+      // OFF → ON: プレビュー音を鳴らして音量を確認させる
+      if (!previewRef.current) {
+        previewRef.current = new Audio("/sound/02_next.mp3")
+        previewRef.current.volume = 0.4
+      }
+      const audio = previewRef.current
+      audio.currentTime = 0
+      audio.play().catch(() => {
+        // Ignore play errors (e.g. autoplay policies or rapid toggling)
+      })
+    }
+    setMuted(!muted)
+  }, [muted, setMuted])
+
+  // Cleanup: アンマウント時にAudioインスタンスを解放
+  useEffect(() => {
+    return () => {
+      if (previewRef.current) {
+        previewRef.current.pause()
+        previewRef.current.currentTime = 0
+        previewRef.current = null
+      }
+    }
+  }, [])
 
   return (
     <button
       type="button"
       className="btn btn-ghost mx-auto bg-gray-100"
-      onClick={() => setMuted(!muted)}
+      onClick={handleToggle}
       aria-label="効果音のオン・オフ切り替え"
     >
-      <span className="text-lg">効果音: {muted ? "OFF" : "ON"}</span>
       {muted ? (
-        <SpeakerXMarkIcon className="size-8 text-red-500" />
+        <SpeakerXMarkIcon className="size-6 text-red-500" />
       ) : (
-        <SpeakerWaveIcon className="size-8 text-green-500" />
+        <SpeakerWaveIcon className="size-6 text-green-500" />
       )}
+      <span className="text-base">効果音{muted ? "OFF" : "ON"}</span>
     </button>
   )
 }

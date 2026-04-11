@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/24/outline"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { BackLabelWithIcon } from "@/app/lib/const"
+import { BackButton } from "@/app/components/parts/buttons"
 import type { SelectCompetition } from "@/app/lib/db/schema"
 
 type InputType = "player" | "umpire" | "course"
@@ -38,15 +38,7 @@ export function ModalBackdrop() {
 
 export function ModalBackButton() {
   const router = useRouter()
-  return (
-    <button
-      type="button"
-      className="btn btn-ghost w-full rounded-xl text-base-content/60 transition-colors hover:text-base-content"
-      onClick={() => router.back()}
-    >
-      <BackLabelWithIcon />
-    </button>
-  )
+  return <BackButton onClick={() => router.back()} fullWidth />
 }
 
 export function DeleteModal({ type, ids }: { type: InputType; ids: number[] }) {
@@ -119,16 +111,13 @@ export function DeleteModal({ type, ids }: { type: InputType; ids: number[] }) {
                 )}
               </button>
             )}
-            <button
-              type="button"
-              className="btn btn-ghost w-full rounded-xl text-base-content/60 transition-colors hover:text-base-content"
+            <BackButton
               onClick={() => {
                 window.location.href = `/${type}`
               }}
               disabled={loading}
-            >
-              <BackLabelWithIcon />
-            </button>
+              fullWidth
+            />
           </div>
         </div>
       </div>
@@ -244,16 +233,13 @@ export function AssignModal({
                 "大会割り当て解除"
               )}
             </button>
-            <button
-              type="button"
-              className="btn btn-ghost w-full rounded-xl text-base-content/60 transition-colors hover:text-base-content"
+            <BackButton
               onClick={() => {
                 window.location.href = `/${type}`
               }}
               disabled={loading}
-            >
-              <BackLabelWithIcon />
-            </button>
+              fullWidth
+            />
           </div>
         </div>
       </div>

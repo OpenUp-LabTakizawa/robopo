@@ -1,12 +1,10 @@
 "use client"
 
-import {
-  ArrowUturnLeftIcon,
-  MagnifyingGlassIcon,
-  PlayIcon,
-} from "@heroicons/react/24/outline"
+import { MagnifyingGlassIcon, PlayIcon } from "@heroicons/react/24/outline"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useMemo, useState } from "react"
+import { BackButton } from "@/app/components/parts/buttons"
 import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 
 export function View({
@@ -22,6 +20,7 @@ export function View({
   courseId: number
   umpireId: number
 }) {
+  const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
   const playerDataList = initialPlayerDataList.players
 
@@ -97,10 +96,7 @@ export function View({
       )}
 
       <div className="mt-6 flex justify-center">
-        <Link href="/" className="btn btn-ghost gap-1">
-          <ArrowUturnLeftIcon className="h-5 w-5" />
-          戻る
-        </Link>
+        <BackButton onClick={() => router.push("/")} />
       </div>
     </div>
   )
