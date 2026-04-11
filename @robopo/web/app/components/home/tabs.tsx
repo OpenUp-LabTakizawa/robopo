@@ -11,6 +11,10 @@ import Link from "next/link"
 import type React from "react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
+import {
+  getCompetitionStatus,
+  isCompetitionActive,
+} from "@/app/lib/competition"
 import { COMPETITION_MANAGEMENT_LIST } from "@/app/lib/const"
 import type {
   SelectCompetition,
@@ -78,7 +82,7 @@ export function ChallengeTab({
   competitionJudgeList,
 }: ChallengeTabProps): React.JSX.Element {
   const activeCompetitions = useMemo(
-    () => competitionList.competitions.filter((c) => c.step === 1),
+    () => competitionList.competitions.filter(isCompetitionActive),
     [competitionList.competitions],
   )
   const singleCompetition =
@@ -260,7 +264,10 @@ export function SummaryTab({
             <option
               key={competition.id}
               value={competition.id}
-              hidden={competition.step === 0}
+              hidden={
+                getCompetitionStatus(competition) === "before" ||
+                getCompetitionStatus(competition) === "unknown"
+              }
             >
               {competition.name}
             </option>

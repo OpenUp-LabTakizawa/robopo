@@ -6,9 +6,33 @@ afterEach(cleanup)
 
 const competitionList = {
   competitions: [
-    { id: 1, name: "Active Comp", step: 1, createdAt: null },
-    { id: 2, name: "Closed Comp", step: 2, createdAt: null },
-    { id: 3, name: "Prep Comp", step: 0, createdAt: null },
+    {
+      id: 1,
+      name: "Active Comp",
+
+      description: null,
+      startDate: new Date("2025-01-01T00:00:00.000Z"),
+      endDate: new Date("2027-12-31T00:00:00.000Z"),
+      createdAt: null,
+    },
+    {
+      id: 2,
+      name: "Closed Comp",
+
+      description: null,
+      startDate: new Date("2024-01-01T00:00:00.000Z"),
+      endDate: new Date("2024-12-31T00:00:00.000Z"),
+      createdAt: null,
+    },
+    {
+      id: 3,
+      name: "Prep Comp",
+
+      description: null,
+      startDate: new Date("2027-06-01T00:00:00.000Z"),
+      endDate: new Date("2027-12-31T00:00:00.000Z"),
+      createdAt: null,
+    },
   ],
 }
 
@@ -63,7 +87,17 @@ const competitionJudgeList = {
 describe("ChallengeTab", () => {
   test("shows competition name when single active competition", () => {
     const singleCompe = {
-      competitions: [{ id: 1, name: "Only Comp", step: 1, createdAt: null }],
+      competitions: [
+        {
+          id: 1,
+          name: "Only Comp",
+
+          description: null,
+          startDate: new Date("2025-01-01T00:00:00.000Z"),
+          endDate: new Date("2027-12-31T00:00:00.000Z"),
+          createdAt: null,
+        },
+      ],
     }
     render(
       <ChallengeTab
@@ -93,7 +127,17 @@ describe("ChallengeTab", () => {
 
   test("shows warning when course card clicked without judge selected", () => {
     const singleCompe = {
-      competitions: [{ id: 1, name: "Comp", step: 1, createdAt: null }],
+      competitions: [
+        {
+          id: 1,
+          name: "Comp",
+
+          description: null,
+          startDate: new Date("2025-01-01T00:00:00.000Z"),
+          endDate: new Date("2027-12-31T00:00:00.000Z"),
+          createdAt: null,
+        },
+      ],
     }
     const { container } = render(
       <ChallengeTab
@@ -116,7 +160,17 @@ describe("ChallengeTab", () => {
 
   test("renders course cards when competition is selected", () => {
     const singleCompe = {
-      competitions: [{ id: 1, name: "Comp", step: 1, createdAt: null }],
+      competitions: [
+        {
+          id: 1,
+          name: "Comp",
+
+          description: null,
+          startDate: new Date("2025-01-01T00:00:00.000Z"),
+          endDate: new Date("2027-12-31T00:00:00.000Z"),
+          createdAt: null,
+        },
+      ],
     }
     render(
       <ChallengeTab
@@ -134,8 +188,24 @@ describe("ChallengeTab", () => {
   test("shows placeholder when no competition selected", () => {
     const multiActive = {
       competitions: [
-        { id: 1, name: "Comp A", step: 1, createdAt: null },
-        { id: 2, name: "Comp B", step: 1, createdAt: null },
+        {
+          id: 1,
+          name: "Comp A",
+
+          description: null,
+          startDate: new Date("2025-01-01T00:00:00.000Z"),
+          endDate: new Date("2027-12-31T00:00:00.000Z"),
+          createdAt: null,
+        },
+        {
+          id: 2,
+          name: "Comp B",
+
+          description: null,
+          startDate: new Date("2025-01-01T00:00:00.000Z"),
+          endDate: new Date("2027-12-31T00:00:00.000Z"),
+          createdAt: null,
+        },
       ],
     }
     render(
@@ -154,7 +224,17 @@ describe("ChallengeTab", () => {
 
   test("renders course links with judgeId in href when judge is selected", () => {
     const singleCompe = {
-      competitions: [{ id: 1, name: "Comp", step: 1, createdAt: null }],
+      competitions: [
+        {
+          id: 1,
+          name: "Comp",
+
+          description: null,
+          startDate: new Date("2025-01-01T00:00:00.000Z"),
+          endDate: new Date("2027-12-31T00:00:00.000Z"),
+          createdAt: null,
+        },
+      ],
     }
     render(
       <ChallengeTab

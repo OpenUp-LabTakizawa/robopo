@@ -7,11 +7,12 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core"
 
-// step 0:prepare, 1:open, 2:close
 export const competition = pgTable("competition", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  step: integer("step").default(0).notNull(),
+  description: text("description"),
+  startDate: timestamp("start_date"),
+  endDate: timestamp("end_date"),
   createdAt: timestamp("created_at").defaultNow(),
 })
 
