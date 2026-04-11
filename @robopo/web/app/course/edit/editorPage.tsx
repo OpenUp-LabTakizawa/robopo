@@ -1,7 +1,9 @@
 "use client"
 
-import { CheckCircleIcon } from "@heroicons/react/24/outline"
-import Link from "next/link"
+import {
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   buildPreviewMission,
@@ -20,6 +22,7 @@ import { BackButton } from "@/app/components/parts/buttons"
 import CourseEdit from "@/app/course/edit/courseEdit"
 import { useCourseEdit } from "@/app/course/edit/courseEditContext"
 import MissionEdit from "@/app/course/edit/missionEdit"
+import { useCourseValidation } from "@/app/hooks/useCourseValidation"
 import { useNavigationGuard } from "@/app/hooks/useNavigationGuard"
 import type { SelectCourse } from "@/app/lib/db/schema"
 
@@ -71,6 +74,21 @@ export function EditorPage({
   >(null)
   const [insertPreview, setInsertPreview] = useState<InsertPreview | null>(null)
   const [saveState, setSaveState] = useState<SaveState>("idle")
+  const [showSaveWarning, setShowSaveWarning] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  const validation = useCourseValidation({ field, mission, name, nameError })
+  const saveBlockMessage = mounted ? validation.saveBlockMessage : null
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!saveBlockMessage) {
+      setShowSaveWarning(false)
+    }
+  }, [saveBlockMessage])
 
   useEffect(() => {
     if (courseData) {
@@ -158,12 +176,7 @@ export function EditorPage({
   )
 
   async function handleSave() {
-    if (name.trim() === "") {
-      alert("コース名を入力してください")
-      return
-    }
-    if (nameError) {
-      alert(nameError)
+    if (!validation.canSave) {
       return
     }
 
@@ -208,9 +221,9 @@ export function EditorPage({
   const isBusy = saveState === "saving" || saveState === "success"
 
   return (
-    <div className="h-full w-full">
-      <div className="gap-4 sm:grid sm:max-h-screen sm:grid-cols-2">
-        <div className="sm:w-full sm:justify-self-end">
+    <div className="h-full w-full sm:flex sm:h-[calc(100dvh-56px)] sm:flex-col sm:overflow-hidden">
+      <div className="gap-4 sm:grid sm:min-h-0 sm:flex-1 sm:grid-cols-2 sm:grid-rows-[1fr]">
+        <div className="sm:min-h-0 sm:w-full sm:justify-self-end sm:overflow-y-auto">
           <CourseEdit
             field={field}
             setField={setField}
@@ -235,11 +248,10 @@ export function EditorPage({
             }
             botAfterAngle={robotPreview?.afterAngle}
             onRouteAdded={handleRouteAdded}
-            disabled={isBusy}
-            courseId={courseId}
+            isolatedPanels={validation.isolatedPanels}
           />
         </div>
-        <div className="sm:mx-4 sm:w-full sm:justify-self-start">
+        <div className="sm:mx-4 sm:min-h-0 sm:w-full sm:justify-self-start sm:overflow-y-auto">
           <MissionEdit
             field={field}
             mission={mission}
@@ -258,52 +270,69 @@ export function EditorPage({
             missionPanelHints={missionPanelHints}
             setMissionPanelHints={setMissionPanelHints}
             onInsertPreview={setInsertPreview}
+            invalidMissionMap={validation.invalidMissionMap}
+            disabled={isBusy}
+            courseId={courseId}
           />
         </div>
       </div>
-      <div className="mt-0 flex justify-center gap-4 p-4">
-        <Link
-          href={
-            courseId ? `/course/edit/${courseId}/valid/` : `/course/edit/valid/`
-          }
-          className={`btn btn-primary min-w-28 max-w-fit ${isBusy ? "btn-disabled" : ""}`}
-          aria-disabled={isBusy}
-          tabIndex={isBusy ? -1 : undefined}
-        >
-          有効性チェック
-        </Link>
-        {saveState === "success" ? (
-          <button
-            type="button"
-            disabled
-            className="btn btn-success min-w-28 max-w-fit"
-          >
-            保存成功
-            <CheckCircleIcon className="size-5" />
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="btn btn-primary min-w-28 max-w-fit"
+      <div className="mt-0 flex flex-col items-center gap-2 p-4">
+        <div className="flex items-center justify-center gap-4">
+          {saveBlockMessage && (
+            <>
+              {/* PC: tooltip on hover */}
+              <div
+                className="tooltip tooltip-right hidden sm:inline-flex"
+                data-tip={saveBlockMessage}
+              >
+                <ExclamationTriangleIcon className="size-5 text-warning" />
+              </div>
+              {/* Mobile: tap to toggle message */}
+              <button
+                type="button"
+                className="sm:hidden"
+                onClick={() => setShowSaveWarning((prev) => !prev)}
+              >
+                <ExclamationTriangleIcon className="size-5 text-warning" />
+              </button>
+            </>
+          )}
+          {saveState === "success" ? (
+            <button
+              type="button"
+              disabled
+              className="btn btn-success min-w-28 max-w-fit"
+            >
+              保存成功
+              <CheckCircleIcon className="size-5" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className={`btn min-w-28 max-w-fit ${validation.canSave && !isBusy ? "btn-primary" : "btn-disabled"}`}
+              disabled={!validation.canSave || isBusy}
+              onClick={handleSave}
+            >
+              {isBusy ? (
+                <>
+                  保存中
+                  <span className="loading loading-spinner loading-sm" />
+                </>
+              ) : (
+                "保存"
+              )}
+            </button>
+          )}
+          <BackButton
+            onClick={() => {
+              window.location.href = "/course"
+            }}
             disabled={isBusy}
-            onClick={handleSave}
-          >
-            {saveState === "saving" ? (
-              <>
-                保存中
-                <span className="loading loading-spinner loading-sm" />
-              </>
-            ) : (
-              "保存"
-            )}
-          </button>
+          />
+        </div>
+        {showSaveWarning && saveBlockMessage && (
+          <p className="text-sm text-warning sm:hidden">{saveBlockMessage}</p>
         )}
-        <BackButton
-          onClick={() => {
-            window.location.href = "/course"
-          }}
-          disabled={isBusy}
-        />
       </div>
     </div>
   )

@@ -3,9 +3,9 @@ import {
   ArrowRightStartOnRectangleIcon,
   ArrowUpCircleIcon,
   ArrowUturnLeftIcon,
-  Cog6ToothIcon,
   HomeIcon,
   PlayIcon,
+  TrophyIcon,
   UserCircleIcon,
   UserIcon,
   WrenchIcon,
@@ -39,24 +39,24 @@ export const SIGN_OUT_CONST: NavItem = {
 
 export const COMPETITION_MANAGEMENT_LIST: NavItem[] = [
   {
-    label: "コース作成",
+    label: "大会一覧",
+    href: "/config",
+    icon: <TrophyIcon className="size-6" />,
+  },
+  {
+    label: "コース一覧",
     href: "/course",
     icon: <WrenchIcon className="size-6" />,
   },
   {
-    label: "選手登録",
+    label: "選手一覧",
     href: "/player",
     icon: <UserIcon className="size-6" />,
   },
   {
-    label: "採点者登録",
+    label: "採点者一覧",
     href: "/judge",
     icon: <UserCircleIcon className="size-6" />,
-  },
-  {
-    label: "大会設定",
-    href: "/config",
-    icon: <Cog6ToothIcon className="size-6" />,
   },
 ]
 

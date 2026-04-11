@@ -11,7 +11,6 @@ import {
   putPanel,
 } from "@/app/components/course/utils"
 import type { ToolType } from "@/app/course/edit/courseEditContext"
-import { useCourseEdit } from "@/app/course/edit/courseEditContext"
 
 type CourseEditProps = {
   field: FieldState
@@ -28,8 +27,7 @@ type CourseEditProps = {
   botAfterPosition?: { row: number; col: number }
   botAfterAngle?: number
   onRouteAdded?: (row: number, col: number) => void
-  disabled?: boolean
-  courseId?: number | null
+  isolatedPanels?: Set<string>
 }
 
 export default function CourseEdit({
@@ -47,41 +45,8 @@ export default function CourseEdit({
   botAfterPosition,
   botAfterAngle,
   onRouteAdded,
-  disabled = false,
-  courseId,
+  isolatedPanels,
 }: CourseEditProps) {
-  const {
-    name,
-    setName,
-    description,
-    setDescription,
-    nameError,
-    setNameError,
-  } = useCourseEdit()
-
-  async function checkNameDuplicate() {
-    const trimmed = name.trim()
-    if (trimmed === "") {
-      setNameError("")
-      return
-    }
-    const checkedName = trimmed
-    const params = new URLSearchParams({ name: checkedName })
-    if (courseId) {
-      params.set("excludeId", String(courseId))
-    }
-    try {
-      const res = await fetch(`/api/course/check-name?${params}`)
-      const data = await res.json()
-      // Discard stale results if the name changed while the request was in flight
-      if (name.trim() !== checkedName) {
-        return
-      }
-      setNameError(data.exists ? "このコース名は既に使用されています" : "")
-    } catch {
-      // ignore network errors during validation
-    }
-  }
   const [isDragging, setIsDragging] = useState(false)
   const lastCellRef = useRef<{ r: number; c: number } | null>(null)
   const pointerHandledRef = useRef(false)
@@ -187,35 +152,7 @@ export default function CourseEdit({
               onPanelClick={handlePanelClick}
               onPanelPointerDown={handlePointerDown}
               onPanelPointerEnter={handlePointerEnter}
-            />
-          </div>
-          <div className="mt-3 flex flex-col gap-2 border-base-300 border-t pt-3">
-            <div>
-              <input
-                type="text"
-                placeholder="コース名"
-                className={`input input-bordered w-full ${nameError ? "input-error" : ""}`}
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value)
-                  if (nameError) {
-                    setNameError("")
-                  }
-                }}
-                onBlur={checkNameDuplicate}
-                disabled={disabled}
-              />
-              {nameError && (
-                <p className="mt-1 text-error text-sm">{nameError}</p>
-              )}
-            </div>
-            <textarea
-              placeholder="コースの説明を入力（任意）"
-              className="textarea textarea-bordered w-full resize-none"
-              rows={1}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              disabled={disabled}
+              isolatedPanels={isolatedPanels}
             />
           </div>
         </div>

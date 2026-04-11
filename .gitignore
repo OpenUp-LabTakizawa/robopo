@@ -1,4 +1,4 @@
 node_modules
-.claude
+**/.claude
 .env
 .playwright-mcp

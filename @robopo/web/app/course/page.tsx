@@ -17,7 +17,7 @@ export default async function Course() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="font-bold text-2xl text-base-content tracking-tight">
-            コース管理
+            コース一覧
           </h1>
           <p className="mt-1 text-base-content/60 text-sm">
             コースの作成・編集・削除を行います
