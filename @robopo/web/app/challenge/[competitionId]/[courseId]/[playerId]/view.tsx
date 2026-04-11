@@ -10,13 +10,13 @@ export function View({
   playerData,
   competitionId,
   courseId,
-  umpireId,
+  judgeId,
 }: {
   courseData: SelectCourse
   playerData: SelectPlayer
   competitionId: number
   courseId: number
-  umpireId: number
+  judgeId: number
 }) {
   const playerId = playerData.id
   const { started } = useAudioContext()
@@ -48,10 +48,10 @@ export function View({
           field={courseData.field}
           mission={courseData.mission}
           point={courseData.point}
-          compeId={competitionId}
+          competitionId={competitionId}
           courseId={courseId}
           playerId={playerId}
-          umpireId={umpireId}
+          judgeId={judgeId}
           setIsEnabled={setIsEnabled}
         />
       )}

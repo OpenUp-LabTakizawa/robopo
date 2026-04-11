@@ -13,7 +13,7 @@ const players = [
     id: 1,
     name: "Alice",
     furigana: "ありす",
-    zekken: 10,
+    bibNumber: 10,
     qr: "",
     createdAt: new Date(),
   },
@@ -21,7 +21,7 @@ const players = [
     id: 2,
     name: "Bob",
     furigana: "ぼぶ",
-    zekken: 20,
+    bibNumber: 20,
     qr: "",
     createdAt: new Date(),
   },
@@ -113,7 +113,7 @@ describe("CommonSelectionList", () => {
     const onSelect = mock()
     const { getByText } = render(
       <CommonSelectionList
-        props={{ type: "umpire", commonDataList: [] }}
+        props={{ type: "judge", commonDataList: [] }}
         selectionMode="radio"
         selectedId={null}
         onSelect={onSelect}

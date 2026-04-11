@@ -29,7 +29,7 @@ const playerData = {
   id: 1,
   name: "player",
   furigana: null,
-  zekken: null,
+  bibNumber: null,
   qr: null,
   createdAt: null,
 }
@@ -42,7 +42,7 @@ function renderView(courseId = 1) {
         playerData={playerData}
         competitionId={1}
         courseId={courseId}
-        umpireId={1}
+        judgeId={1}
       />
     </AudioProvider>,
   )
@@ -72,7 +72,7 @@ describe("View", () => {
     expect(getByTestId("challenge")).toBeDefined()
   })
 
-  test("passes umpireId to Challenge component", () => {
+  test("passes judgeId to Challenge component", () => {
     const { getByTestId } = render(
       <AudioProvider>
         <View
@@ -80,7 +80,7 @@ describe("View", () => {
           playerData={playerData}
           competitionId={1}
           courseId={1}
-          umpireId={5}
+          judgeId={5}
         />
       </AudioProvider>,
     )

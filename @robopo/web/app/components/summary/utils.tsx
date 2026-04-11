@@ -5,11 +5,11 @@ export type CourseSummary = {
   playerId: number | null
   playerName: string | null
   playerFurigana: string | null
-  playerZekken: string | null
-  firstTCourseCount: number | null
-  firstTCourseTime: string | null
-  tCourseCount: number | null
-  tCourseMaxResult: number | null
+  playerBibNumber: string | null
+  firstMaxAttemptCount: number | null
+  firstMaxAttemptTime: string | null
+  attemptCount: number | null
+  maxResult: number | null
   totalPoint: number | null
   pointRank: number | null
   challengeCount: number | null

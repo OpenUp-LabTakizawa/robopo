@@ -8,8 +8,8 @@ describe("API routes should not export GET handlers", () => {
     expect(mod.DELETE).toBeDefined()
   })
 
-  test("api/umpire/route.ts does not export GET", async () => {
-    const mod = await import("@/app/api/umpire/route")
+  test("api/judge/route.ts does not export GET", async () => {
+    const mod = await import("@/app/api/judge/route")
     expect(mod.GET).toBeUndefined()
     expect(mod.POST).toBeDefined()
     expect(mod.DELETE).toBeDefined()

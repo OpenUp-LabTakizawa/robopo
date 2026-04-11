@@ -10,14 +10,15 @@ export async function GET(
   { params }: { params: Promise<{ competitionId: string; courseId: string }> },
 ) {
   const { competitionId, courseId } = await params
-  const compeId = Number(competitionId)
+  const competitionIdNum = Number(competitionId)
   const cId = Number(courseId)
 
   // Fetch data for the selected course
-  const courseSummary = await getCourseSummary(compeId, cId)
+  const courseSummary = await getCourseSummary(competitionIdNum, cId)
 
   // Get all courses for this competition to calculate total score
-  const { competitionCourses } = await getCompetitionCourseList(compeId)
+  const { competitionCourses } =
+    await getCompetitionCourseList(competitionIdNum)
 
   // Calculate total score across all competition courses for each player
   const courseSummaryWithPoints = await Promise.all(
@@ -27,7 +28,7 @@ export async function GET(
       // Sum max score across all competition courses
       let totalPoint = 0
       for (const c of competitionCourses) {
-        const maxPt = await maxCoursePoint(compeId, playerId, c.id)
+        const maxPt = await maxCoursePoint(competitionIdNum, playerId, c.id)
         totalPoint += maxPt
       }
 

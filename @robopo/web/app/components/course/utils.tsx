@@ -57,7 +57,7 @@ export type PointEntry = PointValue | PointTier // 単一値 or 段階選択
 export type PointState = PointEntry[]
 
 // Display panel count or degrees
-export function panelOrDegree(mission: MissionValue): string {
+export function getMissionParameterUnit(mission: MissionValue): string {
   if (mission === "mf" || mission === "mb") {
     return "パネル"
   }

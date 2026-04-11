@@ -12,13 +12,13 @@ export function View({
   initialPlayerDataList,
   competitionId,
   courseId,
-  umpireId,
+  judgeId,
 }: {
   courseData: SelectCourse
   initialPlayerDataList: { players: SelectPlayer[] }
   competitionId: number
   courseId: number
-  umpireId: number
+  judgeId: number
 }) {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
@@ -33,7 +33,7 @@ export function View({
       (p) =>
         p.name.toLowerCase().includes(q) ||
         p.furigana?.toLowerCase().includes(q) ||
-        p.zekken?.toLowerCase().includes(q),
+        p.bibNumber?.toLowerCase().includes(q),
     )
   }, [playerDataList, searchQuery])
 
@@ -69,12 +69,12 @@ export function View({
         {filteredPlayers.map((player) => (
           <Link
             key={player.id}
-            href={`/challenge/${competitionId}/${courseId}/${player.id}?umpireId=${umpireId}`}
+            href={`/challenge/${competitionId}/${courseId}/${player.id}?judgeId=${judgeId}`}
             className="group flex items-center gap-4 rounded-xl border border-base-300 bg-base-100 px-4 py-3 shadow-sm transition-all hover:border-primary/30 hover:shadow-md active:scale-[0.98]"
           >
-            {/* Zekken badge */}
+            {/* Bib number badge */}
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 font-bold text-lg text-primary transition-colors group-hover:bg-primary group-hover:text-primary-content">
-              {player.zekken || "-"}
+              {player.bibNumber || "-"}
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate font-semibold text-base">{player.name}</p>

@@ -32,12 +32,12 @@ export const player = pgTable("player", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   furigana: text("furigana"),
-  zekken: text("zekken"),
+  bibNumber: text("bib_number"),
   qr: text("qr"),
   createdAt: timestamp("created_at").defaultNow(),
 })
 
-export const umpire = pgTable("umpire", {
+export const judge = pgTable("judge", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   createdAt: timestamp("created_at").defaultNow(),
@@ -45,8 +45,8 @@ export const umpire = pgTable("umpire", {
 
 export const challenge = pgTable("challenge", {
   id: serial("id").primaryKey(),
-  result1: integer("result1").notNull(),
-  result2: integer("result2"),
+  firstResult: integer("first_result").notNull(),
+  retryResult: integer("retry_result"),
   detail: text("detail"),
   competitionId: integer("competition_id")
     .notNull()
@@ -57,7 +57,7 @@ export const challenge = pgTable("challenge", {
   playerId: integer("player_id")
     .notNull()
     .references(() => player.id, { onDelete: "cascade" }),
-  umpireId: integer("umpire_id").references(() => umpire.id),
+  judgeId: integer("judge_id").references(() => judge.id),
   createdAt: timestamp("created_at").defaultNow(),
 })
 
@@ -83,14 +83,14 @@ export const competitionPlayer = pgTable("competition_player", {
   createdAt: timestamp("created_at").defaultNow(),
 })
 
-export const competitionUmpire = pgTable("competition_umpire", {
+export const competitionJudge = pgTable("competition_judge", {
   id: serial("id").primaryKey(),
   competitionId: integer("competition_id")
     .notNull()
     .references(() => competition.id, { onDelete: "cascade" }),
-  umpireId: integer("umpire_id")
+  judgeId: integer("judge_id")
     .notNull()
-    .references(() => umpire.id, { onDelete: "cascade" }),
+    .references(() => judge.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow(),
 })
 
@@ -156,8 +156,8 @@ export type SelectCourse = typeof course.$inferSelect
 export type InsertPlayer = typeof player.$inferInsert
 export type SelectPlayer = typeof player.$inferSelect
 
-export type InsertUmpire = typeof umpire.$inferInsert
-export type SelectUmpire = typeof umpire.$inferSelect
+export type InsertJudge = typeof judge.$inferInsert
+export type SelectJudge = typeof judge.$inferSelect
 
 export type InsertChallenge = typeof challenge.$inferInsert
 export type SelectChallenge = typeof challenge.$inferSelect
@@ -168,19 +168,19 @@ export type SelectCompetitionCourse = typeof competitionCourse.$inferSelect
 export type InsertCompetitionPlayer = typeof competitionPlayer.$inferInsert
 export type SelectCompetitionPlayer = typeof competitionPlayer.$inferSelect
 
-export type InsertCompetitionUmpire = typeof competitionUmpire.$inferInsert
-export type SelectCompetitionUmpire = typeof competitionUmpire.$inferSelect
+export type InsertCompetitionJudge = typeof competitionJudge.$inferInsert
+export type SelectCompetitionJudge = typeof competitionJudge.$inferSelect
 
 export type SelectPlayerWithCompetition = {
   id: number
   name: string
   furigana: string | null
-  zekken: string | null
+  bibNumber: string | null
   competitionId: number | null
   competitionName: string[] | null
 }
 
-export type SelectUmpireWithCompetition = {
+export type SelectJudgeWithCompetition = {
   id: number
   name: string
   competitionId: number | null

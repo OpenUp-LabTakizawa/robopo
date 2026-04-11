@@ -62,29 +62,29 @@ async function setupTestData() {
   }
 
   // Create challenges for player A:
-  // Challenge 1: result1=3, result2=null
-  // Challenge 2: result1=5, result2=4  (max=5, first count should be 3: 1 from ch1 + 2 from ch2)
-  // Challenge 3: result1=2, result2=null
+  // Challenge 1: firstResult=3, retryResult=null
+  // Challenge 2: firstResult=5, retryResult=4  (max=5, first count should be 3: 1 from ch1 + 2 from ch2)
+  // Challenge 3: firstResult=2, retryResult=null
   const challenges = await db
     .insert(challenge)
     .values([
       {
-        result1: 3,
-        result2: null,
+        firstResult: 3,
+        retryResult: null,
         competitionId: testCompetitionId,
         courseId: testCourseId,
         playerId: testPlayerIds[0],
       },
       {
-        result1: 5,
-        result2: 4,
+        firstResult: 5,
+        retryResult: 4,
         competitionId: testCompetitionId,
         courseId: testCourseId,
         playerId: testPlayerIds[0],
       },
       {
-        result1: 2,
-        result2: null,
+        firstResult: 2,
+        retryResult: null,
         competitionId: testCompetitionId,
         courseId: testCourseId,
         playerId: testPlayerIds[0],
@@ -128,7 +128,7 @@ afterAll(async () => {
 })
 
 describe("query helpers (integration)", () => {
-  test("getMaxResult returns correct max across result1 and result2", async () => {
+  test("getMaxResult returns correct max across firstResult and retryResult", async () => {
     const result = await getMaxResult(
       testCompetitionId,
       testCourseId,
@@ -188,7 +188,7 @@ describe("query helpers (integration)", () => {
     ).toBe(Number(firstCount[0].firstCount))
   })
 
-  test("getCourseSummary returns data with firstTCourseCount consistent with getFirstCount", async () => {
+  test("getCourseSummary returns data with firstMaxAttemptCount consistent with getFirstCount", async () => {
     const summary = await getCourseSummary(testCompetitionId, testCourseId)
     const playerSummary = summary.find((s) => s.playerId === testPlayerIds[0])
     expect(playerSummary).toBeDefined()
@@ -198,7 +198,7 @@ describe("query helpers (integration)", () => {
       testCourseId,
       testPlayerIds[0],
     )
-    expect(Number(playerSummary?.firstTCourseCount)).toBe(
+    expect(Number(playerSummary?.firstMaxAttemptCount)).toBe(
       Number(firstCount[0].firstCount),
     )
   })

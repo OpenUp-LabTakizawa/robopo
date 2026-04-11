@@ -14,7 +14,7 @@ export const config = {
     "/config/:path*",
     "/course/:path*",
     "/player/:path*",
-    "/umpire/:path*",
+    "/judge/:path*",
     "/summary/:path*",
   ],
 }

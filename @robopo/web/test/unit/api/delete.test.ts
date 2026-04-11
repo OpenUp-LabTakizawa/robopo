@@ -4,14 +4,14 @@ import { afterAll, describe, expect, mock, test } from "bun:test"
 const originalModule = await import("@/app/lib/db/queries/queries")
 
 const mockDeletePlayer = mock(() => Promise.resolve([{ deletedId: 1 }]))
-const mockDeleteUmpire = mock(() => Promise.resolve([{ deletedId: 1 }]))
+const mockDeleteJudge = mock(() => Promise.resolve([{ deletedId: 1 }]))
 const mockDeleteCourse = mock(() => Promise.resolve([{ deletedId: 1 }]))
 const mockDeleteCompetition = mock(() => Promise.resolve([{ deletedId: 1 }]))
 
 mock.module("@/app/lib/db/queries/queries", () => ({
   ...originalModule,
   deletePlayerById: mockDeletePlayer,
-  deleteUmpireById: mockDeleteUmpire,
+  deleteJudgeById: mockDeleteJudge,
   deleteCourseById: mockDeleteCourse,
   deleteCompetitionById: mockDeleteCompetition,
 }))
@@ -28,7 +28,7 @@ function jsonRequest(body: unknown) {
 
 afterAll(() => {
   mockDeletePlayer.mockRestore()
-  mockDeleteUmpire.mockRestore()
+  mockDeleteJudge.mockRestore()
   mockDeleteCourse.mockRestore()
   mockDeleteCompetition.mockRestore()
 })
@@ -42,12 +42,12 @@ describe("deleteById", () => {
     expect(mockDeletePlayer).toHaveBeenCalledWith(1)
   })
 
-  test("deletes umpire by single id", async () => {
-    const res = await deleteById(jsonRequest({ id: 2 }), "umpire")
+  test("deletes judge by single id", async () => {
+    const res = await deleteById(jsonRequest({ id: 2 }), "judge")
     const body = await res.json()
     expect(res.status).toBe(200)
     expect(body.success).toBe(true)
-    expect(mockDeleteUmpire).toHaveBeenCalledWith(2)
+    expect(mockDeleteJudge).toHaveBeenCalledWith(2)
   })
 
   test("deletes course by single id", async () => {

@@ -2,8 +2,8 @@ import { afterAll, beforeEach, describe, expect, spyOn, test } from "bun:test"
 import { db } from "@/app/lib/db/db"
 import {
   competitionCourse,
+  competitionJudge,
   competitionPlayer,
-  competitionUmpire,
 } from "@/app/lib/db/schema"
 
 let lastFromTable: unknown = null
@@ -28,7 +28,7 @@ beforeEach(() => {
 
 const courseRoute = await import("@/app/api/assign/course/route")
 const playerRoute = await import("@/app/api/assign/player/route")
-const umpireRoute = await import("@/app/api/assign/umpire/route")
+const judgeRoute = await import("@/app/api/assign/judge/route")
 
 describe("assign route GET handlers", () => {
   test("assign/course GET queries competition_course table", async () => {
@@ -51,12 +51,12 @@ describe("assign route GET handlers", () => {
     expect(Array.isArray(body.assigns)).toBe(true)
   })
 
-  test("assign/umpire GET queries competition_umpire table", async () => {
-    const res = await umpireRoute.GET()
+  test("assign/judge GET queries competition_judge table", async () => {
+    const res = await judgeRoute.GET()
     const body = await res.json()
 
     expect(res.status).toBe(200)
-    expect(lastFromTable).toBe(competitionUmpire)
+    expect(lastFromTable).toBe(competitionJudge)
     expect(body).toHaveProperty("assigns")
     expect(Array.isArray(body.assigns)).toBe(true)
   })

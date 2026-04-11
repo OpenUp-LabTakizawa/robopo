@@ -2,11 +2,11 @@ import { deleteById } from "@/app/api/delete"
 import { createPlayer } from "@/app/lib/db/queries/insert"
 
 export async function POST(req: Request) {
-  const { name, furigana, zekken, qr } = await req.json()
+  const { name, furigana, bibNumber, qr } = await req.json()
   const playerData = {
     name: name,
     furigana: furigana,
-    zekken: zekken,
+    bibNumber: bibNumber,
     qr: qr,
   }
   try {

@@ -43,7 +43,7 @@ const dummy: CourseEditState = {
   mission: [],
   point: [],
   courseOutRule: "keep",
-  selectedTool: "route",
+  selectedTool: "start",
   setName: () => {},
   setDescription: () => {},
   setField: () => {},
@@ -75,7 +75,7 @@ export function CourseEditProvider({
   const [mission, setMission] = useState<MissionState>([])
   const [point, setPoint] = useState<PointState>([0, 10])
   const [courseOutRule, setCourseOutRule] = useState<string>("keep")
-  const [selectedTool, setSelectedTool] = useState<ToolType>("route")
+  const [selectedTool, setSelectedTool] = useState<ToolType>("start")
 
   // Undo/Redo history
   const historyRef = useRef<FieldState[]>([])

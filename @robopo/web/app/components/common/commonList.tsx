@@ -2,20 +2,20 @@ import type React from "react"
 import type {
   SelectCompetition,
   SelectCourseWithCompetition,
+  SelectJudge,
+  SelectJudgeWithCompetition,
   SelectPlayer,
   SelectPlayerWithCompetition,
-  SelectUmpire,
-  SelectUmpireWithCompetition,
 } from "@/app/lib/db/schema"
 
 type CommonListProps = {
-  type: "player" | "umpire" | "course" | "competition"
+  type: "player" | "judge" | "course" | "competition"
   commonDataList:
     | SelectPlayer[]
-    | SelectUmpire[]
+    | SelectJudge[]
     | SelectCompetition[]
     | SelectPlayerWithCompetition[]
-    | SelectUmpireWithCompetition[]
+    | SelectJudgeWithCompetition[]
 }
 
 function TableComponent({
@@ -25,17 +25,17 @@ function TableComponent({
   type: CommonListProps["type"]
   common:
     | SelectPlayer
-    | SelectUmpire
+    | SelectJudge
     | SelectCompetition
     | SelectPlayerWithCompetition
-    | SelectUmpireWithCompetition
+    | SelectJudgeWithCompetition
 }) {
   return (
     <>
       {type === "player" && (
         <>
           <td className="py-3">
-            {(common as SelectPlayerWithCompetition).zekken}
+            {(common as SelectPlayerWithCompetition).bibNumber}
           </td>
           <td className="py-3">
             {(common as SelectPlayerWithCompetition).furigana}
@@ -54,16 +54,16 @@ function TableComponent({
           </td>
         </>
       )}
-      {type === "umpire" && (
+      {type === "judge" && (
         <>
           <td className="py-3 font-mono text-base-content/50 text-xs">
-            {(common as SelectUmpireWithCompetition).id}
+            {(common as SelectJudgeWithCompetition).id}
           </td>
           <td className="py-3 font-medium">
-            {(common as SelectUmpireWithCompetition).name}
+            {(common as SelectJudgeWithCompetition).name}
           </td>
           <td className="py-3">
-            {(common as SelectUmpireWithCompetition).competitionName?.map(
+            {(common as SelectJudgeWithCompetition).competitionName?.map(
               (name) => (
                 <span key={name} className="badge badge-ghost badge-sm mr-1">
                   {name}
@@ -136,7 +136,7 @@ function itemNames(type: CommonListProps["type"]): string[] {
   const itemNames: string[] = []
   if (type === "player") {
     itemNames.push("ゼッケン番号", "ふりがな", "名前", "参加大会")
-  } else if (type === "umpire") {
+  } else if (type === "judge") {
     itemNames.push("ID", "名前", "参加大会")
   } else if (type === "course") {
     itemNames.push("ID", "コース名", "説明", "作成日時", "使用大会")
@@ -150,7 +150,7 @@ function typeLabel(type: CommonListProps["type"]): string | null {
   switch (type) {
     case "player":
       return "選手"
-    case "umpire":
+    case "judge":
       return "採点者"
     case "course":
       return "コース"

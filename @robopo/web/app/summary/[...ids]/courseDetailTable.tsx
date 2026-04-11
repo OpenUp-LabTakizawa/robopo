@@ -3,28 +3,28 @@
 import React, { useEffect, useState } from "react"
 import { calcPoint } from "@/app/components/challenge/utils"
 import {
+  getMissionParameterUnit,
   MissionString,
   type MissionValue,
   type PointState,
-  panelOrDegree,
 } from "@/app/components/course/utils"
 import { isCompletedCourse } from "@/app/components/summary/utils"
 
-type TCourseTableProps = {
+type CourseDetailTableProps = {
   missionPair: MissionValue[][]
   point: PointState
-  resultArray: { results1: number; results2: number | null }[]
-  firstTCourseCount: { firstCount: number }[]
+  resultArray: { firstResult: number; retryResult: number | null }[]
+  firstMaxAttemptCount: { firstCount: number }[]
   maxResult: { maxResult: number }[]
 }
 
-export function TCourseTable({
+export function CourseDetailTable({
   missionPair,
   point,
   resultArray,
-  firstTCourseCount,
+  firstMaxAttemptCount,
   maxResult,
-}: TCourseTableProps) {
+}: CourseDetailTableProps) {
   // Manage current tab (starts at page 0)
   const [currentTab, setCurrentTab] = useState(0)
   const [itemsPerTab, setItemsPerPage] = useState(5)
@@ -62,8 +62,8 @@ export function TCourseTable({
   const totalColumns = resultArray.reduce((count, result) => {
     return (
       count +
-      (result.results1 !== null ? 1 : 0) +
-      (result.results2 !== null ? 1 : 0)
+      (result.firstResult !== null ? 1 : 0) +
+      (result.retryResult !== null ? 1 : 0)
     )
   }, 0)
 
@@ -72,7 +72,7 @@ export function TCourseTable({
   const endIndex = startIndex + itemsPerTab
 
   const visibleResults: {
-    result: { results1: number; results2: number | null }
+    result: { firstResult: number; retryResult: number | null }
     type: string
     columnIndex: number
   }[] = []
@@ -81,16 +81,16 @@ export function TCourseTable({
     if (columnCount >= startIndex && columnCount < endIndex) {
       visibleResults.push({
         result: resultArray[i],
-        type: "results1",
+        type: "firstResult",
         columnIndex: columnCount,
       })
     }
     columnCount++
-    if (resultArray[i].results2 !== null) {
+    if (resultArray[i].retryResult !== null) {
       if (columnCount >= startIndex && columnCount < endIndex) {
         visibleResults.push({
           result: resultArray[i],
-          type: "results2",
+          type: "retryResult",
           columnIndex: columnCount,
         })
       }
@@ -168,7 +168,7 @@ export function TCourseTable({
                 <th className="border border-gray-400 p-2">
                   {pair[0] !== null && MissionString[pair[0]]}
                   {pair[1] !== null && [pair[1]]}
-                  {pair[0] !== null && panelOrDegree(pair[0])}
+                  {pair[0] !== null && getMissionParameterUnit(pair[0])}
                 </th>
                 <td className="border border-gray-400 p-2">
                   {point[index + 2]}
@@ -176,13 +176,13 @@ export function TCourseTable({
                 {visibleResults.map((result, _visibleIndex: number) => (
                   <React.Fragment key={`col-${result.columnIndex}`}>
                     <td className="min-w-9 border border-gray-400 p-2 text-center">
-                      {result.type === "results1" &&
-                      result.result.results1 > index
+                      {result.type === "firstResult" &&
+                      result.result.firstResult > index
                         ? "○"
                         : ""}
-                      {result.type === "results2" &&
-                      result.result.results2 !== null &&
-                      result.result.results2 > index
+                      {result.type === "retryResult" &&
+                      result.result.retryResult !== null &&
+                      result.result.retryResult > index
                         ? "○"
                         : ""}
                     </td>
@@ -201,12 +201,12 @@ export function TCourseTable({
               {visibleResults.map((result, _index2: number) => (
                 <React.Fragment key={`col-${result.columnIndex}`}>
                   <td className="min-w-9 border border-gray-400 p-2 text-center">
-                    {result.type === "results1" &&
-                    isCompletedCourse(point, result.result.results1)
+                    {result.type === "firstResult" &&
+                    isCompletedCourse(point, result.result.firstResult)
                       ? "○"
                       : ""}
-                    {result.type === "results2" &&
-                    isCompletedCourse(point, result.result.results2)
+                    {result.type === "retryResult" &&
+                    isCompletedCourse(point, result.result.retryResult)
                       ? "○"
                       : ""}
                   </td>
@@ -223,10 +223,10 @@ export function TCourseTable({
               {visibleResults.map((result, _visibleIndex: number) => (
                 <React.Fragment key={`col-${result.columnIndex}`}>
                   <td className="min-w-9 border border-gray-400 p-2 text-center">
-                    {result.type === "results1" &&
-                      calcPoint(point, result.result.results1)}
-                    {result.type === "results2" &&
-                      calcPoint(point, result.result.results2)}
+                    {result.type === "firstResult" &&
+                      calcPoint(point, result.result.firstResult)}
+                    {result.type === "retryResult" &&
+                      calcPoint(point, result.result.retryResult)}
                   </td>
                 </React.Fragment>
               ))}
@@ -245,7 +245,7 @@ export function TCourseTable({
               <td className="border border-gray-400 p-2">
                 {maxResult.length > 0 &&
                 isCompletedCourse(point, maxResult[0].maxResult)
-                  ? firstTCourseCount[0].firstCount
+                  ? firstMaxAttemptCount[0].firstCount
                   : "-"}
               </td>
               <td className="border border-gray-400 bg-cyan-50 p-2 text-center">

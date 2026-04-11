@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test"
 import {
   groupByCourse,
+  groupByJudge,
   groupByPlayer,
-  groupByUmpire,
 } from "@/app/lib/db/queries/queries"
 
 describe("groupByPlayer", () => {
@@ -12,7 +12,7 @@ describe("groupByPlayer", () => {
         id: 1,
         name: "A",
         furigana: "ア",
-        zekken: "001",
+        bibNumber: "001",
         competitionId: 10,
         competitionName: "Comp1",
       },
@@ -20,7 +20,7 @@ describe("groupByPlayer", () => {
         id: 1,
         name: "A",
         furigana: "ア",
-        zekken: "001",
+        bibNumber: "001",
         competitionId: 20,
         competitionName: "Comp2",
       },
@@ -28,7 +28,7 @@ describe("groupByPlayer", () => {
         id: 2,
         name: "B",
         furigana: null,
-        zekken: null,
+        bibNumber: null,
         competitionId: 10,
         competitionName: "Comp1",
       },
@@ -47,7 +47,7 @@ describe("groupByPlayer", () => {
         id: 1,
         name: "A",
         furigana: null,
-        zekken: null,
+        bibNumber: null,
         competitionId: null,
         competitionName: null,
       },
@@ -62,9 +62,9 @@ describe("groupByPlayer", () => {
   })
 })
 
-describe("groupByUmpire", () => {
-  test("groups flat rows by umpire id and collects competition names", () => {
-    const result = groupByUmpire([
+describe("groupByJudge", () => {
+  test("groups flat rows by judge id and collects competition names", () => {
+    const result = groupByJudge([
       { id: 1, name: "U1", competitionId: 10, competitionName: "Comp1" },
       { id: 1, name: "U1", competitionId: 20, competitionName: "Comp2" },
       { id: 2, name: "U2", competitionId: 10, competitionName: "Comp1" },
@@ -75,8 +75,8 @@ describe("groupByUmpire", () => {
     expect(result[1].competitionName).toEqual(["Comp1"])
   })
 
-  test("handles umpire with no competition", () => {
-    const result = groupByUmpire([
+  test("handles judge with no competition", () => {
+    const result = groupByJudge([
       { id: 1, name: "U1", competitionId: null, competitionName: null },
     ])
 
@@ -85,7 +85,7 @@ describe("groupByUmpire", () => {
   })
 
   test("returns empty array for empty input", () => {
-    expect(groupByUmpire([])).toEqual([])
+    expect(groupByJudge([])).toEqual([])
   })
 })
 
@@ -152,13 +152,13 @@ describe("groupByCourse", () => {
         id: 1,
         name: "P",
         furigana: "フ",
-        zekken: "Z",
+        bibNumber: "Z",
         competitionId: null,
         competitionName: null,
       },
     ])
     expect(playerResult[0].furigana).toBe("フ")
-    expect(playerResult[0].zekken).toBe("Z")
+    expect(playerResult[0].bibNumber).toBe("Z")
 
     const courseResult = groupByCourse([
       {

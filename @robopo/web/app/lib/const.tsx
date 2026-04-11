@@ -50,7 +50,7 @@ export const COMPETITION_MANAGEMENT_LIST: NavItem[] = [
   },
   {
     label: "採点者登録",
-    href: "/umpire",
+    href: "/judge",
     icon: <UserCircleIcon className="size-6" />,
   },
   {

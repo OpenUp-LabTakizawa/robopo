@@ -5,17 +5,17 @@ import { db } from "@/app/lib/db/db"
 import {
   competition,
   competitionCourse,
+  competitionJudge,
   competitionPlayer,
-  competitionUmpire,
   course,
+  judge,
   player,
   type SelectCompetition,
   type SelectCompetitionCourse,
-  type SelectCompetitionUmpire,
+  type SelectCompetitionJudge,
   type SelectCourse,
+  type SelectJudge,
   type SelectPlayer,
-  type SelectUmpire,
-  umpire,
 } from "@/app/lib/db/schema"
 
 // Get player list
@@ -23,9 +23,9 @@ export async function getPlayerList(): Promise<SelectPlayer[]> {
   return await db.select().from(player)
 }
 
-// Get umpire list
-export async function getUmpireList(): Promise<SelectUmpire[]> {
-  return await db.select().from(umpire)
+// Get judge list
+export async function getJudgeList(): Promise<SelectJudge[]> {
+  return await db.select().from(judge)
 }
 
 // Get competition list
@@ -87,7 +87,7 @@ export async function getCompetitionPlayerList(competitionId: number): Promise<{
       id: player.id,
       name: player.name,
       furigana: player.furigana,
-      zekken: player.zekken,
+      bibNumber: player.bibNumber,
       qr: player.qr,
       createdAt: player.createdAt,
     })
@@ -98,29 +98,29 @@ export async function getCompetitionPlayerList(competitionId: number): Promise<{
   return { players }
 }
 
-// Get competition-umpire assignment list
-export async function getCompetitionUmpireAssignList(): Promise<{
-  competitionUmpireList: SelectCompetitionUmpire[]
+// Get competition-judge assignment list
+export async function getCompetitionJudgeAssignList(): Promise<{
+  competitionJudgeList: SelectCompetitionJudge[]
 }> {
-  const competitionUmpireList: SelectCompetitionUmpire[] = await db
+  const competitionJudgeList: SelectCompetitionJudge[] = await db
     .select()
-    .from(competitionUmpire)
-  return { competitionUmpireList }
+    .from(competitionJudge)
+  return { competitionJudgeList }
 }
 
-// Get umpires by competition ID
-export async function getCompetitionUmpireList(competitionId: number): Promise<{
-  umpires: SelectUmpire[]
+// Get judges by competition ID
+export async function getCompetitionJudgeList(competitionId: number): Promise<{
+  judges: SelectJudge[]
 }> {
-  const umpires: SelectUmpire[] = await db
+  const judges: SelectJudge[] = await db
     .select({
-      id: umpire.id,
-      name: umpire.name,
-      createdAt: umpire.createdAt,
+      id: judge.id,
+      name: judge.name,
+      createdAt: judge.createdAt,
     })
-    .from(umpire)
-    .innerJoin(competitionUmpire, eq(umpire.id, competitionUmpire.umpireId))
-    .where(eq(competitionUmpire.competitionId, competitionId))
+    .from(judge)
+    .innerJoin(competitionJudge, eq(judge.id, competitionJudge.judgeId))
+    .where(eq(competitionJudge.competitionId, competitionId))
 
-  return { umpires }
+  return { judges }
 }

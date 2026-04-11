@@ -4,5 +4,5 @@ INSERT INTO course (id, name, field, fieldvalid, mission, missionvalid, point) V
 -- センサーコースをID -2 に挿入する
 INSERT INTO course (id, name, fieldvalid, missionvalid) VALUES (-2, 'SensorCourse', TRUE, TRUE);
 
--- testUmpireをID 1 に挿入する
-INSERT INTO umpire (id, name) VALUES (1, 'TestUmpire');
+-- testJudgeをID 1 に挿入する
+INSERT INTO judge (id, name) VALUES (1, 'TestJudge');

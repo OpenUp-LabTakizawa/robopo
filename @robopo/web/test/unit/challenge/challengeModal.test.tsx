@@ -16,20 +16,24 @@ describe("ChallengeModal", () => {
     loading: false,
     isSuccess: false,
     message: "",
-    result1Point: 15,
-    result2Point: null as number | null,
+    firstResultPoint: 15,
+    retryResultPoint: null as number | null,
     isGoal: false,
   }
 
-  test("renders score summary card with result1", () => {
+  test("renders score summary card with firstResult", () => {
     render(<ChallengeModal {...defaultProps} />)
     expect(screen.getByText("15pt")).toBeTruthy()
     expect(screen.getByText("1回目")).toBeTruthy()
   })
 
-  test("renders both results when result2 provided", () => {
+  test("renders both results when retryResult provided", () => {
     render(
-      <ChallengeModal {...defaultProps} result1Point={10} result2Point={20} />,
+      <ChallengeModal
+        {...defaultProps}
+        firstResultPoint={10}
+        retryResultPoint={20}
+      />,
     )
     expect(screen.getByText("10pt")).toBeTruthy()
     expect(screen.getByText("20pt")).toBeTruthy()
@@ -49,15 +53,15 @@ describe("ChallengeModal", () => {
     expect(ghostBtn).toBeTruthy()
   })
 
-  test("shows retry button when result2 is null and not goal", () => {
+  test("shows retry button when retryResult is null and not goal", () => {
     const { container } = render(<ChallengeModal {...defaultProps} />)
     const warningBtn = container.querySelector(".btn-warning")
     expect(warningBtn).toBeTruthy()
   })
 
-  test("hides retry button when result2 is provided", () => {
+  test("hides retry button when retryResult is provided", () => {
     const { container } = render(
-      <ChallengeModal {...defaultProps} result2Point={5} />,
+      <ChallengeModal {...defaultProps} retryResultPoint={5} />,
     )
     const warningBtn = container.querySelector(".btn-warning")
     expect(warningBtn).toBeNull()
@@ -87,7 +91,7 @@ describe("RetryModal", () => {
       <RetryModal
         setModalOpen={setModalOpen}
         handleRetry={handleRetry}
-        result1Point={12}
+        firstResultPoint={12}
       />,
     )
     expect(screen.getByText("12pt")).toBeTruthy()
@@ -100,14 +104,14 @@ describe("CourseOutModal", () => {
     const { container } = render(
       <CourseOutModal
         setModalOpen={mock()}
-        setResult1={mock()}
+        setFirstResult={mock()}
         handleSubmit={mock()}
         handleRetry={mock()}
         loading={false}
         isSuccess={false}
         message=""
-        result1Point={0}
-        result2Point={null}
+        firstResultPoint={0}
+        retryResultPoint={null}
       />,
     )
     const errorTitle = container.querySelector(".text-error")

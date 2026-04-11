@@ -15,9 +15,9 @@ import { COMPETITION_MANAGEMENT_LIST } from "@/app/lib/const"
 import type {
   SelectCompetition,
   SelectCompetitionCourse,
-  SelectCompetitionUmpire,
+  SelectCompetitionJudge,
   SelectCourse,
-  SelectUmpire,
+  SelectJudge,
 } from "@/app/lib/db/schema"
 
 function CourseCard({
@@ -62,8 +62,8 @@ type ChallengeTabProps = {
   competitionList: { competitions: SelectCompetition[] }
   courseList: { courses: SelectCourse[] }
   competitionCourseList: { competitionCourseList: SelectCompetitionCourse[] }
-  umpireList: SelectUmpire[]
-  competitionUmpireList: { competitionUmpireList: SelectCompetitionUmpire[] }
+  judgeList: SelectJudge[]
+  competitionJudgeList: { competitionJudgeList: SelectCompetitionJudge[] }
 }
 
 type SummaryTabProps = {
@@ -74,8 +74,8 @@ export function ChallengeTab({
   competitionList,
   courseList,
   competitionCourseList,
-  umpireList,
-  competitionUmpireList,
+  judgeList,
+  competitionJudgeList,
 }: ChallengeTabProps): React.JSX.Element {
   const activeCompetitions = useMemo(
     () => competitionList.competitions.filter((c) => c.step === 1),
@@ -85,20 +85,20 @@ export function ChallengeTab({
     activeCompetitions.length === 1 ? activeCompetitions[0] : null
 
   const [competitionId, setCompetitionId] = useState(singleCompetition?.id ?? 0)
-  const [umpireId, setUmpireId] = useState(0)
+  const [judgeId, setJudgeId] = useState(0)
   const [showAlert, setShowAlert] = useState(false)
-  const umpireSelectRef = useRef<HTMLSelectElement>(null)
-  const disableCondition = competitionId === 0 || umpireId === 0
+  const judgeSelectRef = useRef<HTMLSelectElement>(null)
+  const disableCondition = competitionId === 0 || judgeId === 0
 
   const handleDisabledClick = useCallback(() => {
-    if (umpireId === 0) {
+    if (judgeId === 0) {
       setShowAlert(true)
-      umpireSelectRef.current?.scrollIntoView({
+      judgeSelectRef.current?.scrollIntoView({
         behavior: "smooth",
         block: "center",
       })
     }
-  }, [umpireId])
+  }, [judgeId])
 
   useEffect(() => {
     if (showAlert) {
@@ -117,15 +117,15 @@ export function ChallengeTab({
     return courseList.courses.filter((c) => assigned.includes(c.id))
   }, [competitionId, competitionCourseList, courseList.courses])
 
-  const filteredUmpires = useMemo(() => {
+  const filteredJudges = useMemo(() => {
     if (competitionId === 0) {
-      return umpireList
+      return judgeList
     }
-    const assignedIds = competitionUmpireList.competitionUmpireList
+    const assignedIds = competitionJudgeList.competitionJudgeList
       .filter((cu) => cu.competitionId === competitionId)
-      .map((cu) => cu.umpireId)
-    return umpireList.filter((u) => assignedIds.includes(u.id))
-  }, [competitionId, competitionUmpireList, umpireList])
+      .map((cu) => cu.judgeId)
+    return judgeList.filter((u) => assignedIds.includes(u.id))
+  }, [competitionId, competitionJudgeList, judgeList])
 
   return (
     <div className="space-y-4">
@@ -151,7 +151,7 @@ export function ChallengeTab({
             value={competitionId}
             onChange={(e) => {
               setCompetitionId(Number(e.target.value))
-              setUmpireId(0)
+              setJudgeId(0)
             }}
           >
             <option value={0} disabled>
@@ -166,29 +166,29 @@ export function ChallengeTab({
         </div>
       )}
 
-      {/* Umpire selection */}
+      {/* Judge selection */}
       <div>
         <label
-          htmlFor="umpire-select"
+          htmlFor="judge-select"
           className="mb-1 flex items-center gap-1 text-base-content/60 text-sm"
         >
           <UserCircleIcon className="h-4 w-4" />
           採点者を選択
         </label>
         <select
-          id="umpire-select"
-          ref={umpireSelectRef}
+          id="judge-select"
+          ref={judgeSelectRef}
           className={`select select-bordered w-full ${showAlert ? "select-warning" : ""}`}
-          value={umpireId}
+          value={judgeId}
           onChange={(e) => {
-            setUmpireId(Number(e.target.value))
+            setJudgeId(Number(e.target.value))
             setShowAlert(false)
           }}
         >
           <option value={0} disabled>
             採点者を選んでください
           </option>
-          {filteredUmpires.map((u) => (
+          {filteredJudges.map((u) => (
             <option key={u.id} value={u.id}>
               {u.name}
             </option>
@@ -212,7 +212,7 @@ export function ChallengeTab({
               key={c.id}
               name={c.name}
               link={
-                `/challenge/${competitionId}/${c.id}?umpireId=${umpireId}` as Route
+                `/challenge/${competitionId}/${c.id}?judgeId=${judgeId}` as Route
               }
               disabled={disableCondition}
               onDisabledClick={handleDisabledClick}

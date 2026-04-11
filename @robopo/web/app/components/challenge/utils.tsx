@@ -33,12 +33,12 @@ export function calcPoint(pointState: PointState, index: number | null) {
 
 // Submit result
 export async function resultSubmit(
-  result1: number,
-  result2: number | null,
-  compeId: number,
+  firstResult: number,
+  retryResult: number | null,
+  competitionId: number,
   courseId: number,
   playerId: number,
-  umpireId: number,
+  judgeId: number,
   setMessage: React.Dispatch<React.SetStateAction<string>>,
   setIsSuccess: React.Dispatch<React.SetStateAction<boolean>>,
   setLoading: React.Dispatch<React.SetStateAction<boolean>>,
@@ -49,12 +49,12 @@ export async function resultSubmit(
   setIsEnabled(false)
 
   const requestBody = {
-    result1: result1,
-    result2: result2,
-    competitionId: compeId,
+    firstResult,
+    retryResult,
+    competitionId,
     courseId: courseId,
     playerId: playerId,
-    umpireId: umpireId,
+    judgeId: judgeId,
   }
 
   try {
