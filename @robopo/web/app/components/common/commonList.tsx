@@ -117,13 +117,37 @@ function TableComponent({
           <td className="py-3 font-medium">
             {(common as SelectCompetition).name}
           </td>
-          <td className="py-3">
-            {(common as SelectCompetition).step === 0 ? (
-              <span className="badge badge-outline badge-sm">開催前</span>
-            ) : (common as SelectCompetition).step === 1 ? (
-              <span className="badge badge-primary badge-sm">開催中</span>
+          <td className="max-w-48 py-3">
+            {(common as SelectCompetition).description ? (
+              <span className="line-clamp-2 text-base-content/70 text-sm">
+                {(common as SelectCompetition).description}
+              </span>
             ) : (
-              <span className="badge badge-ghost badge-sm">終了済</span>
+              <span className="text-base-content/30 text-sm">-</span>
+            )}
+          </td>
+          <td
+            className="py-3 text-base-content/60 text-sm"
+            suppressHydrationWarning
+          >
+            {(common as SelectCompetition).startDate ? (
+              new Date(
+                (common as SelectCompetition).startDate as Date,
+              ).toLocaleDateString("ja-JP")
+            ) : (
+              <span className="text-base-content/30">-</span>
+            )}
+          </td>
+          <td
+            className="py-3 text-base-content/60 text-sm"
+            suppressHydrationWarning
+          >
+            {(common as SelectCompetition).endDate ? (
+              new Date(
+                (common as SelectCompetition).endDate as Date,
+              ).toLocaleDateString("ja-JP")
+            ) : (
+              <span className="text-base-content/30">-</span>
             )}
           </td>
         </>
@@ -141,7 +165,7 @@ function itemNames(type: CommonListProps["type"]): string[] {
   } else if (type === "course") {
     itemNames.push("ID", "コース名", "使用大会", "説明", "作成日時")
   } else if (type === "competition") {
-    itemNames.push("ID", "名前", "開催状況")
+    itemNames.push("ID", "名前", "説明", "開催日", "終了日")
   }
   return itemNames
 }

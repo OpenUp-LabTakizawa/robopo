@@ -68,10 +68,10 @@ async function seed() {
     `)
     const testCourseId = courseResult.rows[0].id
 
-    // Test competition (in progress: step=1)
+    // Test competition (active: start_date in past, end_date in future)
     const compResult = await db.execute<{ id: number }>(sql`
-      INSERT INTO competition (name, step)
-      VALUES ('テスト大会', 1)
+      INSERT INTO competition (name, start_date, end_date)
+      VALUES ('テスト大会', NOW() - INTERVAL '7 days', NOW() + INTERVAL '30 days')
       RETURNING id
     `)
     const competitionId = compResult.rows[0].id
@@ -110,7 +110,7 @@ async function seed() {
       `)
     }
 
-    // --- Second competition (also in progress: step=1) ---
+    // --- Second competition (also active) ---
     const course2Result = await db.execute<{ id: number }>(sql`
       INSERT INTO course (name, field, fieldvalid, mission, missionvalid, point)
       VALUES ('TestCourse2',
@@ -124,8 +124,8 @@ async function seed() {
     const testCourse2Id = course2Result.rows[0].id
 
     const comp2Result = await db.execute<{ id: number }>(sql`
-      INSERT INTO competition (name, step)
-      VALUES ('ロボサバ2026', 1)
+      INSERT INTO competition (name, start_date, end_date)
+      VALUES ('ロボサバ2026', NOW() - INTERVAL '7 days', NOW() + INTERVAL '30 days')
       RETURNING id
     `)
     const competition2Id = comp2Result.rows[0].id

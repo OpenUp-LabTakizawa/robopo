@@ -28,8 +28,22 @@ const players = [
 ]
 
 const competitions = [
-  { id: 1, name: "大会A", step: 0, createdAt: new Date() },
-  { id: 2, name: "大会B", step: 1, createdAt: new Date() },
+  {
+    id: 1,
+    name: "大会A",
+    description: null,
+    startDate: null,
+    endDate: null,
+    createdAt: new Date(),
+  },
+  {
+    id: 2,
+    name: "大会B",
+    description: null,
+    startDate: null,
+    endDate: null,
+    createdAt: new Date(),
+  },
 ]
 
 describe("CommonSelectionList", () => {
@@ -199,5 +213,78 @@ describe("CommonCheckboxList", () => {
     // The callback should have added id 2
     const lastCall = setCommonId.mock.calls[setCommonId.mock.calls.length - 1]
     expect(lastCall[0]).toEqual([1, 2])
+  })
+})
+
+describe("Competition table columns", () => {
+  test("renders correct header labels for competition type", () => {
+    const onSelect = mock()
+    const { container } = render(
+      <CommonSelectionList
+        props={{ type: "competition", commonDataList: competitions }}
+        selectionMode="checkbox"
+        selectedId={[]}
+        onSelect={onSelect}
+      />,
+    )
+    const headers = container.querySelectorAll("thead th")
+    const headerTexts = Array.from(headers).map((h) => h.textContent?.trim())
+    expect(headerTexts).toContain("ID")
+    expect(headerTexts).toContain("名前")
+    expect(headerTexts).toContain("説明")
+    expect(headerTexts).toContain("開催日")
+    expect(headerTexts).toContain("終了日")
+  })
+
+  test("renders dash for null description, startDate, and endDate", () => {
+    const onSelect = mock()
+    const { container } = render(
+      <CommonSelectionList
+        props={{ type: "competition", commonDataList: competitions }}
+        selectionMode="radio"
+        selectedId={null}
+        onSelect={onSelect}
+      />,
+    )
+    const cells = container.querySelectorAll("tbody tr:first-child td")
+    const cellTexts = Array.from(cells).map((c) => c.textContent?.trim())
+    // description, startDate, endDate should all be "-"
+    expect(cellTexts.filter((t) => t === "-")).toHaveLength(3)
+  })
+
+  test("renders formatted dates for non-null startDate and endDate", () => {
+    const onSelect = mock()
+    const competitionsWithDates = [
+      {
+        id: 1,
+        name: "日付あり大会",
+        description: "テスト説明",
+        startDate: new Date("2026-04-01T00:00:00"),
+        endDate: new Date("2026-04-30T00:00:00"),
+        createdAt: new Date(),
+      },
+    ]
+    const { container } = render(
+      <CommonSelectionList
+        props={{
+          type: "competition",
+          commonDataList: competitionsWithDates,
+        }}
+        selectionMode="radio"
+        selectedId={null}
+        onSelect={onSelect}
+      />,
+    )
+    const cells = container.querySelectorAll("tbody tr:first-child td")
+    const cellTexts = Array.from(cells).map((c) => c.textContent?.trim())
+    // description should render
+    expect(cellTexts).toContain("テスト説明")
+    // dates should not be "-"
+    const dashCount = cellTexts.filter((t) => t === "-").length
+    expect(dashCount).toBe(0)
+    // dates should not contain ISO format "T" separator
+    for (const text of cellTexts) {
+      expect(text).not.toContain("T00:00:00")
+    }
   })
 })

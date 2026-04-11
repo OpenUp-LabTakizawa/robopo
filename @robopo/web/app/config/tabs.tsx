@@ -1,203 +1,314 @@
 "use client"
 
+import {
+  CheckIcon,
+  PlusIcon,
+  TrashIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline"
 import { useState } from "react"
-import { CommonRadioList } from "@/app/components/common/commonList"
-import { CommonRegister } from "@/app/components/common/commonRegister"
-import { BackLabelWithIcon } from "@/app/lib/const"
-import type {
-  SelectCompetition,
-  SelectJudge,
-  SelectPlayer,
-} from "@/app/lib/db/schema"
+import type { SelectCompetition } from "@/app/lib/db/schema"
 
-type CompetitionListTabProps = {
-  competitionId: number | null
-  setCompetitionId: React.Dispatch<React.SetStateAction<number | null>>
-  competitionList: SelectCompetition[]
-  setCompetitionList: React.Dispatch<React.SetStateAction<SelectCompetition[]>>
+function formatDateForInput(date: Date | null | undefined): string {
+  if (!date) {
+    return ""
+  }
+  const d = new Date(date)
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, "0")
+  const day = String(d.getDate()).padStart(2, "0")
+  return `${year}-${month}-${day}`
 }
 
-type NewCompetitionTabProps = {
-  setCompetitionList: React.Dispatch<React.SetStateAction<SelectCompetition[]>>
+type CompetitionFormModalProps = {
+  mode: "create" | "edit"
+  competition?: SelectCompetition | null
+  onClose: () => void
+  onSuccess: (newList: SelectCompetition[]) => void
 }
 
-export function CompetitionListTab({
-  competitionId,
-  setCompetitionId,
-  competitionList,
-  setCompetitionList,
-}: CompetitionListTabProps): React.JSX.Element {
+export function CompetitionFormModal({
+  mode,
+  competition,
+  onClose,
+  onSuccess,
+}: CompetitionFormModalProps) {
+  const [name, setName] = useState(competition?.name ?? "")
+  const [description, setDescription] = useState(competition?.description ?? "")
+  const [startDate, setStartDate] = useState(
+    formatDateForInput(competition?.startDate),
+  )
+  const [endDate, setEndDate] = useState(
+    formatDateForInput(competition?.endDate),
+  )
   const [loading, setLoading] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
-  const [message, setMessage] = useState("")
-  const [modalOpen, setModalOpen] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
 
-  async function handleButtonClick(event: React.MouseEvent<HTMLButtonElement>) {
-    const type = event.currentTarget.value
-    const requestBody =
-      type === "delete"
-        ? {
-            type: type,
-            id: competitionId,
-          }
-        : {
-            type: type,
-          }
+  function validate(): string | null {
+    if (!name.trim()) {
+      return "名前は必須です。"
+    }
+    if (startDate && endDate && startDate > endDate) {
+      return "開催日は終了日より前でなければなりません。"
+    }
+    return null
+  }
 
-    const url =
-      type === "delete"
-        ? "/api/competition/"
-        : `/api/competition/${competitionId}`
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    const validationError = validate()
+    if (validationError) {
+      setError(validationError)
+      return
+    }
+
+    setLoading(true)
+    setError(null)
+
     try {
-      setLoading(true)
-      const response = await fetch(url, {
-        method: type === "delete" ? "DELETE" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestBody),
-      })
-      const { success, newList } = await response.json()
-
-      if (response.ok && success) {
-        setMessage("更新に成功しました")
-        setIsSuccess(true)
-        setCompetitionList(newList.competitions)
-        setCompetitionId(null)
-        setModalOpen(false)
-      } else {
-        setMessage("更新に失敗しました")
+      const body: Record<string, unknown> = {
+        name: name.trim(),
+        description: description.trim() || null,
+        startDate: startDate || null,
+        endDate: endDate || null,
       }
-    } catch (_error) {
-      setMessage("送信中にエラーが発生しました")
+
+      const url =
+        mode === "create"
+          ? "/api/competition"
+          : `/api/competition/${competition?.id}`
+      const method = mode === "create" ? "POST" : "PATCH"
+
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      })
+
+      const result = await response.json()
+
+      if (response.ok && result.success) {
+        onSuccess(result.newList.competitions)
+      } else {
+        setError(result.message || "エラーが発生しました。")
+      }
+    } catch {
+      setError("送信中にエラーが発生しました。")
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <>
-      <CommonRadioList
-        props={{ type: "competition", commonDataList: competitionList }}
-        commonId={competitionId}
-        setCommonId={setCompetitionId}
-      />
-      <button
-        type="button"
-        className="btn btn-primary m-1 max-w-fit text-default"
-        value="open"
-        disabled={
-          competitionId === null ||
-          loading ||
-          competitionList?.find((c) => c.id === competitionId)?.step === 1
-        }
-        onClick={(e) => handleButtonClick(e)}
-      >
-        開催
-      </button>
-      <button
-        type="button"
-        className="btn btn-primary m-1 max-w-fit text-default"
-        value="return"
-        disabled={
-          competitionId === null ||
-          loading ||
-          competitionList?.find((c) => c.id === competitionId)?.step !== 1
-        }
-        onClick={(e) => handleButtonClick(e)}
-      >
-        開催前に戻す
-      </button>
-      <button
-        type="button"
-        className="btn btn-primary m-1 max-w-fit text-default"
-        value="close"
-        disabled={
-          competitionId === null ||
-          loading ||
-          competitionList?.find((c) => c.id === competitionId)?.step !== 1
-        }
-        onClick={(e) => handleButtonClick(e)}
-      >
-        終了
-      </button>
-      <button
-        type="button"
-        className="btn btn-warning m-1 max-w-fit text-default"
-        disabled={competitionId === null || loading}
-        onClick={() => {
-          setIsSuccess(false)
-          setModalOpen(true)
-        }}
-      >
-        削除
-      </button>
-      {isSuccess && <p>{message}</p>}
-      <p>{loading && <span className="loading loading-spinner"></span>}</p>
-      {modalOpen && (
-        <dialog
-          className="modal modal-open"
-          onClose={() => setModalOpen(false)}
-        >
-          <div className="modal-box">
-            {isSuccess ? <p>{message}</p> : <p>選択した大会を削除しますか?</p>}
-
-            {!isSuccess && (
-              <button
-                type="button"
-                className="btn btn-accent m-3"
-                value="delete"
-                onClick={(e) => handleButtonClick(e)}
-                disabled={loading}
-              >
-                はい
-              </button>
-            )}
+    <dialog className="modal modal-open">
+      <div className="modal-box max-w-md">
+        <h3 className="mb-4 font-bold text-lg">
+          {mode === "create" ? "大会を作成" : "大会を編集"}
+        </h3>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div>
+            <label className="label" htmlFor="comp-name">
+              <span className="label-text">
+                名前 <span className="text-error">*</span>
+              </span>
+            </label>
+            <input
+              id="comp-name"
+              type="text"
+              className="input input-bordered w-full"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="大会名"
+              required
+            />
+          </div>
+          <div>
+            <label className="label" htmlFor="comp-desc">
+              <span className="label-text">説明</span>
+            </label>
+            <textarea
+              id="comp-desc"
+              className="textarea textarea-bordered w-full"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="大会の説明（任意）"
+              rows={3}
+            />
+          </div>
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <label className="label" htmlFor="comp-start">
+                <span className="label-text">開催日</span>
+              </label>
+              <input
+                id="comp-start"
+                type="date"
+                className="input input-bordered w-full"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+            </div>
+            <div className="flex-1">
+              <label className="label" htmlFor="comp-end">
+                <span className="label-text">終了日</span>
+              </label>
+              <input
+                id="comp-end"
+                type="date"
+                className="input input-bordered w-full"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </div>
+          </div>
+          {startDate && endDate && startDate > endDate && (
+            <p className="text-error text-sm">
+              開催日は終了日より前でなければなりません。
+            </p>
+          )}
+          {error && <p className="text-error text-sm">{error}</p>}
+          <div className="modal-action">
             <button
               type="button"
-              className="btn btn-accent m-3"
-              onClick={() => setModalOpen(false)}
+              className="btn gap-1.5 rounded-lg"
+              onClick={onClose}
               disabled={loading}
             >
-              <BackLabelWithIcon />
+              <XMarkIcon className="size-4" />
+              キャンセル
+            </button>
+            <button
+              type="submit"
+              className="btn btn-primary gap-1.5 rounded-lg shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-primary/30 hover:shadow-xl"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="loading loading-spinner loading-sm" />
+              ) : mode === "create" ? (
+                <PlusIcon className="size-4" />
+              ) : (
+                <CheckIcon className="size-4" />
+              )}
+              {mode === "create" ? "作成" : "保存"}
             </button>
           </div>
-          <form
-            method="dialog"
-            className="modal-backdrop"
-            onClick={() => setModalOpen(false)}
-            onKeyDown={(e) => e.key === "Escape" && setModalOpen(false)}
-          >
-            <button type="button" className="cursor-default">
-              close
-            </button>
-          </form>
-        </dialog>
-      )}
-    </>
+        </form>
+      </div>
+      <form
+        method="dialog"
+        className="modal-backdrop"
+        onClick={onClose}
+        onKeyDown={(e) => e.key === "Escape" && onClose()}
+      >
+        <button type="button" className="cursor-default">
+          close
+        </button>
+      </form>
+    </dialog>
   )
 }
 
-export function NewCompetitionTab({
-  setCompetitionList,
-}: NewCompetitionTabProps) {
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  return (
-    <>
-      <p>新しい大会を追加します</p>
-      <CommonRegister
-        type="competition"
-        setSuccessMessage={setSuccessMessage}
-        setErrorMessage={setErrorMessage}
-        setCommonDataList={
-          setCompetitionList as React.Dispatch<
-            React.SetStateAction<
-              SelectPlayer[] | SelectJudge[] | SelectCompetition[]
-            >
-          >
+type DeleteCompetitionModalProps = {
+  selectedIds: number[]
+  competitions: SelectCompetition[]
+  onClose: () => void
+  onSuccess: (newList: SelectCompetition[]) => void
+}
+
+export function DeleteCompetitionModal({
+  selectedIds,
+  competitions,
+  onClose,
+  onSuccess,
+}: DeleteCompetitionModalProps) {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const selectedNames = competitions
+    .filter((c) => selectedIds.includes(c.id))
+    .map((c) => c.name)
+
+  async function handleDelete() {
+    setLoading(true)
+    setError(null)
+
+    try {
+      for (const id of selectedIds) {
+        const response = await fetch("/api/competition/", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ type: "delete", id }),
+        })
+        const result = await response.json()
+
+        if (!response.ok || !result.success) {
+          setError(`ID ${id} の削除に失敗しました。`)
+          setLoading(false)
+          return
         }
-      />
-      {successMessage && <p>{successMessage}</p>}
-      {errorMessage && <p>{errorMessage}</p>}
-    </>
+
+        if (id === selectedIds[selectedIds.length - 1]) {
+          onSuccess(result.newList.competitions)
+        }
+      }
+    } catch {
+      setError("送信中にエラーが発生しました。")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <dialog className="modal modal-open">
+      <div className="modal-box">
+        <h3 className="mb-4 font-bold text-lg">大会を削除</h3>
+        <p className="mb-2">以下の大会を削除しますか？</p>
+        <ul className="mb-4 list-inside list-disc text-sm">
+          {selectedNames.map((name) => (
+            <li key={name} className="font-medium">
+              {name}
+            </li>
+          ))}
+        </ul>
+        <p className="text-sm text-warning">
+          この操作は取り消せません。関連するデータも全て削除されます。
+        </p>
+        {error && <p className="mt-2 text-error text-sm">{error}</p>}
+        <div className="modal-action">
+          <button
+            type="button"
+            className="btn gap-1.5 rounded-lg"
+            onClick={onClose}
+            disabled={loading}
+          >
+            <XMarkIcon className="size-4" />
+            キャンセル
+          </button>
+          <button
+            type="button"
+            className="btn btn-error gap-1.5 rounded-lg shadow-error/20 shadow-lg transition-all duration-200 hover:shadow-error/30 hover:shadow-xl"
+            onClick={handleDelete}
+            disabled={loading}
+          >
+            {loading ? (
+              <span className="loading loading-spinner loading-sm" />
+            ) : (
+              <TrashIcon className="size-4" />
+            )}
+            削除する
+          </button>
+        </div>
+      </div>
+      <form
+        method="dialog"
+        className="modal-backdrop"
+        onClick={onClose}
+        onKeyDown={(e) => e.key === "Escape" && onClose()}
+      >
+        <button type="button" className="cursor-default">
+          close
+        </button>
+      </form>
+    </dialog>
   )
 }

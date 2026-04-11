@@ -51,7 +51,9 @@ describe("server/db.ts data fetching functions", () => {
   })
 
   test("getCompetitionList queries competition table and wraps result", async () => {
-    mockResult = [{ id: 1, name: "C1", step: 0 }]
+    mockResult = [
+      { id: 1, name: "C1", description: null, startDate: null, endDate: null },
+    ]
     const result = await getCompetitionList()
     expect(lastFromTable).toBe(competition)
     expect(result.competitions).toHaveLength(1)

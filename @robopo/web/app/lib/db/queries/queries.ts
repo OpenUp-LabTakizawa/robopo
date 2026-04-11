@@ -372,47 +372,6 @@ export async function getChallengeCount(
   return result as { challengeCount: number }[]
 }
 
-// Set competition to open status by ID
-export async function openCompetitionById(id: number) {
-  return await db
-    .update(competition)
-    .set({ step: 1 })
-    .where(eq(competition.id, id))
-}
-
-// Set competition to pre-open status by ID
-export async function returnCompetitionById(id: number) {
-  // 1) Check the current step to enforce valid state transition
-  const existing = await db
-    .select({ step: competition.step })
-    .from(competition)
-    .where(eq(competition.id, id))
-    .limit(1)
-
-  if (!existing) {
-    throw new Error(`Competition with id ${id} not found`)
-  }
-  if (existing[0]?.step !== 1) {
-    throw new Error(
-      `Invalid state transition: cannot return competition from step ${existing[0]?.step} to before state`,
-    )
-  }
-
-  // 2) Perform the permitted update
-  return await db
-    .update(competition)
-    .set({ step: 0 })
-    .where(eq(competition.id, id))
-}
-
-// Set competition to closed status by ID
-export async function closeCompetitionById(id: number) {
-  return await db
-    .update(competition)
-    .set({ step: 2 })
-    .where(eq(competition.id, id))
-}
-
 // Get players with their competitions
 export async function getPlayersWithCompetition() {
   return await db

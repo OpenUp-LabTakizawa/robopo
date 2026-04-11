@@ -3,14 +3,28 @@ import { getCompetitionList } from "@/app/components/server/db"
 import { createCompetition } from "@/app/lib/db/queries/insert"
 
 export async function POST(req: Request) {
-  const { name } = await req.json()
+  const { name, description, startDate, endDate } = await req.json()
+
+  if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
+    return Response.json(
+      { success: false, message: "開催日は終了日より前でなければなりません。" },
+      { status: 400 },
+    )
+  }
+
   const competitionData = {
     name: name,
-    step: 0,
+    description: description || null,
+    startDate: startDate ? new Date(startDate) : null,
+    endDate: endDate ? new Date(endDate) : null,
   }
   try {
     const result = await createCompetition(competitionData)
-    return Response.json({ success: true, data: result }, { status: 200 })
+    const newList = await getCompetitionList()
+    return Response.json(
+      { success: true, data: result, newList },
+      { status: 200 },
+    )
   } catch (error) {
     return Response.json(
       {

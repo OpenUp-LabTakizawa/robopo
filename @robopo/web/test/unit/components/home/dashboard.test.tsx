@@ -7,7 +7,14 @@ afterEach(cleanup)
 const defaultProps = {
   competitionList: {
     competitions: [
-      { id: 1, name: "Test Competition", step: 1, createdAt: null },
+      {
+        id: 1,
+        name: "Test Competition",
+        description: null,
+        startDate: null,
+        endDate: null,
+        createdAt: null,
+      },
     ],
   },
   courseList: {

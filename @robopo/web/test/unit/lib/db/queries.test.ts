@@ -52,7 +52,7 @@ async function setupTestData() {
   // Create test competition
   const [comp] = await db
     .insert(competition)
-    .values({ name: "__test_query_competition__", step: 1 })
+    .values({ name: "__test_query_competition__" })
     .returning({ id: competition.id })
   testCompetitionId = comp.id
 
