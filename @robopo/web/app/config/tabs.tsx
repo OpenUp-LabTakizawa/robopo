@@ -326,9 +326,7 @@ export function DeleteCompetitionModal({
             </li>
           ))}
         </ul>
-        <p className="text-sm text-warning">
-          この操作は取り消せません。関連するデータも全て削除されます。
-        </p>
+        <p className="text-sm text-warning">この操作は取り消せません。</p>
         {error && <p className="mt-2 text-error text-sm">{error}</p>}
         <div className="modal-action">
           <button
