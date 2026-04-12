@@ -15,8 +15,6 @@ import {
 } from "@/app/lib/db/queries/queries"
 import { updateCourse } from "@/app/lib/db/queries/update"
 
-export const revalidate = 0
-
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams
   const rawId = searchParams.get("id")

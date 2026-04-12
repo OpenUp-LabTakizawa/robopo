@@ -20,8 +20,6 @@ import {
 } from "@/app/lib/db/queries/queries"
 import { CourseDetailTable } from "@/app/summary/[...ids]/courseDetailTable"
 
-export const revalidate = 0
-
 export default async function SummaryPlayer({
   params,
 }: {

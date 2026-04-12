@@ -5,8 +5,6 @@ import {
   groupByCourse,
 } from "@/app/lib/db/queries/queries"
 
-export const revalidate = 0
-
 export default async function Course() {
   const [courseRows, { competitions }] = await Promise.all([
     getCourseWithCompetition(),

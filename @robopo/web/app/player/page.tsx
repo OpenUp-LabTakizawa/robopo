@@ -5,8 +5,6 @@ import {
 } from "@/app/lib/db/queries/queries"
 import { PlayerView } from "@/app/player/view"
 
-export const revalidate = 0
-
 export default async function Player() {
   const [playerRows, { competitions }] = await Promise.all([
     getPlayersWithCompetition(),
