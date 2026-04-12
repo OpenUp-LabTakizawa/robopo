@@ -1,5 +1,3 @@
-import { PlusIcon } from "@heroicons/react/24/outline"
-import Link from "next/link"
 import { View } from "@/app/components/common/view"
 import { getCompetitionList } from "@/app/components/server/db"
 import {
@@ -17,22 +15,13 @@ export default async function Course() {
   const initialCourseDataList = groupByCourse(courseRows)
   return (
     <div className="flex h-[calc(100dvh-3.5rem)] flex-col overflow-hidden px-4 py-6 sm:px-10 lg:px-16">
-      <div className="mb-4 flex shrink-0 items-center justify-between">
-        <div>
-          <h1 className="font-bold text-2xl text-base-content tracking-tight">
-            コース一覧
-          </h1>
-          <p className="mt-1 text-base-content/60 text-sm">
-            コースの作成・編集・削除を行います
-          </p>
-        </div>
-        <Link
-          href="/course/edit"
-          className="btn btn-primary gap-2 rounded-xl shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-primary/30 hover:shadow-xl"
-        >
-          <PlusIcon className="size-5" />
-          新規作成
-        </Link>
+      <div className="mb-4 shrink-0">
+        <h1 className="font-bold text-2xl text-base-content tracking-tight">
+          コース一覧
+        </h1>
+        <p className="mt-1 text-base-content/60 text-sm">
+          コースの作成・編集・削除を行います
+        </p>
       </div>
       <div className="flex min-h-0 flex-1 flex-col rounded-2xl border border-base-300 bg-base-100 shadow-sm">
         <View

@@ -4,11 +4,12 @@ import {
   BarsArrowDownIcon,
   BarsArrowUpIcon,
   CheckCircleIcon,
+  Cog6ToothIcon,
   ExclamationTriangleIcon,
   FunnelIcon,
-  LinkIcon,
   MagnifyingGlassIcon,
   PencilSquareIcon,
+  PlusIcon,
   TrashIcon,
   XCircleIcon,
   XMarkIcon,
@@ -17,6 +18,7 @@ import Link from "next/link"
 import type React from "react"
 import { useMemo, useState } from "react"
 import { CommonCheckboxList } from "@/app/components/common/commonList"
+import { CourseFormModal } from "@/app/course/modals"
 import type {
   SelectCompetition,
   SelectCourseWithCompetition,
@@ -40,11 +42,11 @@ export function View({
   // Action options for selected items
   function ItemManager({
     commonId,
-    onAssignClick,
+    onEditClick,
     onDeleteClick,
   }: {
     commonId: number[] | null
-    onAssignClick?: () => void
+    onEditClick?: () => void
     onDeleteClick?: () => void
   }) {
     return (
@@ -60,6 +62,33 @@ export function View({
           </div>
         )}
         <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            className="btn btn-primary btn-sm gap-1.5 rounded-lg"
+            onClick={() => {
+              setSuccessMessage(null)
+              setCreateModalOpen(true)
+            }}
+          >
+            <PlusIcon className="size-4" />
+            新規作成
+          </button>
+          <button
+            type="button"
+            className={`btn btn-sm gap-1.5 rounded-lg ${
+              commonId?.length !== 1
+                ? "btn-disabled"
+                : "btn-primary btn-outline"
+            }`}
+            disabled={commonId?.length !== 1}
+            onClick={() => {
+              setSuccessMessage(null)
+              onEditClick?.()
+            }}
+          >
+            <PencilSquareIcon className="size-4" />
+            編集
+          </button>
           <Link
             href={`/course/edit/${commonId?.length === 1 ? commonId[0] : ""}`}
             className={`btn btn-sm gap-1.5 rounded-lg ${
@@ -73,25 +102,9 @@ export function View({
               setSuccessMessage(null)
             }}
           >
-            <PencilSquareIcon className="size-4" />
-            編集
+            <Cog6ToothIcon className="size-4" />
+            コース編集
           </Link>
-          <button
-            type="button"
-            className={`btn btn-sm gap-1.5 rounded-lg ${
-              commonId?.length !== 1
-                ? "btn-disabled"
-                : "btn-primary btn-outline"
-            }`}
-            disabled={commonId?.length !== 1}
-            onClick={() => {
-              setSuccessMessage(null)
-              onAssignClick?.()
-            }}
-          >
-            <LinkIcon className="size-4" />
-            大会紐付け
-          </button>
           <button
             type="button"
             className={`btn btn-sm gap-1.5 rounded-lg ${
@@ -212,7 +225,8 @@ export function View({
   const [competitionDetailNames, setCompetitionDetailNames] = useState<
     string[] | null
   >(null)
-  const [assignModalOpen, setAssignModalOpen] = useState(false)
+  const [createModalOpen, setCreateModalOpen] = useState(false)
+  const [editModalOpen, setEditModalOpen] = useState(false)
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
 
   const courseDataList = commonDataList
@@ -260,15 +274,15 @@ export function View({
 
   const selectedCourses = courseDataList.filter((c) => commonId.includes(c.id))
 
-  function handleAssignSuccess(newList: SelectCourseWithCompetition[]) {
+  function handleEditSuccess(newList: SelectCourseWithCompetition[]) {
     const parsed = newList.map((c) => ({
       ...c,
       createdAt: c.createdAt ? new Date(c.createdAt) : null,
     }))
     setCommonDataList(parsed)
-    setSuccessMessage("大会紐付けを更新しました")
+    setSuccessMessage("コースを更新しました")
     setErrorMessage(null)
-    setAssignModalOpen(false)
+    setEditModalOpen(false)
     setCommonId([])
   }
 
@@ -286,7 +300,7 @@ export function View({
       <div className="shrink-0">
         <ItemManager
           commonId={commonId}
-          onAssignClick={() => setAssignModalOpen(true)}
+          onEditClick={() => setEditModalOpen(true)}
           onDeleteClick={() => setDeleteModalOpen(true)}
         />
         <CourseFilterBar
@@ -301,7 +315,7 @@ export function View({
           setSortOrder={setSortOrder}
         />
       </div>
-      <div className="min-h-0 flex-1">
+      <div className="min-h-0 flex-1 overflow-y-auto">
         {(searchQuery || competitionFilter) &&
         filteredAndSortedList.length === 0 ? (
           <div className="py-8 text-center text-base-content/40">
@@ -374,13 +388,24 @@ export function View({
         </dialog>
       )}
 
-      {/* Course assign modal */}
-      {assignModalOpen && selectedCourse && competitionList && (
-        <CourseAssignModal
+      {/* Course create modal */}
+      {createModalOpen && competitionList && (
+        <CourseFormModal
+          mode="create"
+          competitionList={competitionList}
+          onClose={() => setCreateModalOpen(false)}
+          onSuccess={handleEditSuccess}
+        />
+      )}
+
+      {/* Course edit modal */}
+      {editModalOpen && selectedCourse && competitionList && (
+        <CourseFormModal
+          mode="edit"
           course={selectedCourse}
           competitionList={competitionList}
-          onClose={() => setAssignModalOpen(false)}
-          onSuccess={handleAssignSuccess}
+          onClose={() => setEditModalOpen(false)}
+          onSuccess={handleEditSuccess}
         />
       )}
 
@@ -393,137 +418,6 @@ export function View({
         />
       )}
     </div>
-  )
-}
-
-// Course-specific assign modal with checkbox selection
-function CourseAssignModal({
-  course,
-  competitionList,
-  onClose,
-  onSuccess,
-}: {
-  course: SelectCourseWithCompetition
-  competitionList: SelectCompetition[]
-  onClose: () => void
-  onSuccess: (newList: SelectCourseWithCompetition[]) => void
-}) {
-  const [selectedCompetitionIds, setSelectedCompetitionIds] = useState<
-    number[]
-  >(course.competitionIds ?? [])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  function toggleCompetition(id: number) {
-    setSelectedCompetitionIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    )
-  }
-
-  async function handleSave() {
-    setLoading(true)
-    setError(null)
-    try {
-      const response = await fetch("/api/assign/course", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          courseId: course.id,
-          competitionIds: selectedCompetitionIds,
-        }),
-      })
-      const result = await response.json()
-      if (response.ok && result.success) {
-        onSuccess(result.newList)
-      } else {
-        setError(result.message || "エラーが発生しました。")
-      }
-    } catch {
-      setError("送信中にエラーが発生しました。")
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <dialog className="modal modal-open">
-      <div className="modal-box max-w-md">
-        <div className="mb-4 flex items-center justify-between">
-          <h3 className="font-bold text-lg">大会紐付け</h3>
-          <button
-            type="button"
-            className="btn btn-ghost btn-sm btn-circle"
-            onClick={onClose}
-          >
-            <XMarkIcon className="size-5" />
-          </button>
-        </div>
-        <p className="mb-3 text-base-content/60 text-sm">
-          <span className="font-medium text-base-content">{course.name}</span>{" "}
-          に紐付ける大会を選択してください
-        </p>
-        {competitionList.length > 0 ? (
-          <div className="max-h-[8.5rem] overflow-y-auto rounded-xl border border-base-300/50 bg-base-200/30">
-            {competitionList.map((c) => (
-              <label
-                key={c.id}
-                className="flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 transition-colors hover:bg-base-200/60"
-              >
-                <input
-                  type="checkbox"
-                  className="checkbox checkbox-primary checkbox-sm"
-                  checked={selectedCompetitionIds.includes(c.id)}
-                  onChange={() => toggleCompetition(c.id)}
-                />
-                <span className="text-sm">{c.name}</span>
-              </label>
-            ))}
-          </div>
-        ) : (
-          <p className="rounded-xl bg-base-200/30 px-3 py-2 text-base-content/40 text-sm">
-            大会が登録されていません
-          </p>
-        )}
-        <p className="mt-1 text-base-content/40 text-xs">
-          紐付けは任意です（0件でも可）
-        </p>
-        {error && <p className="mt-2 text-error text-sm">{error}</p>}
-        <div className="modal-action">
-          <button
-            type="button"
-            className="btn gap-1.5 rounded-lg"
-            onClick={onClose}
-            disabled={loading}
-          >
-            <XMarkIcon className="size-4" />
-            キャンセル
-          </button>
-          <button
-            type="button"
-            className="btn btn-primary gap-1.5 rounded-lg shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-primary/30 hover:shadow-xl"
-            onClick={handleSave}
-            disabled={loading}
-          >
-            {loading ? (
-              <span className="loading loading-spinner loading-sm" />
-            ) : (
-              <LinkIcon className="size-4" />
-            )}
-            保存
-          </button>
-        </div>
-      </div>
-      <form
-        method="dialog"
-        className="modal-backdrop"
-        onClick={onClose}
-        onKeyDown={(e) => e.key === "Escape" && onClose()}
-      >
-        <button type="button" className="cursor-default">
-          close
-        </button>
-      </form>
-    </dialog>
   )
 }
 

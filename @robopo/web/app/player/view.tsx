@@ -233,7 +233,7 @@ export function PlayerView({
       </div>
 
       {/* Table */}
-      <div className="min-h-0 flex-1">
+      <div className="min-h-0 flex-1 overflow-y-auto">
         {(searchQuery || competitionFilter) &&
         filteredAndSortedList.length === 0 ? (
           <div className="py-8 text-center text-base-content/40">

@@ -103,8 +103,8 @@ function RobotIcon() {
 const gridCells = ["g0", "g1", "g2", "g3", "g4", "g5", "g6", "g7", "g8"]
 const panelItems = ["p0", "p1", "p2", "p3", "p4"]
 const missionItems = ["m0", "m1", "m2", "m3", "m4"]
-const uiItems = ["u0", "u1", "u2", "u3", "u4", "u5"]
-const btnItems = ["b0", "b1", "b2"]
+const radioItems = ["r0", "r1", "r2"]
+const btnItems = ["b0", "b1"]
 
 export function PageLoading() {
   return (
@@ -163,13 +163,16 @@ export function PageLoading() {
               </div>
             </div>
           </div>
-          {/* Mission UI card */}
-          <div className="card mt-4 w-full min-w-72 bg-base-100 shadow-xl">
+          {/* Course-out rule card */}
+          <div className="card mt-3 w-full min-w-72 bg-base-100 shadow-xl">
             <div className="card-body">
-              <SkeletonBlock className="mb-3 h-4 w-28" />
-              <div className="grid grid-cols-3 gap-2">
-                {uiItems.map((id) => (
-                  <SkeletonBlock key={id} className="h-10 w-full" />
+              <SkeletonBlock className="mb-3 h-4 w-24" />
+              <div className="flex flex-wrap gap-4">
+                {radioItems.map((id) => (
+                  <div key={id} className="flex items-center gap-2">
+                    <SkeletonBlock className="size-5 rounded-full" />
+                    <SkeletonBlock className="h-4 w-20" />
+                  </div>
                 ))}
               </div>
             </div>

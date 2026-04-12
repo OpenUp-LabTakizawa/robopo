@@ -26,7 +26,7 @@ export async function createCompetition(data: Omit<InsertCompetition, "id">) {
 }
 
 export async function createCourse(data: Omit<InsertCourse, "id">) {
-  return await db.insert(course).values(data)
+  return await db.insert(course).values(data).returning({ id: course.id })
 }
 
 export async function createPlayer(data: Omit<InsertPlayer, "id">) {

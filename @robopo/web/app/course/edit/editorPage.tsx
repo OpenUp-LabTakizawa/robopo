@@ -16,6 +16,7 @@ import {
   deserializeMission,
   deserializePoint,
   findStart,
+  isStart,
   missionStatePair,
   serializeField,
   serializeMission,
@@ -176,8 +177,11 @@ export function EditorPage({
       if (courseData.courseOutRule) {
         setCourseOutRule(courseData.courseOutRule)
       }
-      // Default to route tool when editing an existing course
-      setSelectedTool("route")
+      // Default tool based on whether start panel exists
+      const loadedField = courseData.field
+        ? deserializeField(courseData.field)
+        : null
+      setSelectedTool(loadedField && isStart(loadedField) ? "route" : "start")
     }
     // Mark initialized after initial data load so dirty tracking starts
     markInitialized()
@@ -342,8 +346,6 @@ export function EditorPage({
             setMissionPanelHints={setMissionPanelHints}
             onInsertPreview={setInsertPreview}
             invalidMissionMap={validation.invalidMissionMap}
-            disabled={isBusy || isPlaying}
-            courseId={courseId}
             isPlaying={isPlaying}
             onTogglePlay={handleTogglePlay}
             canPlay={canPlay}
