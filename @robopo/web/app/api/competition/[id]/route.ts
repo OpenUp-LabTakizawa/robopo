@@ -1,5 +1,8 @@
-import { getCompetitionList } from "@/app/components/server/db"
+import { eq } from "drizzle-orm"
+import { getCompetitionWithCourseList } from "@/app/components/server/db"
+import { db } from "@/app/lib/db/db"
 import { updateCompetition } from "@/app/lib/db/queries/update"
+import { competitionCourse } from "@/app/lib/db/schema"
 
 export const revalidate = 0
 
@@ -52,7 +55,26 @@ export async function PATCH(
 
   try {
     await updateCompetition(Number(id), updateData)
-    const newList = await getCompetitionList()
+
+    // Update course links if provided
+    if (body.courseIds !== undefined) {
+      const competitionId = Number(id)
+      // Remove all existing links
+      await db
+        .delete(competitionCourse)
+        .where(eq(competitionCourse.competitionId, competitionId))
+      // Insert new links
+      if (Array.isArray(body.courseIds) && body.courseIds.length > 0) {
+        await db.insert(competitionCourse).values(
+          body.courseIds.map((courseId: number) => ({
+            competitionId,
+            courseId,
+          })),
+        )
+      }
+    }
+
+    const newList = await getCompetitionWithCourseList()
     return Response.json({ success: true, newList }, { status: 200 })
   } catch (error) {
     return Response.json(

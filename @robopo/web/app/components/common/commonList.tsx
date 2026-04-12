@@ -1,6 +1,6 @@
 import type React from "react"
 import type {
-  SelectCompetition,
+  SelectCompetitionWithCourse,
   SelectCourseWithCompetition,
   SelectJudge,
   SelectJudgeWithCompetition,
@@ -13,7 +13,7 @@ type CommonListProps = {
   commonDataList:
     | SelectPlayer[]
     | SelectJudge[]
-    | SelectCompetition[]
+    | SelectCompetitionWithCourse[]
     | SelectPlayerWithCompetition[]
     | SelectJudgeWithCompetition[]
 }
@@ -21,14 +21,16 @@ type CommonListProps = {
 function TableComponent({
   type,
   common,
+  onCourseCompetitionClick,
 }: {
   type: CommonListProps["type"]
   common:
     | SelectPlayer
     | SelectJudge
-    | SelectCompetition
+    | SelectCompetitionWithCourse
     | SelectPlayerWithCompetition
     | SelectJudgeWithCompetition
+  onCourseCompetitionClick?: (names: string[]) => void
 }) {
   return (
     <>
@@ -82,12 +84,25 @@ function TableComponent({
             {(common as SelectCourseWithCompetition).name}
           </td>
           <td className="py-3">
-            {(common as SelectCourseWithCompetition).competitionName?.map(
-              (name) => (
-                <span key={name} className="badge badge-ghost badge-sm mr-1">
-                  {name}
-                </span>
-              ),
+            {(common as SelectCourseWithCompetition).competitionName?.length ? (
+              <button
+                type="button"
+                className="badge badge-primary badge-outline cursor-pointer transition-colors hover:bg-primary hover:text-primary-content"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onCourseCompetitionClick?.(
+                    (common as SelectCourseWithCompetition).competitionName ??
+                      [],
+                  )
+                }}
+              >
+                {
+                  (common as SelectCourseWithCompetition).competitionName
+                    ?.length
+                }
+              </button>
+            ) : (
+              <span className="text-base-content/30 text-sm">0</span>
             )}
           </td>
           <td className="max-w-48 py-3">
@@ -112,15 +127,28 @@ function TableComponent({
       {type === "competition" && (
         <>
           <td className="py-3 font-mono text-base-content/50 text-xs">
-            {(common as SelectCompetition).id}
+            {(common as SelectCompetitionWithCourse).id}
           </td>
           <td className="py-3 font-medium">
-            {(common as SelectCompetition).name}
+            {(common as SelectCompetitionWithCourse).name}
+          </td>
+          <td className="py-3">
+            {(common as SelectCompetitionWithCourse).courseNames?.length > 0 ? (
+              (common as SelectCompetitionWithCourse).courseNames.map(
+                (name) => (
+                  <span key={name} className="badge badge-ghost badge-sm mr-1">
+                    {name}
+                  </span>
+                ),
+              )
+            ) : (
+              <span className="text-base-content/30 text-sm">-</span>
+            )}
           </td>
           <td className="max-w-48 py-3">
-            {(common as SelectCompetition).description ? (
+            {(common as SelectCompetitionWithCourse).description ? (
               <span className="line-clamp-2 text-base-content/70 text-sm">
-                {(common as SelectCompetition).description}
+                {(common as SelectCompetitionWithCourse).description}
               </span>
             ) : (
               <span className="text-base-content/30 text-sm">-</span>
@@ -130,9 +158,9 @@ function TableComponent({
             className="py-3 text-base-content/60 text-sm"
             suppressHydrationWarning
           >
-            {(common as SelectCompetition).startDate ? (
+            {(common as SelectCompetitionWithCourse).startDate ? (
               new Date(
-                (common as SelectCompetition).startDate as Date,
+                (common as SelectCompetitionWithCourse).startDate as Date,
               ).toLocaleDateString("ja-JP")
             ) : (
               <span className="text-base-content/30">-</span>
@@ -142,9 +170,9 @@ function TableComponent({
             className="py-3 text-base-content/60 text-sm"
             suppressHydrationWarning
           >
-            {(common as SelectCompetition).endDate ? (
+            {(common as SelectCompetitionWithCourse).endDate ? (
               new Date(
-                (common as SelectCompetition).endDate as Date,
+                (common as SelectCompetitionWithCourse).endDate as Date,
               ).toLocaleDateString("ja-JP")
             ) : (
               <span className="text-base-content/30">-</span>
@@ -165,7 +193,7 @@ function itemNames(type: CommonListProps["type"]): string[] {
   } else if (type === "course") {
     itemNames.push("ID", "コース名", "使用大会", "説明", "作成日時")
   } else if (type === "competition") {
-    itemNames.push("ID", "名前", "説明", "開催日", "終了日")
+    itemNames.push("ID", "名前", "コース", "説明", "開催日", "終了日")
   }
   return itemNames
 }
@@ -200,11 +228,13 @@ export function CommonSelectionList({
   selectionMode,
   selectedId,
   onSelect,
+  onCourseCompetitionClick,
 }: {
   props: CommonListProps
   selectionMode: "radio" | "checkbox"
   selectedId: number | null | number[]
   onSelect: (id: number) => void
+  onCourseCompetitionClick?: (names: string[]) => void
 }) {
   function isChecked(id: number): boolean {
     if (selectionMode === "radio") {
@@ -220,8 +250,8 @@ export function CommonSelectionList({
           {typeLabel(type)}一覧
         </h2>
       )}
-      <div className="w-full">
-        <div className="m-3 max-h-[28rem] overflow-x-auto overflow-y-auto rounded-xl border border-base-300/50 sm:h-96">
+      <div className="flex min-h-0 w-full flex-1 flex-col">
+        <div className="m-3 min-h-0 flex-1 overflow-x-auto overflow-y-auto rounded-xl border border-base-300/50">
           <table className="table-pin-rows table-zebra table">
             <thead>
               <tr className="border-base-300/50 border-b bg-base-200/60">
@@ -275,7 +305,11 @@ export function CommonSelectionList({
                         />
                       </label>
                     </th>
-                    <TableComponent type={type} common={common} />
+                    <TableComponent
+                      type={type}
+                      common={common}
+                      onCourseCompetitionClick={onCourseCompetitionClick}
+                    />
                   </tr>
                 ))
               ) : (
@@ -319,10 +353,12 @@ export function CommonCheckboxList({
   props,
   commonId,
   setCommonId,
+  onCourseCompetitionClick,
 }: {
   props: CommonListProps
   commonId: number[]
   setCommonId: React.Dispatch<React.SetStateAction<number[]>>
+  onCourseCompetitionClick?: (names: string[]) => void
 }) {
   function handleToggle(id: number) {
     if (!commonId) {
@@ -340,6 +376,7 @@ export function CommonCheckboxList({
       selectionMode="checkbox"
       selectedId={commonId}
       onSelect={handleToggle}
+      onCourseCompetitionClick={onCourseCompetitionClick}
     />
   )
 }

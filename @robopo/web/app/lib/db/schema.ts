@@ -194,5 +194,17 @@ export type SelectCourseWithCompetition = {
   description: string | null
   createdAt: Date | null
   competitionId: number | null
+  competitionIds: number[]
   competitionName: string[] | null
+}
+
+export type SelectCompetitionWithCourse = {
+  id: number
+  name: string
+  description: string | null
+  startDate: Date | null
+  endDate: Date | null
+  createdAt: Date | null
+  courseIds: number[]
+  courseNames: string[]
 }

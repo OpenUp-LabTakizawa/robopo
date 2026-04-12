@@ -10,6 +10,7 @@ import {
   course,
   judge,
   player,
+  type SelectCompetitionWithCourse,
   type SelectCourse,
   type SelectCourseWithCompetition,
   type SelectJudgeWithCompetition,
@@ -410,7 +411,10 @@ function groupByIdWithCompetitions<
       map.set(row.id, existing)
     }
 
-    if (row.competitionName) {
+    if (
+      row.competitionName &&
+      !existing.competitionName.includes(row.competitionName)
+    ) {
       existing.competitionName.push(row.competitionName)
     }
   }
@@ -488,7 +492,7 @@ export async function getCourseWithCompetition() {
     .orderBy(course.id)
 }
 
-// Group flat rows by course
+// Group flat rows by course, collecting competition IDs and names
 export function groupByCourse(
   flatRows: {
     id: number
@@ -499,12 +503,127 @@ export function groupByCourse(
     competitionName: string | null
   }[],
 ): SelectCourseWithCompetition[] {
-  return groupByIdWithCompetitions(flatRows, (row) => ({
-    id: row.id,
-    name: row.name,
-    description: row.description,
-    createdAt: row.createdAt,
-    competitionId: row.competitionId,
-    competitionName: [],
-  }))
+  const map = new Map<number, SelectCourseWithCompetition>()
+
+  for (const row of flatRows) {
+    let existing = map.get(row.id)
+    if (!existing) {
+      existing = {
+        id: row.id,
+        name: row.name,
+        description: row.description,
+        createdAt: row.createdAt,
+        competitionId: row.competitionId,
+        competitionIds: [],
+        competitionName: [],
+      }
+      map.set(row.id, existing)
+    }
+    if (
+      row.competitionId &&
+      row.competitionName &&
+      !existing.competitionIds.includes(row.competitionId)
+    ) {
+      existing.competitionIds.push(row.competitionId)
+      existing.competitionName?.push(row.competitionName)
+    }
+  }
+
+  return Array.from(map.values())
+}
+
+// Get competitions with their courses
+export async function getCompetitionWithCourse() {
+  return await db
+    .select({
+      id: competition.id,
+      name: competition.name,
+      description: competition.description,
+      startDate: competition.startDate,
+      endDate: competition.endDate,
+      createdAt: competition.createdAt,
+      courseId: course.id,
+      courseName: course.name,
+    })
+    .from(competition)
+    .leftJoin(
+      competitionCourse,
+      eq(competition.id, competitionCourse.competitionId),
+    )
+    .leftJoin(course, eq(competitionCourse.courseId, course.id))
+    .orderBy(competition.id)
+}
+
+// Group flat rows by competition, collecting course IDs and names
+export function groupByCompetition(
+  flatRows: {
+    id: number
+    name: string
+    description: string | null
+    startDate: Date | null
+    endDate: Date | null
+    createdAt: Date | null
+    courseId: number | null
+    courseName: string | null
+  }[],
+): SelectCompetitionWithCourse[] {
+  const map = new Map<number, SelectCompetitionWithCourse>()
+
+  for (const row of flatRows) {
+    let existing = map.get(row.id)
+    if (!existing) {
+      existing = {
+        id: row.id,
+        name: row.name,
+        description: row.description,
+        startDate: row.startDate,
+        endDate: row.endDate,
+        createdAt: row.createdAt,
+        courseIds: [],
+        courseNames: [],
+      }
+      map.set(row.id, existing)
+    }
+    if (
+      row.courseId &&
+      row.courseName &&
+      !existing.courseIds.includes(row.courseId)
+    ) {
+      existing.courseIds.push(row.courseId)
+      existing.courseNames.push(row.courseName)
+    }
+  }
+
+  return Array.from(map.values())
+}
+
+// Count how many competitions a course is linked to
+export async function getCourseCompetitionCount(
+  courseId: number,
+): Promise<number> {
+  const result = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(competitionCourse)
+    .where(eq(competitionCourse.courseId, courseId))
+  return result[0]?.count ?? 0
+}
+
+// Batch: check if any of the given course IDs have competition links
+export async function getLinkedCourseIds(
+  courseIds: number[],
+): Promise<number[]> {
+  if (courseIds.length === 0) {
+    return []
+  }
+  const result = await db
+    .select({ courseId: competitionCourse.courseId })
+    .from(competitionCourse)
+    .where(
+      sql`${competitionCourse.courseId} IN (${sql.join(
+        courseIds.map((id) => sql`${id}`),
+        sql`, `,
+      )})`,
+    )
+    .groupBy(competitionCourse.courseId)
+  return result.map((r) => r.courseId)
 }
