@@ -2,20 +2,17 @@ import type React from "react"
 import type {
   SelectCompetitionWithCourse,
   SelectCourseWithCompetition,
-  SelectJudge,
   SelectJudgeWithCompetition,
-  SelectPlayer,
   SelectPlayerWithCompetition,
 } from "@/app/lib/db/schema"
 
 type CommonListProps = {
   type: "player" | "judge" | "course" | "competition"
   commonDataList:
-    | SelectPlayer[]
-    | SelectJudge[]
     | SelectCompetitionWithCourse[]
     | SelectPlayerWithCompetition[]
     | SelectJudgeWithCompetition[]
+    | SelectCourseWithCompetition[]
 }
 
 function TableComponent({
@@ -25,33 +22,54 @@ function TableComponent({
 }: {
   type: CommonListProps["type"]
   common:
-    | SelectPlayer
-    | SelectJudge
     | SelectCompetitionWithCourse
     | SelectPlayerWithCompetition
     | SelectJudgeWithCompetition
+    | SelectCourseWithCompetition
   onCourseCompetitionClick?: (names: string[]) => void
 }) {
   return (
     <>
       {type === "player" && (
         <>
-          <td className="py-3">
-            {(common as SelectPlayerWithCompetition).bibNumber}
+          <td className="py-3 font-mono text-base-content/50 text-xs">
+            {(common as SelectPlayerWithCompetition).id}
           </td>
           <td className="py-3">
-            {(common as SelectPlayerWithCompetition).furigana}
+            {(common as SelectPlayerWithCompetition).bibNumber || (
+              <span className="text-base-content/30 text-sm">-</span>
+            )}
+          </td>
+          <td className="py-3">
+            {(common as SelectPlayerWithCompetition).furigana || (
+              <span className="text-base-content/30 text-sm">-</span>
+            )}
           </td>
           <td className="py-3 font-medium">
             {(common as SelectPlayerWithCompetition).name}
           </td>
           <td className="py-3">
-            {(common as SelectPlayerWithCompetition).competitionName?.map(
-              (name) => (
-                <span key={name} className="badge badge-ghost badge-sm mr-1">
-                  {name}
-                </span>
-              ),
+            {(common as SelectPlayerWithCompetition).competitionName?.length ? (
+              <div className="flex flex-col gap-1">
+                {(common as SelectPlayerWithCompetition).competitionName?.map(
+                  (name) => (
+                    <span key={name} className="badge badge-ghost badge-sm">
+                      {name}
+                    </span>
+                  ),
+                )}
+              </div>
+            ) : (
+              <span className="text-base-content/30 text-sm">-</span>
+            )}
+          </td>
+          <td className="max-w-xs py-3">
+            {(common as SelectPlayerWithCompetition).note ? (
+              <span className="line-clamp-2 text-base-content/70 text-sm">
+                {(common as SelectPlayerWithCompetition).note}
+              </span>
+            ) : (
+              <span className="text-base-content/30 text-sm">-</span>
             )}
           </td>
         </>
@@ -65,12 +83,27 @@ function TableComponent({
             {(common as SelectJudgeWithCompetition).name}
           </td>
           <td className="py-3">
-            {(common as SelectJudgeWithCompetition).competitionName?.map(
-              (name) => (
-                <span key={name} className="badge badge-ghost badge-sm mr-1">
-                  {name}
-                </span>
-              ),
+            {(common as SelectJudgeWithCompetition).competitionName?.length ? (
+              <div className="flex flex-col gap-1">
+                {(common as SelectJudgeWithCompetition).competitionName?.map(
+                  (name) => (
+                    <span key={name} className="badge badge-ghost badge-sm">
+                      {name}
+                    </span>
+                  ),
+                )}
+              </div>
+            ) : (
+              <span className="text-base-content/30 text-sm">-</span>
+            )}
+          </td>
+          <td className="max-w-xs py-3">
+            {(common as SelectJudgeWithCompetition).note ? (
+              <span className="line-clamp-2 text-base-content/70 text-sm">
+                {(common as SelectJudgeWithCompetition).note}
+              </span>
+            ) : (
+              <span className="text-base-content/30 text-sm">-</span>
             )}
           </td>
         </>
@@ -105,21 +138,21 @@ function TableComponent({
               <span className="text-base-content/30 text-sm">0</span>
             )}
           </td>
-          <td className="max-w-48 py-3">
-            {(common as SelectCourseWithCompetition).description ? (
-              <span className="line-clamp-2 text-base-content/70 text-sm">
-                {(common as SelectCourseWithCompetition).description}
-              </span>
-            ) : (
-              <span className="text-base-content/30 text-sm">-</span>
-            )}
-          </td>
           <td
             className="py-3 text-base-content/60 text-sm"
             suppressHydrationWarning={true}
           >
             {(common as SelectCourseWithCompetition).createdAt?.toLocaleString(
               "ja-JP",
+            )}
+          </td>
+          <td className="min-w-64 max-w-sm py-3">
+            {(common as SelectCourseWithCompetition).description ? (
+              <span className="line-clamp-3 text-base-content/70 text-sm">
+                {(common as SelectCourseWithCompetition).description}
+              </span>
+            ) : (
+              <span className="text-base-content/30 text-sm">-</span>
             )}
           </td>
         </>
@@ -134,22 +167,15 @@ function TableComponent({
           </td>
           <td className="py-3">
             {(common as SelectCompetitionWithCourse).courseNames?.length > 0 ? (
-              (common as SelectCompetitionWithCourse).courseNames.map(
-                (name) => (
-                  <span key={name} className="badge badge-ghost badge-sm mr-1">
-                    {name}
-                  </span>
-                ),
-              )
-            ) : (
-              <span className="text-base-content/30 text-sm">-</span>
-            )}
-          </td>
-          <td className="max-w-48 py-3">
-            {(common as SelectCompetitionWithCourse).description ? (
-              <span className="line-clamp-2 text-base-content/70 text-sm">
-                {(common as SelectCompetitionWithCourse).description}
-              </span>
+              <div className="flex flex-col gap-1">
+                {(common as SelectCompetitionWithCourse).courseNames.map(
+                  (name) => (
+                    <span key={name} className="badge badge-ghost badge-sm">
+                      {name}
+                    </span>
+                  ),
+                )}
+              </div>
             ) : (
               <span className="text-base-content/30 text-sm">-</span>
             )}
@@ -178,6 +204,15 @@ function TableComponent({
               <span className="text-base-content/30">-</span>
             )}
           </td>
+          <td className="min-w-64 max-w-sm py-3">
+            {(common as SelectCompetitionWithCourse).description ? (
+              <span className="line-clamp-3 text-base-content/70 text-sm">
+                {(common as SelectCompetitionWithCourse).description}
+              </span>
+            ) : (
+              <span className="text-base-content/30 text-sm">-</span>
+            )}
+          </td>
         </>
       )}
     </>
@@ -187,13 +222,20 @@ function TableComponent({
 function itemNames(type: CommonListProps["type"]): string[] {
   const itemNames: string[] = []
   if (type === "player") {
-    itemNames.push("ゼッケン番号", "ふりがな", "名前", "参加大会")
+    itemNames.push(
+      "ID",
+      "ゼッケン番号",
+      "ふりがな",
+      "名前",
+      "紐付け大会",
+      "備考",
+    )
   } else if (type === "judge") {
-    itemNames.push("ID", "名前", "参加大会")
+    itemNames.push("ID", "名前", "紐付け大会", "備考")
   } else if (type === "course") {
-    itemNames.push("ID", "コース名", "使用大会", "説明", "作成日時")
+    itemNames.push("ID", "コース名", "使用大会", "作成日時", "説明")
   } else if (type === "competition") {
-    itemNames.push("ID", "名前", "コース", "説明", "開催日", "終了日")
+    itemNames.push("ID", "名前", "コース", "開催日", "終了日", "説明")
   }
   return itemNames
 }

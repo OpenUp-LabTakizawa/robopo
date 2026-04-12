@@ -36,7 +36,6 @@ export default async function Course() {
       </div>
       <div className="flex min-h-0 flex-1 flex-col rounded-2xl border border-base-300 bg-base-100 shadow-sm">
         <View
-          type="course"
           initialCommonDataList={initialCourseDataList}
           competitionList={competitions}
         />

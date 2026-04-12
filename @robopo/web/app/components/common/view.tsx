@@ -17,59 +17,25 @@ import Link from "next/link"
 import type React from "react"
 import { useMemo, useState } from "react"
 import { CommonCheckboxList } from "@/app/components/common/commonList"
-import { CommonRegister } from "@/app/components/common/commonRegister"
 import type {
   SelectCompetition,
   SelectCourseWithCompetition,
-  SelectJudge,
-  SelectJudgeWithCompetition,
-  SelectPlayer,
-  SelectPlayerWithCompetition,
 } from "@/app/lib/db/schema"
 
 type SortKey = "createdAt" | "name" | "id"
 
-type PlayerProps = {
-  type: "player"
-  initialCommonDataList: SelectPlayerWithCompetition[]
-  competitionList?: never
-}
-
-type JudgeProps = {
-  type: "judge"
-  initialCommonDataList: SelectJudgeWithCompetition[]
-  competitionList?: never
-}
-
-type CourseProps = {
-  type: "course"
-  initialCommonDataList: SelectCourseWithCompetition[]
-  competitionList: SelectCompetition[]
-}
-
 export function View({
-  type,
   initialCommonDataList,
   competitionList,
-}: PlayerProps | JudgeProps | CourseProps) {
+}: {
+  initialCommonDataList: SelectCourseWithCompetition[]
+  competitionList: SelectCompetition[]
+}) {
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const commonString =
-    type === "player" ? "選手" : type === "judge" ? "採点者" : "コース"
   const [commonDataList, setCommonDataList] = useState<
-    | SelectPlayerWithCompetition[]
-    | SelectJudgeWithCompetition[]
-    | SelectCourseWithCompetition[]
-    | SelectPlayer[]
-    | SelectJudge[]
+    SelectCourseWithCompetition[]
   >(initialCommonDataList)
-  // Convert array to query string
-  function createQueryParams(ids: number[] | null) {
-    if (!ids || ids.length === 0) {
-      return ""
-    }
-    return ids.map((id) => `${id}`).join("/")
-  }
 
   // Action options for selected items
   function ItemManager({
@@ -94,136 +60,54 @@ export function View({
           </div>
         )}
         <div className="flex flex-wrap items-center gap-2">
-          {type !== "course" && (
-            <span className="text-base-content/60 text-sm">
-              選択した{commonString}を
-            </span>
-          )}
-          {type === "course" && (
-            <Link
-              href={`/course/edit/${createQueryParams(commonId)}`}
-              className={`btn btn-sm gap-1.5 rounded-lg ${
-                commonId?.length !== 1
-                  ? "btn-disabled pointer-events-none"
-                  : "btn-primary btn-outline"
-              }`}
-              aria-disabled={commonId?.length !== 1}
-              tabIndex={commonId?.length !== 1 ? -1 : undefined}
-              onClick={() => {
-                setSuccessMessage(null)
-              }}
-            >
-              <PencilSquareIcon className="size-4" />
-              編集
-            </Link>
-          )}
-          {type === "course" ? (
-            <button
-              type="button"
-              className={`btn btn-sm gap-1.5 rounded-lg ${
-                commonId?.length !== 1
-                  ? "btn-disabled"
-                  : "btn-primary btn-outline"
-              }`}
-              disabled={commonId?.length !== 1}
-              onClick={() => {
-                setSuccessMessage(null)
-                onAssignClick?.()
-              }}
-            >
-              <LinkIcon className="size-4" />
-              大会紐付け
-            </button>
-          ) : (
-            <Link
-              href={
-                type === "player"
-                  ? `/player/assign/${createQueryParams(commonId)}`
-                  : `/judge/assign/${createQueryParams(commonId)}`
-              }
-              className={`btn btn-sm gap-1.5 rounded-lg ${
-                commonId === null || commonId?.length === 0
-                  ? "btn-disabled pointer-events-none"
-                  : "btn-primary btn-outline"
-              }`}
-              aria-disabled={commonId === null || commonId?.length === 0}
-              tabIndex={
-                commonId === null || commonId?.length === 0 ? -1 : undefined
-              }
-              onClick={() => setSuccessMessage(null)}
-            >
-              <LinkIcon className="size-4" />
-              大会割当
-            </Link>
-          )}
-          {type === "course" ? (
-            <button
-              type="button"
-              className={`btn btn-sm gap-1.5 rounded-lg ${
-                commonId === null || commonId?.length === 0
-                  ? "btn-disabled"
-                  : "btn-error btn-outline"
-              }`}
-              disabled={commonId === null || commonId?.length === 0}
-              onClick={() => {
-                setSuccessMessage(null)
-                onDeleteClick?.()
-              }}
-            >
-              <TrashIcon className="size-4" />
-              削除
-            </button>
-          ) : (
-            <Link
-              href={
-                type === "player"
-                  ? `/player/delete/${createQueryParams(commonId)}`
-                  : `/judge/delete/${createQueryParams(commonId)}`
-              }
-              className={`btn btn-sm gap-1.5 rounded-lg ${
-                commonId === null || commonId?.length === 0
-                  ? "btn-disabled pointer-events-none"
-                  : "btn-error btn-outline"
-              }`}
-              aria-disabled={commonId === null || commonId?.length === 0}
-              tabIndex={
-                commonId === null || commonId?.length === 0 ? -1 : undefined
-              }
-              onClick={() => setSuccessMessage(null)}
-            >
-              <TrashIcon className="size-4" />
-              削除
-            </Link>
-          )}
-        </div>
-      </div>
-    )
-  }
-
-  // View with registration UI
-  function ViewWithRegister() {
-    const [commonId, setCommonId] = useState<number[]>([])
-    return (
-      <div className="lg:flex lg:flex-row">
-        <div className="flex-col lg:w-2/3">
-          <CommonCheckboxList
-            props={{ type: type, commonDataList: commonDataList }}
-            commonId={commonId}
-            setCommonId={setCommonId}
-          />
-          <ItemManager commonId={commonId} />
-        </div>
-        <div className="lg:w-1/3">
-          <CommonRegister
-            type={type}
-            setSuccessMessage={setSuccessMessage}
-            setErrorMessage={setErrorMessage}
-            setCommonDataList={
-              setCommonDataList as React.Dispatch<
-                React.SetStateAction<SelectPlayer[] | SelectJudge[]>
-              >
-            }
-          />
+          <Link
+            href={`/course/edit/${commonId?.length === 1 ? commonId[0] : ""}`}
+            className={`btn btn-sm gap-1.5 rounded-lg ${
+              commonId?.length !== 1
+                ? "btn-disabled pointer-events-none"
+                : "btn-primary btn-outline"
+            }`}
+            aria-disabled={commonId?.length !== 1}
+            tabIndex={commonId?.length !== 1 ? -1 : undefined}
+            onClick={() => {
+              setSuccessMessage(null)
+            }}
+          >
+            <PencilSquareIcon className="size-4" />
+            編集
+          </Link>
+          <button
+            type="button"
+            className={`btn btn-sm gap-1.5 rounded-lg ${
+              commonId?.length !== 1
+                ? "btn-disabled"
+                : "btn-primary btn-outline"
+            }`}
+            disabled={commonId?.length !== 1}
+            onClick={() => {
+              setSuccessMessage(null)
+              onAssignClick?.()
+            }}
+          >
+            <LinkIcon className="size-4" />
+            大会紐付け
+          </button>
+          <button
+            type="button"
+            className={`btn btn-sm gap-1.5 rounded-lg ${
+              commonId === null || commonId?.length === 0
+                ? "btn-disabled"
+                : "btn-error btn-outline"
+            }`}
+            disabled={commonId === null || commonId?.length === 0}
+            onClick={() => {
+              setSuccessMessage(null)
+              onDeleteClick?.()
+            }}
+          >
+            <TrashIcon className="size-4" />
+            削除
+          </button>
         </div>
       </div>
     )
@@ -320,208 +204,195 @@ export function View({
     )
   }
 
-  // View without registration UI (course)
-  function ViewNoRegister() {
-    const [commonId, setCommonId] = useState<number[]>([])
-    const [searchQuery, setSearchQuery] = useState("")
-    const [sortKey, setSortKey] = useState<SortKey>("createdAt")
-    const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
-    const [competitionFilter, setCompetitionFilter] = useState("")
-    const [competitionDetailNames, setCompetitionDetailNames] = useState<
-      string[] | null
-    >(null)
-    const [assignModalOpen, setAssignModalOpen] = useState(false)
-    const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [commonId, setCommonId] = useState<number[]>([])
+  const [searchQuery, setSearchQuery] = useState("")
+  const [sortKey, setSortKey] = useState<SortKey>("createdAt")
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
+  const [competitionFilter, setCompetitionFilter] = useState("")
+  const [competitionDetailNames, setCompetitionDetailNames] = useState<
+    string[] | null
+  >(null)
+  const [assignModalOpen, setAssignModalOpen] = useState(false)
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
 
-    const courseDataList = commonDataList as SelectCourseWithCompetition[]
+  const courseDataList = commonDataList
 
-    const competitionNames = useMemo(() => {
-      const names = new Set<string>()
-      for (const c of courseDataList) {
-        for (const name of c.competitionName ?? []) {
-          names.add(name)
-        }
+  const competitionNames = useMemo(() => {
+    const names = new Set<string>()
+    for (const c of courseDataList) {
+      for (const name of c.competitionName ?? []) {
+        names.add(name)
       }
-      return [...names].sort((a, b) => a.localeCompare(b, "ja"))
-    }, [])
-
-    const filteredAndSortedList = useMemo(() => {
-      let list = courseDataList
-      if (searchQuery.trim()) {
-        const q = searchQuery.trim().toLowerCase()
-        list = list.filter(
-          (c) =>
-            c.name.toLowerCase().includes(q) ||
-            (c.description?.toLowerCase().includes(q) ?? false),
-        )
-      }
-      if (competitionFilter) {
-        list = list.filter((c) =>
-          c.competitionName?.includes(competitionFilter),
-        )
-      }
-      return [...list].sort((a, b) => {
-        let cmp = 0
-        if (sortKey === "name") {
-          cmp = a.name.localeCompare(b.name, "ja")
-        } else if (sortKey === "createdAt") {
-          cmp = (a.createdAt?.getTime() ?? 0) - (b.createdAt?.getTime() ?? 0)
-        } else {
-          cmp = a.id - b.id
-        }
-        return sortOrder === "asc" ? cmp : -cmp
-      })
-    }, [searchQuery, sortKey, sortOrder, competitionFilter])
-
-    const selectedCourse =
-      commonId.length === 1
-        ? (courseDataList.find((c) => c.id === commonId[0]) ?? null)
-        : null
-
-    const selectedCourses = courseDataList.filter((c) =>
-      commonId.includes(c.id),
-    )
-
-    function handleAssignSuccess(newList: SelectCourseWithCompetition[]) {
-      const parsed = newList.map((c) => ({
-        ...c,
-        createdAt: c.createdAt ? new Date(c.createdAt) : null,
-      }))
-      setCommonDataList(parsed)
-      setSuccessMessage("大会紐付けを更新しました")
-      setErrorMessage(null)
-      setAssignModalOpen(false)
-      setCommonId([])
     }
+    return [...names].sort((a, b) => a.localeCompare(b, "ja"))
+  }, [courseDataList])
 
-    function handleDeleteSuccess() {
-      setSuccessMessage("コースを削除しました")
-      setErrorMessage(null)
-      setDeleteModalOpen(false)
-      setCommonId([])
-      // Reload to get fresh data
-      window.location.href = "/course"
+  const filteredAndSortedList = useMemo(() => {
+    let list = courseDataList
+    if (searchQuery.trim()) {
+      const q = searchQuery.trim().toLowerCase()
+      list = list.filter(
+        (c) =>
+          c.name.toLowerCase().includes(q) ||
+          (c.description?.toLowerCase().includes(q) ?? false),
+      )
     }
+    if (competitionFilter) {
+      list = list.filter((c) => c.competitionName?.includes(competitionFilter))
+    }
+    return [...list].sort((a, b) => {
+      let cmp = 0
+      if (sortKey === "name") {
+        cmp = a.name.localeCompare(b.name, "ja")
+      } else if (sortKey === "createdAt") {
+        cmp = (a.createdAt?.getTime() ?? 0) - (b.createdAt?.getTime() ?? 0)
+      } else {
+        cmp = a.id - b.id
+      }
+      return sortOrder === "asc" ? cmp : -cmp
+    })
+  }, [courseDataList, searchQuery, sortKey, sortOrder, competitionFilter])
 
-    return (
-      <div className="flex min-h-0 flex-1 flex-col">
-        <div className="shrink-0">
-          <ItemManager
+  const selectedCourse =
+    commonId.length === 1
+      ? (courseDataList.find((c) => c.id === commonId[0]) ?? null)
+      : null
+
+  const selectedCourses = courseDataList.filter((c) => commonId.includes(c.id))
+
+  function handleAssignSuccess(newList: SelectCourseWithCompetition[]) {
+    const parsed = newList.map((c) => ({
+      ...c,
+      createdAt: c.createdAt ? new Date(c.createdAt) : null,
+    }))
+    setCommonDataList(parsed)
+    setSuccessMessage("大会紐付けを更新しました")
+    setErrorMessage(null)
+    setAssignModalOpen(false)
+    setCommonId([])
+  }
+
+  function handleDeleteSuccess() {
+    setSuccessMessage("コースを削除しました")
+    setErrorMessage(null)
+    setDeleteModalOpen(false)
+    setCommonId([])
+    // Reload to get fresh data
+    window.location.href = "/course"
+  }
+
+  return (
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="shrink-0">
+        <ItemManager
+          commonId={commonId}
+          onAssignClick={() => setAssignModalOpen(true)}
+          onDeleteClick={() => setDeleteModalOpen(true)}
+        />
+        <CourseFilterBar
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          competitionFilter={competitionFilter}
+          setCompetitionFilter={setCompetitionFilter}
+          competitionNames={competitionNames}
+          sortKey={sortKey}
+          setSortKey={setSortKey}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+        />
+      </div>
+      <div className="min-h-0 flex-1">
+        {(searchQuery || competitionFilter) &&
+        filteredAndSortedList.length === 0 ? (
+          <div className="py-8 text-center text-base-content/40">
+            条件に一致するコースが見つかりません
+          </div>
+        ) : (
+          <CommonCheckboxList
+            props={{ type: "course", commonDataList: filteredAndSortedList }}
             commonId={commonId}
-            onAssignClick={() => setAssignModalOpen(true)}
-            onDeleteClick={() => setDeleteModalOpen(true)}
-          />
-          <CourseFilterBar
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            competitionFilter={competitionFilter}
-            setCompetitionFilter={setCompetitionFilter}
-            competitionNames={competitionNames}
-            sortKey={sortKey}
-            setSortKey={setSortKey}
-            sortOrder={sortOrder}
-            setSortOrder={setSortOrder}
-          />
-        </div>
-        <div className="min-h-0 flex-1">
-          {(searchQuery || competitionFilter) &&
-          filteredAndSortedList.length === 0 ? (
-            <div className="py-8 text-center text-base-content/40">
-              条件に一致するコースが見つかりません
-            </div>
-          ) : (
-            <CommonCheckboxList
-              props={{ type: type, commonDataList: filteredAndSortedList }}
-              commonId={commonId}
-              setCommonId={setCommonId}
-              onCourseCompetitionClick={setCompetitionDetailNames}
-            />
-          )}
-        </div>
-
-        {/* Competition detail modal */}
-        {competitionDetailNames !== null && (
-          <dialog className="modal modal-open">
-            <div className="modal-box max-w-sm">
-              <div className="mb-4 flex items-center justify-between">
-                <h3 className="font-bold text-lg">使用大会一覧</h3>
-                <button
-                  type="button"
-                  className="btn btn-ghost btn-sm btn-circle"
-                  onClick={() => setCompetitionDetailNames(null)}
-                >
-                  <XMarkIcon className="size-5" />
-                </button>
-              </div>
-              <div className="max-h-[60vh] overflow-y-auto">
-                {competitionDetailNames.length > 0 ? (
-                  <ul className="space-y-1.5">
-                    {competitionDetailNames.map((name) => (
-                      <li
-                        key={name}
-                        className="rounded-lg bg-base-200/50 px-3 py-2.5 text-sm"
-                      >
-                        {name}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="py-4 text-center text-base-content/40 text-sm">
-                    使用大会はありません
-                  </p>
-                )}
-              </div>
-              <div className="modal-action">
-                <button
-                  type="button"
-                  className="btn rounded-lg"
-                  onClick={() => setCompetitionDetailNames(null)}
-                >
-                  閉じる
-                </button>
-              </div>
-            </div>
-            <form
-              method="dialog"
-              className="modal-backdrop"
-              onClick={() => setCompetitionDetailNames(null)}
-              onKeyDown={(e) =>
-                e.key === "Escape" && setCompetitionDetailNames(null)
-              }
-            >
-              <button type="button" className="cursor-default">
-                close
-              </button>
-            </form>
-          </dialog>
-        )}
-
-        {/* Course assign modal */}
-        {assignModalOpen && selectedCourse && competitionList && (
-          <CourseAssignModal
-            course={selectedCourse}
-            competitionList={competitionList}
-            onClose={() => setAssignModalOpen(false)}
-            onSuccess={handleAssignSuccess}
-          />
-        )}
-
-        {/* Course delete modal */}
-        {deleteModalOpen && selectedCourses.length > 0 && (
-          <CourseDeleteModal
-            courses={selectedCourses}
-            onClose={() => setDeleteModalOpen(false)}
-            onSuccess={handleDeleteSuccess}
+            setCommonId={setCommonId}
+            onCourseCompetitionClick={setCompetitionDetailNames}
           />
         )}
       </div>
-    )
-  }
 
-  return type === "player" || type === "judge" ? (
-    <ViewWithRegister />
-  ) : (
-    <ViewNoRegister />
+      {/* Competition detail modal */}
+      {competitionDetailNames !== null && (
+        <dialog className="modal modal-open">
+          <div className="modal-box max-w-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="font-bold text-lg">使用大会一覧</h3>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm btn-circle"
+                onClick={() => setCompetitionDetailNames(null)}
+              >
+                <XMarkIcon className="size-5" />
+              </button>
+            </div>
+            <div className="max-h-[60vh] overflow-y-auto">
+              {competitionDetailNames.length > 0 ? (
+                <ul className="space-y-1.5">
+                  {competitionDetailNames.map((name) => (
+                    <li
+                      key={name}
+                      className="rounded-lg bg-base-200/50 px-3 py-2.5 text-sm"
+                    >
+                      {name}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="py-4 text-center text-base-content/40 text-sm">
+                  使用大会はありません
+                </p>
+              )}
+            </div>
+            <div className="modal-action">
+              <button
+                type="button"
+                className="btn rounded-lg"
+                onClick={() => setCompetitionDetailNames(null)}
+              >
+                閉じる
+              </button>
+            </div>
+          </div>
+          <form
+            method="dialog"
+            className="modal-backdrop"
+            onClick={() => setCompetitionDetailNames(null)}
+            onKeyDown={(e) =>
+              e.key === "Escape" && setCompetitionDetailNames(null)
+            }
+          >
+            <button type="button" className="cursor-default">
+              close
+            </button>
+          </form>
+        </dialog>
+      )}
+
+      {/* Course assign modal */}
+      {assignModalOpen && selectedCourse && competitionList && (
+        <CourseAssignModal
+          course={selectedCourse}
+          competitionList={competitionList}
+          onClose={() => setAssignModalOpen(false)}
+          onSuccess={handleAssignSuccess}
+        />
+      )}
+
+      {/* Course delete modal */}
+      {deleteModalOpen && selectedCourses.length > 0 && (
+        <CourseDeleteModal
+          courses={selectedCourses}
+          onClose={() => setDeleteModalOpen(false)}
+          onSuccess={handleDeleteSuccess}
+        />
+      )}
+    </div>
   )
 }
 

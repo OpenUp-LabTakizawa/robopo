@@ -373,6 +373,40 @@ export async function getChallengeCount(
   return result as { challengeCount: number }[]
 }
 
+// Check if a player name already exists (optionally excluding a specific player ID)
+export async function getPlayerByName(
+  name: string,
+  excludeId?: number,
+): Promise<{ id: number } | null> {
+  const conditions = [eq(player.name, name)]
+  if (excludeId) {
+    conditions.push(sql`${player.id} != ${excludeId}`)
+  }
+  const result = await db
+    .select({ id: player.id })
+    .from(player)
+    .where(and(...conditions))
+    .limit(1)
+  return result.length > 0 ? result[0] : null
+}
+
+// Check if a judge name already exists (optionally excluding a specific judge ID)
+export async function getJudgeByName(
+  name: string,
+  excludeId?: number,
+): Promise<{ id: number } | null> {
+  const conditions = [eq(judge.name, name)]
+  if (excludeId) {
+    conditions.push(sql`${judge.id} != ${excludeId}`)
+  }
+  const result = await db
+    .select({ id: judge.id })
+    .from(judge)
+    .where(and(...conditions))
+    .limit(1)
+  return result.length > 0 ? result[0] : null
+}
+
 // Get players with their competitions
 export async function getPlayersWithCompetition() {
   return await db
@@ -381,6 +415,8 @@ export async function getPlayersWithCompetition() {
       name: player.name,
       furigana: player.furigana,
       bibNumber: player.bibNumber,
+      note: player.note,
+      createdAt: player.createdAt,
       competitionId: competition.id,
       competitionName: competition.name,
     })
@@ -390,57 +426,48 @@ export async function getPlayersWithCompetition() {
     .orderBy(player.id)
 }
 
-// Generic helper: group flat rows by id and collect competitionName into arrays
-type FlatRowWithCompetition = {
-  id: number
-  competitionId: number | null
-  competitionName: string | null
-}
-
-function groupByIdWithCompetitions<
-  TFlat extends FlatRowWithCompetition,
-  TResult extends { competitionName: string[] },
->(flatRows: TFlat[], toResult: (row: TFlat) => TResult): TResult[] {
-  const map = new Map<number, TResult>()
-
-  for (const row of flatRows) {
-    let existing = map.get(row.id)
-
-    if (!existing) {
-      existing = toResult(row)
-      map.set(row.id, existing)
-    }
-
-    if (
-      row.competitionName &&
-      !existing.competitionName.includes(row.competitionName)
-    ) {
-      existing.competitionName.push(row.competitionName)
-    }
-  }
-
-  return Array.from(map.values())
-}
-
-// Group flat rows by player
+// Group flat rows by player, collecting competition IDs and names
 export function groupByPlayer(
   flatRows: {
     id: number
     name: string
     furigana: string | null
     bibNumber: string | null
+    note: string | null
+    createdAt: Date | null
     competitionId: number | null
     competitionName: string | null
   }[],
 ): SelectPlayerWithCompetition[] {
-  return groupByIdWithCompetitions(flatRows, (row) => ({
-    id: row.id,
-    name: row.name,
-    furigana: row.furigana,
-    bibNumber: row.bibNumber,
-    competitionId: row.competitionId,
-    competitionName: [],
-  }))
+  const map = new Map<number, SelectPlayerWithCompetition>()
+
+  for (const row of flatRows) {
+    let existing = map.get(row.id)
+    if (!existing) {
+      existing = {
+        id: row.id,
+        name: row.name,
+        furigana: row.furigana,
+        bibNumber: row.bibNumber,
+        note: row.note,
+        createdAt: row.createdAt,
+        competitionId: row.competitionId,
+        competitionIds: [],
+        competitionName: [],
+      }
+      map.set(row.id, existing)
+    }
+    if (
+      row.competitionId &&
+      row.competitionName &&
+      !existing.competitionIds.includes(row.competitionId)
+    ) {
+      existing.competitionIds.push(row.competitionId)
+      existing.competitionName?.push(row.competitionName)
+    }
+  }
+
+  return Array.from(map.values())
 }
 
 // Get judges with their competitions
@@ -449,6 +476,8 @@ export async function getJudgeWithCompetition() {
     .select({
       id: judge.id,
       name: judge.name,
+      note: judge.note,
+      createdAt: judge.createdAt,
       competitionId: competition.id,
       competitionName: competition.name,
     })
@@ -458,21 +487,44 @@ export async function getJudgeWithCompetition() {
     .orderBy(judge.id)
 }
 
-// Group flat rows by judge
+// Group flat rows by judge, collecting competition IDs and names
 export function groupByJudge(
   flatRows: {
     id: number
     name: string
+    note: string | null
+    createdAt: Date | null
     competitionId: number | null
     competitionName: string | null
   }[],
 ): SelectJudgeWithCompetition[] {
-  return groupByIdWithCompetitions(flatRows, (row) => ({
-    id: row.id,
-    name: row.name,
-    competitionId: row.competitionId,
-    competitionName: [],
-  }))
+  const map = new Map<number, SelectJudgeWithCompetition>()
+
+  for (const row of flatRows) {
+    let existing = map.get(row.id)
+    if (!existing) {
+      existing = {
+        id: row.id,
+        name: row.name,
+        note: row.note,
+        createdAt: row.createdAt,
+        competitionId: row.competitionId,
+        competitionIds: [],
+        competitionName: [],
+      }
+      map.set(row.id, existing)
+    }
+    if (
+      row.competitionId &&
+      row.competitionName &&
+      !existing.competitionIds.includes(row.competitionId)
+    ) {
+      existing.competitionIds.push(row.competitionId)
+      existing.competitionName?.push(row.competitionName)
+    }
+  }
+
+  return Array.from(map.values())
 }
 
 // Get courses with their competitions

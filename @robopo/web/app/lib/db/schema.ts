@@ -31,16 +31,18 @@ export const course = pgTable("course", {
 
 export const player = pgTable("player", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
+  name: text("name").notNull().unique(),
   furigana: text("furigana"),
   bibNumber: text("bib_number"),
   qr: text("qr"),
+  note: text("note"),
   createdAt: timestamp("created_at").defaultNow(),
 })
 
 export const judge = pgTable("judge", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
+  name: text("name").notNull().unique(),
+  note: text("note"),
   createdAt: timestamp("created_at").defaultNow(),
 })
 
@@ -177,14 +179,20 @@ export type SelectPlayerWithCompetition = {
   name: string
   furigana: string | null
   bibNumber: string | null
+  note: string | null
+  createdAt: Date | null
   competitionId: number | null
+  competitionIds: number[]
   competitionName: string[] | null
 }
 
 export type SelectJudgeWithCompetition = {
   id: number
   name: string
+  note: string | null
+  createdAt: Date | null
   competitionId: number | null
+  competitionIds: number[]
   competitionName: string[] | null
 }
 

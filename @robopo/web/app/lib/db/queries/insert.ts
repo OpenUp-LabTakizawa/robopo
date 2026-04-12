@@ -30,11 +30,11 @@ export async function createCourse(data: Omit<InsertCourse, "id">) {
 }
 
 export async function createPlayer(data: Omit<InsertPlayer, "id">) {
-  return await db.insert(player).values(data)
+  return await db.insert(player).values(data).returning({ id: player.id })
 }
 
 export async function createJudge(data: Omit<InsertJudge, "id">) {
-  return await db.insert(judge).values(data)
+  return await db.insert(judge).values(data).returning({ id: judge.id })
 }
 
 export async function createChallenge(data: Omit<InsertChallenge, "id">) {

@@ -5,8 +5,12 @@ import {
   getChallengeCount,
   getCourseSummary,
   getFirstCount,
+  getJudgeByName,
   getMaxResult,
+  getPlayerByName,
   getPlayerResult,
+  groupByJudge,
+  groupByPlayer,
 } from "@/app/lib/db/queries/queries"
 import {
   challenge,
@@ -14,6 +18,7 @@ import {
   competitionCourse,
   competitionPlayer,
   course,
+  judge,
   player,
 } from "@/app/lib/db/schema"
 
@@ -36,6 +41,40 @@ async function setupTestData() {
       .delete(competitionCourse)
       .where(eq(competitionCourse.courseId, existing[0].id))
     await db.delete(course).where(eq(course.id, existing[0].id))
+  }
+
+  // Clean up leftover test judges
+  for (const jName of ["__test_judge_A__"]) {
+    const existingJudge = await db
+      .select({ id: judge.id })
+      .from(judge)
+      .where(eq(judge.name, jName))
+      .limit(1)
+    if (existingJudge.length > 0) {
+      await db.delete(judge).where(eq(judge.id, existingJudge[0].id))
+    }
+  }
+
+  // Clean up leftover test players
+  for (const pName of ["__test_player_A__", "__test_player_B__"]) {
+    const existingPlayer = await db
+      .select({ id: player.id })
+      .from(player)
+      .where(eq(player.name, pName))
+      .limit(1)
+    if (existingPlayer.length > 0) {
+      await db.delete(player).where(eq(player.id, existingPlayer[0].id))
+    }
+  }
+
+  // Clean up leftover test competition
+  const existingComp = await db
+    .select({ id: competition.id })
+    .from(competition)
+    .where(eq(competition.name, "__test_query_competition__"))
+    .limit(1)
+  if (existingComp.length > 0) {
+    await db.delete(competition).where(eq(competition.id, existingComp[0].id))
   }
 
   // Create test course
@@ -226,5 +265,243 @@ describe("query helpers (integration)", () => {
     expect(result).toHaveLength(1)
     // 3 challenges: ch1 has 1 attempt, ch2 has 2 attempts, ch3 has 1 attempt = 4
     expect(Number(result[0].challengeCount)).toBe(4)
+  })
+})
+
+describe("getPlayerByName", () => {
+  test("returns null when no player matches", async () => {
+    const result = await getPlayerByName("__nonexistent_player__")
+    expect(result).toBeNull()
+  })
+
+  test("returns the correct player when there is a match", async () => {
+    const result = await getPlayerByName("__test_player_A__")
+    expect(result).not.toBeNull()
+    expect(result?.id).toBe(testPlayerIds[0])
+  })
+
+  test("honors excludeId when provided", async () => {
+    const result = await getPlayerByName("__test_player_A__", testPlayerIds[0])
+    expect(result).toBeNull()
+  })
+
+  test("returns match when excludeId is a different player", async () => {
+    const result = await getPlayerByName("__test_player_A__", testPlayerIds[1])
+    expect(result).not.toBeNull()
+    expect(result?.id).toBe(testPlayerIds[0])
+  })
+})
+
+describe("getJudgeByName", () => {
+  let testJudgeId: number
+
+  beforeAll(async () => {
+    const [j] = await db
+      .insert(judge)
+      .values({ name: "__test_judge_A__" })
+      .returning({ id: judge.id })
+    testJudgeId = j.id
+  })
+
+  afterAll(async () => {
+    await db.delete(judge).where(eq(judge.id, testJudgeId))
+  })
+
+  test("returns null when no judge matches", async () => {
+    const result = await getJudgeByName("__nonexistent_judge__")
+    expect(result).toBeNull()
+  })
+
+  test("returns the correct judge when there is a match", async () => {
+    const result = await getJudgeByName("__test_judge_A__")
+    expect(result).not.toBeNull()
+    expect(result?.id).toBe(testJudgeId)
+  })
+
+  test("honors excludeId when provided", async () => {
+    const result = await getJudgeByName("__test_judge_A__", testJudgeId)
+    expect(result).toBeNull()
+  })
+})
+
+describe("groupByPlayer", () => {
+  test("groups rows by player and populates competitionIds", () => {
+    const rows = [
+      {
+        id: 1,
+        name: "Alice",
+        furigana: null,
+        bibNumber: null,
+        note: null,
+        createdAt: null,
+        competitionId: 10,
+        competitionName: "Comp A",
+      },
+      {
+        id: 1,
+        name: "Alice",
+        furigana: null,
+        bibNumber: null,
+        note: null,
+        createdAt: null,
+        competitionId: 20,
+        competitionName: "Comp B",
+      },
+      {
+        id: 2,
+        name: "Bob",
+        furigana: null,
+        bibNumber: null,
+        note: null,
+        createdAt: null,
+        competitionId: 10,
+        competitionName: "Comp A",
+      },
+    ]
+    const result = groupByPlayer(rows)
+    expect(result).toHaveLength(2)
+    const alice = result.find((p) => p.id === 1)
+    expect(alice).toBeDefined()
+    expect(alice?.competitionIds).toEqual([10, 20])
+    expect(alice?.competitionName).toEqual(["Comp A", "Comp B"])
+    const bob = result.find((p) => p.id === 2)
+    expect(bob).toBeDefined()
+    expect(bob?.competitionIds).toEqual([10])
+  })
+
+  test("de-duplicates competitionIds", () => {
+    const rows = [
+      {
+        id: 1,
+        name: "Alice",
+        furigana: null,
+        bibNumber: null,
+        note: null,
+        createdAt: null,
+        competitionId: 10,
+        competitionName: "Comp A",
+      },
+      {
+        id: 1,
+        name: "Alice",
+        furigana: null,
+        bibNumber: null,
+        note: null,
+        createdAt: null,
+        competitionId: 10,
+        competitionName: "Comp A",
+      },
+    ]
+    const result = groupByPlayer(rows)
+    expect(result).toHaveLength(1)
+    expect(result[0].competitionIds).toEqual([10])
+    expect(result[0].competitionName).toEqual(["Comp A"])
+  })
+
+  test("handles null competition data", () => {
+    const rows = [
+      {
+        id: 1,
+        name: "Alice",
+        furigana: null,
+        bibNumber: null,
+        note: null,
+        createdAt: null,
+        competitionId: 10,
+        competitionName: "Comp A",
+      },
+      {
+        id: 1,
+        name: "Alice",
+        furigana: null,
+        bibNumber: null,
+        note: null,
+        createdAt: null,
+        competitionId: null,
+        competitionName: null,
+      },
+    ]
+    const result = groupByPlayer(rows)
+    expect(result).toHaveLength(1)
+    expect(result[0].competitionIds).toEqual([10])
+    expect(result[0].competitionName).toEqual(["Comp A"])
+  })
+})
+
+describe("groupByJudge", () => {
+  test("groups rows by judge and populates competitionIds", () => {
+    const rows = [
+      {
+        id: 1,
+        name: "Judge A",
+        note: null,
+        createdAt: null,
+        competitionId: 10,
+        competitionName: "Comp A",
+      },
+      {
+        id: 1,
+        name: "Judge A",
+        note: null,
+        createdAt: null,
+        competitionId: 20,
+        competitionName: "Comp B",
+      },
+      {
+        id: 2,
+        name: "Judge B",
+        note: null,
+        createdAt: null,
+        competitionId: 10,
+        competitionName: "Comp A",
+      },
+    ]
+    const result = groupByJudge(rows)
+    expect(result).toHaveLength(2)
+    const judgeA = result.find((j) => j.id === 1)
+    expect(judgeA).toBeDefined()
+    expect(judgeA?.competitionIds).toEqual([10, 20])
+    expect(judgeA?.competitionName).toEqual(["Comp A", "Comp B"])
+  })
+
+  test("de-duplicates competitionIds", () => {
+    const rows = [
+      {
+        id: 1,
+        name: "Judge A",
+        note: null,
+        createdAt: null,
+        competitionId: 10,
+        competitionName: "Comp A",
+      },
+      {
+        id: 1,
+        name: "Judge A",
+        note: null,
+        createdAt: null,
+        competitionId: 10,
+        competitionName: "Comp A",
+      },
+    ]
+    const result = groupByJudge(rows)
+    expect(result).toHaveLength(1)
+    expect(result[0].competitionIds).toEqual([10])
+  })
+
+  test("handles null competition data", () => {
+    const rows = [
+      {
+        id: 1,
+        name: "Judge A",
+        note: null,
+        createdAt: null,
+        competitionId: null,
+        competitionName: null,
+      },
+    ]
+    const result = groupByJudge(rows)
+    expect(result).toHaveLength(1)
+    expect(result[0].competitionIds).toEqual([])
+    expect(result[0].competitionName).toEqual([])
   })
 })
