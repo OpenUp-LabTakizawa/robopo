@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
+import { NavigationDrawer } from "@/app/components/header/navigationDrawer"
 import { useNavigationGuard } from "@/app/hooks/useNavigationGuard"
 import { SIGN_IN_CONST, SIGN_OUT_CONST } from "@/app/lib/const"
 import { signOut } from "@/lib/auth-client"
@@ -77,6 +78,9 @@ export function Header({ session }: Props) {
               </>
             )}
           </button>
+        ) : null}
+        {session?.user ? (
+          <NavigationDrawer />
         ) : (
           <Link
             href={SIGN_IN_CONST.href}
