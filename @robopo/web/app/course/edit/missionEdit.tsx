@@ -30,6 +30,9 @@ type MissionEditProps = {
   invalidMissionMap?: Map<number, string>
   disabled?: boolean
   courseId?: number | null
+  isPlaying?: boolean
+  onTogglePlay?: () => void
+  canPlay?: boolean
 }
 
 export default function MissionEdit({
@@ -53,6 +56,9 @@ export default function MissionEdit({
   invalidMissionMap,
   disabled = false,
   courseId,
+  isPlaying,
+  onTogglePlay,
+  canPlay,
 }: MissionEditProps) {
   const {
     name,
@@ -107,6 +113,9 @@ export default function MissionEdit({
             setMissionPanelHints={setMissionPanelHints}
             onInsertPreview={onInsertPreview}
             invalidMissionMap={invalidMissionMap}
+            isPlaying={isPlaying}
+            onTogglePlay={onTogglePlay}
+            canPlay={canPlay}
           />
         </div>
       </div>

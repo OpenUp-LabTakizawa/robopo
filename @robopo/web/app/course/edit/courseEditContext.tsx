@@ -49,6 +49,7 @@ export type CourseEditState = {
   canRedoMission: boolean
   pushMissionHistory: () => void
   markInitialized: () => void
+  resetInitialized: () => void
   nameError: string
   setNameError: React.Dispatch<React.SetStateAction<string>>
 }
@@ -82,6 +83,7 @@ const dummy: CourseEditState = {
   canRedoMission: false,
   pushMissionHistory: () => {},
   markInitialized: () => {},
+  resetInitialized: () => {},
   nameError: "",
   setNameError: () => {},
 }
@@ -106,6 +108,10 @@ export function CourseEditProvider({
 
   const markInitialized = useCallback(() => {
     initializedRef.current = true
+  }, [])
+
+  const resetInitialized = useCallback(() => {
+    initializedRef.current = false
   }, [])
 
   const [nameError, setNameError] = useState("")
@@ -259,6 +265,7 @@ export function CourseEditProvider({
         canRedoMission,
         pushMissionHistory,
         markInitialized,
+        resetInitialized,
         nameError,
         setNameError,
       }}

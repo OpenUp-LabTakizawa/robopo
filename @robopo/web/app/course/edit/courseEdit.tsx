@@ -28,6 +28,7 @@ type CourseEditProps = {
   botAfterAngle?: number
   onRouteAdded?: (row: number, col: number) => void
   isolatedPanels?: Set<string>
+  isPlaying?: boolean
 }
 
 export default function CourseEdit({
@@ -46,6 +47,7 @@ export default function CourseEdit({
   botAfterAngle,
   onRouteAdded,
   isolatedPanels,
+  isPlaying = false,
 }: CourseEditProps) {
   const [isDragging, setIsDragging] = useState(false)
   const lastCellRef = useRef<{ r: number; c: number } | null>(null)
@@ -85,6 +87,9 @@ export default function CourseEdit({
   )
 
   function handlePanelClick(row: number, col: number) {
+    if (isPlaying) {
+      return
+    }
     // Skip if already handled by pointerDown (prevents double-fire on touch)
     if (pointerHandledRef.current) {
       pointerHandledRef.current = false
@@ -95,6 +100,9 @@ export default function CourseEdit({
   }
 
   function handlePointerDown(row: number, col: number) {
+    if (isPlaying) {
+      return
+    }
     pointerHandledRef.current = true
     pushHistory()
     setIsDragging(true)
@@ -149,6 +157,7 @@ export default function CourseEdit({
               botDirection={botDirection}
               botAfterPosition={botAfterPosition}
               botAfterAngle={botAfterAngle}
+              isPlaying={isPlaying}
               onPanelClick={handlePanelClick}
               onPanelPointerDown={handlePointerDown}
               onPanelPointerEnter={handlePointerEnter}

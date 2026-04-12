@@ -5,7 +5,7 @@ import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
   buildPreviewMission,
   type InsertPreview,
@@ -15,6 +15,8 @@ import {
   deserializeField,
   deserializeMission,
   deserializePoint,
+  findStart,
+  missionStatePair,
   serializeField,
   serializeMission,
   serializePoint,
@@ -64,6 +66,7 @@ export function EditorPage({
     missionPanelHints,
     setMissionPanelHints,
     markInitialized,
+    resetInitialized,
     nameError,
   } = useCourseEdit()
 
@@ -77,6 +80,66 @@ export function EditorPage({
   const [saveState, setSaveState] = useState<SaveState>("idle")
   const [showSaveWarning, setShowSaveWarning] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [playbackIndex, setPlaybackIndex] = useState<number | null>(null)
+  const playbackTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const playbackCount = useMemo(
+    () => missionStatePair(mission).length,
+    [mission],
+  )
+
+  const canPlay =
+    playbackCount > 0 && mission[0] !== null && findStart(field) !== null
+
+  const clearPlaybackTimer = useCallback(() => {
+    if (playbackTimerRef.current) {
+      clearInterval(playbackTimerRef.current)
+      playbackTimerRef.current = null
+    }
+  }, [])
+
+  // Auto-advance playback timer
+  useEffect(() => {
+    if (!isPlaying) {
+      setPlaybackIndex(null)
+      clearPlaybackTimer()
+      return
+    }
+
+    setPlaybackIndex(0)
+
+    playbackTimerRef.current = setInterval(() => {
+      setPlaybackIndex((prev) => {
+        if (prev === null || prev + 1 >= playbackCount) {
+          setIsPlaying(false)
+          return null
+        }
+        return prev + 1
+      })
+    }, 2400)
+
+    return clearPlaybackTimer
+  }, [isPlaying, playbackCount, clearPlaybackTimer])
+
+  const wasPlayingRef = useRef(false)
+
+  // Sync selectedMissionIndex from playback index
+  useEffect(() => {
+    if (isPlaying) {
+      wasPlayingRef.current = true
+      setSelectedMissionIndex(playbackIndex)
+      setInsertPreview(null)
+    } else if (wasPlayingRef.current) {
+      // Playback just stopped — clear selection
+      wasPlayingRef.current = false
+      setSelectedMissionIndex(null)
+    }
+  }, [isPlaying, playbackIndex])
+
+  const handleTogglePlay = useCallback(() => {
+    setIsPlaying((prev) => !prev)
+  }, [])
 
   const validation = useCourseValidation({ field, mission, name, nameError })
   const saveBlockMessage = mounted ? validation.saveBlockMessage : null
@@ -92,6 +155,8 @@ export function EditorPage({
   }, [saveBlockMessage])
 
   useEffect(() => {
+    // Reset before loading so re-runs (e.g. React strict mode) don't falsely mark dirty
+    resetInitialized()
     if (courseData) {
       if (courseData.field) {
         setField(deserializeField(courseData.field))
@@ -111,6 +176,8 @@ export function EditorPage({
       if (courseData.courseOutRule) {
         setCourseOutRule(courseData.courseOutRule)
       }
+      // Default to route tool when editing an existing course
+      setSelectedTool("route")
     }
     // Mark initialized after initial data load so dirty tracking starts
     markInitialized()
@@ -122,7 +189,9 @@ export function EditorPage({
     setName,
     setDescription,
     setCourseOutRule,
+    setSelectedTool,
     markInitialized,
+    resetInitialized,
   ])
 
   const robotPreview = useMemo(() => {
@@ -250,6 +319,7 @@ export function EditorPage({
             botAfterAngle={robotPreview?.afterAngle}
             onRouteAdded={handleRouteAdded}
             isolatedPanels={validation.isolatedPanels}
+            isPlaying={isPlaying}
           />
         </div>
         <div className="sm:mx-4 sm:min-h-0 sm:w-full sm:justify-self-start sm:overflow-y-auto">
@@ -272,8 +342,11 @@ export function EditorPage({
             setMissionPanelHints={setMissionPanelHints}
             onInsertPreview={setInsertPreview}
             invalidMissionMap={validation.invalidMissionMap}
-            disabled={isBusy}
+            disabled={isBusy || isPlaying}
             courseId={courseId}
+            isPlaying={isPlaying}
+            onTogglePlay={handleTogglePlay}
+            canPlay={canPlay}
           />
         </div>
       </div>
