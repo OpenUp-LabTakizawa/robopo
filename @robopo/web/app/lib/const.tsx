@@ -59,6 +59,11 @@ export const COMPETITION_MANAGEMENT_LIST: NavItem[] = [
     href: "/judge",
     icon: <UserCircleIcon className="size-6" />,
   },
+  {
+    label: "集計結果",
+    href: "/summary" as Route,
+    icon: <CalculatorIcon className="size-6" />,
+  },
 ]
 
 export const NAVIGATION_GENERAL_LIST: NavItem[] = [
@@ -66,11 +71,6 @@ export const NAVIGATION_GENERAL_LIST: NavItem[] = [
     label: "ホーム",
     href: "/",
     icon: <HomeIcon className="size-6" />,
-  },
-  {
-    label: "集計結果",
-    href: "/summary" as Route,
-    icon: <CalculatorIcon className="size-6" />,
   },
 ]
 

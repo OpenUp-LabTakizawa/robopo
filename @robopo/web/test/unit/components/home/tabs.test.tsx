@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { ChallengeTab, ManageTab, SummaryTab } from "@/app/components/home/tabs"
+import { ChallengeTab, ManageTab } from "@/app/components/home/tabs"
 
 afterEach(cleanup)
 
@@ -260,28 +260,6 @@ describe("ChallengeTab", () => {
   })
 })
 
-describe("SummaryTab", () => {
-  test("renders competition dropdown", () => {
-    render(<SummaryTab competitionList={competitionList} />)
-    expect(screen.getByText("大会を選んでください")).toBeTruthy()
-  })
-
-  test("renders summary button (disabled by default)", () => {
-    render(<SummaryTab competitionList={competitionList} />)
-    expect(screen.getByText("集計結果を見る")).toBeTruthy()
-  })
-
-  test("disabled summary button does not render as a link", () => {
-    const { container } = render(
-      <SummaryTab competitionList={competitionList} />,
-    )
-    const btn = screen.getByText("集計結果を見る").closest("button")
-    expect(btn).toBeTruthy()
-    const link = container.querySelector('a[href*="summary"]')
-    expect(link).toBeNull()
-  })
-})
-
 describe("ManageTab", () => {
   test("renders all management links", () => {
     render(<ManageTab />)
@@ -289,5 +267,6 @@ describe("ManageTab", () => {
     expect(screen.getByText("コース一覧")).toBeTruthy()
     expect(screen.getByText("選手一覧")).toBeTruthy()
     expect(screen.getByText("採点者一覧")).toBeTruthy()
+    expect(screen.getByText("集計結果")).toBeTruthy()
   })
 })

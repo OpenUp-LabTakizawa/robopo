@@ -6,11 +6,20 @@ export type CourseSummary = {
   playerName: string | null
   playerFurigana: string | null
   playerBibNumber: string | null
+  firstAttemptTime: string | null
   firstMaxAttemptCount: number | null
   firstMaxAttemptTime: string | null
+  elapsedToComplete: string | null
+  elapsedToCompleteSeconds: number | null
+  lastAttemptTime: string | null
+  firstAttemptScore: number | null
+  averageScore: number | null
+  courseOutCount: number | null
+  retryCount: number | null
   attemptCount: number | null
   maxResult: number | null
   totalPoint: number | null
+  sumPoint: number | null
   pointRank: number | null
   challengeCount: number | null
   challengeRank: number | null

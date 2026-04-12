@@ -77,6 +77,11 @@ async function seed() {
 
     // Delete existing data to prevent test data duplication
     await db.execute(sql`
+      DELETE FROM challenge WHERE competition_id IN (
+        SELECT id FROM competition WHERE name IN ('テスト大会', 'ロボサバ2026')
+      )
+    `)
+    await db.execute(sql`
       DELETE FROM competition_course WHERE competition_id IN (
         SELECT id FROM competition WHERE name IN ('テスト大会', 'ロボサバ2026')
       )
@@ -197,6 +202,38 @@ async function seed() {
         VALUES (${competition2Id}, ${u.id})
       `)
     }
+
+    // --- Challenge data for テスト大会 × TestCourse ---
+    // TestCourse point='0;10;5;5': result 0→0pt, 1→5pt, 2→20pt (full clear)
+    const judgeId1 = judgeRows.rows[0].id
+    const [pA, pB, pC] = playerResult.rows
+
+    // 選手A: 3 challenges, best=2 (full clear 20pt), achieved on 2nd attempt
+    await db.execute(sql`
+      INSERT INTO challenge (first_result, retry_result, detail, competition_id, course_id, player_id, judge_id, created_at)
+      VALUES
+        (1, NULL, NULL, ${competitionId}, ${testCourseId}, ${pA.id}, ${judgeId1}, NOW() - INTERVAL '5 hours'),
+        (1, 2,    NULL, ${competitionId}, ${testCourseId}, ${pA.id}, ${judgeId1}, NOW() - INTERVAL '3 hours'),
+        (2, NULL, NULL, ${competitionId}, ${testCourseId}, ${pA.id}, ${judgeId1}, NOW() - INTERVAL '1 hour')
+    `)
+
+    // 選手B: 2 challenges, best=2 (full clear 20pt), achieved on 1st attempt
+    await db.execute(sql`
+      INSERT INTO challenge (first_result, retry_result, detail, competition_id, course_id, player_id, judge_id, created_at)
+      VALUES
+        (2, 1,    NULL, ${competitionId}, ${testCourseId}, ${pB.id}, ${judgeId1}, NOW() - INTERVAL '4 hours'),
+        (2, NULL, NULL, ${competitionId}, ${testCourseId}, ${pB.id}, ${judgeId1}, NOW() - INTERVAL '2 hours')
+    `)
+
+    // 選手C: 4 challenges, best=1 (5pt), never completed the course
+    await db.execute(sql`
+      INSERT INTO challenge (first_result, retry_result, detail, competition_id, course_id, player_id, judge_id, created_at)
+      VALUES
+        (0, 1,    NULL, ${competitionId}, ${testCourseId}, ${pC.id}, ${judgeId1}, NOW() - INTERVAL '6 hours'),
+        (1, 0,    NULL, ${competitionId}, ${testCourseId}, ${pC.id}, ${judgeId1}, NOW() - INTERVAL '4 hours'),
+        (0, NULL, NULL, ${competitionId}, ${testCourseId}, ${pC.id}, ${judgeId1}, NOW() - INTERVAL '2 hours'),
+        (1, 1,    NULL, ${competitionId}, ${testCourseId}, ${pC.id}, ${judgeId1}, NOW() - INTERVAL '30 minutes')
+    `)
 
     // --- Associate special courses (ID 1, 2) with ALL competitions ---
     await db.execute(sql`
