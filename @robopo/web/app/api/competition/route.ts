@@ -1,9 +1,11 @@
 import { deleteById } from "@/app/api/delete"
-import { getCompetitionList } from "@/app/components/server/db"
+import { getCompetitionWithCourseList } from "@/app/components/server/db"
+import { db } from "@/app/lib/db/db"
 import { createCompetition } from "@/app/lib/db/queries/insert"
+import { competitionCourse } from "@/app/lib/db/schema"
 
 export async function POST(req: Request) {
-  const { name, description, startDate, endDate } = await req.json()
+  const { name, description, startDate, endDate, courseIds } = await req.json()
 
   if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
     return Response.json(
@@ -20,7 +22,19 @@ export async function POST(req: Request) {
   }
   try {
     const result = await createCompetition(competitionData)
-    const newList = await getCompetitionList()
+    const newCompetitionId = result[0].id
+
+    // Insert course links if provided
+    if (Array.isArray(courseIds) && courseIds.length > 0) {
+      await db.insert(competitionCourse).values(
+        courseIds.map((courseId: number) => ({
+          competitionId: newCompetitionId,
+          courseId,
+        })),
+      )
+    }
+
+    const newList = await getCompetitionWithCourseList()
     return Response.json(
       { success: true, data: result, newList },
       { status: 200 },
@@ -39,6 +53,6 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
   return await deleteById(req, "competition", async () => ({
-    newList: await getCompetitionList(),
+    newList: await getCompetitionWithCourseList(),
   }))
 }

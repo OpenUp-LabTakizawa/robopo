@@ -1,20 +1,23 @@
 import { PlusIcon } from "@heroicons/react/24/outline"
 import Link from "next/link"
 import { View } from "@/app/components/common/view"
+import { getCompetitionList } from "@/app/components/server/db"
 import {
   getCourseWithCompetition,
   groupByCourse,
 } from "@/app/lib/db/queries/queries"
-import type { SelectCourseWithCompetition } from "@/app/lib/db/schema"
 
 export const revalidate = 0
 
 export default async function Course() {
-  const initialCourseDataList: SelectCourseWithCompetition[] =
-    await groupByCourse(await getCourseWithCompetition())
+  const [courseRows, { competitions }] = await Promise.all([
+    getCourseWithCompetition(),
+    getCompetitionList(),
+  ])
+  const initialCourseDataList = groupByCourse(courseRows)
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-6">
-      <div className="mb-6 flex items-center justify-between">
+    <div className="flex h-[calc(100dvh-3.5rem)] flex-col overflow-hidden px-4 py-6 sm:px-10 lg:px-16">
+      <div className="mb-4 flex shrink-0 items-center justify-between">
         <div>
           <h1 className="font-bold text-2xl text-base-content tracking-tight">
             コース一覧
@@ -31,8 +34,12 @@ export default async function Course() {
           新規作成
         </Link>
       </div>
-      <div className="rounded-2xl border border-base-300 bg-base-100 shadow-sm">
-        <View type="course" initialCommonDataList={initialCourseDataList} />
+      <div className="flex min-h-0 flex-1 flex-col rounded-2xl border border-base-300 bg-base-100 shadow-sm">
+        <View
+          type="course"
+          initialCommonDataList={initialCourseDataList}
+          competitionList={competitions}
+        />
       </div>
     </div>
   )

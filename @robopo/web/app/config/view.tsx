@@ -16,15 +16,20 @@ import {
   type CompetitionStatus,
   getCompetitionStatus,
 } from "@/app/lib/competition"
-import type { SelectCompetition } from "@/app/lib/db/schema"
+import type {
+  SelectCompetitionWithCourse,
+  SelectCourse,
+} from "@/app/lib/db/schema"
 
 type SortKey = "name" | "id" | "startDate" | "endDate"
 type StatusFilter = "" | CompetitionStatus
 
 export function CompetitionView({
   initialCompetitionList,
+  courseList,
 }: {
-  initialCompetitionList: SelectCompetition[]
+  initialCompetitionList: SelectCompetitionWithCourse[]
+  courseList: SelectCourse[]
 }) {
   const [competitionList, setCompetitionList] = useState(initialCompetitionList)
   const [selectedIds, setSelectedIds] = useState<number[]>([])
@@ -75,7 +80,10 @@ export function CompetitionView({
     })
   }, [competitionList, searchQuery, statusFilter, sortKey, sortOrder])
 
-  function handleSuccess(newList: SelectCompetition[], message: string) {
+  function handleSuccess(
+    newList: SelectCompetitionWithCourse[],
+    message: string,
+  ) {
     // API JSON responses return dates as strings; convert them back to Date objects
     const parsed = newList.map((c) => ({
       ...c,
@@ -90,9 +98,9 @@ export function CompetitionView({
   }
 
   return (
-    <>
+    <div className="flex min-h-0 flex-1 flex-col">
       {/* Action bar */}
-      <div className="px-4 pt-4 pb-2">
+      <div className="shrink-0 px-4 pt-4 pb-2">
         {successMessage && (
           <div className="mb-3 rounded-lg bg-success/10 px-4 py-2 font-medium text-sm text-success">
             {successMessage}
@@ -151,7 +159,7 @@ export function CompetitionView({
       </div>
 
       {/* Filter bar */}
-      <div className="flex flex-col gap-3 px-4 pb-4">
+      <div className="flex shrink-0 flex-col gap-3 px-4 pb-4">
         <label className="input input-bordered flex items-center gap-2 rounded-xl bg-base-200/40 transition-colors focus-within:bg-base-100">
           <MagnifyingGlassIcon className="size-4 shrink-0 text-base-content/40" />
           <input
@@ -219,22 +227,28 @@ export function CompetitionView({
       </div>
 
       {/* Table */}
-      {(searchQuery || statusFilter) && filteredAndSortedList.length === 0 ? (
-        <div className="py-8 text-center text-base-content/40">
-          条件に一致する大会が見つかりません
-        </div>
-      ) : (
-        <CommonCheckboxList
-          props={{ type: "competition", commonDataList: filteredAndSortedList }}
-          commonId={selectedIds}
-          setCommonId={setSelectedIds}
-        />
-      )}
+      <div className="min-h-0 flex-1">
+        {(searchQuery || statusFilter) && filteredAndSortedList.length === 0 ? (
+          <div className="py-8 text-center text-base-content/40">
+            条件に一致する大会が見つかりません
+          </div>
+        ) : (
+          <CommonCheckboxList
+            props={{
+              type: "competition",
+              commonDataList: filteredAndSortedList,
+            }}
+            commonId={selectedIds}
+            setCommonId={setSelectedIds}
+          />
+        )}
+      </div>
 
       {/* Create Modal */}
       {createModalOpen && (
         <CompetitionFormModal
           mode="create"
+          courseList={courseList}
           onClose={() => setCreateModalOpen(false)}
           onSuccess={(newList) => {
             handleSuccess(newList, "大会を作成しました")
@@ -248,6 +262,7 @@ export function CompetitionView({
         <CompetitionFormModal
           mode="edit"
           competition={selectedCompetition}
+          courseList={courseList}
           onClose={() => setEditModalOpen(false)}
           onSuccess={(newList) => {
             handleSuccess(newList, "大会を更新しました")
@@ -268,6 +283,6 @@ export function CompetitionView({
           }}
         />
       )}
-    </>
+    </div>
   )
 }

@@ -58,11 +58,16 @@ export function DeleteModal({ type, ids }: { type: InputType; ids: number[] }) {
         body: JSON.stringify({ id: ids }),
       })
 
-      if (response.ok) {
+      const result = await response.json()
+      if (response.ok && result.success) {
         setSuccessMessage(`${commonString}を正常に削除しました`)
       } else {
-        setErrorMessage(`${commonString}を削除できませんでした`)
+        setErrorMessage(
+          result.message || `${commonString}を削除できませんでした`,
+        )
       }
+    } catch {
+      setErrorMessage(`${commonString}を削除できませんでした`)
     } finally {
       setLoading(false)
     }

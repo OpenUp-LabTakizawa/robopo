@@ -35,6 +35,8 @@ const competitions = [
     startDate: null,
     endDate: null,
     createdAt: new Date(),
+    courseIds: [],
+    courseNames: [],
   },
   {
     id: 2,
@@ -43,6 +45,8 @@ const competitions = [
     startDate: null,
     endDate: null,
     createdAt: new Date(),
+    courseIds: [],
+    courseNames: [],
   },
 ]
 
@@ -231,6 +235,7 @@ describe("Competition table columns", () => {
     const headerTexts = Array.from(headers).map((h) => h.textContent?.trim())
     expect(headerTexts).toContain("ID")
     expect(headerTexts).toContain("名前")
+    expect(headerTexts).toContain("コース")
     expect(headerTexts).toContain("説明")
     expect(headerTexts).toContain("開催日")
     expect(headerTexts).toContain("終了日")
@@ -248,8 +253,8 @@ describe("Competition table columns", () => {
     )
     const cells = container.querySelectorAll("tbody tr:first-child td")
     const cellTexts = Array.from(cells).map((c) => c.textContent?.trim())
-    // description, startDate, endDate should all be "-"
-    expect(cellTexts.filter((t) => t === "-")).toHaveLength(3)
+    // courses, description, startDate, endDate should all be "-"
+    expect(cellTexts.filter((t) => t === "-")).toHaveLength(4)
   })
 
   test("renders formatted dates for non-null startDate and endDate", () => {
@@ -262,6 +267,8 @@ describe("Competition table columns", () => {
         startDate: new Date("2026-04-01T00:00:00"),
         endDate: new Date("2026-04-30T00:00:00"),
         createdAt: new Date(),
+        courseIds: [1],
+        courseNames: ["テストコース"],
       },
     ]
     const { container } = render(

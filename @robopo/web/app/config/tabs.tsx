@@ -7,7 +7,12 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline"
 import { useState } from "react"
-import type { SelectCompetition } from "@/app/lib/db/schema"
+import type {
+  SelectCompetitionWithCourse,
+  SelectCourse,
+} from "@/app/lib/db/schema"
+
+const DEFAULT_COURSE_NAMES = ["THE一本橋", "センサーコース"]
 
 function formatDateForInput(date: Date | null | undefined): string {
   if (!date) {
@@ -22,14 +27,16 @@ function formatDateForInput(date: Date | null | undefined): string {
 
 type CompetitionFormModalProps = {
   mode: "create" | "edit"
-  competition?: SelectCompetition | null
+  competition?: SelectCompetitionWithCourse | null
+  courseList: SelectCourse[]
   onClose: () => void
-  onSuccess: (newList: SelectCompetition[]) => void
+  onSuccess: (newList: SelectCompetitionWithCourse[]) => void
 }
 
 export function CompetitionFormModal({
   mode,
   competition,
+  courseList,
   onClose,
   onSuccess,
 }: CompetitionFormModalProps) {
@@ -41,8 +48,23 @@ export function CompetitionFormModal({
   const [endDate, setEndDate] = useState(
     formatDateForInput(competition?.endDate),
   )
+  const [selectedCourseIds, setSelectedCourseIds] = useState<number[]>(
+    mode === "create"
+      ? courseList
+          .filter((c) => DEFAULT_COURSE_NAMES.includes(c.name))
+          .map((c) => c.id)
+      : (competition?.courseIds ?? []),
+  )
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  function toggleCourse(courseId: number) {
+    setSelectedCourseIds((prev) =>
+      prev.includes(courseId)
+        ? prev.filter((id) => id !== courseId)
+        : [...prev, courseId],
+    )
+  }
 
   function validate(): string | null {
     if (!name.trim()) {
@@ -71,6 +93,7 @@ export function CompetitionFormModal({
         description: description.trim() || null,
         startDate: startDate || null,
         endDate: endDate || null,
+        courseIds: selectedCourseIds,
       }
 
       const url =
@@ -166,6 +189,39 @@ export function CompetitionFormModal({
               開催日は終了日より前でなければなりません。
             </p>
           )}
+
+          {/* Course selection */}
+          <div>
+            <span className="label">
+              <span className="label-text">コース</span>
+            </span>
+            {courseList.length > 0 ? (
+              <div className="max-h-[8.5rem] overflow-y-auto rounded-xl border border-base-300/50 bg-base-200/30">
+                {courseList.map((c) => (
+                  <label
+                    key={c.id}
+                    className="flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 transition-colors hover:bg-base-200/60"
+                  >
+                    <input
+                      type="checkbox"
+                      className="checkbox checkbox-primary checkbox-sm"
+                      checked={selectedCourseIds.includes(c.id)}
+                      onChange={() => toggleCourse(c.id)}
+                    />
+                    <span className="text-sm">{c.name}</span>
+                  </label>
+                ))}
+              </div>
+            ) : (
+              <p className="rounded-xl bg-base-200/30 px-3 py-2 text-base-content/40 text-sm">
+                コースが登録されていません
+              </p>
+            )}
+            <p className="mt-1 text-base-content/40 text-xs">
+              コースの選択は任意です
+            </p>
+          </div>
+
           {error && <p className="text-error text-sm">{error}</p>}
           <div className="modal-action">
             <button
@@ -210,9 +266,9 @@ export function CompetitionFormModal({
 
 type DeleteCompetitionModalProps = {
   selectedIds: number[]
-  competitions: SelectCompetition[]
+  competitions: SelectCompetitionWithCourse[]
   onClose: () => void
-  onSuccess: (newList: SelectCompetition[]) => void
+  onSuccess: (newList: SelectCompetitionWithCourse[]) => void
 }
 
 export function DeleteCompetitionModal({

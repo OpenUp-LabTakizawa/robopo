@@ -19,7 +19,10 @@ import {
 } from "@/app/lib/db/schema"
 
 export async function createCompetition(data: Omit<InsertCompetition, "id">) {
-  return await db.insert(competition).values(data)
+  return await db
+    .insert(competition)
+    .values(data)
+    .returning({ id: competition.id })
 }
 
 export async function createCourse(data: Omit<InsertCourse, "id">) {

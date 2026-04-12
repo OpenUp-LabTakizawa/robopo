@@ -1,5 +1,3 @@
-import type { SelectCompetition } from "@/app/lib/db/schema"
-
 export type CompetitionStatus = "before" | "active" | "ended" | "unknown"
 
 /**
@@ -9,7 +7,10 @@ export type CompetitionStatus = "before" | "active" | "ended" | "unknown"
  * - "ended": today is after the end date
  * - "unknown": start or end date is not set
  */
-export function getCompetitionStatus(c: SelectCompetition): CompetitionStatus {
+export function getCompetitionStatus(c: {
+  startDate: Date | null
+  endDate: Date | null
+}): CompetitionStatus {
   if (!c.startDate || !c.endDate) {
     return "unknown"
   }
@@ -31,6 +32,9 @@ export function getCompetitionStatus(c: SelectCompetition): CompetitionStatus {
 /**
  * Check if a competition is currently active (today falls within its date range).
  */
-export function isCompetitionActive(c: SelectCompetition): boolean {
+export function isCompetitionActive(c: {
+  startDate: Date | null
+  endDate: Date | null
+}): boolean {
   return getCompetitionStatus(c) === "active"
 }

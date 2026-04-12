@@ -3,6 +3,10 @@
 import { eq } from "drizzle-orm"
 import { db } from "@/app/lib/db/db"
 import {
+  getCompetitionWithCourse,
+  groupByCompetition,
+} from "@/app/lib/db/queries/queries"
+import {
   competition,
   competitionCourse,
   competitionJudge,
@@ -13,6 +17,7 @@ import {
   type SelectCompetition,
   type SelectCompetitionCourse,
   type SelectCompetitionJudge,
+  type SelectCompetitionWithCourse,
   type SelectCourse,
   type SelectJudge,
   type SelectPlayer,
@@ -33,6 +38,14 @@ export async function getCompetitionList(): Promise<{
   competitions: SelectCompetition[]
 }> {
   const competitions: SelectCompetition[] = await db.select().from(competition)
+  return { competitions }
+}
+
+// Get competition list with course info
+export async function getCompetitionWithCourseList(): Promise<{
+  competitions: SelectCompetitionWithCourse[]
+}> {
+  const competitions = groupByCompetition(await getCompetitionWithCourse())
   return { competitions }
 }
 

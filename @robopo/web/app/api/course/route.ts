@@ -1,5 +1,4 @@
 import type { NextRequest } from "next/server"
-import { deleteById } from "@/app/api/delete"
 import {
   checkValidity,
   deserializeField,
@@ -8,7 +7,12 @@ import {
   isStart,
 } from "@/app/components/course/utils"
 import { createCourse } from "@/app/lib/db/queries/insert"
-import { getCourseById, getCourseByName } from "@/app/lib/db/queries/queries"
+import {
+  deleteCourseById,
+  getCourseById,
+  getCourseByName,
+  getLinkedCourseIds,
+} from "@/app/lib/db/queries/queries"
 import { updateCourse } from "@/app/lib/db/queries/update"
 
 export const revalidate = 0
@@ -82,5 +86,36 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: Request) {
-  return await deleteById(req, "course")
+  const { id } = await req.json()
+  const ids: number[] = Array.isArray(id) ? id : [id]
+
+  // Check if any course is linked to competitions (single query)
+  const linkedIds = await getLinkedCourseIds(ids)
+  if (linkedIds.length > 0) {
+    return Response.json(
+      {
+        success: false,
+        message:
+          "使用大会が0でないコースは削除できません。先に紐付けを解除してください。",
+      },
+      { status: 400 },
+    )
+  }
+
+  try {
+    await Promise.all(ids.map((cid) => deleteCourseById(cid)))
+    return Response.json(
+      { success: true, message: "コースを削除しました。" },
+      { status: 200 },
+    )
+  } catch (error) {
+    return Response.json(
+      {
+        success: false,
+        message: "コースの削除中にエラーが発生しました。",
+        error,
+      },
+      { status: 500 },
+    )
+  }
 }
