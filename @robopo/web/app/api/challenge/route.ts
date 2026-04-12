@@ -1,7 +1,5 @@
 import { createChallenge } from "@/app/lib/db/queries/insert"
 
-export const revalidate = 0
-
 export async function POST(req: Request) {
   const {
     firstResult,

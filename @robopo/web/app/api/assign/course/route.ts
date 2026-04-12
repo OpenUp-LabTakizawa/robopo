@@ -10,8 +10,6 @@ import {
   type SelectCompetitionCourse,
 } from "@/app/lib/db/schema"
 
-export const revalidate = 0
-
 // Get assigned competition and course list
 export async function GET() {
   const assigns: SelectCompetitionCourse[] = await db

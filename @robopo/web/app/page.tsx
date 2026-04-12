@@ -17,9 +17,6 @@ import type {
 } from "@/app/lib/db/schema"
 import { auth } from "@/lib/auth"
 
-export const dynamic = "force-dynamic"
-export const revalidate = 0
-
 export default async function Home() {
   const session = await auth.api.getSession({
     headers: await headers(),

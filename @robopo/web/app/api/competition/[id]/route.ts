@@ -4,8 +4,6 @@ import { db } from "@/app/lib/db/db"
 import { updateCompetition } from "@/app/lib/db/queries/update"
 import { competitionCourse } from "@/app/lib/db/schema"
 
-export const revalidate = 0
-
 function parseOptionalDate(
   value: string | null | undefined,
 ): Date | null | undefined {

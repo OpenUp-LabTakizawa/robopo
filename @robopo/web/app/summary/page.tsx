@@ -3,8 +3,6 @@ import { getCompetitionStatus } from "@/app/lib/competition"
 import type { SelectCompetition } from "@/app/lib/db/schema"
 import { SummaryView } from "@/app/summary/summaryView"
 
-export const revalidate = 0
-
 function getDefaultCompetitionId(
   competitions: SelectCompetition[],
 ): number | null {

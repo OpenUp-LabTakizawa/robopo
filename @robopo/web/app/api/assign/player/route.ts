@@ -10,8 +10,6 @@ import {
   type SelectCompetitionPlayer,
 } from "@/app/lib/db/schema"
 
-export const revalidate = 0
-
 // Get assigned competition and player list
 export async function GET() {
   const assigns: SelectCompetitionPlayer[] = await db

@@ -6,8 +6,6 @@ import {
 import type { CourseSummary } from "@/app/components/summary/utils"
 import { getCourseSummary } from "@/app/lib/db/queries/queries"
 
-export const revalidate = 0
-
 function calcElapsedSeconds(
   startTime: string | null,
   endTime: string | null,

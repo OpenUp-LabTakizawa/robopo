@@ -5,8 +5,6 @@ import {
   groupByJudge,
 } from "@/app/lib/db/queries/queries"
 
-export const revalidate = 0
-
 export default async function JudgePage() {
   const [judgeRows, { competitions }] = await Promise.all([
     getJudgeWithCompetition(),

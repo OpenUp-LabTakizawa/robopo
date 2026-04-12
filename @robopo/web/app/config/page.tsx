@@ -4,8 +4,6 @@ import {
 } from "@/app/components/server/db"
 import { CompetitionView } from "@/app/config/view"
 
-export const revalidate = 0
-
 export default async function Config() {
   const [{ competitions }, { courses }] = await Promise.all([
     getCompetitionWithCourseList(),
