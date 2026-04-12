@@ -227,7 +227,7 @@ export function CompetitionView({
       </div>
 
       {/* Table */}
-      <div className="min-h-0 flex-1">
+      <div className="min-h-0 flex-1 overflow-y-auto">
         {(searchQuery || statusFilter) && filteredAndSortedList.length === 0 ? (
           <div className="py-8 text-center text-base-content/40">
             条件に一致する大会が見つかりません

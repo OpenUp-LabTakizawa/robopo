@@ -85,6 +85,54 @@ export async function POST(req: NextRequest) {
   }
 }
 
+export async function PATCH(req: NextRequest) {
+  const { name, description } = await req.json()
+  const searchParams = req.nextUrl.searchParams
+  const rawId = searchParams.get("id")
+  const id = rawId ? Number.parseInt(rawId, 10) : null
+
+  if (!id) {
+    return Response.json(
+      { success: false, message: "IDが指定されていません" },
+      { status: 400 },
+    )
+  }
+
+  if (!name || typeof name !== "string" || !name.trim()) {
+    return Response.json(
+      { success: false, message: "コース名は必須です" },
+      { status: 400 },
+    )
+  }
+
+  const existingCourse = await getCourseByName(name.trim(), id)
+  if (existingCourse) {
+    return Response.json(
+      { success: false, message: "このコース名は既に使用されています" },
+      { status: 409 },
+    )
+  }
+
+  const normalizedDescription =
+    typeof description === "string" ? description.trim() || null : null
+
+  try {
+    await updateCourse(id, {
+      name: name.trim(),
+      description: normalizedDescription,
+    })
+    return Response.json({ success: true }, { status: 200 })
+  } catch {
+    return Response.json(
+      {
+        success: false,
+        message: "コースの更新中にエラーが発生しました。",
+      },
+      { status: 500 },
+    )
+  }
+}
+
 export async function DELETE(req: Request) {
   const { id } = await req.json()
   const ids: number[] = Array.isArray(id) ? id : [id]
