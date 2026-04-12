@@ -3,7 +3,7 @@
 import { MagnifyingGlassIcon, PlayIcon } from "@heroicons/react/24/outline"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { BackButton } from "@/app/components/parts/buttons"
 import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
 
@@ -24,7 +24,7 @@ export function View({
   const [searchQuery, setSearchQuery] = useState("")
   const playerDataList = initialPlayerDataList.players
 
-  const filteredPlayers = useMemo(() => {
+  const filteredPlayers = (() => {
     if (!searchQuery) {
       return playerDataList
     }
@@ -35,7 +35,7 @@ export function View({
         p.furigana?.toLowerCase().includes(q) ||
         p.bibNumber?.toLowerCase().includes(q),
     )
-  }, [playerDataList, searchQuery])
+  })()
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col px-4 py-6">

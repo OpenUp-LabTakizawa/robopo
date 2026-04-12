@@ -61,6 +61,7 @@
     "@types/pg": "^8.20.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "babel-plugin-react-compiler": "^1.0.0",
     "daisyui": "^5.5.19",
     "drizzle-kit": "^0.31.10",
     "postcss": "^8.5.9",

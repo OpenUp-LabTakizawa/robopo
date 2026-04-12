@@ -9,7 +9,7 @@ import {
   PlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { CommonCheckboxList } from "@/app/components/common/commonList"
 import { CompetitionFormModal, DeleteCompetitionModal } from "@/app/config/tabs"
 import {
@@ -49,7 +49,7 @@ export function CompetitionView({
       ? (competitionList.find((c) => c.id === selectedIds[0]) ?? null)
       : null
 
-  const filteredAndSortedList = useMemo(() => {
+  const filteredAndSortedList = (() => {
     let list = competitionList
 
     if (searchQuery.trim()) {
@@ -78,7 +78,7 @@ export function CompetitionView({
       }
       return sortOrder === "asc" ? cmp : -cmp
     })
-  }, [competitionList, searchQuery, statusFilter, sortKey, sortOrder])
+  })()
 
   function handleSuccess(
     newList: SelectCompetitionWithCourse[],

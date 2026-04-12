@@ -1,4 +1,4 @@
-import { and, eq, type SQLWrapper, sql } from "drizzle-orm"
+import { and, count, eq, inArray, ne, type SQLWrapper, sql } from "drizzle-orm"
 import type { CourseSummary } from "@/app/components/summary/utils"
 import { db } from "@/app/lib/db/db"
 import {
@@ -24,7 +24,7 @@ export async function getCourseByName(
 ): Promise<{ id: number } | null> {
   const conditions = [eq(course.name, name)]
   if (excludeId) {
-    conditions.push(sql`${course.id} != ${excludeId}`)
+    conditions.push(ne(course.id, excludeId))
   }
   const result = await db
     .select({ id: course.id })
@@ -462,7 +462,7 @@ export async function getPlayerByName(
 ): Promise<{ id: number } | null> {
   const conditions = [eq(player.name, name)]
   if (excludeId) {
-    conditions.push(sql`${player.id} != ${excludeId}`)
+    conditions.push(ne(player.id, excludeId))
   }
   const result = await db
     .select({ id: player.id })
@@ -479,7 +479,7 @@ export async function getJudgeByName(
 ): Promise<{ id: number } | null> {
   const conditions = [eq(judge.name, name)]
   if (excludeId) {
-    conditions.push(sql`${judge.id} != ${excludeId}`)
+    conditions.push(ne(judge.id, excludeId))
   }
   const result = await db
     .select({ id: judge.id })
@@ -736,7 +736,7 @@ export async function getCourseCompetitionCount(
   courseId: number,
 ): Promise<number> {
   const result = await db
-    .select({ count: sql<number>`count(*)::int` })
+    .select({ count: count() })
     .from(competitionCourse)
     .where(eq(competitionCourse.courseId, courseId))
   return result[0]?.count ?? 0
@@ -752,12 +752,7 @@ export async function getLinkedCourseIds(
   const result = await db
     .select({ courseId: competitionCourse.courseId })
     .from(competitionCourse)
-    .where(
-      sql`${competitionCourse.courseId} IN (${sql.join(
-        courseIds.map((id) => sql`${id}`),
-        sql`, `,
-      )})`,
-    )
+    .where(inArray(competitionCourse.courseId, courseIds))
     .groupBy(competitionCourse.courseId)
   return result.map((r) => r.courseId)
 }

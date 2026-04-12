@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { Field } from "@/app/components/course/field"
 import { Toolbar } from "@/app/components/course/toolbar"
 import {
@@ -54,37 +54,34 @@ export default function CourseEdit({
   const pointerHandledRef = useRef(false)
 
   // Apply tool to a cell
-  const applyTool = useCallback(
-    (row: number, col: number) => {
-      if (selectedTool === "eraser") {
-        if (field[row][col] !== null) {
-          const newField = field.map((r) => [...r])
-          newField[row][col] = null
-          setField(newField)
-        }
-        return
-      }
-      const mode = selectedTool as PanelValue
-      const wasEmpty = field[row][col] === null
-      const newField = putPanel(field, row, col, mode)
-      if (newField) {
+  const applyTool = (row: number, col: number) => {
+    if (selectedTool === "eraser") {
+      if (field[row][col] !== null) {
+        const newField = field.map((r) => [...r])
+        newField[row][col] = null
         setField(newField)
-        // Auto-switch to route after placing start
-        if (mode === "start" && !isStart(field)) {
-          setSelectedTool("route")
-        }
-        // Auto-switch to route after placing goal
-        if (mode === "goal" && !isGoal(field)) {
-          setSelectedTool("route")
-        }
-        // Auto-add empty mission when a route panel is newly placed
-        if (mode === "route" && wasEmpty && onRouteAdded) {
-          onRouteAdded(row, col)
-        }
       }
-    },
-    [field, setField, selectedTool, setSelectedTool, onRouteAdded],
-  )
+      return
+    }
+    const mode = selectedTool as PanelValue
+    const wasEmpty = field[row][col] === null
+    const newField = putPanel(field, row, col, mode)
+    if (newField) {
+      setField(newField)
+      // Auto-switch to route after placing start
+      if (mode === "start" && !isStart(field)) {
+        setSelectedTool("route")
+      }
+      // Auto-switch to route after placing goal
+      if (mode === "goal" && !isGoal(field)) {
+        setSelectedTool("route")
+      }
+      // Auto-add empty mission when a route panel is newly placed
+      if (mode === "route" && wasEmpty && onRouteAdded) {
+        onRouteAdded(row, col)
+      }
+    }
+  }
 
   function handlePanelClick(row: number, col: number) {
     if (isPlaying) {

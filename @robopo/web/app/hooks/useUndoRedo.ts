@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react"
+import { useRef, useState } from "react"
 
 const DEFAULT_MAX_HISTORY = 50
 
@@ -20,14 +20,14 @@ export function useUndoRedo<T>({
   const [canUndo, setCanUndo] = useState(false)
   const [canRedo, setCanRedo] = useState(false)
 
-  const push = useCallback(() => {
+  const push = () => {
     historyRef.current = [...historyRef.current.slice(-max + 1), getSnapshot()]
     redoRef.current = []
     setCanUndo(true)
     setCanRedo(false)
-  }, [getSnapshot, max])
+  }
 
-  const undo = useCallback(() => {
+  const undo = () => {
     const history = historyRef.current
     if (history.length === 0) {
       return
@@ -42,9 +42,9 @@ export function useUndoRedo<T>({
     setCanUndo(historyRef.current.length > 0)
 
     applySnapshot(prev)
-  }, [getSnapshot, applySnapshot])
+  }
 
-  const redo = useCallback(() => {
+  const redo = () => {
     const redoStack = redoRef.current
     if (redoStack.length === 0) {
       return
@@ -59,7 +59,7 @@ export function useUndoRedo<T>({
     setCanRedo(redoRef.current.length > 0)
 
     applySnapshot(next)
-  }, [getSnapshot, applySnapshot])
+  }
 
   return { push, undo, redo, canUndo, canRedo }
 }

@@ -17,7 +17,7 @@ Bun workspace monorepo with two packages:
 
 - Runtime: Bun
 - Language: TypeScript (strict mode)
-- Framework: Next.js 16 (App Router, `typedRoutes: true`)
+- Framework: Next.js 16 (App Router, `typedRoutes: true`, `reactCompiler: true`)
 - UI: React 19, Tailwind CSS 4, daisyUI 5
 - Database: PostgreSQL (node-postgres Pool) via Drizzle ORM
 - Authentication: Better Auth with username plugin
@@ -32,6 +32,13 @@ Bun workspace monorepo with two packages:
 - Indent with spaces, no semicolons (ASI), sorted Tailwind classes (`useSortedClasses`).
 - All comments in English. UI-facing strings (labels, messages) are in Japanese.
 - Use `@/` path alias for imports within `@robopo/web` (maps to project root).
+
+### React Compiler
+
+- `reactCompiler: true` is enabled in `next.config.ts`.
+- The React Compiler automatically memoizes components and computations.
+- Do NOT use `useMemo`, `useCallback`, or `React.memo` — they are redundant.
+- Write plain inline expressions for derived state and regular functions for handlers.
 
 ### Database
 

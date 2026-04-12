@@ -3,7 +3,7 @@
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import type { NavItem } from "@/app/lib/const"
 import {
@@ -55,19 +55,20 @@ export function NavigationDrawer() {
   const triggerRef = useRef<HTMLButtonElement>(null)
   const drawerRef = useRef<HTMLDivElement>(null)
 
-  const close = useCallback(() => {
+  const close = () => {
     setIsOpen(false)
     // Return focus to trigger button
     requestAnimationFrame(() => {
       triggerRef.current?.focus()
     })
-  }, [])
+  }
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
   // Escape key handler
+  // biome-ignore lint/correctness/useExhaustiveDependencies: React Compiler handles memoization of close
   useEffect(() => {
     if (!isOpen) {
       return
@@ -79,7 +80,7 @@ export function NavigationDrawer() {
     }
     document.addEventListener("keydown", onKeyDown)
     return () => document.removeEventListener("keydown", onKeyDown)
-  }, [isOpen, close])
+  }, [isOpen])
 
   // Focus trap
   useEffect(() => {
