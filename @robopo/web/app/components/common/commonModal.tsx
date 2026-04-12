@@ -195,7 +195,7 @@ export function AssignModal({
       <div className="modal-box max-w-sm">
         <div className="flex flex-col items-center px-2 py-2">
           <h3 className="mb-4 font-bold text-base-content text-lg">
-            大会割り当て
+            大会紐付け
           </h3>
 
           <select
@@ -223,7 +223,7 @@ export function AssignModal({
               {loading ? (
                 <span className="loading loading-spinner loading-sm" />
               ) : (
-                "大会を割り当てる"
+                "大会を紐付ける"
               )}
             </button>
             <button
@@ -235,7 +235,7 @@ export function AssignModal({
               {loading ? (
                 <span className="loading loading-spinner loading-sm" />
               ) : (
-                "大会割り当て解除"
+                "大会紐付け解除"
               )}
             </button>
             <BackButton

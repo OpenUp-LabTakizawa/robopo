@@ -102,6 +102,7 @@ export async function getCompetitionPlayerList(competitionId: number): Promise<{
       furigana: player.furigana,
       bibNumber: player.bibNumber,
       qr: player.qr,
+      note: player.note,
       createdAt: player.createdAt,
     })
     .from(player)
@@ -129,6 +130,7 @@ export async function getCompetitionJudgeList(competitionId: number): Promise<{
     .select({
       id: judge.id,
       name: judge.name,
+      note: judge.note,
       createdAt: judge.createdAt,
     })
     .from(judge)
