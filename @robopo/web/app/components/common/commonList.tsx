@@ -116,6 +116,13 @@ function TableComponent({
           <td className="py-3 font-medium">
             {(common as SelectCourseWithCompetition).name}
           </td>
+          <td className="py-3 text-center">
+            {(common as SelectCourseWithCompetition).isConfigured ? (
+              <span className="text-lg text-red-500">○</span>
+            ) : (
+              <span className="text-blue-500 text-lg">✕</span>
+            )}
+          </td>
           <td className="py-3">
             {(common as SelectCourseWithCompetition).competitionName?.length ? (
               <button
@@ -233,7 +240,7 @@ function itemNames(type: CommonListProps["type"]): string[] {
   } else if (type === "judge") {
     itemNames.push("ID", "名前", "紐付け大会", "備考")
   } else if (type === "course") {
-    itemNames.push("ID", "コース名", "使用大会", "作成日時", "説明")
+    itemNames.push("ID", "コース名", "設定済み", "使用大会", "作成日時", "説明")
   } else if (type === "competition") {
     itemNames.push("ID", "名前", "コース", "開催日", "終了日", "説明")
   }

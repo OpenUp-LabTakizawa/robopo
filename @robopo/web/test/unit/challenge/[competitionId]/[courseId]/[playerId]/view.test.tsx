@@ -25,6 +25,7 @@ const courseData = {
   missionValid: false,
   point: null,
   courseOutRule: "keep",
+  isConfigured: true,
   createdAt: null,
 }
 
@@ -34,6 +35,7 @@ const playerData = {
   furigana: null,
   bibNumber: null,
   qr: null,
+  note: null,
   createdAt: null,
 }
 

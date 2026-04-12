@@ -24,7 +24,7 @@ import type {
   SelectCourseWithCompetition,
 } from "@/app/lib/db/schema"
 
-type SortKey = "createdAt" | "name" | "id"
+type SortKey = "createdAt" | "name" | "id" | "isConfigured"
 
 export function View({
   initialCommonDataList,
@@ -186,6 +186,7 @@ export function View({
               <option value="createdAt">作成日時</option>
               <option value="name">コース名</option>
               <option value="id">ID</option>
+              <option value="isConfigured">設定済み</option>
             </select>
             <button
               type="button"
@@ -207,9 +208,13 @@ export function View({
                   ? sortOrder === "desc"
                     ? "Z→A"
                     : "A→Z"
-                  : sortOrder === "desc"
-                    ? "大きい順"
-                    : "小さい順"}
+                  : sortKey === "isConfigured"
+                    ? sortOrder === "desc"
+                      ? "設定済み優先"
+                      : "未設定優先"
+                    : sortOrder === "desc"
+                      ? "大きい順"
+                      : "小さい順"}
             </button>
           </div>
         </div>
@@ -260,6 +265,8 @@ export function View({
         cmp = a.name.localeCompare(b.name, "ja")
       } else if (sortKey === "createdAt") {
         cmp = (a.createdAt?.getTime() ?? 0) - (b.createdAt?.getTime() ?? 0)
+      } else if (sortKey === "isConfigured") {
+        cmp = Number(a.isConfigured) - Number(b.isConfigured)
       } else {
         cmp = a.id - b.id
       }

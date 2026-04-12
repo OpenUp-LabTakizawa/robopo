@@ -616,6 +616,7 @@ export async function getCourseWithCompetition() {
       id: course.id,
       name: course.name,
       description: course.description,
+      isConfigured: course.isConfigured,
       createdAt: course.createdAt,
       competitionId: competition.id,
       competitionName: competition.name,
@@ -632,6 +633,7 @@ export function groupByCourse(
     id: number
     name: string
     description: string | null
+    isConfigured: boolean
     createdAt: Date | null
     competitionId: number | null
     competitionName: string | null
@@ -646,6 +648,7 @@ export function groupByCourse(
         id: row.id,
         name: row.name,
         description: row.description,
+        isConfigured: row.isConfigured,
         createdAt: row.createdAt,
         competitionId: row.competitionId,
         competitionIds: [],

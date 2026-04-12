@@ -29,6 +29,7 @@ const defaultProps = {
         missionValid: false,
         point: null,
         courseOutRule: "keep",
+        isConfigured: true,
         createdAt: null,
       },
     ],
