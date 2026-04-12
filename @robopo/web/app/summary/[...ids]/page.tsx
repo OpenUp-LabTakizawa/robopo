@@ -166,7 +166,7 @@ export default async function SummaryPlayer({
         </table>
       </div>
       <Link
-        href={`/summary/${competitionId}`}
+        href={`/summary?competitionId=${competitionId}`}
         className="btn btn-primary mx-auto mr-5 min-w-28 max-w-fit"
       >
         集計結果一覧へ

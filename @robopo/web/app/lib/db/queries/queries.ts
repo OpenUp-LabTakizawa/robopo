@@ -166,7 +166,7 @@ function firstTimeSubquery(
 ) {
   return sql`
     (
-      SELECT created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo' FROM (
+      SELECT TO_CHAR(created_at AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo', 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"') FROM (
         SELECT
           ROW_NUMBER() OVER (ORDER BY created_at ASC, id ASC) AS attempt_number,
           created_at,
@@ -201,6 +201,73 @@ function firstTimeSubquery(
   `
 }
 
+// SQL helper: timestamp of the very first challenge attempt for a player in a competition
+function firstAttemptTimeSubquery(
+  playerIdRef: SQLWrapper,
+  competitionId: number,
+) {
+  return sql`
+    (
+      SELECT TO_CHAR(MIN(created_at) AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo', 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"')
+      FROM challenge
+      WHERE
+        player_id = ${playerIdRef}
+        AND competition_id = ${competitionId}
+    )
+  `
+}
+
+// SQL helper: timestamp of the last challenge attempt for a player in a competition (specific course)
+function lastAttemptTimeSubquery(
+  playerIdRef: SQLWrapper,
+  competitionId: number,
+  courseId: number,
+) {
+  return sql`
+    (
+      SELECT TO_CHAR(MAX(created_at) AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo', 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"')
+      FROM challenge
+      WHERE
+        player_id = ${playerIdRef}
+        AND competition_id = ${competitionId}
+        AND course_id = ${courseId}
+    )
+  `
+}
+
+// SQL helper: score of the very first challenge attempt (best of first/retry) for a player in a specific course
+function firstAttemptScoreSubquery(
+  playerIdRef: SQLWrapper,
+  competitionId: number,
+  courseId: number,
+) {
+  return sql`
+    (
+      SELECT GREATEST(first_result, COALESCE(retry_result, 0))
+      FROM challenge
+      WHERE
+        player_id = ${playerIdRef}
+        AND competition_id = ${competitionId}
+        AND course_id = ${courseId}
+      ORDER BY created_at ASC, id ASC
+      LIMIT 1
+    )
+  `
+}
+
+// SQL helper: count of course-out events for a player in a specific course
+function courseOutCountExpr(courseId: number) {
+  return sql`SUM(CASE WHEN ${challenge.courseId} = ${courseId} THEN
+    (CASE WHEN ${challenge.detail} = 'courseOut:first' THEN 1 ELSE 0 END)
+    + (CASE WHEN ${challenge.detail} = 'courseOut:retry' THEN 1 ELSE 0 END)
+    ELSE 0 END)`
+}
+
+// SQL helper: count of retry attempts (retryResult IS NOT NULL) for a specific course
+function retryCountExpr(courseId: number) {
+  return sql`SUM(CASE WHEN ${challenge.courseId} = ${courseId} AND ${challenge.retryResult} IS NOT NULL THEN 1 ELSE 0 END)`
+}
+
 // SQL helper: max result across firstResult and retryResult for a specific course
 function maxResultExpr(courseIdExpr: number | ReturnType<typeof sql>) {
   return sql`MAX(CASE WHEN ${challenge.courseId} = ${courseIdExpr} THEN GREATEST(${challenge.firstResult}, COALESCE(${challenge.retryResult}, 0)) ELSE NULL END)`
@@ -226,6 +293,9 @@ export async function getCourseSummary(
       playerName: player.name,
       playerFurigana: player.furigana,
       playerBibNumber: player.bibNumber,
+      firstAttemptTime: firstAttemptTimeSubquery(player.id, competitionId).as(
+        "firstAttemptTime",
+      ),
       firstMaxAttemptCount: firstCountSubquery(
         player.id,
         competitionId,
@@ -236,6 +306,18 @@ export async function getCourseSummary(
         competitionId,
         courseId,
       ).as("firstMaxAttemptTime"),
+      lastAttemptTime: lastAttemptTimeSubquery(
+        player.id,
+        competitionId,
+        courseId,
+      ).as("lastAttemptTime"),
+      firstAttemptScore: firstAttemptScoreSubquery(
+        player.id,
+        competitionId,
+        courseId,
+      ).as("firstAttemptScore"),
+      courseOutCount: courseOutCountExpr(courseId).as("courseOutCount"),
+      retryCount: retryCountExpr(courseId).as("retryCount"),
       attemptCount: attemptCountExpr(courseId).as("attemptCount"),
       maxResult: maxResultExpr(courseId).as("maxResult"),
       challengeCount: attemptCountExpr(courseId).as("challengeCount"),

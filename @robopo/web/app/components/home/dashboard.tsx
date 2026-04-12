@@ -1,12 +1,11 @@
 "use client"
 
 import {
-  CalculatorIcon,
   ClipboardDocumentCheckIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline"
 import type React from "react"
-import { ChallengeTab, ManageTab, SummaryTab } from "@/app/components/home/tabs"
+import { ChallengeTab, ManageTab } from "@/app/components/home/tabs"
 import type {
   SelectCompetition,
   SelectCompetitionCourse,
@@ -86,21 +85,15 @@ export function Dashboard({
           </DashboardCard>
         </div>
 
-        {/* Summary card */}
-        <DashboardCard
-          title="集計結果"
-          icon={<CalculatorIcon className="h-5 w-5" />}
-        >
-          <SummaryTab competitionList={competitionList} />
-        </DashboardCard>
-
         {/* Management card */}
-        <DashboardCard
-          title="大会管理"
-          icon={<Cog6ToothIcon className="h-5 w-5" />}
-        >
-          <ManageTab />
-        </DashboardCard>
+        <div className="md:col-span-2">
+          <DashboardCard
+            title="大会管理"
+            icon={<Cog6ToothIcon className="h-5 w-5" />}
+          >
+            <ManageTab />
+          </DashboardCard>
+        </div>
       </div>
     </div>
   )
