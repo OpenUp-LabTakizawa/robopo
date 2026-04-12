@@ -8,7 +8,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline"
 import Link from "next/link"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { calcPoint } from "@/app/components/challenge/utils"
 import {
   deserializePoint,
@@ -165,29 +165,22 @@ export function SummaryView({ competitions, defaultCompetitionId }: Props) {
   ])
 
   // Available keys not yet used in sort conditions
-  const availableKeys = useMemo(
-    () =>
-      SORT_OPTIONS.filter(
-        (opt) => !sortConditions.some((sc) => sc.key === opt.value),
-      ),
-    [sortConditions],
+  const availableKeys = SORT_OPTIONS.filter(
+    (opt) => !sortConditions.some((sc) => sc.key === opt.value),
   )
 
-  const addSort = useCallback(
-    (key: SortKey) => {
-      if (sortConditions.some((sc) => sc.key === key)) {
-        return
-      }
-      setSortConditions((prev) => [...prev, { key, order: "desc" }])
-    },
-    [sortConditions],
-  )
+  const addSort = (key: SortKey) => {
+    if (sortConditions.some((sc) => sc.key === key)) {
+      return
+    }
+    setSortConditions((prev) => [...prev, { key, order: "desc" }])
+  }
 
-  const removeSort = useCallback((index: number) => {
+  const removeSort = (index: number) => {
     setSortConditions((prev) => prev.filter((_, i) => i !== index))
-  }, [])
+  }
 
-  const toggleOrder = useCallback((index: number) => {
+  const toggleOrder = (index: number) => {
     setSortConditions((prev) =>
       prev.map((sc, i) =>
         i === index
@@ -195,7 +188,7 @@ export function SummaryView({ competitions, defaultCompetitionId }: Props) {
           : sc,
       ),
     )
-  }, [])
+  }
 
   // Fetch courses when competition changes
   useEffect(() => {
@@ -255,7 +248,7 @@ export function SummaryView({ competitions, defaultCompetitionId }: Props) {
     fetchData()
   }, [competitionId, courseId, courses])
 
-  const filteredAndSorted = useMemo(() => {
+  const filteredAndSorted = (() => {
     let list = rawSummary
 
     // Keyword search
@@ -279,7 +272,7 @@ export function SummaryView({ competitions, defaultCompetitionId }: Props) {
       }
       return 0
     })
-  }, [rawSummary, searchQuery, sortConditions, pointData])
+  })()
 
   const columns = [
     "名前",

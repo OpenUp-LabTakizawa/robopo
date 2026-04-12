@@ -3,7 +3,6 @@
 import {
   createContext,
   type ReactNode,
-  useCallback,
   useContext,
   useEffect,
   useState,
@@ -24,9 +23,9 @@ export const useNavigationGuard = () => useContext(NavigationGuardContext)
 export function NavigationGuardProvider({ children }: { children: ReactNode }) {
   const [isDirty, setIsDirty] = useState(false)
 
-  const setDirty = useCallback((dirty: boolean) => {
+  const setDirty = (dirty: boolean) => {
     setIsDirty(dirty)
-  }, [])
+  }
 
   useEffect(() => {
     if (!isDirty) {

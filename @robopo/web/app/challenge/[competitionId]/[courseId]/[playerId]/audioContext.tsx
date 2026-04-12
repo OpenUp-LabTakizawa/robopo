@@ -2,14 +2,7 @@
 
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/outline"
 import type React from "react"
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import { createContext, useContext, useEffect, useRef, useState } from "react"
 
 export type AudioContextType = {
   muted: boolean
@@ -50,7 +43,7 @@ export function SoundController() {
   const { muted, setMuted } = useAudioContext()
   const previewRef = useRef<HTMLAudioElement | null>(null)
 
-  const handleToggle = useCallback(() => {
+  const handleToggle = () => {
     if (muted) {
       // OFF → ON: プレビュー音を鳴らして音量を確認させる
       if (!previewRef.current) {
@@ -63,8 +56,8 @@ export function SoundController() {
         // Ignore play errors (e.g. autoplay policies or rapid toggling)
       })
     }
-    setMuted(!muted)
-  }, [muted, setMuted])
+    setMuted((prev) => !prev)
+  }
 
   // Cleanup: アンマウント時にAudioインスタンスを解放
   useEffect(() => {

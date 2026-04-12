@@ -8,7 +8,7 @@ import {
 import type { Route } from "next"
 import Link from "next/link"
 import type React from "react"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import { isCompetitionActive } from "@/app/lib/competition"
 import { COMPETITION_MANAGEMENT_LIST } from "@/app/lib/const"
@@ -73,10 +73,8 @@ export function ChallengeTab({
   judgeList,
   competitionJudgeList,
 }: ChallengeTabProps): React.JSX.Element {
-  const activeCompetitions = useMemo(
-    () => competitionList.competitions.filter(isCompetitionActive),
-    [competitionList.competitions],
-  )
+  const activeCompetitions =
+    competitionList.competitions.filter(isCompetitionActive)
   const singleCompetition =
     activeCompetitions.length === 1 ? activeCompetitions[0] : null
 
@@ -86,7 +84,7 @@ export function ChallengeTab({
   const judgeSelectRef = useRef<HTMLSelectElement>(null)
   const disableCondition = competitionId === 0 || judgeId === 0
 
-  const handleDisabledClick = useCallback(() => {
+  const handleDisabledClick = () => {
     if (judgeId === 0) {
       setShowAlert(true)
       judgeSelectRef.current?.scrollIntoView({
@@ -94,7 +92,7 @@ export function ChallengeTab({
         block: "center",
       })
     }
-  }, [judgeId])
+  }
 
   useEffect(() => {
     if (showAlert) {
@@ -103,7 +101,7 @@ export function ChallengeTab({
     }
   }, [showAlert])
 
-  const filteredCourses = useMemo(() => {
+  const filteredCourses = (() => {
     if (competitionId === 0) {
       return []
     }
@@ -111,9 +109,9 @@ export function ChallengeTab({
       .filter((cc) => cc.competitionId === competitionId)
       .map((cc) => cc.courseId)
     return courseList.courses.filter((c) => assigned.includes(c.id))
-  }, [competitionId, competitionCourseList, courseList.courses])
+  })()
 
-  const filteredJudges = useMemo(() => {
+  const filteredJudges = (() => {
     if (competitionId === 0) {
       return judgeList
     }
@@ -121,7 +119,7 @@ export function ChallengeTab({
       .filter((cu) => cu.competitionId === competitionId)
       .map((cu) => cu.judgeId)
     return judgeList.filter((u) => assignedIds.includes(u.id))
-  }, [competitionId, competitionJudgeList, judgeList])
+  })()
 
   return (
     <div className="space-y-4">

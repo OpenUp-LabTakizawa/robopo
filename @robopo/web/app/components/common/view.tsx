@@ -16,7 +16,7 @@ import {
 } from "@heroicons/react/24/outline"
 import Link from "next/link"
 import type React from "react"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { CommonCheckboxList } from "@/app/components/common/commonList"
 import { CourseFormModal } from "@/app/course/modals"
 import type {
@@ -231,7 +231,7 @@ export function View({
 
   const courseDataList = commonDataList
 
-  const competitionNames = useMemo(() => {
+  const competitionNames = (() => {
     const names = new Set<string>()
     for (const c of courseDataList) {
       for (const name of c.competitionName ?? []) {
@@ -239,9 +239,9 @@ export function View({
       }
     }
     return [...names].sort((a, b) => a.localeCompare(b, "ja"))
-  }, [courseDataList])
+  })()
 
-  const filteredAndSortedList = useMemo(() => {
+  const filteredAndSortedList = (() => {
     let list = courseDataList
     if (searchQuery.trim()) {
       const q = searchQuery.trim().toLowerCase()
@@ -265,7 +265,7 @@ export function View({
       }
       return sortOrder === "asc" ? cmp : -cmp
     })
-  }, [courseDataList, searchQuery, sortKey, sortOrder, competitionFilter])
+  })()
 
   const selectedCourse =
     commonId.length === 1

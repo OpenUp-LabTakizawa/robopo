@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation"
 import type React from "react"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import {
   SoundController,
   useAudioContext,
@@ -227,16 +227,10 @@ export function Challenge({
   setIsEnabled,
 }: ChallengeProps): React.JSX.Element {
   const router = useRouter()
-  const fieldState = useMemo(() => deserializeField(field ?? ""), [field])
-  const missionState = useMemo(
-    () => deserializeMission(mission ?? ""),
-    [mission],
-  )
-  const missionPair = useMemo(
-    () => missionStatePair(missionState),
-    [missionState],
-  )
-  const pointState: PointState = useMemo(() => deserializePoint(point), [point])
+  const fieldState = deserializeField(field ?? "")
+  const missionState = deserializeMission(mission ?? "")
+  const missionPair = missionStatePair(missionState)
+  const pointState: PointState = deserializePoint(point)
   const [isRetry, setIsRetry] = useState(false)
   const [isGoal, setIsGoal] = useState(false)
   const [nowMission, setNowMission] = useState(0)
@@ -247,7 +241,7 @@ export function Challenge({
   const [isSuccess, setIsSuccess] = useState(false)
   const [message, setMessage] = useState("")
   const [modalOpen, setModalOpen] = useState(0)
-  const start = useMemo(() => findStart(fieldState), [fieldState])
+  const start = findStart(fieldState)
   const [botPosition, setBotPosition] = useState({
     row: start?.[0] || 0,
     col: start?.[1] || 0,
@@ -269,59 +263,42 @@ export function Challenge({
     }
   }, [nextSound, backSound])
 
-  const handleNext = useCallback(
-    (row: number, col: number) => {
-      if (
-        nowMission < missionPair.length &&
-        pointState[nowMission + 2] !== null
-      ) {
-        const [newRow, newCol, direction] = getRobotPosition(
-          start?.[0] || 0,
-          start?.[1] || 0,
-          missionState,
-          nowMission + 1,
-        )
-        if ((strictMode && newRow === row && newCol === col) || !strictMode) {
-          const point = calcPoint(pointState, nowMission + 1)
-          setPointCount(point)
-          if (nowMission === missionPair.length - 1) {
-            setIsGoal(true)
-            setModalOpen(1)
-            !muted && goalSound?.play()
-          } else if (nowMission < missionPair.length - 1) {
-            setNowMission(nowMission + 1)
-            !muted && nextSound?.play()
-          }
-          if (!isRetry && !isGoal) {
-            setFirstResult(firstResult + 1)
-          } else if (retryResult !== null && !isGoal) {
-            setRetryResult(retryResult + 1)
-          }
-          setBotPosition({ row: newRow, col: newCol })
-          setBotDirection(direction)
+  const handleNext = (row: number, col: number) => {
+    if (
+      nowMission < missionPair.length &&
+      pointState[nowMission + 2] !== null
+    ) {
+      const [newRow, newCol, direction] = getRobotPosition(
+        start?.[0] || 0,
+        start?.[1] || 0,
+        missionState,
+        nowMission + 1,
+      )
+      if ((strictMode && newRow === row && newCol === col) || !strictMode) {
+        const point = calcPoint(pointState, nowMission + 1)
+        setPointCount(point)
+        if (nowMission === missionPair.length - 1) {
+          setIsGoal(true)
+          setModalOpen(1)
+          !muted && goalSound?.play()
+        } else if (nowMission < missionPair.length - 1) {
+          setNowMission(nowMission + 1)
+          !muted && nextSound?.play()
         }
-      } else {
-        setNowMission(0)
+        if (!isRetry && !isGoal) {
+          setFirstResult(firstResult + 1)
+        } else if (retryResult !== null && !isGoal) {
+          setRetryResult(retryResult + 1)
+        }
+        setBotPosition({ row: newRow, col: newCol })
+        setBotDirection(direction)
       }
-    },
-    [
-      nowMission,
-      missionPair.length,
-      pointState,
-      start,
-      missionState,
-      strictMode,
-      isRetry,
-      isGoal,
-      firstResult,
-      retryResult,
-      muted,
-      goalSound,
-      nextSound,
-    ],
-  )
+    } else {
+      setNowMission(0)
+    }
+  }
 
-  const handleBack = useCallback(() => {
+  const handleBack = () => {
     if (nowMission > 0) {
       if (!isRetry) {
         setFirstResult(firstResult - 1)
@@ -345,20 +322,9 @@ export function Challenge({
       }
       !muted && backSound?.play()
     }
-  }, [
-    nowMission,
-    isRetry,
-    firstResult,
-    retryResult,
-    isGoal,
-    pointState,
-    start,
-    missionState,
-    muted,
-    backSound,
-  ])
+  }
 
-  const handleRetry = useCallback(() => {
+  const handleRetry = () => {
     setIsRetry(true)
     setRetryResult(0)
     setPointCount(0)
@@ -366,68 +332,50 @@ export function Challenge({
     setIsGoal(false)
     setBotPosition({ row: start?.[0] || 0, col: start?.[1] || 0 })
     setBotDirection(missionState[0])
-  }, [start, missionState])
+  }
 
   // Handle tier point selection (for graded scoring missions)
-  const handleTierSelect = useCallback(
-    (tierIndex: number) => {
-      const currentEntry = pointState[nowMission + 2]
-      if (!Array.isArray(currentEntry)) {
-        return
-      }
+  const handleTierSelect = (tierIndex: number) => {
+    const currentEntry = pointState[nowMission + 2]
+    if (!Array.isArray(currentEntry)) {
+      return
+    }
 
-      const tierPoint = currentEntry[tierIndex] ?? 0
-      // Calculate point manually: base + tier point for this mission
-      const basePoint = calcPoint(pointState, nowMission)
-      const newPoint = basePoint + tierPoint
-      // Add goal bonus if this is the last mission
-      if (nowMission === missionPair.length - 1) {
-        const goalEntry = pointState[1]
-        const goalPt =
-          goalEntry !== null && !Array.isArray(goalEntry)
-            ? Number(goalEntry)
-            : 0
-        setPointCount(newPoint + goalPt)
-        setIsGoal(true)
-        setModalOpen(1)
-        !muted && goalSound?.play()
-      } else {
-        setPointCount(newPoint)
-        setNowMission(nowMission + 1)
-        !muted && nextSound?.play()
-      }
+    const tierPoint = currentEntry[tierIndex] ?? 0
+    // Calculate point manually: base + tier point for this mission
+    const basePoint = calcPoint(pointState, nowMission)
+    const newPoint = basePoint + tierPoint
+    // Add goal bonus if this is the last mission
+    if (nowMission === missionPair.length - 1) {
+      const goalEntry = pointState[1]
+      const goalPt =
+        goalEntry !== null && !Array.isArray(goalEntry) ? Number(goalEntry) : 0
+      setPointCount(newPoint + goalPt)
+      setIsGoal(true)
+      setModalOpen(1)
+      !muted && goalSound?.play()
+    } else {
+      setPointCount(newPoint)
+      setNowMission(nowMission + 1)
+      !muted && nextSound?.play()
+    }
 
-      // Update robot position
-      const [newRow, newCol, direction] = getRobotPosition(
-        start?.[0] || 0,
-        start?.[1] || 0,
-        missionState,
-        nowMission + 1,
-      )
-      setBotPosition({ row: newRow, col: newCol })
-      setBotDirection(direction)
-
-      if (!isRetry && !isGoal) {
-        setFirstResult(firstResult + 1)
-      } else if (retryResult !== null && !isGoal) {
-        setRetryResult(retryResult + 1)
-      }
-    },
-    [
-      nowMission,
-      missionPair.length,
-      pointState,
-      start,
+    // Update robot position
+    const [newRow, newCol, direction] = getRobotPosition(
+      start?.[0] || 0,
+      start?.[1] || 0,
       missionState,
-      isRetry,
-      isGoal,
-      firstResult,
-      retryResult,
-      muted,
-      goalSound,
-      nextSound,
-    ],
-  )
+      nowMission + 1,
+    )
+    setBotPosition({ row: newRow, col: newCol })
+    setBotDirection(direction)
+
+    if (!isRetry && !isGoal) {
+      setFirstResult(firstResult + 1)
+    } else if (retryResult !== null && !isGoal) {
+      setRetryResult(retryResult + 1)
+    }
+  }
 
   const FieldProps = {
     type: "challenge" as FieldPropsType["type"],

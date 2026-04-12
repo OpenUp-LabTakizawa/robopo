@@ -9,7 +9,7 @@ import {
   PlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { CommonCheckboxList } from "@/app/components/common/commonList"
 import type {
   SelectCompetition,
@@ -46,7 +46,7 @@ export function PlayerView({
 
   const selectedPlayers = playerList.filter((p) => selectedIds.includes(p.id))
 
-  const competitionNames = useMemo(() => {
+  const competitionNames = (() => {
     const names = new Set<string>()
     for (const p of playerList) {
       for (const name of p.competitionName ?? []) {
@@ -54,9 +54,9 @@ export function PlayerView({
       }
     }
     return [...names].sort((a, b) => a.localeCompare(b, "ja"))
-  }, [playerList])
+  })()
 
-  const filteredAndSortedList = useMemo(() => {
+  const filteredAndSortedList = (() => {
     let list = playerList
     if (searchQuery.trim()) {
       const q = searchQuery.trim().toLowerCase()
@@ -86,7 +86,7 @@ export function PlayerView({
       }
       return sortOrder === "asc" ? cmp : -cmp
     })
-  }, [playerList, searchQuery, competitionFilter, sortKey, sortOrder])
+  })()
 
   function handleSuccess(
     newList: SelectPlayerWithCompetition[],

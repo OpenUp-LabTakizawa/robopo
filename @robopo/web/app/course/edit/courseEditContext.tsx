@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { createContext, useCallback, useContext, useRef, useState } from "react"
+import { createContext, useContext, useRef, useState } from "react"
 import {
   type FieldState,
   initializeField,
@@ -100,19 +100,19 @@ export function CourseEditProvider({
   const { setDirty } = useNavigationGuard()
   const initializedRef = useRef(false)
 
-  const markDirty = useCallback(() => {
+  const markDirty = () => {
     if (initializedRef.current) {
       setDirty(true)
     }
-  }, [setDirty])
+  }
 
-  const markInitialized = useCallback(() => {
+  const markInitialized = () => {
     initializedRef.current = true
-  }, [])
+  }
 
-  const resetInitialized = useCallback(() => {
+  const resetInitialized = () => {
     initializedRef.current = false
-  }, [])
+  }
 
   const [nameError, setNameError] = useState("")
 
@@ -133,62 +133,40 @@ export function CourseEditProvider({
   const [courseOutRule, setCourseOutRuleRaw] = useState<string>("keep")
   const [selectedTool, setSelectedTool] = useState<ToolType>("start")
 
-  const setName: React.Dispatch<React.SetStateAction<string>> = useCallback(
-    (v) => {
-      setNameRaw(v)
-      markDirty()
-    },
-    [markDirty],
-  )
-  const setDescription: React.Dispatch<React.SetStateAction<string>> =
-    useCallback(
-      (v) => {
-        setDescriptionRaw(v)
-        markDirty()
-      },
-      [markDirty],
-    )
-  const setField: React.Dispatch<React.SetStateAction<FieldState>> =
-    useCallback(
-      (v) => {
-        setFieldRaw(v)
-        markDirty()
-      },
-      [markDirty],
-    )
-  const setMission: React.Dispatch<React.SetStateAction<MissionState>> =
-    useCallback(
-      (v) => {
-        setMissionRaw(v)
-        markDirty()
-      },
-      [markDirty],
-    )
-  const setPoint: React.Dispatch<React.SetStateAction<PointState>> =
-    useCallback(
-      (v) => {
-        setPointRaw(v)
-        markDirty()
-      },
-      [markDirty],
-    )
+  const setName: React.Dispatch<React.SetStateAction<string>> = (v) => {
+    setNameRaw(v)
+    markDirty()
+  }
+  const setDescription: React.Dispatch<React.SetStateAction<string>> = (v) => {
+    setDescriptionRaw(v)
+    markDirty()
+  }
+  const setField: React.Dispatch<React.SetStateAction<FieldState>> = (v) => {
+    setFieldRaw(v)
+    markDirty()
+  }
+  const setMission: React.Dispatch<React.SetStateAction<MissionState>> = (
+    v,
+  ) => {
+    setMissionRaw(v)
+    markDirty()
+  }
+  const setPoint: React.Dispatch<React.SetStateAction<PointState>> = (v) => {
+    setPointRaw(v)
+    markDirty()
+  }
   const setMissionPanelHints: React.Dispatch<
     React.SetStateAction<(number | null)[]>
-  > = useCallback(
-    (v) => {
-      setMissionPanelHintsRaw(v)
-      markDirty()
-    },
-    [markDirty],
-  )
-  const setCourseOutRule: React.Dispatch<React.SetStateAction<string>> =
-    useCallback(
-      (v) => {
-        setCourseOutRuleRaw(v)
-        markDirty()
-      },
-      [markDirty],
-    )
+  > = (v) => {
+    setMissionPanelHintsRaw(v)
+    markDirty()
+  }
+  const setCourseOutRule: React.Dispatch<React.SetStateAction<string>> = (
+    v,
+  ) => {
+    setCourseOutRuleRaw(v)
+    markDirty()
+  }
 
   // Field undo/redo
   const {
@@ -198,14 +176,11 @@ export function CourseEditProvider({
     canUndo,
     canRedo,
   } = useUndoRedo<FieldState>({
-    getSnapshot: useCallback(() => field.map((row) => [...row]), [field]),
-    applySnapshot: useCallback(
-      (snap: FieldState) => {
-        setFieldRaw(snap)
-        markDirty()
-      },
-      [markDirty],
-    ),
+    getSnapshot: () => field.map((row) => [...row]),
+    applySnapshot: (snap: FieldState) => {
+      setFieldRaw(snap)
+      markDirty()
+    },
   })
 
   // Mission undo/redo (includes panelHints for sync - Comment 1 fix)
@@ -216,23 +191,17 @@ export function CourseEditProvider({
     canUndo: canUndoMission,
     canRedo: canRedoMission,
   } = useUndoRedo<MissionSnapshot>({
-    getSnapshot: useCallback(
-      () => ({
-        mission: [...mission],
-        point: [...point],
-        panelHints: [...missionPanelHints],
-      }),
-      [mission, point, missionPanelHints],
-    ),
-    applySnapshot: useCallback(
-      (snap: MissionSnapshot) => {
-        setMissionRaw(snap.mission)
-        setPointRaw(snap.point)
-        setMissionPanelHintsRaw(snap.panelHints)
-        markDirty()
-      },
-      [markDirty],
-    ),
+    getSnapshot: () => ({
+      mission: [...mission],
+      point: [...point],
+      panelHints: [...missionPanelHints],
+    }),
+    applySnapshot: (snap: MissionSnapshot) => {
+      setMissionRaw(snap.mission)
+      setPointRaw(snap.point)
+      setMissionPanelHintsRaw(snap.panelHints)
+      markDirty()
+    },
   })
 
   return (

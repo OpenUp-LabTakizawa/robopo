@@ -9,7 +9,7 @@ import {
   PlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { CommonCheckboxList } from "@/app/components/common/commonList"
 import { JudgeDeleteModal, JudgeFormModal } from "@/app/judge/modals"
 import type {
@@ -46,7 +46,7 @@ export function JudgeView({
 
   const selectedJudges = judgeList.filter((j) => selectedIds.includes(j.id))
 
-  const competitionNames = useMemo(() => {
+  const competitionNames = (() => {
     const names = new Set<string>()
     for (const j of judgeList) {
       for (const name of j.competitionName ?? []) {
@@ -54,9 +54,9 @@ export function JudgeView({
       }
     }
     return [...names].sort((a, b) => a.localeCompare(b, "ja"))
-  }, [judgeList])
+  })()
 
-  const filteredAndSortedList = useMemo(() => {
+  const filteredAndSortedList = (() => {
     let list = judgeList
     if (searchQuery.trim()) {
       const q = searchQuery.trim().toLowerCase()
@@ -78,7 +78,7 @@ export function JudgeView({
       }
       return sortOrder === "asc" ? cmp : -cmp
     })
-  }, [judgeList, searchQuery, competitionFilter, sortKey, sortOrder])
+  })()
 
   function handleSuccess(
     newList: SelectJudgeWithCompetition[],

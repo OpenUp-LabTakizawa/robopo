@@ -23,7 +23,7 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline"
 import { PlayIcon, StopIcon } from "@heroicons/react/24/solid"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import {
   type FieldState,
   findGoal,
@@ -130,7 +130,7 @@ export function MissionList({
   }, [mission])
 
   // Compute panel positions for each mission
-  const panelPositions = useMemo(() => {
+  const panelPositions = (() => {
     const start = findStart(field)
     if (!start) {
       return null
@@ -150,7 +150,7 @@ export function MissionList({
       positions,
       goalPanel,
     }
-  }, [field, mission])
+  })()
 
   // ─── DnD ─────────────────────────────────────────────────
 
@@ -722,10 +722,10 @@ function SortableMissionRow({
       ? "最終ミッションがゴールに到達していません"
       : "コース外の移動です"
 
-  const handleErrorTap = useCallback((e: React.MouseEvent) => {
+  const handleErrorTap = (e: React.MouseEvent) => {
     e.stopPropagation()
     setShowMobileError((prev) => !prev)
-  }, [])
+  }
 
   return (
     // biome-ignore lint/a11y/useSemanticElements: sortable container with drag handle
