@@ -466,11 +466,18 @@ export function SummaryView({ competitions, defaultCompetitionId }: Props) {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr>
-                    <td colSpan={columns.length} className="py-12 text-center">
-                      <span className="loading loading-spinner text-primary" />
-                    </td>
-                  </tr>
+                  ["sk0", "sk1", "sk2", "sk3", "sk4"].map((id, i) => (
+                    <tr key={id}>
+                      {columns.map((col) => (
+                        <td key={col} className="py-3">
+                          <div
+                            className="skeleton-shimmer h-4 w-full rounded"
+                            style={{ animationDelay: `${i * 60}ms` }}
+                          />
+                        </td>
+                      ))}
+                    </tr>
+                  ))
                 ) : filteredAndSorted.length > 0 ? (
                   filteredAndSorted.map((player) => (
                     <PlayerRow

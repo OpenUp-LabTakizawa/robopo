@@ -17,7 +17,7 @@ Bun workspace monorepo with two packages:
 
 - Runtime: Bun
 - Language: TypeScript (strict mode)
-- Framework: Next.js 16 (App Router, `typedRoutes: true`, `reactCompiler: true`)
+- Framework: Next.js 16 (App Router, `typedRoutes: true`, `reactCompiler: true`, `cacheComponents: true`)
 - UI: React 19, Tailwind CSS 4, daisyUI 5
 - Database: PostgreSQL (node-postgres Pool) via Drizzle ORM
 - Authentication: Better Auth with username plugin
