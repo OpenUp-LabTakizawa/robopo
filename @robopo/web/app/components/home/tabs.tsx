@@ -108,7 +108,9 @@ export function ChallengeTab({
     const assigned = competitionCourseList.competitionCourseList
       .filter((cc) => cc.competitionId === competitionId)
       .map((cc) => cc.courseId)
-    return courseList.courses.filter((c) => assigned.includes(c.id))
+    return courseList.courses.filter(
+      (c) => assigned.includes(c.id) && c.isConfigured,
+    )
   })()
 
   const filteredJudges = (() => {

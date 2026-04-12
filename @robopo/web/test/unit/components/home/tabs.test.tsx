@@ -48,6 +48,7 @@ const courseList = {
       missionValid: false,
       point: null,
       courseOutRule: "keep",
+      isConfigured: true,
       createdAt: null,
     },
     {
@@ -60,6 +61,7 @@ const courseList = {
       missionValid: false,
       point: null,
       courseOutRule: "keep",
+      isConfigured: true,
       createdAt: null,
     },
   ],

@@ -26,6 +26,7 @@ export const course = pgTable("course", {
   missionValid: boolean("missionvalid").default(false).notNull(),
   point: text("point"),
   courseOutRule: text("course_out_rule").default("keep").notNull(),
+  isConfigured: boolean("is_configured").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow(),
 })
 
@@ -200,6 +201,7 @@ export type SelectCourseWithCompetition = {
   id: number
   name: string
   description: string | null
+  isConfigured: boolean
   createdAt: Date | null
   competitionId: number | null
   competitionIds: number[]

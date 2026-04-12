@@ -72,6 +72,7 @@ export async function getCompetitionCourseList(competitionId: number): Promise<{
       missionValid: course.missionValid,
       point: course.point,
       courseOutRule: course.courseOutRule,
+      isConfigured: course.isConfigured,
       createdAt: course.createdAt,
     })
     .from(course)

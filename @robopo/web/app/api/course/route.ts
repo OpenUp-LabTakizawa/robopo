@@ -55,6 +55,8 @@ export async function POST(req: NextRequest) {
       ? checkValidity(parsedField, parsedMission)
       : false
 
+  const isConfigured = computedFieldValid && computedMissionValid
+
   const courseData = {
     name: name,
     description: normalizedDescription,
@@ -64,6 +66,7 @@ export async function POST(req: NextRequest) {
     missionValid: computedMissionValid,
     point: point,
     courseOutRule: courseOutRule || "keep",
+    isConfigured: isConfigured,
   }
 
   const method = id ? "update" : "create"
