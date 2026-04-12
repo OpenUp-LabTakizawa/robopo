@@ -18,6 +18,7 @@ type FieldProps = {
   botDirection?: MissionValue
   botAfterPosition?: { row: number; col: number }
   botAfterAngle?: number
+  isPlaying?: boolean
   nextMission?: MissionValue[]
   onPanelClick: (row: number, col: number) => void
   onPanelPointerDown?: (row: number, col: number) => void
@@ -34,6 +35,7 @@ export function Field({
   botDirection,
   botAfterPosition,
   botAfterAngle,
+  isPlaying = false,
   nextMission,
   onPanelClick,
   onPanelPointerDown,
@@ -135,7 +137,7 @@ export function Field({
           afterCol={botAfterPosition?.col}
           afterAngle={botAfterAngle}
           responsive
-          opacity={0.6}
+          opacity={isPlaying ? 1 : 0.6}
         />
       )}
     </div>

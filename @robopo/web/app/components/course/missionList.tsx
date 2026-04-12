@@ -22,7 +22,8 @@ import {
   PlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { PlayIcon, StopIcon } from "@heroicons/react/24/solid"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
   type FieldState,
   findGoal,
@@ -89,6 +90,9 @@ export function MissionList({
   setMissionPanelHints,
   onInsertPreview,
   invalidMissionMap,
+  isPlaying = false,
+  onTogglePlay,
+  canPlay = false,
 }: {
   field: FieldState
   mission: MissionState
@@ -106,6 +110,9 @@ export function MissionList({
   setMissionPanelHints: React.Dispatch<React.SetStateAction<(number | null)[]>>
   onInsertPreview?: (preview: InsertPreview | null) => void
   invalidMissionMap?: Map<number, string>
+  isPlaying?: boolean
+  onTogglePlay?: () => void
+  canPlay?: boolean
 }) {
   const [items, setItems] = useState<MissionPairItem[]>([])
   const [insertingAt, setInsertingAt] = useState<number | null>(null)
@@ -321,11 +328,34 @@ export function MissionList({
           pt
         </span>
         <div className="flex gap-1">
+          {onTogglePlay && (
+            <div
+              className="tooltip tooltip-bottom"
+              data-tip={isPlaying ? "停止" : "全体プレビュー"}
+            >
+              <button
+                type="button"
+                className={`btn btn-xs ${
+                  isPlaying
+                    ? "btn-error text-white"
+                    : "bg-gradient-to-r from-primary to-secondary text-white shadow-sm hover:shadow-md"
+                } transition-all duration-200`}
+                onClick={onTogglePlay}
+                disabled={!canPlay && !isPlaying}
+              >
+                {isPlaying ? (
+                  <StopIcon className="size-3.5" />
+                ) : (
+                  <PlayIcon className="size-3.5" />
+                )}
+              </button>
+            </div>
+          )}
           <button
             type="button"
             className="btn btn-ghost btn-xs"
             onClick={undoMission}
-            disabled={!canUndoMission}
+            disabled={!canUndoMission || isPlaying}
             title="元に戻す"
           >
             <ArrowUturnLeftIcon className="size-4" />
@@ -334,7 +364,7 @@ export function MissionList({
             type="button"
             className="btn btn-ghost btn-xs"
             onClick={redoMission}
-            disabled={!canRedoMission}
+            disabled={!canRedoMission || isPlaying}
             title="やり直す"
           >
             <ArrowUturnRightIcon className="size-4" />
@@ -396,6 +426,7 @@ export function MissionList({
                   isSelected={selectedMissionIndex === idx}
                   isInvalid={invalidMissionMap?.has(idx) ?? false}
                   invalidReason={invalidMissionMap?.get(idx)}
+                  isPlaying={isPlaying}
                   onSelect={() => setSelectedMissionIndex(idx)}
                   onDelete={() => handleDeleteMission(idx)}
                   onUpdate={(mt, p, pt) => handleUpdateMission(idx, mt, p, pt)}
@@ -416,7 +447,11 @@ export function MissionList({
                 />
                 {insertingAt === idx && (
                   <InsertMissionRow
-                    defaultPanelId={panelPositions?.positions[idx] ?? null}
+                    defaultPanelId={
+                      panelPositions?.positions[idx + 1] ??
+                      panelPositions?.positions[idx] ??
+                      null
+                    }
                     onInsert={handleInsertMission}
                     onCancel={() => {
                       setInsertingAt(null)
@@ -625,6 +660,7 @@ function SortableMissionRow({
   isSelected,
   isInvalid,
   invalidReason,
+  isPlaying = false,
   onSelect,
   onDelete,
   onUpdate,
@@ -637,6 +673,7 @@ function SortableMissionRow({
   isSelected: boolean
   isInvalid?: boolean
   invalidReason?: string
+  isPlaying?: boolean
   onSelect: () => void
   onDelete: () => void
   onUpdate: (
@@ -664,7 +701,15 @@ function SortableMissionRow({
   const missionType = item.mission[0]
   const missionParam = item.mission[1]
 
+  const rowRef = useRef<HTMLDivElement>(null)
   const [showMobileError, setShowMobileError] = useState(false)
+
+  useEffect(() => {
+    // Skip auto-scroll on mobile to keep the course field visible during playback
+    if (isSelected && isPlaying && rowRef.current && window.innerWidth >= 640) {
+      rowRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" })
+    }
+  }, [isSelected, isPlaying])
 
   useEffect(() => {
     if (!isInvalid) {
@@ -685,7 +730,11 @@ function SortableMissionRow({
   return (
     // biome-ignore lint/a11y/useSemanticElements: sortable container with drag handle
     <div
-      ref={setNodeRef}
+      ref={(node) => {
+        setNodeRef(node)
+        ;(rowRef as React.MutableRefObject<HTMLDivElement | null>).current =
+          node
+      }}
       role="button"
       tabIndex={0}
       style={style}
@@ -736,6 +785,7 @@ function SortableMissionRow({
               className="input input-bordered input-xs w-12 font-mono"
               min={1}
               max={25}
+              disabled={isPlaying}
               value={panelNumber ?? ""}
               onChange={(e) => {
                 const num = Number(e.target.value)
@@ -761,6 +811,7 @@ function SortableMissionRow({
               missionParam={missionParam}
               pointEntry={point ?? 0}
               onUpdate={onUpdate}
+              disabled={isPlaying}
             />
           ) : (
             <span>
@@ -829,6 +880,7 @@ function InlineMissionEditor({
   missionParam,
   pointEntry,
   onUpdate,
+  disabled = false,
 }: {
   missionType: MissionValue
   missionParam: MissionValue
@@ -838,6 +890,7 @@ function InlineMissionEditor({
     param: MissionValue,
     pointEntry: PointEntry,
   ) => void
+  disabled?: boolean
 }) {
   const isMove = missionType === "mf" || missionType === "mb"
   const isTurn = missionType === "tr" || missionType === "tl"
@@ -848,9 +901,8 @@ function InlineMissionEditor({
     pointEntry !== null && !Array.isArray(pointEntry) ? pointEntry : 0
 
   return (
-    // biome-ignore lint/a11y/useSemanticElements: inline editor form group
-    <div
-      role="group"
+    <fieldset
+      disabled={disabled}
       className="space-y-2"
       onClick={(e) => e.stopPropagation()}
       onKeyDown={(e) => e.stopPropagation()}
@@ -1033,7 +1085,7 @@ function InlineMissionEditor({
           )}
         </div>
       )}
-    </div>
+    </fieldset>
   )
 }
 
