@@ -1,6 +1,36 @@
 import { calcPoint } from "@/app/components/challenge/utils"
 import type { PointState } from "@/app/components/course/utils"
 
+export type JudgeSummary = {
+  judgeId: number
+  judgeName: string
+  scoredPlayerCount: number
+  scoredPlayerNames: string[]
+  firstScoringTime: string | null
+  lastScoringTime: string | null
+  totalScoringCount: number
+  courseCount: number
+  courseNames: string[]
+  averageScore: number | null
+  courseOutCount: number
+}
+
+export type CourseCompetitionSummary = {
+  courseId: number
+  courseName: string
+  firstChallengeTime: string | null
+  firstCompletionTime: string | null
+  lastChallengeTime: string | null
+  challengerCount: number
+  completionCount: number
+  completionRate: number | null
+  totalChallengeCount: number
+  averageScore: number | null
+  maxScore: number | null
+  courseOutCount: number
+  retryCount: number
+}
+
 export type CourseSummary = {
   playerId: number | null
   playerName: string | null
@@ -23,6 +53,19 @@ export type CourseSummary = {
   pointRank: number | null
   challengeCount: number | null
   challengeRank: number | null
+}
+
+// Format ISO timestamp for display
+export function formatTimestamp(iso: string | null): string {
+  if (!iso) {
+    return "-"
+  }
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) {
+    return "-"
+  }
+  const pad = (n: number) => String(n).padStart(2, "0")
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
 }
 
 // Course completion check function

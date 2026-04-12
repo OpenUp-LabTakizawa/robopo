@@ -1,5 +1,8 @@
 import { and, count, eq, inArray, ne, type SQLWrapper, sql } from "drizzle-orm"
-import type { CourseSummary } from "@/app/components/summary/utils"
+import type {
+  CourseSummary,
+  JudgeSummary,
+} from "@/app/components/summary/utils"
 import { db } from "@/app/lib/db/db"
 import {
   challenge,
@@ -758,4 +761,85 @@ export async function getLinkedCourseIds(
     .where(inArray(competitionCourse.courseId, courseIds))
     .groupBy(competitionCourse.courseId)
   return result.map((r) => r.courseId)
+}
+
+// Get judge summary by competition (aggregated stats per judge)
+export async function getJudgeSummaryByCompetition(
+  competitionId: number,
+): Promise<JudgeSummary[]> {
+  const result = await db.execute(sql`
+    SELECT
+      j.id AS "judgeId",
+      j.name AS "judgeName",
+      COUNT(DISTINCT c.player_id)::int AS "scoredPlayerCount",
+      array_agg(DISTINCT p.name) AS "scoredPlayerNames",
+      TO_CHAR(MIN(c.created_at) AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo', 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"') AS "firstScoringTime",
+      TO_CHAR(MAX(c.created_at) AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo', 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"') AS "lastScoringTime",
+      COUNT(c.id)::int AS "totalScoringCount",
+      COUNT(DISTINCT c.course_id)::int AS "courseCount",
+      array_agg(DISTINCT co.name) AS "courseNames",
+      ROUND(AVG(GREATEST(c.first_result, COALESCE(c.retry_result, 0)))::numeric, 1)::float AS "averageScore",
+      SUM(
+        CASE WHEN c.detail = 'courseOut:first' THEN 1 ELSE 0 END
+        + CASE WHEN c.detail = 'courseOut:retry' THEN 1 ELSE 0 END
+      )::int AS "courseOutCount"
+    FROM judge j
+    INNER JOIN challenge c ON c.judge_id = j.id AND c.competition_id = ${competitionId}
+    INNER JOIN player p ON p.id = c.player_id
+    INNER JOIN course co ON co.id = c.course_id
+    GROUP BY j.id, j.name
+    ORDER BY j.id
+  `)
+  return result.rows as JudgeSummary[]
+}
+
+// Get course summary by competition (aggregated stats per course)
+export async function getCourseSummaryByCompetition(
+  competitionId: number,
+): Promise<
+  {
+    courseId: number
+    courseName: string
+    firstChallengeTime: string | null
+    lastChallengeTime: string | null
+    challengerCount: number
+    totalChallengeCount: number
+    averageRawScore: number | null
+    maxRawScore: number | null
+    courseOutCount: number
+    retryCount: number
+  }[]
+> {
+  const result = await db.execute(sql`
+    SELECT
+      co.id AS "courseId",
+      co.name AS "courseName",
+      TO_CHAR(MIN(c.created_at) AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo', 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"') AS "firstChallengeTime",
+      TO_CHAR(MAX(c.created_at) AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo', 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"') AS "lastChallengeTime",
+      COUNT(DISTINCT c.player_id)::int AS "challengerCount",
+      SUM(CASE WHEN c.retry_result IS NULL THEN 1 ELSE 2 END)::int AS "totalChallengeCount",
+      ROUND(AVG(GREATEST(c.first_result, COALESCE(c.retry_result, 0)))::numeric, 1)::float AS "averageRawScore",
+      MAX(GREATEST(c.first_result, COALESCE(c.retry_result, 0)))::int AS "maxRawScore",
+      SUM(
+        CASE WHEN c.detail = 'courseOut:first' THEN 1 ELSE 0 END
+        + CASE WHEN c.detail = 'courseOut:retry' THEN 1 ELSE 0 END
+      )::int AS "courseOutCount",
+      SUM(CASE WHEN c.retry_result IS NOT NULL THEN 1 ELSE 0 END)::int AS "retryCount"
+    FROM course co
+    INNER JOIN challenge c ON c.course_id = co.id AND c.competition_id = ${competitionId}
+    GROUP BY co.id, co.name
+    ORDER BY co.id
+  `)
+  return result.rows as {
+    courseId: number
+    courseName: string
+    firstChallengeTime: string | null
+    lastChallengeTime: string | null
+    challengerCount: number
+    totalChallengeCount: number
+    averageRawScore: number | null
+    maxRawScore: number | null
+    courseOutCount: number
+    retryCount: number
+  }[]
 }
