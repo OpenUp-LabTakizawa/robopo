@@ -40,62 +40,45 @@ describe("SummaryView", () => {
     expect(screen.getByText("大会を選択してください")).toBeTruthy()
   })
 
-  test("renders default sort condition (totalPoint desc)", () => {
+  test("renders tab buttons", () => {
     render(
       <SummaryView competitions={competitions} defaultCompetitionId={null} />,
     )
-    expect(screen.getByText("総得点")).toBeTruthy()
-    expect(screen.getByText("大きい順")).toBeTruthy()
+    expect(screen.getByText("選手")).toBeTruthy()
+    expect(screen.getByText("採点者")).toBeTruthy()
+    expect(screen.getByText("コース")).toBeTruthy()
   })
 
-  test("toggles sort order on click", () => {
+  test("player tab is active by default", () => {
     render(
       <SummaryView competitions={competitions} defaultCompetitionId={null} />,
     )
-    const orderButton = screen.getByText("大きい順")
-    fireEvent.click(orderButton)
-    expect(screen.getByText("小さい順")).toBeTruthy()
+    const playerButton = screen.getByText("選手").closest("button")
+    expect(playerButton?.className).toContain("bg-primary")
   })
 
-  test("removes sort condition on X click", () => {
+  test("switches to judge tab on click", () => {
     render(
       <SummaryView competitions={competitions} defaultCompetitionId={null} />,
     )
-    // The sort chip should have a remove button
-    const removeButton = screen.getByLabelText("総得点のソートを削除")
-    fireEvent.click(removeButton)
-    // After removal, the sort chip label should be gone (text may still appear in dropdown options)
-    expect(screen.queryByLabelText("総得点のソートを削除")).toBeNull()
-  })
-
-  test("adds new sort condition from dropdown", () => {
-    render(
-      <SummaryView competitions={competitions} defaultCompetitionId={null} />,
-    )
-    // Find the add-sort select
-    const _addSelect = screen.getByRole("combobox", { name: "" })
-    // The last combobox is the sort adder (after competition + course selects)
-    const selects = screen
-      .getAllByRole("combobox")
-      .filter(
-        (s) =>
-          s.querySelector('option[value="playerFurigana"]') !== null ||
-          (s as HTMLSelectElement).querySelector(
-            'option[value="playerFurigana"]',
-          ),
-      )
-    if (selects.length > 0) {
-      fireEvent.change(selects[0], { target: { value: "maxResult" } })
-      expect(screen.getByText("最高得点")).toBeTruthy()
+    const judgeButton = screen.getByText("採点者").closest("button")
+    if (judgeButton) {
+      fireEvent.click(judgeButton)
     }
+    expect(judgeButton?.className).toContain("bg-primary")
+    // Player tab should no longer be active
+    const playerButton = screen.getByText("選手").closest("button")
+    expect(playerButton?.className).not.toContain("bg-primary")
   })
 
-  test("renders search input", () => {
+  test("switches to course tab on click", () => {
     render(
       <SummaryView competitions={competitions} defaultCompetitionId={null} />,
     )
-    expect(
-      screen.getByPlaceholderText("名前・ふりがな・ゼッケン番号で検索"),
-    ).toBeTruthy()
+    const courseButton = screen.getByText("コース").closest("button")
+    if (courseButton) {
+      fireEvent.click(courseButton)
+    }
+    expect(courseButton?.className).toContain("bg-primary")
   })
 })
