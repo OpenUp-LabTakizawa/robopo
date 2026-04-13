@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test"
-import { cleanup, fireEvent, render, screen } from "@testing-library/react"
+import { cleanup, fireEvent, screen } from "@testing-library/react"
 import { ChallengeTab, ManageTab } from "@/app/components/home/tabs"
+import { renderWithRouter } from "../../../utils/router"
 
 afterEach(cleanup)
 
@@ -101,7 +102,7 @@ describe("ChallengeTab", () => {
         },
       ],
     }
-    render(
+    renderWithRouter(
       <ChallengeTab
         competitionList={singleCompe}
         courseList={courseList}
@@ -114,7 +115,7 @@ describe("ChallengeTab", () => {
   })
 
   test("renders judge selection dropdown", () => {
-    render(
+    renderWithRouter(
       <ChallengeTab
         competitionList={competitionList}
         courseList={courseList}
@@ -141,7 +142,7 @@ describe("ChallengeTab", () => {
         },
       ],
     }
-    const { container } = render(
+    const { container } = renderWithRouter(
       <ChallengeTab
         competitionList={singleCompe}
         courseList={courseList}
@@ -174,7 +175,7 @@ describe("ChallengeTab", () => {
         },
       ],
     }
-    render(
+    renderWithRouter(
       <ChallengeTab
         competitionList={singleCompe}
         courseList={courseList}
@@ -210,7 +211,7 @@ describe("ChallengeTab", () => {
         },
       ],
     }
-    render(
+    renderWithRouter(
       <ChallengeTab
         competitionList={multiActive}
         courseList={courseList}
@@ -220,11 +221,11 @@ describe("ChallengeTab", () => {
       />,
     )
     expect(
-      screen.getByText("大会を選択するとコースが表示されます"),
+      screen.getByText("大会を選択するとコースと選手が表示されます"),
     ).toBeTruthy()
   })
 
-  test("renders course links with judgeId in href when judge is selected", () => {
+  test("renders course cards as buttons when judge is selected", () => {
     const singleCompe = {
       competitions: [
         {
@@ -238,7 +239,7 @@ describe("ChallengeTab", () => {
         },
       ],
     }
-    render(
+    renderWithRouter(
       <ChallengeTab
         competitionList={singleCompe}
         courseList={courseList}
@@ -254,17 +255,16 @@ describe("ChallengeTab", () => {
     })
     fireEvent.change(judgeSelect, { target: { value: "1" } })
 
-    // Course card should now render as a link with judgeId
-    const courseLink = screen.getByText("Course A").closest("a")
-    expect(courseLink).toBeTruthy()
-    const href = courseLink?.getAttribute("href")
-    expect(href).toContain("judgeId=1")
+    // Course card should now render as a button (not a link)
+    const courseButton = screen.getByText("Course A").closest("button")
+    expect(courseButton).toBeTruthy()
+    expect(courseButton?.disabled).toBe(false)
   })
 })
 
 describe("ManageTab", () => {
   test("renders all management links", () => {
-    render(<ManageTab />)
+    renderWithRouter(<ManageTab />)
     expect(screen.getByText("大会一覧")).toBeTruthy()
     expect(screen.getByText("コース一覧")).toBeTruthy()
     expect(screen.getByText("選手一覧")).toBeTruthy()
