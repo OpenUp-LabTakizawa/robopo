@@ -73,16 +73,15 @@ export function SoundController() {
   return (
     <button
       type="button"
-      className="btn btn-ghost mx-auto bg-gray-100"
+      className="btn btn-ghost btn-sm btn-circle"
       onClick={handleToggle}
       aria-label="効果音のオン・オフ切り替え"
     >
       {muted ? (
-        <SpeakerXMarkIcon className="size-6 text-red-500" />
+        <SpeakerXMarkIcon className="size-5 text-base-content/40" />
       ) : (
-        <SpeakerWaveIcon className="size-6 text-green-500" />
+        <SpeakerWaveIcon className="size-5 text-success" />
       )}
-      <span className="text-base">効果音{muted ? "OFF" : "ON"}</span>
     </button>
   )
 }

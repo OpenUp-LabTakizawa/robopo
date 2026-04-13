@@ -1,8 +1,45 @@
+import { PauseIcon } from "@heroicons/react/24/solid"
 import {
   getNextPosition,
   type MissionValue,
   PANEL_SIZE,
 } from "@/app/components/course/utils"
+
+// Shared cell positioning style for overlays
+function getCellStyle({
+  row,
+  col,
+  responsive,
+}: {
+  row: number
+  col: number
+  responsive?: boolean
+}): React.CSSProperties {
+  if (responsive) {
+    return {
+      position: "absolute",
+      top: `calc(var(--cell-size) * ${row})`,
+      left: `calc(var(--cell-size) * ${col})`,
+      height: "var(--cell-size)",
+      width: "var(--cell-size)",
+      pointerEvents: "none",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }
+  }
+  return {
+    position: "absolute",
+    top: `${row * PANEL_SIZE}px`,
+    left: `${col * PANEL_SIZE}px`,
+    height: `${PANEL_SIZE}px`,
+    width: `${PANEL_SIZE}px`,
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }
+}
 
 export function NextArrow({
   row,
@@ -46,6 +83,9 @@ export function NextArrow({
         responsive={responsive}
       />
     )
+  }
+  if (nextMission[0] === "ps") {
+    return <NextPauseIndicator row={row} col={col} responsive={responsive} />
   }
   return (
     <NextTurnArrow
@@ -296,6 +336,24 @@ function getStartDeg(direction: MissionValue): number {
     default:
       return 0
   }
+}
+
+export function NextPauseIndicator({
+  row,
+  col,
+  responsive,
+}: {
+  row: number
+  col: number
+  responsive?: boolean
+}) {
+  return (
+    <div style={getCellStyle({ row, col, responsive })}>
+      <div className="pause-indicator flex h-3/4 w-3/4 items-center justify-center rounded-full bg-warning/25 ring-2 ring-warning/40">
+        <PauseIcon className="h-1/2 w-1/2 text-warning drop-shadow-sm" />
+      </div>
+    </div>
+  )
 }
 
 function getClipPath(degree: MissionValue): string {

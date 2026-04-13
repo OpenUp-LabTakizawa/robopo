@@ -10,10 +10,12 @@ import {
   CourseOutModal,
   RetryModal,
 } from "@/app/challenge/challengeModal"
+import { MissionOverview } from "@/app/components/challenge/missionOverview"
 import {
   COURSE_OUT_FIRST,
   COURSE_OUT_RETRY,
   calcPoint,
+  getMissionProgress,
   parseCourseOutRule,
   resultSubmit,
 } from "@/app/components/challenge/utils"
@@ -33,6 +35,7 @@ import {
 } from "@/app/components/course/utils"
 import {
   BackButton,
+  CourseOutButton,
   FailButton,
   ReloadButton,
   SubmitButton,
@@ -49,6 +52,8 @@ type ChallengeProps = {
   playerId: number
   judgeId: number
   setIsEnabled: (value: boolean) => void
+  courseName: string
+  playerName: string
 }
 
 type FieldPropsType = {
@@ -76,6 +81,8 @@ interface NormalChallengeSectionProps {
   isSuccess: boolean
   message: string
   FieldProps: FieldPropsType
+  courseName: string
+  playerName: string
 }
 
 function NormalChallengeSection({
@@ -91,31 +98,60 @@ function NormalChallengeSection({
   isSuccess,
   message,
   FieldProps,
+  courseName,
+  playerName,
 }: NormalChallengeSectionProps) {
   // Check if current mission has tier points
   const currentPointEntry = !isGoal ? pointState[nowMission + 2] : null
   const isTierMission = Array.isArray(currentPointEntry)
+  const progress = getMissionProgress(missionPair.length, nowMission, isGoal)
   return (
     <div className="flex h-[calc(100dvh-3.5rem)] w-full flex-col">
       {/* Status bar */}
-      <div className="flex items-center justify-between border-base-300 border-b bg-base-100 px-4 py-2">
-        <span className="rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary text-sm">
-          チャレンジ {FieldProps.isRetry ? "2回目" : "1回目"}
-        </span>
-        <div className="score-display text-right">
-          <p className="text-base-content/50 text-xs">
-            {isGoal ? "クリア" : "現在"}
-          </p>
-          <p className="font-bold text-2xl text-accent">
-            {pointCount}
-            <span className="text-sm">pt</span>
-          </p>
+      <div className="border-base-300 border-b bg-base-100">
+        <div className="flex items-center justify-between px-3 py-1.5">
+          {/* Left: attempt badge + course/player info */}
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-0.5 font-semibold text-primary text-xs">
+              {FieldProps.isRetry ? "2回目" : "1回目"}
+            </span>
+            <span className="truncate text-base-content/50 text-xs">
+              {courseName} / {playerName}
+            </span>
+          </div>
+          {/* Right: mission overview + sound + score */}
+          <div className="flex shrink-0 items-center gap-1">
+            <MissionOverview
+              missionPair={missionPair}
+              pointState={pointState}
+              nowMission={nowMission}
+              isGoal={isGoal}
+              progress={progress}
+            />
+            <SoundController />
+            <div className="score-display pl-1 text-right">
+              <p className="font-bold text-accent text-xl leading-tight">
+                {pointCount}
+                <span className="text-xs">pt</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        {/* Progress bar */}
+        <div className="h-1 w-full bg-base-300">
+          <div
+            className="h-full bg-primary transition-all duration-500 ease-out"
+            style={{ width: `${progress.percent}%` }}
+          />
         </div>
       </div>
 
       {/* Goal celebration or Mission info */}
       {isGoal ? (
-        <div className="flex flex-col items-center gap-3 bg-success/5 px-4 py-4">
+        <div className="flex flex-col items-center gap-3 bg-gradient-to-b from-success/10 to-success/5 px-4 py-6">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-success/20">
+            <span className="text-3xl">&#127881;</span>
+          </div>
           <p className="font-bold text-2xl text-success">おめでとう!</p>
           {pointState[1] !== null &&
             !Array.isArray(pointState[1]) &&
@@ -139,12 +175,12 @@ function NormalChallengeSection({
           {message && <p className="text-base-content/60 text-sm">{message}</p>}
         </div>
       ) : (
-        <div className="flex items-center justify-center gap-4 bg-base-200/50 px-4 py-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary font-bold text-primary-content text-sm">
+        <div className="flex items-center justify-center gap-4 bg-base-200/30 px-4 py-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary font-bold text-primary-content text-sm shadow-sm">
             {nowMission + 1}
           </div>
           <div>
-            <p className="font-bold text-lg text-primary">
+            <p className="font-bold text-lg text-primary leading-tight">
               {missionPair[nowMission][0] === null
                 ? "-"
                 : MissionString[missionPair[nowMission][0]]}
@@ -155,12 +191,21 @@ function NormalChallengeSection({
                 ? ""
                 : getMissionParameterUnit(missionPair[nowMission][0])}
             </p>
-            {!isTierMission && (
-              <p className="text-accent text-xs">
-                +{pointState[nowMission + 2] as number}pt
-              </p>
-            )}
-            {isTierMission && <p className="text-accent text-xs">段階評価</p>}
+            <div className="flex items-center gap-2">
+              {!isTierMission && (
+                <p className="font-medium text-accent text-xs">
+                  +{pointState[nowMission + 2] as number}pt
+                </p>
+              )}
+              {isTierMission && (
+                <span className="rounded-md bg-accent/10 px-2 py-0.5 font-medium text-accent text-xs">
+                  段階評価
+                </span>
+              )}
+              <span className="text-base-content/30 text-xs">
+                {nowMission + 1}/{progress.total}
+              </span>
+            </div>
           </div>
         </div>
       )}
@@ -196,7 +241,7 @@ function NormalChallengeSection({
 
       {/* Action bar */}
       <div className="border-base-300 border-t bg-base-100 px-4 py-3">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <BackButton
             onClick={handleBack}
             disabled={FieldProps.nowMission === 0}
@@ -204,11 +249,15 @@ function NormalChallengeSection({
             className="flex-1"
           />
           {!isGoal && (
-            <FailButton onClick={() => setModalOpen(1)} className="flex-1" />
+            <>
+              <CourseOutButton
+                onClick={() => setModalOpen(3)}
+                variant="outline"
+                className="whitespace-nowrap"
+              />
+              <FailButton onClick={() => setModalOpen(1)} className="flex-1" />
+            </>
           )}
-        </div>
-        <div className="mt-2 flex justify-center">
-          <SoundController />
         </div>
       </div>
     </div>
@@ -225,6 +274,8 @@ export function Challenge({
   playerId,
   judgeId,
   setIsEnabled,
+  courseName,
+  playerName,
 }: ChallengeProps): React.JSX.Element {
   const router = useRouter()
   const fieldState = deserializeField(field ?? "")
@@ -430,6 +481,8 @@ export function Challenge({
         isSuccess={isSuccess}
         message={message}
         FieldProps={FieldProps}
+        courseName={courseName}
+        playerName={playerName}
       />
       {modalOpen === 1 && (
         <ChallengeModal

@@ -58,7 +58,7 @@ function renderView(courseId = 1) {
 afterEach(cleanup)
 
 describe("View", () => {
-  test("does not register beforeunload before challenge starts", () => {
+  test("registers beforeunload immediately on render", () => {
     const spy = mock()
     const original = window.addEventListener
     window.addEventListener = mock((event: string, handler: unknown) => {
@@ -70,7 +70,7 @@ describe("View", () => {
 
     renderView()
 
-    expect(spy).not.toHaveBeenCalled()
+    expect(spy).toHaveBeenCalled()
     window.addEventListener = original
   })
 
