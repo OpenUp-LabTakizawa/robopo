@@ -1,5 +1,8 @@
 import type React from "react"
-import { NextArrow } from "@/app/components/course/nextArrow"
+import {
+  NextArrow,
+  NextPauseIndicator,
+} from "@/app/components/course/nextArrow"
 import { Panel } from "@/app/components/course/panel"
 import { Robot } from "@/app/components/course/robot"
 import {
@@ -19,6 +22,7 @@ type FieldProps = {
   botAfterPosition?: { row: number; col: number }
   botAfterAngle?: number
   isPlaying?: boolean
+  isPauseMission?: boolean
   nextMission?: MissionValue[]
   onPanelClick: (row: number, col: number) => void
   onPanelPointerDown?: (row: number, col: number) => void
@@ -36,6 +40,7 @@ export function Field({
   botAfterPosition,
   botAfterAngle,
   isPlaying = false,
+  isPauseMission = false,
   nextMission,
   onPanelClick,
   onPanelPointerDown,
@@ -129,16 +134,25 @@ export function Field({
       )}
       {/* Show bot preview during edit */}
       {type === "edit" && botPosition && botDirection && (
-        <Robot
-          row={botPosition.row}
-          col={botPosition.col}
-          direction={botDirection}
-          afterRow={botAfterPosition?.row}
-          afterCol={botAfterPosition?.col}
-          afterAngle={botAfterAngle}
-          responsive
-          opacity={isPlaying ? 1 : 0.6}
-        />
+        <>
+          <Robot
+            row={botPosition.row}
+            col={botPosition.col}
+            direction={botDirection}
+            afterRow={isPauseMission ? undefined : botAfterPosition?.row}
+            afterCol={isPauseMission ? undefined : botAfterPosition?.col}
+            afterAngle={isPauseMission ? undefined : botAfterAngle}
+            responsive
+            opacity={isPlaying ? 1 : 0.6}
+          />
+          {isPauseMission && (
+            <NextPauseIndicator
+              row={botPosition.row}
+              col={botPosition.col}
+              responsive
+            />
+          )}
+        </>
       )}
     </div>
   )

@@ -2,6 +2,23 @@ import type { useRouter } from "next/navigation"
 import type React from "react"
 import type { PointState } from "@/app/components/course/utils"
 
+// ミッション進捗の計算
+export type MissionProgress = {
+  completed: number
+  total: number
+  percent: number
+}
+
+export function getMissionProgress(
+  missionCount: number,
+  nowMission: number,
+  isGoal: boolean,
+): MissionProgress {
+  const completed = isGoal ? missionCount : nowMission
+  const percent = missionCount > 0 ? (completed / missionCount) * 100 : 0
+  return { completed, total: missionCount, percent }
+}
+
 // コースアウト detail 値の定数
 export const COURSE_OUT_FIRST = "courseOut:first" as const
 export const COURSE_OUT_RETRY = "courseOut:retry" as const

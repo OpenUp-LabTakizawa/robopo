@@ -26,6 +26,7 @@ type CourseEditProps = {
   botDirection?: MissionValue
   botAfterPosition?: { row: number; col: number }
   botAfterAngle?: number
+  isPauseMission?: boolean
   onRouteAdded?: (row: number, col: number) => void
   isolatedPanels?: Set<string>
   isPlaying?: boolean
@@ -45,6 +46,7 @@ export default function CourseEdit({
   botDirection,
   botAfterPosition,
   botAfterAngle,
+  isPauseMission,
   onRouteAdded,
   isolatedPanels,
   isPlaying = false,
@@ -154,6 +156,7 @@ export default function CourseEdit({
               botDirection={botDirection}
               botAfterPosition={botAfterPosition}
               botAfterAngle={botAfterAngle}
+              isPauseMission={isPauseMission}
               isPlaying={isPlaying}
               onPanelClick={handlePanelClick}
               onPanelPointerDown={handlePointerDown}

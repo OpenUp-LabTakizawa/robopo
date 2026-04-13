@@ -275,6 +275,23 @@
   }
 }
 
+/* Pause mission indicator pulse */
+.pause-indicator {
+  animation: pausePulse 2s ease-in-out infinite;
+}
+
+@keyframes pausePulse {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
 /* Robot icon pulse glow */
 @keyframes robotPulse {
   0%,
@@ -310,6 +327,9 @@
     animation: none;
   }
   .scoring-btn-ready {
+    animation: none;
+  }
+  .pause-indicator {
     animation: none;
   }
   .skeleton-shimmer {

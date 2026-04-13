@@ -321,6 +321,16 @@ export function EditorPage({
                 : undefined
             }
             botAfterAngle={robotPreview?.afterAngle}
+            isPauseMission={(() => {
+              const idx = insertPreview
+                ? buildPreviewMission(mission, insertPreview).selectedIndex
+                : selectedMissionIndex
+              if (idx === null || idx < 0) {
+                return false
+              }
+              const pairs = missionStatePair(mission)
+              return pairs[idx]?.[0] === "ps"
+            })()}
             onRouteAdded={handleRouteAdded}
             isolatedPanels={validation.isolatedPanels}
             isPlaying={isPlaying}

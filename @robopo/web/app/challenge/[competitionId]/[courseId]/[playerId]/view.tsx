@@ -20,16 +20,15 @@ export function View({
   judgeId: number
 }) {
   const playerId = playerData.id
-  const { started } = useAudioContext()
+  const { setStarted } = useAudioContext()
   const { setDirty } = useNavigationGuard()
 
-  // スタートボタンが押されたら離脱警告を有効化
+  // ページ表示と同時にチャレンジを開始
   useEffect(() => {
-    if (started) {
-      setDirty(true)
-    }
+    setStarted(true)
+    setDirty(true)
     return () => setDirty(false)
-  }, [started, setDirty])
+  }, [setStarted, setDirty])
 
   return (
     <div className="flex w-full flex-col items-center justify-center overflow-y-auto pt-10 sm:pt-px">
@@ -44,6 +43,8 @@ export function View({
           playerId={playerId}
           judgeId={judgeId}
           setIsEnabled={setDirty}
+          courseName={courseData.name}
+          playerName={playerData.name}
         />
       )}
     </div>

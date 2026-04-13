@@ -3,10 +3,5 @@ import { AudioProvider } from "@/app/challenge/[competitionId]/[courseId]/[playe
 export default function Layout(
   props: LayoutProps<"/challenge/[competitionId]/[courseId]/[playerId]">,
 ) {
-  return (
-    <AudioProvider>
-      {props.children}
-      {props.modal}
-    </AudioProvider>
-  )
+  return <AudioProvider>{props.children}</AudioProvider>
 }
