@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test"
-import { cleanup, render, screen } from "@testing-library/react"
+import { cleanup, screen } from "@testing-library/react"
 import { Dashboard } from "@/app/components/home/dashboard"
+import { renderWithRouter } from "../../../utils/router"
 
 afterEach(cleanup)
 
@@ -49,19 +50,19 @@ const defaultProps = {
 
 describe("Dashboard", () => {
   test("renders two dashboard cards", () => {
-    const { container } = render(<Dashboard {...defaultProps} />)
+    const { container } = renderWithRouter(<Dashboard {...defaultProps} />)
     const cards = container.querySelectorAll(".rounded-box")
     expect(cards.length).toBe(2)
   })
 
   test("renders scoring card with primary variant", () => {
-    const { container } = render(<Dashboard {...defaultProps} />)
+    const { container } = renderWithRouter(<Dashboard {...defaultProps} />)
     const primaryCard = container.querySelector(".ring-primary\\/10")
     expect(primaryCard).toBeTruthy()
   })
 
   test("renders card titles", () => {
-    render(<Dashboard {...defaultProps} />)
+    renderWithRouter(<Dashboard {...defaultProps} />)
     expect(screen.getByText("採点")).toBeTruthy()
     expect(screen.getByText("大会管理")).toBeTruthy()
   })

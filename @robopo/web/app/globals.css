@@ -235,6 +235,25 @@
   }
 }
 
+/* Scoring start button glow */
+.scoring-btn-ready {
+  animation: scoringPulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes scoringPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 4px 14px -2px oklch(0.55 0.13 175 / 0.25),
+      0 0 0 0 oklch(0.55 0.13 175 / 0);
+  }
+  50% {
+    box-shadow:
+      0 8px 25px -4px oklch(0.55 0.13 175 / 0.4),
+      0 0 20px 3px oklch(0.55 0.13 175 / 0.12);
+  }
+}
+
 /* Skeleton shimmer for page loading */
 .skeleton-shimmer {
   background: linear-gradient(
@@ -288,6 +307,9 @@
     animation: none;
   }
   .start-btn-glow {
+    animation: none;
+  }
+  .scoring-btn-ready {
     animation: none;
   }
   .skeleton-shimmer {
