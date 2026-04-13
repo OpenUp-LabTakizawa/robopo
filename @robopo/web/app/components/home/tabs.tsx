@@ -17,7 +17,7 @@ import type {
   SelectCompetitionCourse,
   SelectCompetitionJudge,
   SelectCourse,
-  SelectJudge,
+  SelectJudgeWithUsername,
 } from "@/app/lib/db/schema"
 
 function CourseCard({
@@ -62,8 +62,9 @@ type ChallengeTabProps = {
   competitionList: { competitions: SelectCompetition[] }
   courseList: { courses: SelectCourse[] }
   competitionCourseList: { competitionCourseList: SelectCompetitionCourse[] }
-  judgeList: SelectJudge[]
+  judgeList: SelectJudgeWithUsername[]
   competitionJudgeList: { competitionJudgeList: SelectCompetitionJudge[] }
+  loggedInJudgeId?: number
 }
 
 export function ChallengeTab({
@@ -72,6 +73,7 @@ export function ChallengeTab({
   competitionCourseList,
   judgeList,
   competitionJudgeList,
+  loggedInJudgeId,
 }: ChallengeTabProps): React.JSX.Element {
   const activeCompetitions =
     competitionList.competitions.filter(isCompetitionActive)
@@ -79,7 +81,7 @@ export function ChallengeTab({
     activeCompetitions.length === 1 ? activeCompetitions[0] : null
 
   const [competitionId, setCompetitionId] = useState(singleCompetition?.id ?? 0)
-  const [judgeId, setJudgeId] = useState(0)
+  const [judgeId, setJudgeId] = useState(loggedInJudgeId ?? 0)
   const [showAlert, setShowAlert] = useState(false)
   const judgeSelectRef = useRef<HTMLSelectElement>(null)
   const disableCondition = competitionId === 0 || judgeId === 0
@@ -186,7 +188,7 @@ export function ChallengeTab({
           </option>
           {filteredJudges.map((u) => (
             <option key={u.id} value={u.id}>
-              {u.name}
+              {u.username}
             </option>
           ))}
         </select>

@@ -65,23 +65,85 @@ describe("groupByPlayer", () => {
 describe("groupByJudge", () => {
   test("groups flat rows by judge id and collects competition names", () => {
     const result = groupByJudge([
-      { id: 1, name: "U1", competitionId: 10, competitionName: "Comp1" },
-      { id: 1, name: "U1", competitionId: 20, competitionName: "Comp2" },
-      { id: 2, name: "U2", competitionId: 10, competitionName: "Comp1" },
+      {
+        id: 1,
+        username: "U1",
+        userId: "u1",
+        note: null,
+        lastLoginAt: null,
+        createdAt: null,
+        competitionId: 10,
+        competitionName: "Comp1",
+      },
+      {
+        id: 1,
+        username: "U1",
+        userId: "u1",
+        note: null,
+        lastLoginAt: null,
+        createdAt: null,
+        competitionId: 20,
+        competitionName: "Comp2",
+      },
+      {
+        id: 2,
+        username: "U2",
+        userId: "u2",
+        note: null,
+        lastLoginAt: null,
+        createdAt: null,
+        competitionId: 10,
+        competitionName: "Comp1",
+      },
     ])
 
     expect(result).toHaveLength(2)
+    expect(result[0].username).toBe("U1")
+    expect(result[0].userId).toBe("u1")
+    expect(result[0].lastLoginAt).toBeNull()
     expect(result[0].competitionName).toEqual(["Comp1", "Comp2"])
+    expect(result[1].username).toBe("U2")
+    expect(result[1].userId).toBe("u2")
     expect(result[1].competitionName).toEqual(["Comp1"])
   })
 
   test("handles judge with no competition", () => {
     const result = groupByJudge([
-      { id: 1, name: "U1", competitionId: null, competitionName: null },
+      {
+        id: 1,
+        username: "U1",
+        userId: "u1",
+        note: null,
+        lastLoginAt: null,
+        createdAt: null,
+        competitionId: null,
+        competitionName: null,
+      },
     ])
 
     expect(result).toHaveLength(1)
+    expect(result[0].username).toBe("U1")
+    expect(result[0].userId).toBe("u1")
     expect(result[0].competitionName).toEqual([])
+  })
+
+  test("normalizes null username to empty string", () => {
+    const result = groupByJudge([
+      {
+        id: 1,
+        username: null,
+        userId: "u1",
+        note: null,
+        lastLoginAt: new Date("2024-01-01T00:00:00.000Z"),
+        createdAt: null,
+        competitionId: 10,
+        competitionName: "Comp1",
+      },
+    ])
+
+    expect(result).toHaveLength(1)
+    expect(result[0].username).toBe("")
+    expect(result[0].lastLoginAt).toEqual(new Date("2024-01-01T00:00:00.000Z"))
   })
 
   test("returns empty array for empty input", () => {

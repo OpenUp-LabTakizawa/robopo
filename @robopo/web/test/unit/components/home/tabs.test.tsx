@@ -75,8 +75,8 @@ const competitionCourseList = {
 }
 
 const judgeList = [
-  { id: 1, name: "Judge A", createdAt: null },
-  { id: 2, name: "Judge B", createdAt: null },
+  { id: 1, username: "judgea", note: null, userId: "u1", createdAt: null },
+  { id: 2, username: "judgeb", note: null, userId: "u2", createdAt: null },
 ]
 
 const competitionJudgeList = {
@@ -123,8 +123,8 @@ describe("ChallengeTab", () => {
         competitionJudgeList={competitionJudgeList}
       />,
     )
-    expect(screen.getByText("Judge A")).toBeTruthy()
-    expect(screen.getByText("Judge B")).toBeTruthy()
+    expect(screen.getByText("judgea")).toBeTruthy()
+    expect(screen.getByText("judgeb")).toBeTruthy()
   })
 
   test("shows warning when course card clicked without judge selected", () => {

@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm"
 import { db } from "@/app/lib/db/db"
+import { auth } from "@/lib/auth"
 
 async function seed() {
   await db.execute(sql`BEGIN`)
@@ -51,29 +52,67 @@ async function seed() {
       SELECT setval('course_id_seq', (SELECT COALESCE(MAX(id), 0) FROM course))
     `)
 
-    // Test judges
+    // Known test judge usernames
+    const judgeUsernames = ["testjudge", "judgeb", "judgec"]
+    const usernameList = sql.join(
+      judgeUsernames.map((u) => sql`${u}`),
+      sql`, `,
+    )
+
+    // Clean up test judges by username (single-pass, targeted cleanup)
     await db.execute(sql`
-      INSERT INTO judge (id, name)
-      VALUES (1, 'TestJudge')
-      ON CONFLICT (id) DO UPDATE SET name = 'TestJudge'
-    `)
-    await db.execute(sql`
-      UPDATE challenge SET judge_id = NULL WHERE judge_id IN (
-        SELECT id FROM judge WHERE name IN ('審判B', '審判C')
+      UPDATE challenge SET judge_id = NULL
+      WHERE judge_id IN (
+        SELECT j.id FROM judge j
+        JOIN "user" u ON j.user_id = u.id
+        WHERE u.username IN (${usernameList})
       )
     `)
     await db.execute(sql`
-      DELETE FROM competition_judge WHERE judge_id IN (
-        SELECT id FROM judge WHERE name IN ('審判B', '審判C')
+      DELETE FROM competition_judge
+      WHERE judge_id IN (
+        SELECT j.id FROM judge j
+        JOIN "user" u ON j.user_id = u.id
+        WHERE u.username IN (${usernameList})
       )
     `)
-    await db.execute(sql`DELETE FROM judge WHERE name IN ('審判B', '審判C')`)
     await db.execute(sql`
-      SELECT setval('judge_id_seq', (SELECT COALESCE(MAX(id), 0) FROM judge))
+      DELETE FROM judge
+      WHERE user_id IN (SELECT id FROM "user" WHERE username IN (${usernameList}))
     `)
     await db.execute(sql`
-      INSERT INTO judge (name) VALUES ('審判B'), ('審判C')
+      DELETE FROM "user" WHERE username IN (${usernameList})
     `)
+    await db.execute(sql`
+      SELECT setval('judge_id_seq', GREATEST((SELECT COALESCE(MAX(id), 0) FROM judge), 1))
+    `)
+
+    // Create judge accounts (user + judge record)
+    async function createJudgeAccount(username: string) {
+      const res = await auth.api.signUpEmail({
+        body: {
+          email: `${username}@robopo.local`,
+          password: "judge1234",
+          name: username,
+          username,
+        },
+      })
+      if (!res?.user?.id) {
+        return
+      }
+      await db.execute(sql`
+        INSERT INTO judge (user_id) VALUES (${res.user.id})
+      `)
+      console.log(`  Judge account created: ${username}`)
+    }
+
+    for (const uname of judgeUsernames) {
+      try {
+        await createJudgeAccount(uname)
+      } catch (e) {
+        console.error(`  Failed to create account for ${uname}:`, e)
+      }
+    }
 
     // Delete existing data to prevent test data duplication
     await db.execute(sql`

@@ -11,15 +11,16 @@ import type {
   SelectCompetitionCourse,
   SelectCompetitionJudge,
   SelectCourse,
-  SelectJudge,
+  SelectJudgeWithUsername,
 } from "@/app/lib/db/schema"
 
 type DashboardProps = {
   competitionList: { competitions: SelectCompetition[] }
   courseList: { courses: SelectCourse[] }
   competitionCourseList: { competitionCourseList: SelectCompetitionCourse[] }
-  judgeList: SelectJudge[]
+  judgeList: SelectJudgeWithUsername[]
   competitionJudgeList: { competitionJudgeList: SelectCompetitionJudge[] }
+  loggedInJudgeId?: number
 }
 
 function DashboardCard({
@@ -64,6 +65,7 @@ export function Dashboard({
   competitionCourseList,
   judgeList,
   competitionJudgeList,
+  loggedInJudgeId,
 }: DashboardProps) {
   return (
     <div className="mx-auto max-w-4xl px-4 py-6">
@@ -81,6 +83,7 @@ export function Dashboard({
               competitionCourseList={competitionCourseList}
               judgeList={judgeList}
               competitionJudgeList={competitionJudgeList}
+              loggedInJudgeId={loggedInJudgeId}
             />
           </DashboardCard>
         </div>

@@ -21,7 +21,7 @@ type JudgeSortKey =
   | "courseOutCount"
 
 const SORT_OPTIONS: { value: JudgeSortKey; label: string }[] = [
-  { value: "judgeName", label: "採点者名" },
+  { value: "judgeName", label: "ユーザー名" },
   { value: "scoredPlayerCount", label: "採点人数" },
   { value: "firstScoringTime", label: "初採点時刻" },
   { value: "lastScoringTime", label: "最終採点時刻" },
@@ -133,7 +133,7 @@ export function JudgeSummaryTable({ competitionId }: Props) {
 
   const columns = [
     "ID",
-    "採点者名",
+    "ユーザー名",
     "採点人数",
     "初採点時刻",
     "最終採点時刻",
@@ -147,7 +147,7 @@ export function JudgeSummaryTable({ competitionId }: Props) {
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <MultiSortToolbar<JudgeSortKey>
-        searchPlaceholder="採点者名で検索"
+        searchPlaceholder="ユーザー名で検索"
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         sortConditions={sortConditions}

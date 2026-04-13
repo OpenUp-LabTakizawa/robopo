@@ -4,6 +4,8 @@ import {
   CheckCircleIcon,
   CheckIcon,
   ExclamationTriangleIcon,
+  EyeIcon,
+  EyeSlashIcon,
   PlusIcon,
   XCircleIcon,
   XMarkIcon,
@@ -29,7 +31,9 @@ export function JudgeFormModal({
   onClose,
   onSuccess,
 }: JudgeFormModalProps) {
-  const [name, setName] = useState(judge?.name ?? "")
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
   const [note, setNote] = useState(judge?.note ?? "")
   const [selectedCompetitionIds, setSelectedCompetitionIds] = useState<
     number[]
@@ -45,8 +49,29 @@ export function JudgeFormModal({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!name.trim()) {
-      setError("名前は必須です。")
+
+    if (mode === "create") {
+      if (!username.trim()) {
+        setError("ユーザー名は必須です。")
+        return
+      }
+      if (!/^[a-z0-9_]+$/.test(username.trim())) {
+        setError("ユーザー名は英小文字・数字・アンダースコアのみ使用できます。")
+        return
+      }
+      if (!password || password.length < 8) {
+        setError("パスワードは8文字以上で入力してください。")
+        return
+      }
+    }
+
+    if (
+      mode === "edit" &&
+      password &&
+      password.length > 0 &&
+      password.length < 8
+    ) {
+      setError("パスワードは8文字以上で入力してください。")
       return
     }
 
@@ -55,11 +80,16 @@ export function JudgeFormModal({
 
     try {
       const body: Record<string, unknown> = {
-        name: name.trim(),
         note: note.trim() || null,
+        competitionIds: selectedCompetitionIds,
       }
 
-      body.competitionIds = selectedCompetitionIds
+      if (mode === "create") {
+        body.username = username.trim()
+        body.password = password
+      } else if (password) {
+        body.password = password
+      }
 
       const url = mode === "create" ? "/api/judge" : `/api/judge/${judge?.id}`
       const method = mode === "create" ? "POST" : "PATCH"
@@ -95,22 +125,84 @@ export function JudgeFormModal({
           {mode === "create" ? "採点者を登録" : "採点者を編集"}
         </h3>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {mode === "create" ? (
+            <div>
+              <label className="label" htmlFor="judge-username">
+                <span className="label-text">
+                  ユーザー名 <span className="text-error">*</span>
+                </span>
+              </label>
+              <input
+                id="judge-username"
+                type="text"
+                className="input input-bordered w-full lowercase"
+                value={username}
+                onChange={(e) => setUsername(e.target.value.toLowerCase())}
+                placeholder="英小文字・数字（例: judge1）"
+                pattern="[a-z0-9_]+"
+                required
+              />
+              <p className="mt-1 text-base-content/40 text-xs">
+                英小文字・数字・アンダースコアのみ使用可能（ログインにも使用）
+              </p>
+            </div>
+          ) : (
+            <div>
+              <label className="label" htmlFor="judge-username-display">
+                <span className="label-text">ユーザー名</span>
+              </label>
+              <input
+                id="judge-username-display"
+                type="text"
+                className="input input-bordered w-full"
+                value={judge?.username ?? ""}
+                disabled
+              />
+            </div>
+          )}
+
           <div>
-            <label className="label" htmlFor="judge-name">
+            <label className="label" htmlFor="judge-password">
               <span className="label-text">
-                名前 <span className="text-error">*</span>
+                パスワード
+                {mode === "create" && <span className="text-error"> *</span>}
               </span>
             </label>
-            <input
-              id="judge-name"
-              type="text"
-              className="input input-bordered w-full"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="採点者名"
-              required
-            />
+            <div className="relative">
+              <input
+                id="judge-password"
+                type={showPassword ? "text" : "password"}
+                className="input input-bordered w-full pr-12"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder={
+                  mode === "create"
+                    ? "8文字以上"
+                    : "変更する場合のみ入力（8文字以上）"
+                }
+                minLength={mode === "create" ? 8 : undefined}
+                required={mode === "create"}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute inset-y-0 right-2 flex items-center rounded-lg p-1.5 text-base-content/40 transition-colors hover:bg-base-300/50 hover:text-base-content/70"
+                aria-label="パスワードを表示"
+              >
+                {showPassword ? (
+                  <EyeSlashIcon className="size-5" />
+                ) : (
+                  <EyeIcon className="size-5" />
+                )}
+              </button>
+            </div>
+            {mode === "edit" && (
+              <p className="mt-1 text-base-content/40 text-xs">
+                空欄の場合、パスワードは変更されません
+              </p>
+            )}
           </div>
+
           <div>
             <label className="label" htmlFor="judge-note">
               <span className="label-text">備考</span>
@@ -254,7 +346,7 @@ export function JudgeDeleteModal({
               <ul className="w-full list-inside list-disc text-sm">
                 {judges.map((j) => (
                   <li key={j.id} className="font-medium">
-                    {j.name}
+                    {j.username}
                   </li>
                 ))}
               </ul>
