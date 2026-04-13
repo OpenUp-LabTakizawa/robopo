@@ -17,7 +17,7 @@ import type {
   SelectJudgeWithCompetition,
 } from "@/app/lib/db/schema"
 
-type SortKey = "name" | "id"
+type SortKey = "username" | "id"
 
 export function JudgeView({
   initialJudgeList,
@@ -62,7 +62,7 @@ export function JudgeView({
       const q = searchQuery.trim().toLowerCase()
       list = list.filter(
         (j) =>
-          j.name.toLowerCase().includes(q) ||
+          j.username.toLowerCase().includes(q) ||
           (j.note?.toLowerCase().includes(q) ?? false),
       )
     }
@@ -71,8 +71,8 @@ export function JudgeView({
     }
     return [...list].sort((a, b) => {
       let cmp = 0
-      if (sortKey === "name") {
-        cmp = a.name.localeCompare(b.name, "ja")
+      if (sortKey === "username") {
+        cmp = a.username.localeCompare(b.username)
       } else {
         cmp = a.id - b.id
       }
@@ -161,7 +161,7 @@ export function JudgeView({
           <MagnifyingGlassIcon className="size-4 shrink-0 text-base-content/40" />
           <input
             type="text"
-            placeholder="名前・備考で検索"
+            placeholder="ユーザー名・備考で検索"
             className="grow"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -192,7 +192,7 @@ export function JudgeView({
               onChange={(e) => setSortKey(e.target.value as SortKey)}
             >
               <option value="id">ID</option>
-              <option value="name">名前</option>
+              <option value="username">ユーザー名</option>
             </select>
             <button
               type="button"
@@ -206,7 +206,7 @@ export function JudgeView({
               ) : (
                 <BarsArrowUpIcon className="size-3.5" />
               )}
-              {sortKey === "name"
+              {sortKey === "username"
                 ? sortOrder === "desc"
                   ? "Z→A"
                   : "A→Z"

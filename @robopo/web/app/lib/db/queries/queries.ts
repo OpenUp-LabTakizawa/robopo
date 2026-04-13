@@ -18,6 +18,8 @@ import {
   type SelectCourseWithCompetition,
   type SelectJudgeWithCompetition,
   type SelectPlayerWithCompetition,
+  session,
+  user,
 } from "@/app/lib/db/schema"
 
 // Check if a course name already exists (optionally excluding a specific course ID)
@@ -475,23 +477,6 @@ export async function getPlayerByName(
   return result.length > 0 ? result[0] : null
 }
 
-// Check if a judge name already exists (optionally excluding a specific judge ID)
-export async function getJudgeByName(
-  name: string,
-  excludeId?: number,
-): Promise<{ id: number } | null> {
-  const conditions = [eq(judge.name, name)]
-  if (excludeId) {
-    conditions.push(ne(judge.id, excludeId))
-  }
-  const result = await db
-    .select({ id: judge.id })
-    .from(judge)
-    .where(and(...conditions))
-    .limit(1)
-  return result.length > 0 ? result[0] : null
-}
-
 // Get players with their competitions
 export async function getPlayersWithCompetition() {
   return await db
@@ -555,18 +540,32 @@ export function groupByPlayer(
   return Array.from(map.values())
 }
 
-// Get judges with their competitions
+// Get judges with their competitions (username from user table)
 export async function getJudgeWithCompetition() {
+  // Subquery: latest session createdAt per userId
+  const lastLoginSubquery = db
+    .select({
+      userId: session.userId,
+      lastLoginAt: sql<Date>`MAX(${session.createdAt})`.as("last_login_at"),
+    })
+    .from(session)
+    .groupBy(session.userId)
+    .as("last_login")
+
   return await db
     .select({
       id: judge.id,
-      name: judge.name,
+      username: user.username,
       note: judge.note,
+      userId: judge.userId,
+      lastLoginAt: lastLoginSubquery.lastLoginAt,
       createdAt: judge.createdAt,
       competitionId: competition.id,
       competitionName: competition.name,
     })
     .from(judge)
+    .innerJoin(user, eq(judge.userId, user.id))
+    .leftJoin(lastLoginSubquery, eq(user.id, lastLoginSubquery.userId))
     .leftJoin(competitionJudge, eq(judge.id, competitionJudge.judgeId))
     .leftJoin(competition, eq(competitionJudge.competitionId, competition.id))
     .orderBy(judge.id)
@@ -576,8 +575,10 @@ export async function getJudgeWithCompetition() {
 export function groupByJudge(
   flatRows: {
     id: number
-    name: string
+    username: string | null
     note: string | null
+    userId: string
+    lastLoginAt: Date | null
     createdAt: Date | null
     competitionId: number | null
     competitionName: string | null
@@ -590,8 +591,10 @@ export function groupByJudge(
     if (!existing) {
       existing = {
         id: row.id,
-        name: row.name,
+        username: row.username ?? "",
         note: row.note,
+        userId: row.userId,
+        lastLoginAt: row.lastLoginAt,
         createdAt: row.createdAt,
         competitionId: row.competitionId,
         competitionIds: [],
@@ -770,7 +773,7 @@ export async function getJudgeSummaryByCompetition(
   const result = await db.execute(sql`
     SELECT
       j.id AS "judgeId",
-      j.name AS "judgeName",
+      u.username AS "judgeName",
       COUNT(DISTINCT c.player_id)::int AS "scoredPlayerCount",
       array_agg(DISTINCT p.name) AS "scoredPlayerNames",
       TO_CHAR(MIN(c.created_at) AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Tokyo', 'YYYY-MM-DD"T"HH24:MI:SS"+09:00"') AS "firstScoringTime",
@@ -784,10 +787,11 @@ export async function getJudgeSummaryByCompetition(
         + CASE WHEN c.detail = 'courseOut:retry' THEN 1 ELSE 0 END
       )::int AS "courseOutCount"
     FROM judge j
+    INNER JOIN "user" u ON u.id = j.user_id
     INNER JOIN challenge c ON c.judge_id = j.id AND c.competition_id = ${competitionId}
     INNER JOIN player p ON p.id = c.player_id
     INNER JOIN course co ON co.id = c.course_id
-    GROUP BY j.id, j.name
+    GROUP BY j.id, u.username
     ORDER BY j.id
   `)
   return result.rows as JudgeSummary[]

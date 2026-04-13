@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm"
 import { headers } from "next/headers"
 import { Dashboard } from "@/app/components/home/dashboard"
 import { ChallengeTab } from "@/app/components/home/tabs"
@@ -8,13 +9,15 @@ import {
   getCourseList,
   getJudgeList,
 } from "@/app/components/server/db"
+import { db } from "@/app/lib/db/db"
 import type {
   SelectCompetition,
   SelectCompetitionCourse,
   SelectCompetitionJudge,
   SelectCourse,
-  SelectJudge,
+  SelectJudgeWithUsername,
 } from "@/app/lib/db/schema"
+import { judge } from "@/app/lib/db/schema"
 import { auth } from "@/lib/auth"
 
 export default async function Home() {
@@ -27,30 +30,57 @@ export default async function Home() {
   const competitionCourseList: {
     competitionCourseList: SelectCompetitionCourse[]
   } = await getCompetitionCourseAssignList()
-  const judgeList: SelectJudge[] = await getJudgeList()
+  const judgeList: SelectJudgeWithUsername[] = await getJudgeList()
   const competitionJudgeList: {
     competitionJudgeList: SelectCompetitionJudge[]
   } = await getCompetitionJudgeAssignList()
 
-  return session?.user ? (
-    <Dashboard
+  // Check if logged-in user is a judge
+  let isJudge = false
+  let loggedInJudgeId: number | undefined
+  if (session?.user) {
+    const judgeRecord = await db
+      .select({ id: judge.id })
+      .from(judge)
+      .where(eq(judge.userId, session.user.id))
+      .limit(1)
+    if (judgeRecord.length > 0) {
+      isJudge = true
+      loggedInJudgeId = judgeRecord[0].id
+    }
+  }
+
+  const isAdmin = session?.user && !isJudge
+
+  const challengeTab = (
+    <ChallengeTab
+      key="challenge"
       competitionList={competitionList}
       courseList={courseList}
       competitionCourseList={competitionCourseList}
       judgeList={judgeList}
       competitionJudgeList={competitionJudgeList}
+      loggedInJudgeId={loggedInJudgeId}
     />
-  ) : (
+  )
+
+  if (isAdmin) {
+    return (
+      <Dashboard
+        competitionList={competitionList}
+        courseList={courseList}
+        competitionCourseList={competitionCourseList}
+        judgeList={judgeList}
+        competitionJudgeList={competitionJudgeList}
+        loggedInJudgeId={loggedInJudgeId}
+      />
+    )
+  }
+
+  return (
     <div className="mx-auto mt-8 max-w-lg">
       <div className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
-        <ChallengeTab
-          key="challenge"
-          competitionList={competitionList}
-          courseList={courseList}
-          competitionCourseList={competitionCourseList}
-          judgeList={judgeList}
-          competitionJudgeList={competitionJudgeList}
-        />
+        {challengeTab}
       </div>
     </div>
   )

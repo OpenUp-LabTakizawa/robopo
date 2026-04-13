@@ -5,7 +5,6 @@ import {
   getChallengeCount,
   getCourseSummary,
   getFirstCount,
-  getJudgeByName,
   getMaxResult,
   getPlayerByName,
   getPlayerResult,
@@ -18,7 +17,6 @@ import {
   competitionCourse,
   competitionPlayer,
   course,
-  judge,
   player,
 } from "@/app/lib/db/schema"
 
@@ -41,18 +39,6 @@ async function setupTestData() {
       .delete(competitionCourse)
       .where(eq(competitionCourse.courseId, existing[0].id))
     await db.delete(course).where(eq(course.id, existing[0].id))
-  }
-
-  // Clean up leftover test judges
-  for (const jName of ["__test_judge_A__"]) {
-    const existingJudge = await db
-      .select({ id: judge.id })
-      .from(judge)
-      .where(eq(judge.name, jName))
-      .limit(1)
-    if (existingJudge.length > 0) {
-      await db.delete(judge).where(eq(judge.id, existingJudge[0].id))
-    }
   }
 
   // Clean up leftover test players
@@ -292,38 +278,6 @@ describe("getPlayerByName", () => {
   })
 })
 
-describe("getJudgeByName", () => {
-  let testJudgeId: number
-
-  beforeAll(async () => {
-    const [j] = await db
-      .insert(judge)
-      .values({ name: "__test_judge_A__" })
-      .returning({ id: judge.id })
-    testJudgeId = j.id
-  })
-
-  afterAll(async () => {
-    await db.delete(judge).where(eq(judge.id, testJudgeId))
-  })
-
-  test("returns null when no judge matches", async () => {
-    const result = await getJudgeByName("__nonexistent_judge__")
-    expect(result).toBeNull()
-  })
-
-  test("returns the correct judge when there is a match", async () => {
-    const result = await getJudgeByName("__test_judge_A__")
-    expect(result).not.toBeNull()
-    expect(result?.id).toBe(testJudgeId)
-  })
-
-  test("honors excludeId when provided", async () => {
-    const result = await getJudgeByName("__test_judge_A__", testJudgeId)
-    expect(result).toBeNull()
-  })
-})
-
 describe("groupByPlayer", () => {
   test("groups rows by player and populates competitionIds", () => {
     const rows = [
@@ -433,24 +387,30 @@ describe("groupByJudge", () => {
     const rows = [
       {
         id: 1,
-        name: "Judge A",
+        username: "judgeA",
+        userId: "u1",
         note: null,
+        lastLoginAt: null,
         createdAt: null,
         competitionId: 10,
         competitionName: "Comp A",
       },
       {
         id: 1,
-        name: "Judge A",
+        username: "judgeA",
+        userId: "u1",
         note: null,
+        lastLoginAt: null,
         createdAt: null,
         competitionId: 20,
         competitionName: "Comp B",
       },
       {
         id: 2,
-        name: "Judge B",
+        username: "judgeB",
+        userId: "u2",
         note: null,
+        lastLoginAt: null,
         createdAt: null,
         competitionId: 10,
         competitionName: "Comp A",
@@ -460,24 +420,34 @@ describe("groupByJudge", () => {
     expect(result).toHaveLength(2)
     const judgeA = result.find((j) => j.id === 1)
     expect(judgeA).toBeDefined()
+    expect(judgeA?.username).toBe("judgeA")
+    expect(judgeA?.userId).toBe("u1")
+    expect(judgeA?.lastLoginAt).toBeNull()
     expect(judgeA?.competitionIds).toEqual([10, 20])
     expect(judgeA?.competitionName).toEqual(["Comp A", "Comp B"])
+    const judgeB = result.find((j) => j.id === 2)
+    expect(judgeB?.username).toBe("judgeB")
+    expect(judgeB?.userId).toBe("u2")
   })
 
   test("de-duplicates competitionIds", () => {
     const rows = [
       {
         id: 1,
-        name: "Judge A",
+        username: "judgeA",
+        userId: "u1",
         note: null,
+        lastLoginAt: null,
         createdAt: null,
         competitionId: 10,
         competitionName: "Comp A",
       },
       {
         id: 1,
-        name: "Judge A",
+        username: "judgeA",
+        userId: "u1",
         note: null,
+        lastLoginAt: null,
         createdAt: null,
         competitionId: 10,
         competitionName: "Comp A",
@@ -492,8 +462,10 @@ describe("groupByJudge", () => {
     const rows = [
       {
         id: 1,
-        name: "Judge A",
+        username: "judgeA",
+        userId: "u1",
         note: null,
+        lastLoginAt: null,
         createdAt: null,
         competitionId: null,
         competitionName: null,

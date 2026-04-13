@@ -9,7 +9,10 @@ import { SIGN_IN_CONST, SIGN_OUT_CONST } from "@/app/lib/const"
 import { signOut } from "@/lib/auth-client"
 
 type Props = {
-  session: { user: { id: string; name: string } } | null
+  session: {
+    user: { id: string; name: string }
+    isJudge: boolean
+  } | null
 }
 
 export function Header({ session }: Props) {
@@ -79,9 +82,9 @@ export function Header({ session }: Props) {
             )}
           </button>
         ) : null}
-        {session?.user ? (
+        {session?.user && !session.isJudge ? (
           <NavigationDrawer />
-        ) : (
+        ) : !session?.user ? (
           <Link
             href={SIGN_IN_CONST.href}
             className="btn btn-ghost btn-sm rounded-full border border-primary/20 text-primary hover:bg-primary hover:text-primary-content"
@@ -90,7 +93,7 @@ export function Header({ session }: Props) {
             {SIGN_IN_CONST.icon}
             {SIGN_IN_CONST.label}
           </Link>
-        )}
+        ) : null}
       </div>
     </header>
   )

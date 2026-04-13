@@ -80,7 +80,7 @@ function TableComponent({
             {(common as SelectJudgeWithCompetition).id}
           </td>
           <td className="py-3 font-medium">
-            {(common as SelectJudgeWithCompetition).name}
+            {(common as SelectJudgeWithCompetition).username}
           </td>
           <td className="py-3">
             {(common as SelectJudgeWithCompetition).competitionName?.length ? (
@@ -95,6 +95,18 @@ function TableComponent({
               </div>
             ) : (
               <span className="text-base-content/30 text-sm">-</span>
+            )}
+          </td>
+          <td
+            className="whitespace-nowrap py-3 text-base-content/60 text-sm"
+            suppressHydrationWarning={true}
+          >
+            {(common as SelectJudgeWithCompetition).lastLoginAt ? (
+              new Date(
+                (common as SelectJudgeWithCompetition).lastLoginAt as Date,
+              ).toLocaleString("ja-JP")
+            ) : (
+              <span className="text-base-content/30">-</span>
             )}
           </td>
           <td className="max-w-xs py-3">
@@ -116,7 +128,7 @@ function TableComponent({
           <td className="py-3 font-medium">
             {(common as SelectCourseWithCompetition).name}
           </td>
-          <td className="py-3 text-center">
+          <td className="py-3">
             {(common as SelectCourseWithCompetition).isConfigured ? (
               <span className="text-lg text-red-500">○</span>
             ) : (
@@ -238,7 +250,7 @@ function itemNames(type: CommonListProps["type"]): string[] {
       "備考",
     )
   } else if (type === "judge") {
-    itemNames.push("ID", "名前", "紐付け大会", "備考")
+    itemNames.push("ID", "ユーザー名", "紐付け大会", "ログイン日時", "備考")
   } else if (type === "course") {
     itemNames.push("ID", "コース名", "設定済み", "使用大会", "作成日時", "説明")
   } else if (type === "competition") {

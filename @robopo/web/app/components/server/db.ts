@@ -19,8 +19,9 @@ import {
   type SelectCompetitionJudge,
   type SelectCompetitionWithCourse,
   type SelectCourse,
-  type SelectJudge,
+  type SelectJudgeWithUsername,
   type SelectPlayer,
+  user,
 } from "@/app/lib/db/schema"
 
 // Get player list
@@ -28,9 +29,19 @@ export async function getPlayerList(): Promise<SelectPlayer[]> {
   return await db.select().from(player)
 }
 
-// Get judge list
-export async function getJudgeList(): Promise<SelectJudge[]> {
-  return await db.select().from(judge)
+// Get judge list (with username from user table)
+export async function getJudgeList(): Promise<SelectJudgeWithUsername[]> {
+  return await db
+    .select({
+      id: judge.id,
+      note: judge.note,
+      userId: judge.userId,
+      createdAt: judge.createdAt,
+      username: user.username,
+    })
+    .from(judge)
+    .innerJoin(user, eq(judge.userId, user.id))
+    .then((rows) => rows.map((r) => ({ ...r, username: r.username ?? "" })))
 }
 
 // Get competition list
@@ -123,20 +134,24 @@ export async function getCompetitionJudgeAssignList(): Promise<{
   return { competitionJudgeList }
 }
 
-// Get judges by competition ID
+// Get judges by competition ID (with username from user table)
 export async function getCompetitionJudgeList(competitionId: number): Promise<{
-  judges: SelectJudge[]
+  judges: SelectJudgeWithUsername[]
 }> {
-  const judges: SelectJudge[] = await db
+  const rows = await db
     .select({
       id: judge.id,
-      name: judge.name,
       note: judge.note,
+      userId: judge.userId,
       createdAt: judge.createdAt,
+      username: user.username,
     })
     .from(judge)
+    .innerJoin(user, eq(judge.userId, user.id))
     .innerJoin(competitionJudge, eq(judge.id, competitionJudge.judgeId))
     .where(eq(competitionJudge.competitionId, competitionId))
 
-  return { judges }
+  return {
+    judges: rows.map((r) => ({ ...r, username: r.username ?? "" })),
+  }
 }

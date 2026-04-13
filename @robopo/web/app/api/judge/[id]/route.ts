@@ -1,12 +1,12 @@
-import { eq } from "drizzle-orm"
+import { hashPassword } from "better-auth/crypto"
+import { and, eq } from "drizzle-orm"
 import { sanitizeCompetitionIds } from "@/app/api/validate"
 import { db } from "@/app/lib/db/db"
 import {
-  getJudgeByName,
   getJudgeWithCompetition,
   groupByJudge,
 } from "@/app/lib/db/queries/queries"
-import { competitionJudge, judge } from "@/app/lib/db/schema"
+import { account, competitionJudge, judge } from "@/app/lib/db/schema"
 
 export async function PATCH(
   req: Request,
@@ -18,31 +18,48 @@ export async function PATCH(
     return Response.json({ error: "Invalid ID" }, { status: 400 })
   }
 
-  const { name, note, competitionIds } = await req.json()
+  const { note, competitionIds, password } = await req.json()
 
-  if (!name?.trim()) {
+  // Validate password up front before any updates
+  if (password && password.length > 0 && password.length < 8) {
     return Response.json(
-      { success: false, message: "名前は必須です。" },
-      { status: 400 },
-    )
-  }
-
-  const existing = await getJudgeByName(name.trim(), judgeId)
-  if (existing) {
-    return Response.json(
-      { success: false, message: "同じ名前の採点者が既に登録されています。" },
+      {
+        success: false,
+        message: "パスワードは8文字以上で入力してください。",
+      },
       { status: 400 },
     )
   }
 
   try {
+    // Update judge record (only note)
     await db
       .update(judge)
-      .set({
-        name: name.trim(),
-        note: note || null,
-      })
+      .set({ note: note || null })
       .where(eq(judge.id, judgeId))
+
+    // Update password if provided
+    if (password && password.length >= 8) {
+      const judgeRecord = await db
+        .select({ userId: judge.userId })
+        .from(judge)
+        .where(eq(judge.id, judgeId))
+        .limit(1)
+
+      const userId = judgeRecord[0]?.userId
+      if (userId) {
+        const hashed = await hashPassword(password)
+        await db
+          .update(account)
+          .set({ password: hashed })
+          .where(
+            and(
+              eq(account.userId, userId),
+              eq(account.providerId, "credential"),
+            ),
+          )
+      }
+    }
 
     // Update competition links if provided
     const sanitizedIds = sanitizeCompetitionIds(competitionIds)
@@ -68,7 +85,7 @@ export async function PATCH(
       {
         success: false,
         message: "採点者の更新中にエラーが発生しました。",
-        error,
+        error: String(error),
       },
       { status: 500 },
     )

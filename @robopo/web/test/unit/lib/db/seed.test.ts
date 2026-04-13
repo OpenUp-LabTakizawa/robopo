@@ -6,13 +6,18 @@ import {
   deserializeMission,
 } from "@/app/components/course/utils"
 import { db } from "@/app/lib/db/db"
-import { course, judge } from "@/app/lib/db/schema"
+import { course, judge, user } from "@/app/lib/db/schema"
 
 describe("seed data", () => {
   test("test judge exists in database", async () => {
-    const result = await db.select().from(judge).where(eq(judge.id, 1)).limit(1)
+    const result = await db
+      .select({ id: judge.id, username: user.username })
+      .from(judge)
+      .innerJoin(user, eq(judge.userId, user.id))
+      .where(eq(user.username, "testjudge"))
+      .limit(1)
     expect(result).toHaveLength(1)
-    expect(result[0].name).toBe("TestJudge")
+    expect(result[0].username).toBe("testjudge")
   })
 
   for (const courseName of ["TestCourse", "TestCourse2"]) {

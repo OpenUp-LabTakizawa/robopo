@@ -42,8 +42,10 @@ export const player = pgTable("player", {
 
 export const judge = pgTable("judge", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull().unique(),
   note: text("note"),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow(),
 })
 
@@ -163,6 +165,11 @@ export type SelectPlayer = typeof player.$inferSelect
 export type InsertJudge = typeof judge.$inferInsert
 export type SelectJudge = typeof judge.$inferSelect
 
+// Judge with username from user table (used for display)
+export type SelectJudgeWithUsername = SelectJudge & {
+  username: string
+}
+
 export type InsertChallenge = typeof challenge.$inferInsert
 export type SelectChallenge = typeof challenge.$inferSelect
 
@@ -189,8 +196,10 @@ export type SelectPlayerWithCompetition = {
 
 export type SelectJudgeWithCompetition = {
   id: number
-  name: string
+  username: string
   note: string | null
+  userId: string
+  lastLoginAt: Date | null
   createdAt: Date | null
   competitionId: number | null
   competitionIds: number[]
