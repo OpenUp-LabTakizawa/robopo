@@ -1,11 +1,6 @@
 "use client"
 
-import {
-  CheckIcon,
-  PlusIcon,
-  TrashIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline"
+import { Check, Plus, Trash2, X } from "lucide-react"
 import { useState } from "react"
 import type {
   SelectCompetitionWithCourse,
@@ -230,7 +225,7 @@ export function CompetitionFormModal({
               onClick={onClose}
               disabled={loading}
             >
-              <XMarkIcon className="size-4" />
+              <X className="size-4" />
               キャンセル
             </button>
             <button
@@ -241,9 +236,9 @@ export function CompetitionFormModal({
               {loading ? (
                 <span className="loading loading-spinner loading-sm" />
               ) : mode === "create" ? (
-                <PlusIcon className="size-4" />
+                <Plus className="size-4" />
               ) : (
-                <CheckIcon className="size-4" />
+                <Check className="size-4" />
               )}
               {mode === "create" ? "作成" : "保存"}
             </button>
@@ -335,7 +330,7 @@ export function DeleteCompetitionModal({
             onClick={onClose}
             disabled={loading}
           >
-            <XMarkIcon className="size-4" />
+            <X className="size-4" />
             キャンセル
           </button>
           <button
@@ -347,7 +342,7 @@ export function DeleteCompetitionModal({
             {loading ? (
               <span className="loading loading-spinner loading-sm" />
             ) : (
-              <TrashIcon className="size-4" />
+              <Trash2 className="size-4" />
             )}
             削除する
           </button>

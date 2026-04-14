@@ -1,11 +1,6 @@
 "use client"
 
-import {
-  MagnifyingGlassIcon,
-  PlayIcon,
-  TrophyIcon,
-  UserCircleIcon,
-} from "@heroicons/react/24/outline"
+import { Play, Search, Trophy, UserCheck } from "lucide-react"
 import type { Route } from "next"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -240,7 +235,7 @@ export function ChallengeTab({
         {singleCompetition ? (
           <SelectionCard
             name={singleCompetition.name}
-            icon={<TrophyIcon className="h-4 w-4" />}
+            icon={<Trophy className="h-4 w-4" />}
             isSelected
           />
         ) : activeCompetitions.length > 0 ? (
@@ -249,7 +244,7 @@ export function ChallengeTab({
               <SelectionCard
                 key={c.id}
                 name={c.name}
-                icon={<TrophyIcon className="h-4 w-4" />}
+                icon={<Trophy className="h-4 w-4" />}
                 isSelected={competitionId === c.id}
                 onClick={() => handleCompetitionChange(c.id)}
               />
@@ -271,7 +266,7 @@ export function ChallengeTab({
               <SelectionCard
                 key={c.id}
                 name={c.name}
-                icon={<PlayIcon className="h-4 w-4" />}
+                icon={<Play className="h-4 w-4" />}
                 isSelected={selectedCourseId === c.id}
                 onClick={
                   courseDisabled ? undefined : () => handleCourseSelect(c.id)
@@ -294,7 +289,7 @@ export function ChallengeTab({
         {competitionJudges.length > 0 ? (
           <div className="space-y-2">
             <div className="relative">
-              <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-base-content/40" />
+              <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-base-content/40" />
               <input
                 type="text"
                 placeholder="採点者を検索..."
@@ -310,7 +305,7 @@ export function ChallengeTab({
                   <SelectionCard
                     key={u.id}
                     name={u.username}
-                    icon={<UserCircleIcon className="h-4 w-4" />}
+                    icon={<UserCheck className="h-4 w-4" />}
                     isSelected={judgeId === u.id}
                     onClick={
                       competitionDisabled
@@ -362,7 +357,7 @@ export function ChallengeTab({
             : "cursor-not-allowed bg-base-300 text-base-content/30"
         }`}
       >
-        <PlayIcon className="h-5 w-5" />
+        <Play className="h-5 w-5" />
         採点を開始
       </button>
     </div>

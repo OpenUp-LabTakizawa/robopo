@@ -1,13 +1,13 @@
 "use client"
 
 import {
-  CheckCircleIcon,
-  CheckIcon,
-  ExclamationTriangleIcon,
-  PlusIcon,
-  XCircleIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline"
+  Check,
+  CircleCheck,
+  CircleX,
+  Plus,
+  TriangleAlert,
+  X,
+} from "lucide-react"
 import { useState } from "react"
 import type {
   SelectCompetition,
@@ -198,7 +198,7 @@ export function PlayerFormModal({
               onClick={onClose}
               disabled={loading}
             >
-              <XMarkIcon className="size-4" />
+              <X className="size-4" />
               キャンセル
             </button>
             <button
@@ -209,9 +209,9 @@ export function PlayerFormModal({
               {loading ? (
                 <span className="loading loading-spinner loading-sm" />
               ) : mode === "create" ? (
-                <PlusIcon className="size-4" />
+                <Plus className="size-4" />
               ) : (
-                <CheckIcon className="size-4" />
+                <Check className="size-4" />
               )}
               {mode === "create" ? "登録" : "保存"}
             </button>
@@ -273,12 +273,12 @@ export function PlayerDeleteModal({
         <div className="flex flex-col items-center px-2 py-2">
           {successMessage ? (
             <div className="flex flex-col items-center gap-3">
-              <CheckCircleIcon className="size-12 text-success" />
+              <CircleCheck className="size-12 text-success" />
               <p className="text-center font-medium">{successMessage}</p>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-3">
-              <ExclamationTriangleIcon className="size-12 text-warning" />
+              <TriangleAlert className="size-12 text-warning" />
               <p className="text-center font-medium">
                 選択した選手を削除しますか?
               </p>
@@ -297,7 +297,7 @@ export function PlayerDeleteModal({
 
           {errorMessage && (
             <div className="mt-4 flex w-full items-center gap-2 rounded-lg bg-error/10 px-4 py-2.5 text-error text-sm">
-              <XCircleIcon className="size-5 shrink-0" />
+              <CircleX className="size-5 shrink-0" />
               {errorMessage}
             </div>
           )}

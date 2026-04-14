@@ -1,9 +1,6 @@
 "use client"
 
-import {
-  ClipboardDocumentCheckIcon,
-  Cog6ToothIcon,
-} from "@heroicons/react/24/outline"
+import { ClipboardCheck, Settings } from "lucide-react"
 import type React from "react"
 import { ChallengeTab, ManageTab } from "@/app/components/home/tabs"
 import type {
@@ -74,7 +71,7 @@ export function Dashboard({
         <div className="md:col-span-2">
           <DashboardCard
             title="採点"
-            icon={<ClipboardDocumentCheckIcon className="h-5 w-5" />}
+            icon={<ClipboardCheck className="h-5 w-5" />}
             variant="primary"
           >
             <ChallengeTab
@@ -92,7 +89,7 @@ export function Dashboard({
         <div className="md:col-span-2">
           <DashboardCard
             title="大会管理"
-            icon={<Cog6ToothIcon className="h-5 w-5" />}
+            icon={<Settings className="h-5 w-5" />}
           >
             <ManageTab />
           </DashboardCard>

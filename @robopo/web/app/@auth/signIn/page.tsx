@@ -1,10 +1,6 @@
 "use client"
 
-import {
-  ArrowRightEndOnRectangleIcon,
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-} from "@heroicons/react/24/outline"
+import { CircleAlert, CircleCheck, LogIn } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import { useActionState, useEffect, useId, useState } from "react"
 import { useFormStatus } from "react-dom"
@@ -30,7 +26,7 @@ function SubmitButton({
         disabled
         className="btn btn-success w-full rounded-xl text-success-content shadow-lg shadow-success/25"
       >
-        <CheckCircleIcon className="size-5" />
+        <CircleCheck className="size-5" />
         ログイン成功
       </button>
     )
@@ -49,7 +45,7 @@ function SubmitButton({
         </>
       ) : (
         <>
-          <ArrowRightEndOnRectangleIcon className="size-5" />
+          <LogIn className="size-5" />
           ログイン
         </>
       )}
@@ -173,7 +169,7 @@ export default function SignIn() {
 
           {state?.message && !state?.success && (
             <div className="mt-4 flex w-full items-center gap-2 rounded-lg bg-error/10 px-4 py-2.5 text-error text-sm">
-              <ExclamationCircleIcon className="size-5 shrink-0" />
+              <CircleAlert className="size-5 shrink-0" />
               {state.message}
             </div>
           )}

@@ -1,11 +1,6 @@
 "use client"
 
-import {
-  CheckCircleIcon,
-  CheckIcon,
-  PlusIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline"
+import { Check, CircleCheck, Plus, X } from "lucide-react"
 import { useState } from "react"
 import type {
   SelectCompetition,
@@ -221,7 +216,7 @@ export function CourseFormModal({
               onClick={onClose}
               disabled={loading || success}
             >
-              <XMarkIcon className="size-4" />
+              <X className="size-4" />
               キャンセル
             </button>
             {success ? (
@@ -230,7 +225,7 @@ export function CourseFormModal({
                 disabled
                 className="btn btn-success gap-1.5 rounded-lg shadow-lg shadow-success/20 transition-all duration-200"
               >
-                <CheckCircleIcon className="size-4 animate-[scale-in_0.3s_ease-out]" />
+                <CircleCheck className="size-4 animate-[scale-in_0.3s_ease-out]" />
                 登録成功
               </button>
             ) : (
@@ -242,9 +237,9 @@ export function CourseFormModal({
                 {loading ? (
                   <span className="loading loading-spinner loading-sm" />
                 ) : mode === "create" ? (
-                  <PlusIcon className="size-4" />
+                  <Plus className="size-4" />
                 ) : (
-                  <CheckIcon className="size-4" />
+                  <Check className="size-4" />
                 )}
                 {mode === "create" ? "登録" : "保存"}
               </button>

@@ -1,6 +1,6 @@
 "use client"
 
-import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/outline"
+import { Volume2, VolumeX } from "lucide-react"
 import type React from "react"
 import { createContext, useContext, useEffect, useRef, useState } from "react"
 
@@ -78,9 +78,9 @@ export function SoundController() {
       aria-label="効果音のオン・オフ切り替え"
     >
       {muted ? (
-        <SpeakerXMarkIcon className="size-5 text-base-content/40" />
+        <VolumeX className="size-5 text-base-content/40" />
       ) : (
-        <SpeakerWaveIcon className="size-5 text-success" />
+        <Volume2 className="size-5 text-success" />
       )}
     </button>
   )

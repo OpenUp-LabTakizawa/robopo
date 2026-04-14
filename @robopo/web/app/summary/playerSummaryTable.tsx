@@ -292,6 +292,7 @@ export function PlayerSummaryTable({ competitionId }: Props) {
         onRemoveSort={removeSort}
         onAddSort={addSort}
         onReset={sortConditions.length > 1 ? resetSort : undefined}
+        isTextKey={(key) => key === "playerFurigana"}
       />
 
       <div className="min-h-0 flex-1 overflow-x-auto overflow-y-auto">

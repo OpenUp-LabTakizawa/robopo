@@ -1,4 +1,4 @@
-import { PauseIcon } from "@heroicons/react/24/solid"
+import { Pause } from "lucide-react"
 import {
   getNextPosition,
   type MissionValue,
@@ -350,7 +350,10 @@ export function NextPauseIndicator({
   return (
     <div style={getCellStyle({ row, col, responsive })}>
       <div className="pause-indicator flex h-3/4 w-3/4 items-center justify-center rounded-full bg-warning/25 ring-2 ring-warning/40">
-        <PauseIcon className="h-1/2 w-1/2 text-warning drop-shadow-sm" />
+        <Pause
+          className="h-1/2 w-1/2 text-warning drop-shadow-sm"
+          fill="currentColor"
+        />
       </div>
     </div>
   )

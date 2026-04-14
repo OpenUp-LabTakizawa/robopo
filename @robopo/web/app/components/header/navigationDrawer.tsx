@@ -1,6 +1,6 @@
 "use client"
 
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
+import { Menu, X } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
@@ -188,7 +188,7 @@ export function NavigationDrawer() {
             className="btn btn-ghost btn-sm btn-square rounded-full transition-transform duration-200 hover:rotate-90 active:scale-90"
             aria-label="メニューを閉じる"
           >
-            <XMarkIcon className="size-5" />
+            <X className="size-5" />
           </button>
         </div>
 
@@ -239,7 +239,7 @@ export function NavigationDrawer() {
         className="btn btn-ghost btn-sm btn-square rounded-full transition-transform duration-200 active:scale-90"
         aria-label="メニューを開く"
       >
-        <Bars3Icon className="size-5" />
+        <Menu className="size-5" />
       </button>
 
       {mounted && createPortal(drawerOverlay, document.body)}

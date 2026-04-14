@@ -1,10 +1,6 @@
 "use client"
 
-import {
-  ClipboardDocumentCheckIcon,
-  MapIcon,
-  UserGroupIcon,
-} from "@heroicons/react/24/outline"
+import { type LucideIcon, Route as RouteIcon, Scale, Users } from "lucide-react"
 import { useState } from "react"
 import type { SelectCompetition } from "@/app/lib/db/schema"
 import { CourseSummaryTable } from "@/app/summary/courseSummaryTable"
@@ -13,10 +9,10 @@ import { PlayerSummaryTable } from "@/app/summary/playerSummaryTable"
 
 type TabKey = "player" | "judge" | "course"
 
-const TABS: { key: TabKey; label: string; icon: typeof UserGroupIcon }[] = [
-  { key: "player", label: "選手", icon: UserGroupIcon },
-  { key: "judge", label: "採点者", icon: ClipboardDocumentCheckIcon },
-  { key: "course", label: "コース", icon: MapIcon },
+const TABS: { key: TabKey; label: string; icon: LucideIcon }[] = [
+  { key: "player", label: "選手", icon: Users },
+  { key: "judge", label: "採点者", icon: Scale },
+  { key: "course", label: "コース", icon: RouteIcon },
 ]
 
 type Props = {

@@ -1,13 +1,13 @@
 "use client"
 
 import {
-  ArrowPathIcon,
-  ArrowUpCircleIcon,
-  ArrowUturnLeftIcon,
-  ExclamationTriangleIcon,
-  HomeIcon,
-  PlayIcon,
-} from "@heroicons/react/24/outline"
+  House,
+  Play,
+  RefreshCw,
+  SendHorizontal,
+  TriangleAlert,
+  Undo2,
+} from "lucide-react"
 import { useRouter } from "next/navigation"
 
 export function ReloadButton() {
@@ -17,7 +17,7 @@ export function ReloadButton() {
       className="btn btn-primary mx-auto mt-5 min-w-28 max-w-fit"
       onClick={() => window.location.reload()}
     >
-      <ArrowPathIcon className="size-6" />
+      <RefreshCw className="size-6" />
       再読み込み
     </button>
   )
@@ -31,7 +31,7 @@ export function HomeButton() {
       className="btn btn-primary m-5 mx-auto min-w-28 max-w-fit"
       onClick={() => router.push("/")}
     >
-      <HomeIcon className="size-6" />
+      <House className="size-6" />
       ホーム
     </button>
   )
@@ -65,7 +65,7 @@ export function BackButton({
       onClick={onClick}
       disabled={disabled}
     >
-      <ArrowUturnLeftIcon className="size-5" />
+      <Undo2 className="size-5" />
       {label}
     </button>
   )
@@ -99,7 +99,7 @@ export function SubmitButton({
         <span className="loading loading-spinner" />
       ) : (
         <>
-          <ArrowUpCircleIcon className="size-5" />
+          <SendHorizontal className="size-5" />
           {label}
         </>
       )}
@@ -129,7 +129,7 @@ export function RetryButton({
       onClick={onClick}
       disabled={disabled}
     >
-      <PlayIcon className="size-5" />
+      <Play className="size-5" />
       {label}
     </button>
   )
@@ -158,7 +158,7 @@ export function CourseOutButton({
       onClick={onClick}
       disabled={disabled}
     >
-      <ExclamationTriangleIcon className="size-4" />
+      <TriangleAlert className="size-4" />
       コースアウト
     </button>
   )
@@ -178,7 +178,7 @@ export function FailButton({
       className={`btn btn-error rounded-xl transition-all duration-200 ${extraClassName ?? ""}`.trim()}
       onClick={onClick}
     >
-      <ExclamationTriangleIcon className="size-5" />
+      <TriangleAlert className="size-5" />
       失敗
     </button>
   )
