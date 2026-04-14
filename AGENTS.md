@@ -100,3 +100,10 @@ bun run test:e2e     # Playwright e2e tests
 bun run db:seed      # Seed database with test data
 bun run docs-dev     # Start docs dev server
 ```
+
+### Post-Edit Checks
+
+After completing code changes, always run the following and fix any errors before finishing:
+
+1. `bun lint:fix --unsafe` — auto-fix lint and formatting issues
+2. `bun test:unit` — ensure all unit tests pass
