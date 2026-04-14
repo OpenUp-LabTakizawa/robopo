@@ -48,12 +48,12 @@ export default async function SummaryPage({
       : getDefaultCompetitionId(visibleCompetitions)
 
   return (
-    <div className="flex h-[calc(100dvh-3.5rem)] flex-col overflow-hidden px-4 py-6 sm:px-10 lg:px-16">
-      <div className="mb-4 shrink-0">
+    <div className="flex h-[calc(100dvh-3.5rem)] flex-col overflow-hidden px-4 py-3 sm:px-10 lg:px-16">
+      <div className="mb-2 shrink-0">
         <h1 className="font-bold text-2xl text-base-content tracking-tight">
           集計結果
         </h1>
-        <p className="mt-1 text-base-content/60 text-sm">
+        <p className="mt-0.5 text-base-content/60 text-sm lg:hidden">
           大会を選択して集計結果を確認します
         </p>
       </div>
