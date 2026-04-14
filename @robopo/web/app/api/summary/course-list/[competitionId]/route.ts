@@ -57,7 +57,7 @@ export async function GET(
     FROM challenge c
     WHERE c.competition_id = ${competitionIdNum}
       AND c.course_id = ANY(${sql`ARRAY[${sql.join(
-        courseIds.map((id) => sql`${id}`),
+        courseIds.map((id) => sql`${id}::int`),
         sql`, `,
       )}]`})
     GROUP BY c.course_id, c.player_id

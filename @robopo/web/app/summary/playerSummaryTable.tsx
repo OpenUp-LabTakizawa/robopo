@@ -252,34 +252,6 @@ export function PlayerSummaryTable({ competitionId }: Props) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      {/* Course selector */}
-      <div className="shrink-0 px-4 pb-2">
-        <div className="min-w-[200px]">
-          <label
-            htmlFor="player-summary-course"
-            className="mb-1 block font-semibold text-base-content/60 text-xs uppercase tracking-wider"
-          >
-            コース
-          </label>
-          <select
-            id="player-summary-course"
-            className="select select-bordered w-full"
-            value={courseId ?? 0}
-            onChange={(e) => setCourseId(Number(e.target.value))}
-            disabled={courses.length === 0}
-          >
-            <option value={0} disabled>
-              コースを選んでください
-            </option>
-            {courses.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
       <MultiSortToolbar<SortKey>
         searchPlaceholder="名前・ふりがな・ゼッケン番号で検索"
         searchQuery={searchQuery}
@@ -293,6 +265,27 @@ export function PlayerSummaryTable({ competitionId }: Props) {
         onAddSort={addSort}
         onReset={sortConditions.length > 1 ? resetSort : undefined}
         isTextKey={(key) => key === "playerFurigana"}
+        leadingSlot={
+          <div className="min-w-[180px] lg:max-w-[220px]">
+            <select
+              id="player-summary-course"
+              aria-label="コース"
+              className="select select-bordered w-full"
+              value={courseId ?? 0}
+              onChange={(e) => setCourseId(Number(e.target.value))}
+              disabled={courses.length === 0}
+            >
+              <option value={0} disabled>
+                コースを選択
+              </option>
+              {courses.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        }
       />
 
       <div className="min-h-0 flex-1 overflow-x-auto overflow-y-auto">

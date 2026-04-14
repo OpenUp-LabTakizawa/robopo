@@ -30,14 +30,14 @@ export function DataTableShell({
   }
 
   return (
-    <div className="m-3 min-h-0 overflow-x-auto overflow-y-auto rounded-xl border border-base-300/50">
-      <table className="table-pin-rows table-zebra table">
+    <div className="mx-3 mb-3 min-h-0 overflow-x-auto overflow-y-auto rounded-xl border border-base-300/50">
+      <table className="table-pin-rows table-zebra table-sm table">
         <thead>
           <tr className="border-base-300/50 border-b bg-base-200/60">
             {columns.map((label) => (
               <th
                 key={label}
-                className="whitespace-nowrap py-3 font-semibold text-base-content/50 text-xs uppercase tracking-wider"
+                className="whitespace-nowrap py-2 font-semibold text-base-content/50 text-xs uppercase tracking-wider"
               >
                 {label}
               </th>

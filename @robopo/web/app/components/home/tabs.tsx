@@ -1,6 +1,6 @@
 "use client"
 
-import { Play, Search, Trophy, UserCheck } from "lucide-react"
+import { Play, Search, Trophy, UserCheck, Waypoints } from "lucide-react"
 import type { Route } from "next"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -266,7 +266,7 @@ export function ChallengeTab({
               <SelectionCard
                 key={c.id}
                 name={c.name}
-                icon={<Play className="h-4 w-4" />}
+                icon={<Waypoints className="h-4 w-4" />}
                 isSelected={selectedCourseId === c.id}
                 onClick={
                   courseDisabled ? undefined : () => handleCourseSelect(c.id)

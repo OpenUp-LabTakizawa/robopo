@@ -9,6 +9,7 @@ import {
   Search,
   X,
 } from "lucide-react"
+import type React from "react"
 import type {
   SortCondition,
   SortOrder,
@@ -32,6 +33,8 @@ type Props<K extends string> = {
   onAddSort: (key: K) => void
   onReset?: () => void
   isTextKey?: (key: K) => boolean
+  /** Extra controls rendered before the search input on lg screens */
+  leadingSlot?: React.ReactNode
 }
 
 export function MultiSortToolbar<K extends string>({
@@ -47,10 +50,12 @@ export function MultiSortToolbar<K extends string>({
   onAddSort,
   onReset,
   isTextKey,
+  leadingSlot,
 }: Props<K>) {
   return (
-    <div className="flex shrink-0 flex-col gap-3 px-4 pb-4">
-      <label className="input input-bordered flex items-center gap-2 rounded-xl bg-base-200/40 transition-colors focus-within:bg-base-100">
+    <div className="flex shrink-0 flex-col gap-2 px-4 pb-3 lg:flex-row lg:flex-wrap lg:items-center lg:gap-3">
+      {leadingSlot}
+      <label className="input input-bordered flex items-center gap-2 rounded-xl bg-base-200/40 transition-colors focus-within:bg-base-100 lg:max-w-sm lg:flex-1">
         <Search className="size-4 shrink-0 text-base-content/40" />
         <input
           type="text"
