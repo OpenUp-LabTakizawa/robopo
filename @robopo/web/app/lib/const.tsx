@@ -41,7 +41,7 @@ export const SIGN_OUT_CONST: NavItem = {
 export const COMPETITION_MANAGEMENT_LIST: NavItem[] = [
   {
     label: "大会一覧",
-    href: "/config",
+    href: "/competition",
     icon: <TrophyIcon className="size-6" />,
   },
   {
