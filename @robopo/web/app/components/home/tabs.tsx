@@ -1,15 +1,16 @@
 "use client"
 
 import {
-  ExclamationTriangleIcon,
+  MagnifyingGlassIcon,
   PlayIcon,
+  TrophyIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline"
 import type { Route } from "next"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import type React from "react"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 import { PlayerSelector } from "@/app/components/home/player-selector"
 import { useSelectionStorage } from "@/app/hooks/useSelectionStorage"
@@ -24,33 +25,17 @@ import type {
   SelectPlayer,
 } from "@/app/lib/db/schema"
 
-function CourseCard({
+function SelectionCard({
   name,
-  disabled,
+  icon,
   isSelected,
-  onDisabledClick,
   onClick,
 }: {
   name: string
-  disabled: boolean
+  icon: React.ReactNode
   isSelected: boolean
-  onDisabledClick?: () => void
   onClick?: () => void
 }) {
-  if (disabled) {
-    return (
-      <button
-        type="button"
-        onClick={onDisabledClick}
-        className="group flex min-h-[56px] w-full cursor-pointer items-center gap-3 rounded-xl border border-base-300 bg-base-200 px-4 py-2.5 opacity-50 transition-all"
-      >
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-base-300 text-base-content/30 transition-colors">
-          <PlayIcon className="h-4 w-4" />
-        </div>
-        <span className="text-left font-medium text-sm">{name}</span>
-      </button>
-    )
-  }
   return (
     <button
       type="button"
@@ -68,7 +53,7 @@ function CourseCard({
             : "bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-content"
         }`}
       >
-        <PlayIcon className="h-4 w-4" />
+        {icon}
       </div>
       <span className="text-left font-medium text-sm">{name}</span>
     </button>
@@ -102,11 +87,9 @@ export function ChallengeTab({
 
   const [competitionId, setCompetitionId] = useState(singleCompetition?.id ?? 0)
   const [judgeId, setJudgeId] = useState(loggedInJudgeId ?? 0)
-  const [showAlert, setShowAlert] = useState(false)
   const [selectedCourseId, setSelectedCourseId] = useState<number | null>(null)
   const [selectedPlayerId, setSelectedPlayerId] = useState<number | null>(null)
-  const judgeSelectRef = useRef<HTMLSelectElement>(null)
-  const disableCondition = competitionId === 0 || judgeId === 0
+  const [judgeSearchQuery, setJudgeSearchQuery] = useState("")
 
   // Apply localStorage values after hydration (split by responsibility)
   useEffect(() => {
@@ -132,7 +115,7 @@ export function ChallengeTab({
     setSelectedCourseId(stored.courseId)
   }, [isLoaded, stored.courseId])
 
-  const filteredJudges = (() => {
+  const competitionJudges = (() => {
     if (competitionId === 0) {
       return judgeList
     }
@@ -140,6 +123,14 @@ export function ChallengeTab({
       .filter((cu) => cu.competitionId === competitionId)
       .map((cu) => cu.judgeId)
     return judgeList.filter((u) => assignedIds.includes(u.id))
+  })()
+
+  const filteredJudges = (() => {
+    if (!judgeSearchQuery) {
+      return competitionJudges
+    }
+    const q = judgeSearchQuery.toLowerCase()
+    return competitionJudges.filter((u) => u.username.toLowerCase().includes(q))
   })()
 
   // Validate judgeId against current competition's judges
@@ -150,27 +141,26 @@ export function ChallengeTab({
     if (loggedInJudgeId && judgeId === loggedInJudgeId) {
       return
     }
-    if (competitionId !== 0 && !filteredJudges.some((j) => j.id === judgeId)) {
+    if (competitionId === 0) {
+      return
+    }
+    const assignedIds = competitionJudgeList.competitionJudgeList
+      .filter((cu) => cu.competitionId === competitionId)
+      .map((cu) => cu.judgeId)
+    const isValid = judgeList.some(
+      (u) => assignedIds.includes(u.id) && u.id === judgeId,
+    )
+    if (!isValid) {
       setJudgeId(loggedInJudgeId ?? 0)
     }
-  }, [competitionId, isLoaded, loggedInJudgeId, judgeId, filteredJudges])
-
-  const handleDisabledClick = () => {
-    if (judgeId === 0) {
-      setShowAlert(true)
-      judgeSelectRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      })
-    }
-  }
-
-  useEffect(() => {
-    if (showAlert) {
-      const timer = setTimeout(() => setShowAlert(false), 5000)
-      return () => clearTimeout(timer)
-    }
-  }, [showAlert])
+  }, [
+    competitionId,
+    isLoaded,
+    loggedInJudgeId,
+    judgeId,
+    judgeList,
+    competitionJudgeList,
+  ])
 
   const filteredCourses = (() => {
     if (competitionId === 0) {
@@ -205,16 +195,19 @@ export function ChallengeTab({
       setJudgeId(loggedInJudgeId ?? 0)
       setSelectedCourseId(null)
       setSelectedPlayerId(null)
+      setJudgeSearchQuery("")
       save({ competitionId: newId, courseId: undefined })
     },
     [loggedInJudgeId, save],
   )
 
-  const handleJudgeChange = (newId: number) => {
-    setJudgeId(newId)
-    setShowAlert(false)
-    save({ judgeId: newId })
-  }
+  const handleJudgeChange = useCallback(
+    (newId: number) => {
+      setJudgeId(newId)
+      save({ judgeId: newId })
+    },
+    [save],
+  )
 
   const handleStartScoring = useCallback(() => {
     if (!selectedCourseId || !selectedPlayerId || !judgeId) {
@@ -236,137 +229,142 @@ export function ChallengeTab({
     selectedCourseId !== null &&
     selectedPlayerId !== null
 
-  return (
-    <div className="space-y-4">
-      {/* Competition selection */}
-      {singleCompetition ? (
-        <div className="flex items-center gap-2 rounded-lg bg-primary/5 px-3 py-2">
-          <span className="text-base-content/60 text-sm">開催中:</span>
-          <span className="font-semibold text-primary">
-            {singleCompetition.name}
-          </span>
-        </div>
-      ) : (
-        <div>
-          <label
-            htmlFor="competition-select"
-            className="mb-1 block text-base-content/60 text-sm"
-          >
-            大会を選択
-          </label>
-          <select
-            id="competition-select"
-            className="select select-bordered w-full"
-            value={competitionId}
-            onChange={(e) => handleCompetitionChange(Number(e.target.value))}
-          >
-            <option value={0} disabled>
-              大会を選んでください
-            </option>
-            {activeCompetitions.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
+  const competitionDisabled = competitionId === 0
+  const courseDisabled = competitionDisabled
 
-      {/* Judge selection */}
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      {/* 1. Competition selection */}
       <div>
-        <label
-          htmlFor="judge-select"
-          className="mb-1 flex items-center gap-1 text-base-content/60 text-sm"
-        >
-          <UserCircleIcon className="h-4 w-4" />
-          採点者を選択
-        </label>
-        <select
-          id="judge-select"
-          ref={judgeSelectRef}
-          className={`select select-bordered w-full ${showAlert ? "select-warning" : ""}`}
-          value={judgeId}
-          onChange={(e) => handleJudgeChange(Number(e.target.value))}
-        >
-          <option value={0} disabled>
-            採点者を選んでください
-          </option>
-          {filteredJudges.map((u) => (
-            <option key={u.id} value={u.id}>
-              {u.username}
-            </option>
-          ))}
-        </select>
-        {showAlert && (
-          <div role="alert" className="alert alert-warning mt-2 py-2">
-            <ExclamationTriangleIcon className="h-5 w-5 shrink-0" />
-            <span className="font-medium text-sm">
-              先に採点者を選択してください
-            </span>
+        <p className="mb-2 text-base-content/60 text-sm">大会を選択</p>
+        {singleCompetition ? (
+          <SelectionCard
+            name={singleCompetition.name}
+            icon={<TrophyIcon className="h-4 w-4" />}
+            isSelected
+          />
+        ) : activeCompetitions.length > 0 ? (
+          <div className="grid gap-2">
+            {activeCompetitions.map((c) => (
+              <SelectionCard
+                key={c.id}
+                name={c.name}
+                icon={<TrophyIcon className="h-4 w-4" />}
+                isSelected={competitionId === c.id}
+                onClick={() => handleCompetitionChange(c.id)}
+              />
+            ))}
           </div>
+        ) : (
+          <p className="py-4 text-center text-base-content/40 text-sm">
+            開催中の大会がありません
+          </p>
         )}
       </div>
 
-      {/* Course and Player selection side by side */}
-      {competitionId !== 0 && (
-        <div className="grid gap-4 md:grid-cols-2">
-          {/* Course selection */}
-          <div>
-            <p className="mb-2 text-base-content/60 text-sm">コースを選択</p>
-            {filteredCourses.length > 0 ? (
+      {/* 2. Course selection */}
+      <div className={courseDisabled ? "opacity-50" : ""}>
+        <p className="mb-2 text-base-content/60 text-sm">コースを選択</p>
+        {filteredCourses.length > 0 ? (
+          <div className="grid gap-2">
+            {filteredCourses.map((c) => (
+              <SelectionCard
+                key={c.id}
+                name={c.name}
+                icon={<PlayIcon className="h-4 w-4" />}
+                isSelected={selectedCourseId === c.id}
+                onClick={
+                  courseDisabled ? undefined : () => handleCourseSelect(c.id)
+                }
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="py-4 text-center text-base-content/40 text-sm">
+            {competitionDisabled
+              ? "大会を選択してください"
+              : "コースが割り当てられていません"}
+          </p>
+        )}
+      </div>
+
+      {/* 3. Judge selection */}
+      <div className={competitionDisabled ? "opacity-50" : ""}>
+        <p className="mb-2 text-base-content/60 text-sm">採点者を選択</p>
+        {competitionJudges.length > 0 ? (
+          <div className="space-y-2">
+            <div className="relative">
+              <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-base-content/40" />
+              <input
+                type="text"
+                placeholder="採点者を検索..."
+                className="input input-bordered input-sm w-full pl-9 text-sm"
+                value={judgeSearchQuery}
+                onChange={(e) => setJudgeSearchQuery(e.target.value)}
+                disabled={competitionDisabled}
+              />
+            </div>
+            {filteredJudges.length > 0 ? (
               <div className="grid gap-2">
-                {filteredCourses.map((c) => (
-                  <CourseCard
-                    key={c.id}
-                    name={c.name}
-                    disabled={disableCondition}
-                    isSelected={selectedCourseId === c.id}
-                    onDisabledClick={handleDisabledClick}
-                    onClick={() => handleCourseSelect(c.id)}
+                {filteredJudges.map((u) => (
+                  <SelectionCard
+                    key={u.id}
+                    name={u.username}
+                    icon={<UserCircleIcon className="h-4 w-4" />}
+                    isSelected={judgeId === u.id}
+                    onClick={
+                      competitionDisabled
+                        ? undefined
+                        : () => handleJudgeChange(u.id)
+                    }
                   />
                 ))}
               </div>
             ) : (
               <p className="py-4 text-center text-base-content/40 text-sm">
-                コースが割り当てられていません
+                該当する採点者がいません
               </p>
             )}
           </div>
+        ) : (
+          <p className="py-4 text-center text-base-content/40 text-sm">
+            {competitionDisabled
+              ? "大会を選択してください"
+              : "採点者が割り当てられていません"}
+          </p>
+        )}
+      </div>
 
-          {/* Player selection */}
-          <div>
-            <p className="mb-2 text-base-content/60 text-sm">選手を選択</p>
-            <PlayerSelector
-              competitionId={competitionId}
-              selectedPlayerId={selectedPlayerId}
-              onSelect={handlePlayerSelect}
-            />
-          </div>
-        </div>
-      )}
+      {/* 4. Player selection */}
+      <div className={competitionDisabled ? "opacity-50" : ""}>
+        <p className="mb-2 text-base-content/60 text-sm">選手を選択</p>
+        {competitionId !== 0 ? (
+          <PlayerSelector
+            competitionId={competitionId}
+            selectedPlayerId={selectedPlayerId}
+            onSelect={handlePlayerSelect}
+          />
+        ) : (
+          <p className="py-4 text-center text-base-content/40 text-sm">
+            大会を選択してください
+          </p>
+        )}
+      </div>
 
-      {competitionId === 0 && (
-        <p className="py-4 text-center text-base-content/40 text-sm">
-          大会を選択するとコースと選手が表示されます
-        </p>
-      )}
-
-      {/* Start scoring button - always visible when competition selected */}
-      {competitionId !== 0 && (
-        <button
-          type="button"
-          onClick={handleStartScoring}
-          disabled={!canStartScoring}
-          className={`btn w-full gap-2 rounded-xl border-0 font-bold text-base tracking-wide transition-all duration-300 ${
-            canStartScoring
-              ? "btn-primary scoring-btn-ready hover:brightness-110 active:scale-[0.97]"
-              : "cursor-not-allowed bg-base-300 text-base-content/30"
-          }`}
-        >
-          <PlayIcon className="h-5 w-5" />
-          採点を開始
-        </button>
-      )}
+      {/* Start scoring button - spans both columns */}
+      <button
+        type="button"
+        onClick={handleStartScoring}
+        disabled={!canStartScoring}
+        className={`btn col-span-2 w-full gap-2 rounded-xl border-0 font-bold text-base tracking-wide transition-all duration-300 ${
+          canStartScoring
+            ? "btn-primary scoring-btn-ready hover:brightness-110 active:scale-[0.97]"
+            : "cursor-not-allowed bg-base-300 text-base-content/30"
+        }`}
+      >
+        <PlayIcon className="h-5 w-5" />
+        採点を開始
+      </button>
     </div>
   )
 }

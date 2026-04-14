@@ -11,16 +11,12 @@ test.describe("Home page - Dashboard layout", () => {
     page,
   }) => {
     await page.goto("/")
-    const hasDropdown = await page
-      .locator("#competition-select, #summary-competition-select")
-      .count()
-    const hasActiveName = await page.getByText("開催中:").count()
-    expect(hasDropdown + hasActiveName).toBeGreaterThan(0)
+    await expect(page.getByText("大会を選択", { exact: true })).toBeVisible()
   })
 
-  test("displays judge selection dropdown", async ({ page }) => {
+  test("displays judge selection section", async ({ page }) => {
     await page.goto("/")
-    await expect(page.locator("#judge-select")).toBeVisible()
+    await expect(page.getByText("採点者を選択")).toBeVisible()
   })
 
   test("displays scoring card for unauthenticated users", async ({ page }) => {

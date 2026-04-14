@@ -65,7 +65,7 @@ export function PlayerSelector({
   return (
     <div className="space-y-3">
       {/* Search bar */}
-      {loaded && players.length > 5 && (
+      {loaded && players.length > 0 && (
         <div className="relative">
           <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-base-content/40" />
           <input
@@ -88,7 +88,7 @@ export function PlayerSelector({
 
       {/* Player list */}
       {loaded && (
-        <div className="grid gap-1.5">
+        <div className="grid max-h-[360px] gap-1.5 overflow-y-auto pr-1">
           {filteredPlayers.map((player) => {
             const isSelected = selectedPlayerId === player.id
             return (
