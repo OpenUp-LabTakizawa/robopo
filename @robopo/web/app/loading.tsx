@@ -1,7 +1,29 @@
 import { Skeleton } from "@/app/components/common/skeleton"
 
-const courseCards = ["cc0", "cc1", "cc2", "cc3"]
+const selectionCardKeys = ["sc0", "sc1"]
+const playerCardKeys = ["pc0", "pc1", "pc2"]
 const manageItems = ["m0", "m1", "m2", "m3", "m4"]
+
+function SelectionCardSkeleton() {
+  return (
+    <div className="flex min-h-[56px] w-full items-center gap-3 rounded-xl border border-base-300 px-4 py-2.5">
+      <Skeleton className="h-9 w-9 shrink-0 rounded-lg" />
+      <Skeleton className="h-4 w-3/5" />
+    </div>
+  )
+}
+
+function PlayerCardSkeleton() {
+  return (
+    <div className="flex w-full items-center gap-3 rounded-xl border border-base-300 px-3 py-2.5">
+      <Skeleton className="h-10 w-10 shrink-0 rounded-full" />
+      <div className="min-w-0 flex-1 space-y-1">
+        <Skeleton className="h-3.5 w-3/5" />
+        <Skeleton className="h-2.5 w-2/5" />
+      </div>
+    </div>
+  )
+}
 
 export default function Loading() {
   return (
@@ -15,30 +37,51 @@ export default function Loading() {
               <Skeleton className="h-9 w-9 rounded-lg" />
               <Skeleton className="h-5 w-14" />
             </div>
-            {/* Competition selector */}
-            <div className="space-y-4">
+            {/* ChallengeTab 2x2 grid */}
+            <div className="grid grid-cols-2 gap-3">
+              {/* Competition selection */}
               <div>
-                <Skeleton className="mb-1 h-3.5 w-20" />
-                <Skeleton className="h-10 w-full rounded-lg" />
+                <Skeleton className="mb-2 h-3.5 w-20" />
+                <div className="grid gap-2">
+                  {selectionCardKeys.map((id) => (
+                    <SelectionCardSkeleton key={id} />
+                  ))}
+                </div>
               </div>
-              {/* Judge selector */}
+
+              {/* Course selection */}
               <div>
-                <Skeleton className="mb-1 h-3.5 w-24" />
-                <Skeleton className="h-10 w-full rounded-lg" />
+                <Skeleton className="mb-2 h-3.5 w-24" />
+                <div className="grid gap-2">
+                  {selectionCardKeys.map((id) => (
+                    <SelectionCardSkeleton key={`c-${id}`} />
+                  ))}
+                </div>
               </div>
-              {/* Course cards grid */}
-              <div className="grid gap-3 sm:grid-cols-2">
-                {courseCards.map((id, i) => (
-                  <div
-                    key={id}
-                    className="flex min-h-[72px] items-center gap-3 rounded-xl border border-base-300 px-4 py-3"
-                    style={{ animationDelay: `${i * 60}ms` }}
-                  >
-                    <Skeleton className="h-10 w-10 shrink-0 rounded-lg" />
-                    <Skeleton className="h-4 w-3/5" />
-                  </div>
-                ))}
+
+              {/* Judge selection */}
+              <div>
+                <Skeleton className="mb-2 h-3.5 w-24" />
+                <Skeleton className="h-8 w-full rounded-lg" />
+                <div className="mt-2 grid gap-2">
+                  {selectionCardKeys.map((id) => (
+                    <SelectionCardSkeleton key={`j-${id}`} />
+                  ))}
+                </div>
               </div>
+
+              {/* Player selection */}
+              <div>
+                <Skeleton className="mb-2 h-3.5 w-20" />
+                <div className="grid gap-1.5">
+                  {playerCardKeys.map((id) => (
+                    <PlayerCardSkeleton key={id} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Start scoring button */}
+              <Skeleton className="col-span-2 h-12 w-full rounded-xl" />
             </div>
           </div>
         </div>
