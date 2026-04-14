@@ -1,10 +1,10 @@
+import { CompetitionView } from "@/app/competition/view"
 import {
   getCompetitionWithCourseList,
   getCourseList,
 } from "@/app/components/server/db"
-import { CompetitionView } from "@/app/config/view"
 
-export default async function Config() {
+export default async function Competition() {
   const [{ competitions }, { courses }] = await Promise.all([
     getCompetitionWithCourseList(),
     getCourseList(),
