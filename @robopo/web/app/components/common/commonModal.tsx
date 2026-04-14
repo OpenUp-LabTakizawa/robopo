@@ -1,10 +1,6 @@
 "use client"
 
-import {
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
-  XCircleIcon,
-} from "@heroicons/react/24/outline"
+import { CircleCheck, CircleX, TriangleAlert } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { BackButton } from "@/app/components/parts/buttons"
@@ -79,12 +75,12 @@ export function DeleteModal({ type, ids }: { type: InputType; ids: number[] }) {
         <div className="flex flex-col items-center px-2 py-2">
           {successMessage ? (
             <div className="flex flex-col items-center gap-3">
-              <CheckCircleIcon className="size-12 text-success" />
+              <CircleCheck className="size-12 text-success" />
               <p className="text-center font-medium">{successMessage}</p>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-3">
-              <ExclamationTriangleIcon className="size-12 text-warning" />
+              <TriangleAlert className="size-12 text-warning" />
               <p className="text-center font-medium">
                 選択した{commonString}を削除しますか?
               </p>
@@ -93,7 +89,7 @@ export function DeleteModal({ type, ids }: { type: InputType; ids: number[] }) {
 
           {errorMessage && (
             <div className="mt-4 flex w-full items-center gap-2 rounded-lg bg-error/10 px-4 py-2.5 text-error text-sm">
-              <XCircleIcon className="size-5 shrink-0" />
+              <CircleX className="size-5 shrink-0" />
               {errorMessage}
             </div>
           )}

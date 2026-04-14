@@ -1,11 +1,6 @@
 "use client"
 
-import {
-  CheckCircleIcon,
-  ChevronRightIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline"
-import { Bars3BottomLeftIcon } from "@heroicons/react/24/solid"
+import { ChevronRight, CircleCheck, ListOrdered, X } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import type { MissionProgress } from "@/app/components/challenge/utils"
 import {
@@ -80,7 +75,7 @@ function MissionOverviewItem({
     <div ref={isCurrent ? currentRef : undefined} className={containerClass}>
       {/* Status icon / Number */}
       {isCompleted ? (
-        <CheckCircleIcon className="size-6 shrink-0 text-success" />
+        <CircleCheck className="size-6 shrink-0 text-success" />
       ) : (
         <div
           className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs ${
@@ -107,7 +102,7 @@ function MissionOverviewItem({
 
       {/* Current indicator */}
       {isCurrent && (
-        <ChevronRightIcon className="size-4 shrink-0 animate-pulse text-primary" />
+        <ChevronRight className="size-4 shrink-0 animate-pulse text-primary" />
       )}
     </div>
   )
@@ -166,7 +161,7 @@ export function MissionOverview({
         onClick={() => setOpen(true)}
         aria-label="ミッション一覧を開く"
       >
-        <Bars3BottomLeftIcon className="size-5" />
+        <ListOrdered className="size-5" />
         <span className="font-medium text-xs">
           {progress.completed}/{progress.total}
         </span>
@@ -199,7 +194,7 @@ export function MissionOverview({
                 onClick={() => setOpen(false)}
                 aria-label="閉じる"
               >
-                <XMarkIcon className="size-5" />
+                <X className="size-5" />
               </button>
             </div>
 

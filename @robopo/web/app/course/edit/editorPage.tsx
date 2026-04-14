@@ -1,10 +1,6 @@
 "use client"
 
-import {
-  ArrowDownTrayIcon,
-  CheckCircleIcon,
-  ExclamationTriangleIcon,
-} from "@heroicons/react/24/outline"
+import { CircleCheck, Download, TriangleAlert } from "lucide-react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import {
   buildPreviewMission,
@@ -371,7 +367,7 @@ export function EditorPage({
                 className="tooltip tooltip-right hidden sm:inline-flex"
                 data-tip={saveBlockMessage}
               >
-                <ExclamationTriangleIcon className="size-5 text-warning" />
+                <TriangleAlert className="size-5 text-warning" />
               </div>
               {/* Mobile: tap to toggle message */}
               <button
@@ -379,7 +375,7 @@ export function EditorPage({
                 className="sm:hidden"
                 onClick={() => setShowSaveWarning((prev) => !prev)}
               >
-                <ExclamationTriangleIcon className="size-5 text-warning" />
+                <TriangleAlert className="size-5 text-warning" />
               </button>
             </>
           )}
@@ -390,7 +386,7 @@ export function EditorPage({
               className="btn btn-success min-w-28 max-w-fit rounded-xl shadow-lg shadow-success/20 transition-all duration-200"
             >
               保存成功
-              <CheckCircleIcon className="size-5" />
+              <CircleCheck className="size-5" />
             </button>
           ) : (
             <button
@@ -406,7 +402,7 @@ export function EditorPage({
                 </>
               ) : (
                 <>
-                  <ArrowDownTrayIcon className="size-5" />
+                  <Download className="size-5" />
                   保存
                 </>
               )}

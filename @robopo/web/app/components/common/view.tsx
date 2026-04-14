@@ -1,19 +1,21 @@
 "use client"
 
 import {
-  BarsArrowDownIcon,
-  BarsArrowUpIcon,
-  CheckCircleIcon,
-  Cog6ToothIcon,
-  ExclamationTriangleIcon,
-  FunnelIcon,
-  MagnifyingGlassIcon,
-  PencilSquareIcon,
-  PlusIcon,
-  TrashIcon,
-  XCircleIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline"
+  ArrowDown01,
+  ArrowDownAZ,
+  ArrowUp01,
+  ArrowUpAZ,
+  CircleCheck,
+  CircleX,
+  Filter,
+  Plus,
+  Search,
+  Settings,
+  SquarePen,
+  Trash2,
+  TriangleAlert,
+  X,
+} from "lucide-react"
 import Link from "next/link"
 import type React from "react"
 import { useState } from "react"
@@ -70,7 +72,7 @@ export function View({
               setCreateModalOpen(true)
             }}
           >
-            <PlusIcon className="size-4" />
+            <Plus className="size-4" />
             新規作成
           </button>
           <button
@@ -86,7 +88,7 @@ export function View({
               onEditClick?.()
             }}
           >
-            <PencilSquareIcon className="size-4" />
+            <SquarePen className="size-4" />
             編集
           </button>
           <Link
@@ -102,7 +104,7 @@ export function View({
               setSuccessMessage(null)
             }}
           >
-            <Cog6ToothIcon className="size-4" />
+            <Settings className="size-4" />
             コース編集
           </Link>
           <button
@@ -118,7 +120,7 @@ export function View({
               onDeleteClick?.()
             }}
           >
-            <TrashIcon className="size-4" />
+            <Trash2 className="size-4" />
             削除
           </button>
         </div>
@@ -150,7 +152,7 @@ export function View({
     return (
       <div className="flex flex-col gap-3 px-4 pb-4">
         <label className="input input-bordered flex items-center gap-2 rounded-xl bg-base-200/40 transition-colors focus-within:bg-base-100">
-          <MagnifyingGlassIcon className="size-4 shrink-0 text-base-content/40" />
+          <Search className="size-4 shrink-0 text-base-content/40" />
           <input
             type="text"
             placeholder="コース名・説明で検索"
@@ -161,7 +163,7 @@ export function View({
         </label>
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex shrink-0 items-center gap-1.5 rounded-lg bg-base-200/50 px-2.5 py-1.5">
-            <FunnelIcon className="size-3.5 shrink-0 text-base-content/40" />
+            <Filter className="size-3.5 shrink-0 text-base-content/40" />
             <span className="shrink-0 text-xs">大会</span>
             <select
               className="select select-ghost select-xs bg-transparent pe-0 font-medium focus:outline-none [&>option]:bg-base-100 [&>option]:text-base-content"
@@ -195,10 +197,16 @@ export function View({
                 setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
               }
             >
-              {sortOrder === "desc" ? (
-                <BarsArrowDownIcon className="size-3.5" />
+              {sortKey === "name" ? (
+                sortOrder === "desc" ? (
+                  <ArrowDownAZ className="size-3.5" />
+                ) : (
+                  <ArrowUpAZ className="size-3.5" />
+                )
+              ) : sortOrder === "desc" ? (
+                <ArrowDown01 className="size-3.5" />
               ) : (
-                <BarsArrowUpIcon className="size-3.5" />
+                <ArrowUp01 className="size-3.5" />
               )}
               {sortKey === "createdAt"
                 ? sortOrder === "desc"
@@ -349,7 +357,7 @@ export function View({
                 className="btn btn-ghost btn-sm btn-circle"
                 onClick={() => setCompetitionDetailNames(null)}
               >
-                <XMarkIcon className="size-5" />
+                <X className="size-5" />
               </button>
             </div>
             <div className="max-h-[60vh] overflow-y-auto">
@@ -474,12 +482,12 @@ function CourseDeleteModal({
         <div className="flex flex-col items-center px-2 py-2">
           {successMessage ? (
             <div className="flex flex-col items-center gap-3">
-              <CheckCircleIcon className="size-12 text-success" />
+              <CircleCheck className="size-12 text-success" />
               <p className="text-center font-medium">{successMessage}</p>
             </div>
           ) : hasLinkedCourses ? (
             <div className="flex flex-col items-center gap-3">
-              <ExclamationTriangleIcon className="size-12 text-warning" />
+              <TriangleAlert className="size-12 text-warning" />
               <p className="text-center font-medium">
                 使用大会が0でないコースは削除できません。
                 <br />
@@ -488,7 +496,7 @@ function CourseDeleteModal({
             </div>
           ) : (
             <div className="flex flex-col items-center gap-3">
-              <ExclamationTriangleIcon className="size-12 text-warning" />
+              <TriangleAlert className="size-12 text-warning" />
               <p className="text-center font-medium">
                 選択したコースを削除しますか?
               </p>
@@ -504,7 +512,7 @@ function CourseDeleteModal({
 
           {errorMessage && (
             <div className="mt-4 flex w-full items-center gap-2 rounded-lg bg-error/10 px-4 py-2.5 text-error text-sm">
-              <XCircleIcon className="size-5 shrink-0" />
+              <CircleX className="size-5 shrink-0" />
               {errorMessage}
             </div>
           )}

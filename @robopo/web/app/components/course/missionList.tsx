@@ -15,14 +15,15 @@ import {
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import {
-  ArrowUturnLeftIcon,
-  ArrowUturnRightIcon,
-  Bars3Icon,
-  ExclamationTriangleIcon,
-  PlusIcon,
-  TrashIcon,
-} from "@heroicons/react/24/outline"
-import { PlayIcon, StopIcon } from "@heroicons/react/24/solid"
+  GripVertical,
+  Play,
+  Plus,
+  Redo2,
+  Square,
+  Trash2,
+  TriangleAlert,
+  Undo2,
+} from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import {
   type FieldState,
@@ -344,9 +345,9 @@ export function MissionList({
                 disabled={!canPlay && !isPlaying}
               >
                 {isPlaying ? (
-                  <StopIcon className="size-3.5" />
+                  <Square className="size-3.5" fill="currentColor" />
                 ) : (
-                  <PlayIcon className="size-3.5" />
+                  <Play className="size-3.5" fill="currentColor" />
                 )}
               </button>
             </div>
@@ -358,7 +359,7 @@ export function MissionList({
             disabled={!canUndoMission || isPlaying}
             title="元に戻す"
           >
-            <ArrowUturnLeftIcon className="size-4" />
+            <Undo2 className="size-4" />
           </button>
           <button
             type="button"
@@ -367,7 +368,7 @@ export function MissionList({
             disabled={!canRedoMission || isPlaying}
             title="やり直す"
           >
-            <ArrowUturnRightIcon className="size-4" />
+            <Redo2 className="size-4" />
           </button>
         </div>
       </div>
@@ -762,7 +763,7 @@ function SortableMissionRow({
           {...listeners}
           onClick={(e) => e.stopPropagation()}
         >
-          <Bars3Icon className="size-4" />
+          <GripVertical className="size-4" />
         </button>
 
         {/* Order number */}
@@ -839,7 +840,7 @@ function SortableMissionRow({
               className="tooltip tooltip-left hidden sm:block"
               data-tip={errorMessage}
             >
-              <ExclamationTriangleIcon className="size-4 text-error" />
+              <TriangleAlert className="size-4 text-error" />
             </div>
             {/* Mobile: tap to show message */}
             <button
@@ -847,7 +848,7 @@ function SortableMissionRow({
               className="sm:hidden"
               onClick={handleErrorTap}
             >
-              <ExclamationTriangleIcon className="size-4 text-error" />
+              <TriangleAlert className="size-4 text-error" />
             </button>
           </>
         )}
@@ -862,7 +863,7 @@ function SortableMissionRow({
           }}
           title="削除"
         >
-          <TrashIcon className="size-4" />
+          <Trash2 className="size-4" />
         </button>
       </div>
       {/* Mobile error message */}
@@ -1279,7 +1280,7 @@ function AddButton({
         onClick={onClick}
         title="ミッションを追加"
       >
-        <PlusIcon className="size-3 text-primary" />
+        <Plus className="size-3 text-primary" />
       </button>
     </div>
   )

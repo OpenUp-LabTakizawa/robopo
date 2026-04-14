@@ -1,6 +1,6 @@
 "use client"
 
-import { CheckIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline"
+import { Check, Search } from "lucide-react"
 import { useEffect, useRef, useState, useTransition } from "react"
 
 import { getCompetitionPlayerList } from "@/app/components/server/db"
@@ -67,7 +67,7 @@ export function PlayerSelector({
       {/* Search bar */}
       {loaded && players.length > 0 && (
         <div className="relative">
-          <MagnifyingGlassIcon className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-base-content/40" />
+          <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-base-content/40" />
           <input
             type="text"
             placeholder="選手を検索..."
@@ -122,7 +122,7 @@ export function PlayerSelector({
                   )}
                 </div>
                 {isSelected && (
-                  <CheckIcon className="h-5 w-5 shrink-0 text-primary" />
+                  <Check className="h-5 w-5 shrink-0 text-primary" />
                 )}
               </button>
             )
