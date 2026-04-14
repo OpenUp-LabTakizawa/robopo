@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm"
 import { headers } from "next/headers"
+import { auth } from "@/app/lib/auth/auth"
 import { db } from "@/app/lib/db/db"
 import { judge } from "@/app/lib/db/schema"
-import { auth } from "@/lib/auth"
 
 export type HeaderSession = {
   user: { id: string; name: string }

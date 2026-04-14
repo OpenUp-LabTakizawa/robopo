@@ -2,13 +2,7 @@ import { eq } from "drizzle-orm"
 import { headers } from "next/headers"
 import { Dashboard } from "@/app/components/home/dashboard"
 import { ChallengeTab } from "@/app/components/home/tabs"
-import {
-  getCompetitionCourseAssignList,
-  getCompetitionJudgeAssignList,
-  getCompetitionList,
-  getCourseList,
-  getJudgeList,
-} from "@/app/components/server/db"
+import { auth } from "@/app/lib/auth/auth"
 import { db } from "@/app/lib/db/db"
 import type {
   SelectCompetition,
@@ -18,7 +12,13 @@ import type {
   SelectJudgeWithUsername,
 } from "@/app/lib/db/schema"
 import { judge } from "@/app/lib/db/schema"
-import { auth } from "@/lib/auth"
+import {
+  getCompetitionCourseAssignList,
+  getCompetitionJudgeAssignList,
+  getCompetitionList,
+  getCourseList,
+  getJudgeList,
+} from "@/app/server/db"
 
 export default async function Home() {
   const session = await auth.api.getSession({

@@ -1,7 +1,7 @@
-import { getCompetitionList } from "@/app/components/server/db"
+import { SummaryView } from "@/app/components/summary/summaryView"
 import { getCompetitionStatus } from "@/app/lib/competition"
 import type { SelectCompetition } from "@/app/lib/db/schema"
-import { SummaryView } from "@/app/summary/summaryView"
+import { getCompetitionList } from "@/app/server/db"
 
 function getDefaultCompetitionId(
   competitions: SelectCompetition[],

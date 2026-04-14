@@ -2,9 +2,8 @@
 
 import { Check, Search } from "lucide-react"
 import { useEffect, useRef, useState, useTransition } from "react"
-
-import { getCompetitionPlayerList } from "@/app/components/server/db"
 import type { SelectPlayer } from "@/app/lib/db/schema"
+import { getCompetitionPlayerList } from "@/app/server/db"
 
 type PlayerSelectorProps = {
   competitionId: number

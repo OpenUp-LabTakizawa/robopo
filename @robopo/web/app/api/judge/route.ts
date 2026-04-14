@@ -4,7 +4,7 @@ import { db } from "@/app/lib/db/db"
 import { createJudge } from "@/app/lib/db/queries/insert"
 import { competitionJudge, judge, user } from "@/app/lib/db/schema"
 export async function POST(req: Request) {
-  const { auth } = await import("@/lib/auth")
+  const { auth } = await import("@/app/lib/auth/auth")
   const { note, competitionIds, username, password } = await req.json()
 
   if (!username?.trim()) {

@@ -1,13 +1,13 @@
 import { sql } from "drizzle-orm"
-import { calcPoint } from "@/app/components/challenge/utils"
-import { deserializePoint } from "@/app/components/course/utils"
-import type { CourseCompetitionSummary } from "@/app/components/summary/utils"
-import { isCompletedCourse } from "@/app/components/summary/utils"
+import { deserializePoint } from "@/app/lib/course/point"
 import { db } from "@/app/lib/db/db"
 import {
   getCourseById,
   getCourseSummaryByCompetition,
 } from "@/app/lib/db/queries/queries"
+import { calcPoint } from "@/app/lib/scoring/scoring"
+import { isCompletedCourse } from "@/app/lib/summary/format"
+import type { CourseCompetitionSummary } from "@/app/lib/summary/types"
 
 export async function GET(
   _req: Request,

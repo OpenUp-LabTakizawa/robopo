@@ -1,6 +1,6 @@
 import { AssignModal } from "@/app/components/common/commonModal"
-import { getCompetitionList } from "@/app/components/server/db"
 import type { SelectCompetition } from "@/app/lib/db/schema"
+import { getCompetitionList } from "@/app/server/db"
 
 export default async function AssignCourse({
   params,

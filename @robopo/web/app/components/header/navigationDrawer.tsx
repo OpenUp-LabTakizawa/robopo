@@ -5,11 +5,11 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
-import type { NavItem } from "@/app/lib/const"
+import type { NavItem } from "@/app/lib/navigation"
 import {
   COMPETITION_MANAGEMENT_LIST,
   NAVIGATION_GENERAL_LIST,
-} from "@/app/lib/const"
+} from "@/app/lib/navigation"
 
 function NavLink({
   item,

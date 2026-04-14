@@ -1,15 +1,10 @@
 import Link from "next/link"
 import React from "react"
-import { calcPoint } from "@/app/components/challenge/utils"
-import {
-  deserializeMission,
-  deserializePoint,
-  missionStatePair,
-} from "@/app/components/course/utils"
 import { HomeButton } from "@/app/components/parts/buttons"
-import { getCompetitionCourseList } from "@/app/components/server/db"
-import { maxCoursePoint } from "@/app/components/summary/utilServer"
-import { BackLabelWithIcon } from "@/app/lib/const"
+import { BackLabelWithIcon } from "@/app/components/parts/icons"
+import { CourseDetailTable } from "@/app/components/summary/courseDetailTable"
+import { deserializeMission, missionStatePair } from "@/app/lib/course/mission"
+import { deserializePoint } from "@/app/lib/course/point"
 import {
   getChallengeCount,
   getCourseById,
@@ -18,7 +13,9 @@ import {
   getMaxResult,
   getPlayerById,
 } from "@/app/lib/db/queries/queries"
-import { CourseDetailTable } from "@/app/summary/[...ids]/courseDetailTable"
+import { calcPoint } from "@/app/lib/scoring/scoring"
+import { maxCoursePoint } from "@/app/lib/summary/calculations"
+import { getCompetitionCourseList } from "@/app/server/db"
 
 export default async function SummaryPlayer({
   params,

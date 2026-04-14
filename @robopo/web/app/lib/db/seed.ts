@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm"
+import { auth } from "@/app/lib/auth/auth"
 import { db } from "@/app/lib/db/db"
-import { auth } from "@/lib/auth"
 
 async function seed() {
   await db.execute(sql`BEGIN`)

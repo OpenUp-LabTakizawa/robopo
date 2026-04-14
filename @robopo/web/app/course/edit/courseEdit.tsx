@@ -1,16 +1,18 @@
 import { useRef, useState } from "react"
 import { Field } from "@/app/components/course/field"
 import { Toolbar } from "@/app/components/course/toolbar"
+import type { ToolType } from "@/app/course/edit/courseEditContext"
 import {
-  type FieldState,
   initializeField,
   isGoal,
   isStart,
-  type MissionValue,
-  type PanelValue,
   putPanel,
-} from "@/app/components/course/utils"
-import type { ToolType } from "@/app/course/edit/courseEditContext"
+} from "@/app/lib/course/field"
+import type {
+  FieldState,
+  MissionValue,
+  PanelValue,
+} from "@/app/lib/course/types"
 
 type CourseEditProps = {
   field: FieldState

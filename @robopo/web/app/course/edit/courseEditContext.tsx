@@ -2,15 +2,15 @@
 
 import type React from "react"
 import { createContext, useContext, useRef, useState } from "react"
-import {
-  type FieldState,
-  initializeField,
-  type MissionState,
-  type PanelValue,
-  type PointState,
-} from "@/app/components/course/utils"
 import { useNavigationGuard } from "@/app/hooks/useNavigationGuard"
 import { useUndoRedo } from "@/app/hooks/useUndoRedo"
+import { initializeField } from "@/app/lib/course/field"
+import type {
+  FieldState,
+  MissionState,
+  PanelValue,
+  PointState,
+} from "@/app/lib/course/types"
 
 export type ToolType = PanelValue | "eraser"
 

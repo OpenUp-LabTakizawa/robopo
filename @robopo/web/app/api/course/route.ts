@@ -1,11 +1,7 @@
 import type { NextRequest } from "next/server"
-import {
-  checkValidity,
-  deserializeField,
-  deserializeMission,
-  isGoal,
-  isStart,
-} from "@/app/components/course/utils"
+import { deserializeField, isGoal, isStart } from "@/app/lib/course/field"
+import { deserializeMission } from "@/app/lib/course/mission"
+import { checkValidity } from "@/app/lib/course/validation"
 import { createCourse } from "@/app/lib/db/queries/insert"
 import {
   deleteCourseById,

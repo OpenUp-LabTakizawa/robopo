@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { getCompetitionCourseList } from "@/app/components/server/db"
+import { getCompetitionCourseList } from "@/app/server/db"
 
 export async function GET(
   _request: Request,

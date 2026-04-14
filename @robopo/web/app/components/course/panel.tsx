@@ -1,5 +1,5 @@
 import { TriangleAlert } from "lucide-react"
-import { PanelString, type PanelValue } from "@/app/components/course/utils"
+import { PanelString, type PanelValue } from "@/app/lib/course/types"
 
 // Panel component
 export function Panel({

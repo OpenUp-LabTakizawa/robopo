@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import { type MissionValue, PANEL_SIZE } from "@/app/components/course/utils"
+import { type MissionValue, PANEL_SIZE } from "@/app/lib/course/types"
 
 function dirToDeg(dir: MissionValue): number {
   switch (dir) {
