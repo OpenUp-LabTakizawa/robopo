@@ -7,7 +7,7 @@ import {
   type PointEntry,
   type PointState,
   type PointValue,
-} from "@/app/components/course/utils"
+} from "@/app/lib/course/types"
 
 // Start select
 function StartSelect({

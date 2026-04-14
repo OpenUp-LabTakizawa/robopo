@@ -1,10 +1,7 @@
-import { getCompetitionCourseList } from "@/app/components/server/db"
-import {
-  maxCoursePoint,
-  sumCoursePoint,
-} from "@/app/components/summary/utilServer"
-import type { CourseSummary } from "@/app/components/summary/utils"
 import { getCourseSummary } from "@/app/lib/db/queries/queries"
+import { maxCoursePoint, sumCoursePoint } from "@/app/lib/summary/calculations"
+import type { CourseSummary } from "@/app/lib/summary/types"
+import { getCompetitionCourseList } from "@/app/server/db"
 
 function calcElapsedSeconds(
   startTime: string | null,

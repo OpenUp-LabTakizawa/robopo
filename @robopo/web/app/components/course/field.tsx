@@ -5,14 +5,14 @@ import {
 } from "@/app/components/course/nextArrow"
 import { Panel } from "@/app/components/course/panel"
 import { Robot } from "@/app/components/course/robot"
+import { getFieldBounds } from "@/app/lib/course/field"
 import {
   type FieldState,
-  getFieldBounds,
   MAX_FIELD_HEIGHT,
   MAX_FIELD_WIDTH,
   type MissionValue,
   PANEL_SIZE,
-} from "@/app/components/course/utils"
+} from "@/app/lib/course/types"
 
 type FieldProps = {
   field: FieldState

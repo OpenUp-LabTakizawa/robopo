@@ -2,14 +2,14 @@
 
 import { ChevronRight, CircleCheck, ListOrdered, X } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
-import type { MissionProgress } from "@/app/components/challenge/utils"
+import { getMissionParameterUnit } from "@/app/lib/course/mission"
 import {
-  getMissionParameterUnit,
   MissionString,
   type MissionValue,
   type PointEntry,
   type PointState,
-} from "@/app/components/course/utils"
+} from "@/app/lib/course/types"
+import type { MissionProgress } from "@/app/lib/scoring/scoring"
 
 // Mission status
 type MissionStatus = "completed" | "current" | "upcoming"

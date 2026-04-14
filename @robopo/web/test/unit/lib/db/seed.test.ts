@@ -1,10 +1,8 @@
 import { describe, expect, test } from "bun:test"
 import { eq } from "drizzle-orm"
-import {
-  checkValidity,
-  deserializeField,
-  deserializeMission,
-} from "@/app/components/course/utils"
+import { deserializeField } from "@/app/lib/course/field"
+import { deserializeMission } from "@/app/lib/course/mission"
+import { checkValidity } from "@/app/lib/course/validation"
 import { db } from "@/app/lib/db/db"
 import { course, judge, user } from "@/app/lib/db/schema"
 

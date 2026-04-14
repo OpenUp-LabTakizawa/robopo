@@ -1,9 +1,6 @@
 import { Pause } from "lucide-react"
-import {
-  getNextPosition,
-  type MissionValue,
-  PANEL_SIZE,
-} from "@/app/components/course/utils"
+import { getNextPosition } from "@/app/lib/course/mission"
+import { type MissionValue, PANEL_SIZE } from "@/app/lib/course/types"
 
 // Shared cell positioning style for overlays
 function getCellStyle({

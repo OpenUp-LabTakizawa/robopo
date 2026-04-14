@@ -1,9 +1,9 @@
-import { getCompetitionList } from "@/app/components/server/db"
-import { JudgeView } from "@/app/judge/view"
+import { JudgeView } from "@/app/components/judge/view"
 import {
   getJudgeWithCompetition,
   groupByJudge,
 } from "@/app/lib/db/queries/queries"
+import { getCompetitionList } from "@/app/server/db"
 
 export default async function JudgePage() {
   const [judgeRows, { competitions }] = await Promise.all([

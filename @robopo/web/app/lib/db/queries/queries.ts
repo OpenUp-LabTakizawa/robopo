@@ -1,8 +1,4 @@
 import { and, count, eq, inArray, ne, type SQLWrapper, sql } from "drizzle-orm"
-import type {
-  CourseSummary,
-  JudgeSummary,
-} from "@/app/components/summary/utils"
 import { db } from "@/app/lib/db/db"
 import {
   challenge,
@@ -21,6 +17,7 @@ import {
   session,
   user,
 } from "@/app/lib/db/schema"
+import type { CourseSummary, JudgeSummary } from "@/app/lib/summary/types"
 
 // Check if a course name already exists (optionally excluding a specific course ID)
 export async function getCourseByName(

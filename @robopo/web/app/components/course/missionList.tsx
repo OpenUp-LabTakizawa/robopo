@@ -25,20 +25,21 @@ import {
   Undo2,
 } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
+import { findGoal, findStart } from "@/app/lib/course/field"
 import {
-  type FieldState,
-  findGoal,
-  findStart,
   getMissionParameterUnit,
   getRobotPosition,
+  missionStatePair,
+} from "@/app/lib/course/mission"
+import {
+  type FieldState,
   MAX_FIELD_WIDTH,
   type MissionState,
   MissionString,
   type MissionValue,
-  missionStatePair,
   type PointEntry,
   type PointState,
-} from "@/app/components/course/utils"
+} from "@/app/lib/course/types"
 
 // ─── Types ───────────────────────────────────────────────────────────
 

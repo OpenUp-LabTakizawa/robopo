@@ -1,6 +1,6 @@
-import type { FieldState } from "@/app/components/course/utils"
-import { isGoal, isStart } from "@/app/components/course/utils"
 import type { ToolType } from "@/app/course/edit/courseEditContext"
+import { isGoal, isStart } from "@/app/lib/course/field"
+import type { FieldState } from "@/app/lib/course/types"
 
 type ToolbarProps = {
   field: FieldState

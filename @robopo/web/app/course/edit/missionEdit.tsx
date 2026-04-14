@@ -6,7 +6,7 @@ import type {
   FieldState,
   MissionState,
   PointState,
-} from "@/app/components/course/utils"
+} from "@/app/lib/course/types"
 
 type MissionEditProps = {
   field: FieldState

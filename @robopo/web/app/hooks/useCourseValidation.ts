@@ -1,14 +1,12 @@
 import { useMemo } from "react"
-import {
-  type FieldState,
-  findIsolatedPanels,
-  isGoal,
-  isStart,
-  type MissionErrorReason,
-  type MissionState,
-  missionStatePair,
-  validateMissions,
-} from "@/app/components/course/utils"
+import { findIsolatedPanels, isGoal, isStart } from "@/app/lib/course/field"
+import { missionStatePair } from "@/app/lib/course/mission"
+import type {
+  FieldState,
+  MissionErrorReason,
+  MissionState,
+} from "@/app/lib/course/types"
+import { validateMissions } from "@/app/lib/course/validation"
 
 type ValidationResult = {
   hasStart: boolean

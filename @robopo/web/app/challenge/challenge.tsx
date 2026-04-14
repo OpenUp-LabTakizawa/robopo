@@ -9,30 +9,10 @@ import {
   ChallengeModal,
   CourseOutModal,
   RetryModal,
-} from "@/app/challenge/challengeModal"
+} from "@/app/components/challenge/challengeModal"
 import { MissionOverview } from "@/app/components/challenge/missionOverview"
-import {
-  COURSE_OUT_FIRST,
-  COURSE_OUT_RETRY,
-  calcPoint,
-  getMissionProgress,
-  parseCourseOutRule,
-  resultSubmit,
-} from "@/app/components/challenge/utils"
+import { resultSubmit } from "@/app/components/challenge/resultSubmit"
 import { Field } from "@/app/components/course/field"
-import {
-  deserializeField,
-  deserializeMission,
-  deserializePoint,
-  type FieldState,
-  findStart,
-  getMissionParameterUnit,
-  getRobotPosition,
-  MissionString,
-  type MissionValue,
-  missionStatePair,
-  type PointState,
-} from "@/app/components/course/utils"
 import {
   BackButton,
   CourseOutButton,
@@ -40,6 +20,26 @@ import {
   ReloadButton,
   SubmitButton,
 } from "@/app/components/parts/buttons"
+import { deserializeField, findStart } from "@/app/lib/course/field"
+import {
+  deserializeMission,
+  getMissionParameterUnit,
+  getRobotPosition,
+  missionStatePair,
+} from "@/app/lib/course/mission"
+import { deserializePoint } from "@/app/lib/course/point"
+import {
+  type FieldState,
+  MissionString,
+  type MissionValue,
+  type PointState,
+} from "@/app/lib/course/types"
+import {
+  COURSE_OUT_FIRST,
+  COURSE_OUT_RETRY,
+  parseCourseOutRule,
+} from "@/app/lib/scoring/course-out"
+import { calcPoint, getMissionProgress } from "@/app/lib/scoring/scoring"
 
 // Type definitions
 type ChallengeProps = {

@@ -20,7 +20,7 @@ import Link from "next/link"
 import type React from "react"
 import { useState } from "react"
 import { CommonCheckboxList } from "@/app/components/common/commonList"
-import { CourseFormModal } from "@/app/course/modals"
+import { CourseFormModal } from "@/app/components/course/modals"
 import type {
   SelectCompetition,
   SelectCourseWithCompetition,

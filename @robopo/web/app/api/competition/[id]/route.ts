@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm"
-import { getCompetitionWithCourseList } from "@/app/components/server/db"
 import { db } from "@/app/lib/db/db"
 import { updateCompetition } from "@/app/lib/db/queries/update"
 import { competitionCourse } from "@/app/lib/db/schema"
+import { getCompetitionWithCourseList } from "@/app/server/db"
 
 function parseOptionalDate(
   value: string | null | undefined,

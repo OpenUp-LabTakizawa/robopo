@@ -10,10 +10,7 @@ import {
   X,
 } from "lucide-react"
 import type React from "react"
-import type {
-  SortCondition,
-  SortOrder,
-} from "@/app/components/summary/useMultiSort"
+import type { SortCondition, SortOrder } from "@/app/hooks/useMultiSort"
 
 type SortOption<K extends string> = {
   value: K

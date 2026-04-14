@@ -10,7 +10,6 @@ import { useCallback, useEffect, useState } from "react"
 import { PlayerSelector } from "@/app/components/home/player-selector"
 import { useSelectionStorage } from "@/app/hooks/useSelectionStorage"
 import { isCompetitionActive } from "@/app/lib/competition"
-import { COMPETITION_MANAGEMENT_LIST } from "@/app/lib/const"
 import type {
   SelectCompetition,
   SelectCompetitionCourse,
@@ -19,6 +18,7 @@ import type {
   SelectJudgeWithUsername,
   SelectPlayer,
 } from "@/app/lib/db/schema"
+import { COMPETITION_MANAGEMENT_LIST } from "@/app/lib/navigation"
 
 function SelectionCard({
   name,
