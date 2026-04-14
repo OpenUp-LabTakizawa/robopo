@@ -5,10 +5,6 @@ import { auth } from "@/lib/auth"
 // Form state for signIn
 type FormState =
   | {
-      errors?: {
-        username?: string[]
-        password?: string[]
-      }
       message?: string
       success?: boolean
     }
@@ -16,20 +12,13 @@ type FormState =
 
 // Server action for sign-in
 export async function signInAction(_state: FormState, formData: FormData) {
-  const username = formData.get("username")
-  const password = formData.get("password")
+  const username = formData.get("username")?.toString().trim() ?? ""
+  const password = formData.get("password")?.toString() ?? ""
 
-  // Validation
-  if (!username || typeof username !== "string") {
+  if (!username || !password) {
     return {
       success: false,
-      message: "ユーザーネームが未入力です",
-    }
-  }
-  if (!password || typeof password !== "string") {
-    return {
-      success: false,
-      message: "パスワードが未入力です",
+      message: "ログインに失敗しました",
     }
   }
 

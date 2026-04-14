@@ -16,7 +16,13 @@ import {
 } from "@/app/components/common/commonModal"
 import { signInAction } from "@/app/components/server/auth"
 
-function SubmitButton({ success }: { success?: boolean }) {
+function SubmitButton({
+  success,
+  disabled,
+}: {
+  success?: boolean
+  disabled?: boolean
+}) {
   const { pending } = useFormStatus()
 
   if (success) {
@@ -35,7 +41,7 @@ function SubmitButton({ success }: { success?: boolean }) {
   return (
     <button
       type="submit"
-      disabled={pending}
+      disabled={pending || disabled}
       className="btn btn-primary w-full rounded-xl shadow-lg shadow-primary/25 transition-all duration-200 hover:shadow-primary/30 hover:shadow-xl"
     >
       {pending ? (
@@ -58,11 +64,15 @@ function FormFields({
   passwordId,
   showPassword,
   setShowPassword,
+  onUsernameChange,
+  onPasswordChange,
 }: {
   usernameId: string
   passwordId: string
   showPassword: boolean
   setShowPassword: (fn: (prev: boolean) => boolean) => void
+  onUsernameChange: (value: string) => void
+  onPasswordChange: (value: string) => void
 }) {
   const { pending } = useFormStatus()
 
@@ -81,6 +91,7 @@ function FormFields({
           name="username"
           placeholder="robosava"
           required
+          onChange={(e) => onUsernameChange(e.target.value)}
           className="input w-full rounded-xl border-base-300/50 bg-base-200/50 transition-all duration-200 focus:border-primary/50 focus:bg-base-100 focus:ring-2 focus:ring-primary/20"
         />
       </div>
@@ -98,6 +109,7 @@ function FormFields({
             name="password"
             placeholder="12345678"
             required
+            onChange={(e) => onPasswordChange(e.target.value)}
             className="input w-full rounded-xl border-base-300/50 bg-base-200/50 pr-12 transition-all duration-200 focus:border-primary/50 focus:bg-base-100 focus:ring-2 focus:ring-primary/20"
           />
           <button
@@ -145,6 +157,8 @@ export default function SignIn() {
   const callbackUrl = getSafeCallbackUrl(rawCallbackUrl)
   const [state, action] = useActionState(signInAction, undefined)
   const [showPassword, setShowPassword] = useState(false)
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
 
   useEffect(() => {
     if (state?.success) {
@@ -171,10 +185,15 @@ export default function SignIn() {
             passwordId={passwordId}
             showPassword={showPassword}
             setShowPassword={setShowPassword}
+            onUsernameChange={setUsername}
+            onPasswordChange={setPassword}
           />
 
           <div className="mt-6 flex w-full flex-col gap-2">
-            <SubmitButton success={state?.success} />
+            <SubmitButton
+              success={state?.success}
+              disabled={!username.trim() || !password.trim()}
+            />
             <ModalBackButton />
           </div>
 
