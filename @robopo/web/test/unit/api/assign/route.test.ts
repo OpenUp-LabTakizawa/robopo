@@ -1,10 +1,10 @@
 import { afterAll, beforeEach, describe, expect, spyOn, test } from "bun:test"
-import { db } from "@/app/lib/db/db"
+import { db } from "@/lib/db/db"
 import {
   competitionCourse,
   competitionJudge,
   competitionPlayer,
-} from "@/app/lib/db/schema"
+} from "@/lib/db/schema"
 
 let lastFromTable: unknown = null
 

@@ -1,5 +1,5 @@
-import { CompetitionView } from "@/app/components/competition/view"
-import { getCompetitionWithCourseList, getCourseList } from "@/app/server/db"
+import { CompetitionView } from "@/components/competition/view"
+import { getCompetitionWithCourseList, getCourseList } from "@/server/db"
 
 export default async function Competition() {
   const [{ competitions }, { courses }] = await Promise.all([

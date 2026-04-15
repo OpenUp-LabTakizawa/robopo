@@ -2,10 +2,7 @@
 
 import { Check, Plus, Trash2, X } from "lucide-react"
 import { useState } from "react"
-import type {
-  SelectCompetitionWithCourse,
-  SelectCourse,
-} from "@/app/lib/db/schema"
+import type { SelectCompetitionWithCourse, SelectCourse } from "@/lib/db/schema"
 
 const DEFAULT_COURSE_NAMES = ["THE一本橋", "センサーコース"]
 

@@ -1,14 +1,14 @@
 import { afterAll, describe, expect, mock, test } from "bun:test"
 
 // Mock only delete query functions, preserving all other exports
-const originalModule = await import("@/app/lib/db/queries/queries")
+const originalModule = await import("@/lib/db/queries/queries")
 
 const mockDeletePlayer = mock(() => Promise.resolve([{ deletedId: 1 }]))
 const mockDeleteJudge = mock(() => Promise.resolve([{ deletedId: 1 }]))
 const mockDeleteCourse = mock(() => Promise.resolve([{ deletedId: 1 }]))
 const mockDeleteCompetition = mock(() => Promise.resolve([{ deletedId: 1 }]))
 
-mock.module("@/app/lib/db/queries/queries", () => ({
+mock.module("@/lib/db/queries/queries", () => ({
   ...originalModule,
   deletePlayerById: mockDeletePlayer,
   deleteJudgeById: mockDeleteJudge,

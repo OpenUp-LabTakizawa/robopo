@@ -11,9 +11,7 @@ const { AudioProvider } = await import(
 const { View } = await import(
   "@/app/challenge/[competitionId]/[courseId]/[playerId]/view"
 )
-const { NavigationGuardProvider } = await import(
-  "@/app/hooks/useNavigationGuard"
-)
+const { NavigationGuardProvider } = await import("@/hooks/useNavigationGuard")
 
 const courseData = {
   id: 1,

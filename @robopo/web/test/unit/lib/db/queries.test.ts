@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, test } from "bun:test"
 import { eq } from "drizzle-orm"
-import { db } from "@/app/lib/db/db"
+import { db } from "@/lib/db/db"
 import {
   getChallengeCount,
   getCourseSummary,
@@ -10,7 +10,7 @@ import {
   getPlayerResult,
   groupByJudge,
   groupByPlayer,
-} from "@/app/lib/db/queries/queries"
+} from "@/lib/db/queries/queries"
 import {
   challenge,
   competition,
@@ -18,7 +18,7 @@ import {
   competitionPlayer,
   course,
   player,
-} from "@/app/lib/db/schema"
+} from "@/lib/db/schema"
 
 // Test data IDs (cleaned up in afterAll)
 let testCompetitionId: number

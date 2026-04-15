@@ -4,7 +4,7 @@ import {
   CommonCheckboxList,
   CommonRadioList,
   CommonSelectionList,
-} from "@/app/components/common/commonList"
+} from "@/components/common/commonList"
 
 afterEach(cleanup)
 

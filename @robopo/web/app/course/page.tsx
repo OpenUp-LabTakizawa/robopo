@@ -1,9 +1,9 @@
-import { View } from "@/app/components/common/view"
+import { View } from "@/components/common/view"
 import {
   getCourseWithCompetition,
   groupByCourse,
-} from "@/app/lib/db/queries/queries"
-import { getCompetitionList } from "@/app/server/db"
+} from "@/lib/db/queries/queries"
+import { getCompetitionList } from "@/server/db"
 
 export default async function Course() {
   const [courseRows, { competitions }] = await Promise.all([

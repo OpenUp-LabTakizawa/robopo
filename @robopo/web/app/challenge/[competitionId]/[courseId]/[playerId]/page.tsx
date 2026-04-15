@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 import { View } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/view"
-import { getCourseById, getPlayerById } from "@/app/lib/db/queries/queries"
-import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
+import { getCourseById, getPlayerById } from "@/lib/db/queries/queries"
+import type { SelectCourse, SelectPlayer } from "@/lib/db/schema"
 
 export default async function Challenge({
   params,

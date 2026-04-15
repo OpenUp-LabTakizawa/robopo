@@ -1,5 +1,5 @@
 import { Suspense } from "react"
-import { PageLoading } from "@/app/components/parts/pageLoading"
+import { PageLoading } from "@/components/parts/pageLoading"
 
 export default function Layout({
   children,

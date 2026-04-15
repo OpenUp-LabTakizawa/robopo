@@ -1,12 +1,9 @@
 import { hashPassword } from "better-auth/crypto"
 import { and, eq } from "drizzle-orm"
 import { sanitizeCompetitionIds } from "@/app/api/validate"
-import { db } from "@/app/lib/db/db"
-import {
-  getJudgeWithCompetition,
-  groupByJudge,
-} from "@/app/lib/db/queries/queries"
-import { account, competitionJudge, judge } from "@/app/lib/db/schema"
+import { db } from "@/lib/db/db"
+import { getJudgeWithCompetition, groupByJudge } from "@/lib/db/queries/queries"
+import { account, competitionJudge, judge } from "@/lib/db/schema"
 
 export async function PATCH(
   req: Request,

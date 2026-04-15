@@ -1,12 +1,12 @@
 import { afterAll, beforeEach, describe, expect, spyOn, test } from "bun:test"
-import { db } from "@/app/lib/db/db"
-import { competition, course, judge, player } from "@/app/lib/db/schema"
+import { db } from "@/lib/db/db"
+import { competition, course, judge, player } from "@/lib/db/schema"
 import {
   getCompetitionList,
   getCourseList,
   getJudgeList,
   getPlayerList,
-} from "@/app/server/db"
+} from "@/server/db"
 
 let lastFromTable: unknown = null
 let mockResult: unknown[] = []

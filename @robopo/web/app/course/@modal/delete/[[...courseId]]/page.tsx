@@ -1,4 +1,4 @@
-import { DeleteModal } from "@/app/components/common/commonModal"
+import { DeleteModal } from "@/components/common/commonModal"
 
 export default async function Delete({
   params,

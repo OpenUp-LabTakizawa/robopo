@@ -35,7 +35,7 @@
     "test:unit": "bun test test/unit --preload ./happydom.ts",
     "test:e2e": "playwright test",
     "test:report": "playwright show-report",
-    "db:seed": "bun run app/lib/db/seed.ts"
+    "db:seed": "bun run lib/db/seed.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

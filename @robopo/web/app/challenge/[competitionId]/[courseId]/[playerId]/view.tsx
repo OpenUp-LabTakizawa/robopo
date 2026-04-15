@@ -3,8 +3,8 @@
 import { useEffect } from "react"
 import { useAudioContext } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/audioContext"
 import { Challenge } from "@/app/challenge/challenge"
-import { useNavigationGuard } from "@/app/hooks/useNavigationGuard"
-import type { SelectCourse, SelectPlayer } from "@/app/lib/db/schema"
+import { useNavigationGuard } from "@/hooks/useNavigationGuard"
+import type { SelectCourse, SelectPlayer } from "@/lib/db/schema"
 
 export function View({
   courseData,

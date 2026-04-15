@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import { cleanup, fireEvent, screen } from "@testing-library/react"
-import { ChallengeTab, ManageTab } from "@/app/components/home/tabs"
+import { ChallengeTab, ManageTab } from "@/components/home/tabs"
 import { renderWithRouter } from "../../../utils/router"
 
 afterEach(cleanup)

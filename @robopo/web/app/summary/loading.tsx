@@ -1,5 +1,5 @@
-import { PageLoadingShell } from "@/app/components/common/pageLoadingShell"
-import { Skeleton } from "@/app/components/common/skeleton"
+import { PageLoadingShell } from "@/components/common/pageLoadingShell"
+import { Skeleton } from "@/components/common/skeleton"
 
 const tableRows = ["t0", "t1", "t2", "t3", "t4", "t5"]
 const tableCols = ["c0", "c1", "c2", "c3", "c4", "c5", "c6"]

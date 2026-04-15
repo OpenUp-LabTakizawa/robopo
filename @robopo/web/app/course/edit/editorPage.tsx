@@ -2,30 +2,30 @@
 
 import { CircleCheck, Download, TriangleAlert } from "lucide-react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import {
-  buildPreviewMission,
-  type InsertPreview,
-} from "@/app/components/course/missionList"
-import { BackButton } from "@/app/components/parts/buttons"
 import CourseEdit from "@/app/course/edit/courseEdit"
 import { useCourseEdit } from "@/app/course/edit/courseEditContext"
 import MissionEdit from "@/app/course/edit/missionEdit"
-import { useCourseValidation } from "@/app/hooks/useCourseValidation"
-import { useNavigationGuard } from "@/app/hooks/useNavigationGuard"
+import {
+  buildPreviewMission,
+  type InsertPreview,
+} from "@/components/course/missionList"
+import { BackButton } from "@/components/parts/buttons"
+import { useCourseValidation } from "@/hooks/useCourseValidation"
+import { useNavigationGuard } from "@/hooks/useNavigationGuard"
 import {
   deserializeField,
   findStart,
   isStart,
   serializeField,
-} from "@/app/lib/course/field"
+} from "@/lib/course/field"
 import {
   deserializeMission,
   missionStatePair,
   serializeMission,
-} from "@/app/lib/course/mission"
-import { deserializePoint, serializePoint } from "@/app/lib/course/point"
-import { computeRobotPreview } from "@/app/lib/course/robot-position"
-import type { SelectCourse } from "@/app/lib/db/schema"
+} from "@/lib/course/mission"
+import { deserializePoint, serializePoint } from "@/lib/course/point"
+import { computeRobotPreview } from "@/lib/course/robot-position"
+import type { SelectCourse } from "@/lib/db/schema"
 
 type SaveState = "idle" | "saving" | "success" | "error"
 

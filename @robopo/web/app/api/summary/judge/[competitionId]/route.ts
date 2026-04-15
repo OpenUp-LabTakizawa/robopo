@@ -1,4 +1,4 @@
-import { getJudgeSummaryByCompetition } from "@/app/lib/db/queries/queries"
+import { getJudgeSummaryByCompetition } from "@/lib/db/queries/queries"
 
 export async function GET(
   _req: Request,

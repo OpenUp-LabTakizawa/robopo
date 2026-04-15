@@ -4,11 +4,8 @@ import { CircleAlert, CircleCheck, LogIn } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import { useActionState, useEffect, useId, useState } from "react"
 import { useFormStatus } from "react-dom"
-import { signInAction } from "@/app/actions/auth"
-import {
-  ModalBackButton,
-  ModalBackdrop,
-} from "@/app/components/common/commonModal"
+import { signInAction } from "@/actions/auth"
+import { ModalBackButton, ModalBackdrop } from "@/components/common/commonModal"
 
 function SubmitButton({
   success,

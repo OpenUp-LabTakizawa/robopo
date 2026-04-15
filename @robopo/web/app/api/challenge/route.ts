@@ -1,4 +1,4 @@
-import { createChallenge } from "@/app/lib/db/queries/insert"
+import { createChallenge } from "@/lib/db/queries/insert"
 
 export async function POST(req: Request) {
   const {

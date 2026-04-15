@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import { cleanup, render, within } from "@testing-library/react"
-import { ThreeTabs } from "@/app/components/parts/threeTabs"
+import { ThreeTabs } from "@/components/parts/threeTabs"
 
 afterEach(cleanup)
 

@@ -1,4 +1,4 @@
-import { PageLoadingShell } from "@/app/components/common/pageLoadingShell"
+import { PageLoadingShell } from "@/components/common/pageLoadingShell"
 
 export default function Loading() {
   return (

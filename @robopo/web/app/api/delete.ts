@@ -3,7 +3,7 @@ import {
   deleteCourseById,
   deleteJudgeById,
   deletePlayerById,
-} from "@/app/lib/db/queries/queries"
+} from "@/lib/db/queries/queries"
 
 export async function deleteById(
   req: Request,

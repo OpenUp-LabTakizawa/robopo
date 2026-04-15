@@ -4,7 +4,7 @@ import {
   ChallengeModal,
   CourseOutModal,
   RetryModal,
-} from "@/app/components/challenge/challengeModal"
+} from "@/components/challenge/challengeModal"
 
 afterEach(cleanup)
 
