@@ -1,4 +1,4 @@
-import { Skeleton } from "@/app/components/common/skeleton"
+import { Skeleton } from "@/components/common/skeleton"
 
 const selectionCardKeys = ["sc0", "sc1"]
 const playerCardKeys = ["pc0", "pc1", "pc2"]

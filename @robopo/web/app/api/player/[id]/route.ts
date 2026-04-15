@@ -1,12 +1,12 @@
 import { eq } from "drizzle-orm"
 import { sanitizeCompetitionIds } from "@/app/api/validate"
-import { db } from "@/app/lib/db/db"
+import { db } from "@/lib/db/db"
 import {
   getPlayerByName,
   getPlayersWithCompetition,
   groupByPlayer,
-} from "@/app/lib/db/queries/queries"
-import { competitionPlayer, player } from "@/app/lib/db/schema"
+} from "@/lib/db/queries/queries"
+import { competitionPlayer, player } from "@/lib/db/schema"
 
 export async function PATCH(
   req: Request,

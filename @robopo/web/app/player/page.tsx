@@ -1,9 +1,9 @@
-import { PlayerView } from "@/app/components/player/view"
+import { PlayerView } from "@/components/player/view"
 import {
   getPlayersWithCompetition,
   groupByPlayer,
-} from "@/app/lib/db/queries/queries"
-import { getCompetitionList } from "@/app/server/db"
+} from "@/lib/db/queries/queries"
+import { getCompetitionList } from "@/server/db"
 
 export default async function Player() {
   const [playerRows, { competitions }] = await Promise.all([

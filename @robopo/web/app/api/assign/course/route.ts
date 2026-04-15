@@ -1,14 +1,14 @@
 import { eq } from "drizzle-orm"
 import { assignById, unassignById } from "@/app/api/assign/assign"
-import { db } from "@/app/lib/db/db"
+import { db } from "@/lib/db/db"
 import {
   getCourseWithCompetition,
   groupByCourse,
-} from "@/app/lib/db/queries/queries"
+} from "@/lib/db/queries/queries"
 import {
   competitionCourse,
   type SelectCompetitionCourse,
-} from "@/app/lib/db/schema"
+} from "@/lib/db/schema"
 
 // Get assigned competition and course list
 export async function GET() {

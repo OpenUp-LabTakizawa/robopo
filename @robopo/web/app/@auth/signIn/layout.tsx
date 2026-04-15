@@ -1,6 +1,6 @@
 import type React from "react"
 import { Suspense } from "react"
-import { Skeleton } from "@/app/components/common/skeleton"
+import { Skeleton } from "@/components/common/skeleton"
 
 function SignInSkeleton() {
   return (

@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 import { Inter, Noto_Sans_JP } from "next/font/google"
 import { Suspense } from "react"
-import Header from "@/app/components/header/header"
-import HeaderServer from "@/app/components/header/headerServer"
-import { NavigationGuardProvider } from "@/app/hooks/useNavigationGuard"
+import Header from "@/components/header/header"
+import HeaderServer from "@/components/header/headerServer"
+import { NavigationGuardProvider } from "@/hooks/useNavigationGuard"
 import "./globals.css"
 
 const inter = Inter({

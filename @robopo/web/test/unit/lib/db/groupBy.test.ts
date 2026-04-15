@@ -3,7 +3,7 @@ import {
   groupByCourse,
   groupByJudge,
   groupByPlayer,
-} from "@/app/lib/db/queries/queries"
+} from "@/lib/db/queries/queries"
 
 describe("groupByPlayer", () => {
   test("groups flat rows by player id and collects competition names", () => {

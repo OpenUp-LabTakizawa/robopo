@@ -1,10 +1,10 @@
 import { eq, inArray } from "drizzle-orm"
 import { sanitizeCompetitionIds } from "@/app/api/validate"
-import { db } from "@/app/lib/db/db"
-import { createJudge } from "@/app/lib/db/queries/insert"
-import { competitionJudge, judge, user } from "@/app/lib/db/schema"
+import { db } from "@/lib/db/db"
+import { createJudge } from "@/lib/db/queries/insert"
+import { competitionJudge, judge, user } from "@/lib/db/schema"
 export async function POST(req: Request) {
-  const { auth } = await import("@/app/lib/auth/auth")
+  const { auth } = await import("@/lib/auth/auth")
   const { note, competitionIds, username, password } = await req.json()
 
   if (!username?.trim()) {

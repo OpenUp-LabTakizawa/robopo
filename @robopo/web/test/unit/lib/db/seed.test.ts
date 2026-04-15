@@ -1,10 +1,10 @@
 import { describe, expect, test } from "bun:test"
 import { eq } from "drizzle-orm"
-import { deserializeField } from "@/app/lib/course/field"
-import { deserializeMission } from "@/app/lib/course/mission"
-import { checkValidity } from "@/app/lib/course/validation"
-import { db } from "@/app/lib/db/db"
-import { course, judge, user } from "@/app/lib/db/schema"
+import { deserializeField } from "@/lib/course/field"
+import { deserializeMission } from "@/lib/course/mission"
+import { checkValidity } from "@/lib/course/validation"
+import { db } from "@/lib/db/db"
+import { course, judge, user } from "@/lib/db/schema"
 
 describe("seed data", () => {
   test("test judge exists in database", async () => {

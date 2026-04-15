@@ -42,9 +42,9 @@ Bun workspace monorepo with two packages:
 
 ### Database
 
-- DB client in `@robopo/web/app/lib/db/db.ts` (node-postgres Pool with Drizzle).
-- Schema defined in `@robopo/web/app/lib/db/schema.ts` (single file for all tables including Better Auth).
-- Queries organized in `@robopo/web/app/lib/db/queries/` (`queries.ts`, `insert.ts`, `update.ts`).
+- DB client in `@robopo/web/lib/db/db.ts` (node-postgres Pool with Drizzle).
+- Schema defined in `@robopo/web/lib/db/schema.ts` (single file for all tables including Better Auth).
+- Queries organized in `@robopo/web/lib/db/queries/` (`queries.ts`, `insert.ts`, `update.ts`).
 - Drizzle config at `@robopo/web/drizzle.config.ts`.
 - Apply schema changes with `bunx drizzle-kit push`.
 - Seed data with `bun db:seed`.
@@ -54,8 +54,8 @@ Bun workspace monorepo with two packages:
 - Better Auth configured in `@robopo/web/lib/auth.ts` with Drizzle adapter and schema.
 - Auth client in `@robopo/web/lib/auth-client.ts`.
 - API route at `@robopo/web/app/api/auth/[...all]/route.ts`.
-- Sign-in via server action in `@robopo/web/app/components/server/auth.ts`.
-- Session check in `@robopo/web/app/components/header/headerServer.tsx`.
+- Sign-in via server action in `@robopo/web/components/server/auth.ts`.
+- Session check in `@robopo/web/components/header/headerServer.tsx`.
 - Route protection via `proxy.ts` (redirects unauthenticated users on `/config`, `/course`, `/player`, `/judge`, `/summary`).
 - `.env` must have `BETTER_AUTH_URL=http://localhost:3000` for local development.
 
@@ -68,25 +68,26 @@ app/
   challenge/       — Challenge/scoring pages
   config/          — Competition management
   course/          — Course list and editor
-  hooks/           — Custom React hooks
   judge/           — Judge management
   player/          — Player management
   summary/         — Score aggregation and display
-  components/
-    challenge/     — Scoring components
-    common/        — Shared list/register/modal components
-    course/        — Course editor, field, panel, mission components
-    header/        — Header (client + server)
-    home/          — Top page
-    parts/         — Reusable UI parts
-    server/        — Server actions (auth, db)
-    summary/       — Summary utilities
-  lib/
-    db/            — Database (db client, schema, queries/, seed, migrations/)
-    const.tsx      — App-wide constants
+actions/           — Server actions (auth)
+components/
+  challenge/       — Scoring components
+  common/          — Shared list/register/modal components
+  course/          — Course editor, field, panel, mission components
+  header/          — Header (client + server)
+  home/            — Top page
+  parts/           — Reusable UI parts
+  server/          — Server actions (auth, db)
+  summary/         — Summary utilities
+hooks/             — Custom React hooks
 lib/
   auth.ts          — Better Auth server config
   auth-client.ts   — Better Auth client config
+  db/              — Database (db client, schema, queries/, seed, migrations/)
+  const.tsx        — App-wide constants
+server/            — Server-only utilities (db connection)
 ```
 
 ### Commands

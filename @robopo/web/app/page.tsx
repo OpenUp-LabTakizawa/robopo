@@ -1,24 +1,24 @@
 import { eq } from "drizzle-orm"
 import { headers } from "next/headers"
-import { Dashboard } from "@/app/components/home/dashboard"
-import { ChallengeTab } from "@/app/components/home/tabs"
-import { auth } from "@/app/lib/auth/auth"
-import { db } from "@/app/lib/db/db"
+import { Dashboard } from "@/components/home/dashboard"
+import { ChallengeTab } from "@/components/home/tabs"
+import { auth } from "@/lib/auth/auth"
+import { db } from "@/lib/db/db"
 import type {
   SelectCompetition,
   SelectCompetitionCourse,
   SelectCompetitionJudge,
   SelectCourse,
   SelectJudgeWithUsername,
-} from "@/app/lib/db/schema"
-import { judge } from "@/app/lib/db/schema"
+} from "@/lib/db/schema"
+import { judge } from "@/lib/db/schema"
 import {
   getCompetitionCourseAssignList,
   getCompetitionJudgeAssignList,
   getCompetitionList,
   getCourseList,
   getJudgeList,
-} from "@/app/server/db"
+} from "@/server/db"
 
 export default async function Home() {
   const session = await auth.api.getSession({

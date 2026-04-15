@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test"
-import { deserializePoint, serializePoint } from "@/app/lib/course/point"
-import type { PointState } from "@/app/lib/course/types"
-import { calcPoint } from "@/app/lib/scoring/scoring"
-import { isCompletedCourse } from "@/app/lib/summary/format"
+import { deserializePoint, serializePoint } from "@/lib/course/point"
+import type { PointState } from "@/lib/course/types"
+import { calcPoint } from "@/lib/scoring/scoring"
+import { isCompletedCourse } from "@/lib/summary/format"
 
 describe("serializePoint / deserializePoint", () => {
   test("round-trip scalar points", () => {

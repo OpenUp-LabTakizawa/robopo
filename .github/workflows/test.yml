@@ -58,7 +58,7 @@ jobs:
         run: |
           cd @robopo/web
           bunx drizzle-kit push --force
-          bun run app/lib/db/seed.ts
+          bun run lib/db/seed.ts
 
       - name: 🧪 Test app
         id: test

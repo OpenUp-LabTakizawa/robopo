@@ -1,12 +1,8 @@
 import {
   type InsertPreview,
   MissionList,
-} from "@/app/components/course/missionList"
-import type {
-  FieldState,
-  MissionState,
-  PointState,
-} from "@/app/lib/course/types"
+} from "@/components/course/missionList"
+import type { FieldState, MissionState, PointState } from "@/lib/course/types"
 
 type MissionEditProps = {
   field: FieldState

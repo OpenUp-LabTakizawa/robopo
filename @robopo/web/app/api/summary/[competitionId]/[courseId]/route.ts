@@ -1,7 +1,7 @@
-import { getCourseSummary } from "@/app/lib/db/queries/queries"
-import { maxCoursePoint, sumCoursePoint } from "@/app/lib/summary/calculations"
-import type { CourseSummary } from "@/app/lib/summary/types"
-import { getCompetitionCourseList } from "@/app/server/db"
+import { getCourseSummary } from "@/lib/db/queries/queries"
+import { maxCoursePoint, sumCoursePoint } from "@/lib/summary/calculations"
+import type { CourseSummary } from "@/lib/summary/types"
+import { getCompetitionCourseList } from "@/server/db"
 
 function calcElapsedSeconds(
   startTime: string | null,

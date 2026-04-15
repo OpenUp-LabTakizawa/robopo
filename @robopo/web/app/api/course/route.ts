@@ -1,15 +1,15 @@
 import type { NextRequest } from "next/server"
-import { deserializeField, isGoal, isStart } from "@/app/lib/course/field"
-import { deserializeMission } from "@/app/lib/course/mission"
-import { checkValidity } from "@/app/lib/course/validation"
-import { createCourse } from "@/app/lib/db/queries/insert"
+import { deserializeField, isGoal, isStart } from "@/lib/course/field"
+import { deserializeMission } from "@/lib/course/mission"
+import { checkValidity } from "@/lib/course/validation"
+import { createCourse } from "@/lib/db/queries/insert"
 import {
   deleteCourseById,
   getCourseById,
   getCourseByName,
   getLinkedCourseIds,
-} from "@/app/lib/db/queries/queries"
-import { updateCourse } from "@/app/lib/db/queries/update"
+} from "@/lib/db/queries/queries"
+import { updateCourse } from "@/lib/db/queries/update"
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams

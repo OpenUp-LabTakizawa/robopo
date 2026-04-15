@@ -1,8 +1,8 @@
 import { deleteById } from "@/app/api/delete"
-import { db } from "@/app/lib/db/db"
-import { createCompetition } from "@/app/lib/db/queries/insert"
-import { competitionCourse } from "@/app/lib/db/schema"
-import { getCompetitionWithCourseList } from "@/app/server/db"
+import { db } from "@/lib/db/db"
+import { createCompetition } from "@/lib/db/queries/insert"
+import { competitionCourse } from "@/lib/db/schema"
+import { getCompetitionWithCourseList } from "@/server/db"
 
 export async function POST(req: Request) {
   const { name, description, startDate, endDate, courseIds } = await req.json()

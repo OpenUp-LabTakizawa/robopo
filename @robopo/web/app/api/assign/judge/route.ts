@@ -1,14 +1,8 @@
 import { eq } from "drizzle-orm"
 import { assignById, unassignById } from "@/app/api/assign/assign"
-import { db } from "@/app/lib/db/db"
-import {
-  getJudgeWithCompetition,
-  groupByJudge,
-} from "@/app/lib/db/queries/queries"
-import {
-  competitionJudge,
-  type SelectCompetitionJudge,
-} from "@/app/lib/db/schema"
+import { db } from "@/lib/db/db"
+import { getJudgeWithCompetition, groupByJudge } from "@/lib/db/queries/queries"
+import { competitionJudge, type SelectCompetitionJudge } from "@/lib/db/schema"
 
 // Get assigned competition and judge list
 export async function GET() {

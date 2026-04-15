@@ -1,9 +1,9 @@
 import { deleteById } from "@/app/api/delete"
 import { sanitizeCompetitionIds } from "@/app/api/validate"
-import { db } from "@/app/lib/db/db"
-import { createPlayer } from "@/app/lib/db/queries/insert"
-import { getPlayerByName } from "@/app/lib/db/queries/queries"
-import { competitionPlayer } from "@/app/lib/db/schema"
+import { db } from "@/lib/db/db"
+import { createPlayer } from "@/lib/db/queries/insert"
+import { getPlayerByName } from "@/lib/db/queries/queries"
+import { competitionPlayer } from "@/lib/db/schema"
 
 export async function POST(req: Request) {
   const { name, furigana, bibNumber, qr, note, competitionIds } =

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import { cleanup, screen } from "@testing-library/react"
-import { Dashboard } from "@/app/components/home/dashboard"
+import { Dashboard } from "@/components/home/dashboard"
 import { renderWithRouter } from "../../../utils/router"
 
 afterEach(cleanup)

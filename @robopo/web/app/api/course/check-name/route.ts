@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server"
-import { getCourseByName } from "@/app/lib/db/queries/queries"
+import { getCourseByName } from "@/lib/db/queries/queries"
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams

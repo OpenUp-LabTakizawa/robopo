@@ -1,5 +1,5 @@
 import { EditorPage } from "@/app/course/edit/editorPage"
-import { getCourseById } from "@/app/lib/db/queries/queries"
+import { getCourseById } from "@/lib/db/queries/queries"
 
 export default async function Edit({
   params,

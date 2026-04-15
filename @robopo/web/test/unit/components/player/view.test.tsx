@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test } from "bun:test"
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { PlayerView } from "@/app/components/player/view"
-import type { SelectPlayerWithCompetition } from "@/app/lib/db/schema"
+import { PlayerView } from "@/components/player/view"
+import type { SelectPlayerWithCompetition } from "@/lib/db/schema"
 
 afterEach(cleanup)
 
