@@ -40,17 +40,17 @@ export async function deleteById(
 
   async function deleteMode(mode: string, id: number) {
     switch (mode) {
-      case "player":
-        await deletePlayerById(id)
-        break
-      case "judge":
-        await deleteJudgeById(id)
+      case "competition":
+        await deleteCompetitionById(id)
         break
       case "course":
         await deleteCourseById(id)
         break
-      case "competition":
-        await deleteCompetitionById(id)
+      case "judge":
+        await deleteJudgeById(id)
+        break
+      case "player":
+        await deletePlayerById(id)
         break
       default:
         throw new Error(`Invalid mode: ${mode}`)
