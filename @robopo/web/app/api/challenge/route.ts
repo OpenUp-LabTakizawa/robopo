@@ -33,23 +33,3 @@ export async function POST(req: Request) {
     )
   }
 }
-
-// challengeの削除は関数はformactionでやる。queries.tsから呼ぶ。deleteChallengeByIdをAPI介さずserver actionでやる。
-// export async function DELETE(req: NextRequest) {
-//     const reqbody = await req.json()
-//     const { id } = reqbody
-//     try {
-//       const result = await deletePlayerById(id)
-//       return NextResponse.json({ success: true, data: result }, { status: 200 })
-//     } catch (error) {
-//       console.log("error: ", error)
-//       return NextResponse.json(
-//         {
-//           success: false,
-//           message: "An error occurred while creating the course.",
-//           error: error,
-//         },
-//         { status: 500 }
-//       )
-//     }
-//   }
