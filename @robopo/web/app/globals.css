@@ -338,6 +338,63 @@
   }
 }
 
+/* A4 print sheet — screen preview */
+.print-sheet {
+  width: 210mm;
+  min-height: 297mm;
+  box-sizing: border-box;
+}
+
+/* Print styles for score sheet */
+@media print {
+  body {
+    background-color: white;
+    color: black;
+    font-size: 11pt;
+  }
+
+  .print\:hidden {
+    display: none;
+  }
+
+  .card {
+    box-shadow: none;
+    border: 1px solid #d1d5db;
+  }
+
+  .table tbody tr:last-child td,
+  .table tbody tr:not(:last-child) td,
+  .table thead tr th {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Prevent page breaks inside course sections */
+  .print\:break-inside-avoid {
+    break-inside: avoid;
+  }
+
+  /* Ensure background colors print */
+  .bg-base-200,
+  .bg-base-200\/50,
+  .bg-base-200\/30,
+  .bg-primary\/10 {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Hide header/footer navigation */
+  header,
+  nav {
+    display: none;
+  }
+
+  @page {
+    margin: 1cm;
+    size: A4;
+  }
+}
+
 /* hide default password visibility toggle button */
 input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear,

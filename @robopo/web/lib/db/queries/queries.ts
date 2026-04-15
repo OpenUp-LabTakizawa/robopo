@@ -341,6 +341,7 @@ export async function getCourseSummaryByPlayerId(
   // Get results as array
   return await db
     .select({
+      id: challenge.id,
       firstResult: challenge.firstResult,
       retryResult: challenge.retryResult,
       detail: challenge.detail,
