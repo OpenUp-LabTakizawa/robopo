@@ -1,14 +1,12 @@
 "use client"
 
 import {
-  House,
   Play,
   RefreshCw,
   SendHorizontal,
   TriangleAlert,
   Undo2,
 } from "lucide-react"
-import { useRouter } from "next/navigation"
 
 export function ReloadButton() {
   return (
@@ -19,20 +17,6 @@ export function ReloadButton() {
     >
       <RefreshCw className="size-6" />
       再読み込み
-    </button>
-  )
-}
-
-export function HomeButton() {
-  const router = useRouter()
-  return (
-    <button
-      type="button"
-      className="btn btn-primary m-5 mx-auto min-w-28 max-w-fit"
-      onClick={() => router.push("/")}
-    >
-      <House className="size-6" />
-      ホーム
     </button>
   )
 }

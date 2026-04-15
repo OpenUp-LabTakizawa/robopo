@@ -1,15 +1,14 @@
-import { PlayerScoreSheet } from "@/components/summary/playerScoreSheet"
+import { PrintScoreSheet } from "@/components/summary/printScoreSheet"
 import { getCompetitionById, getPlayerById } from "@/lib/db/queries/queries"
 import { buildCoursesForPlayer } from "@/lib/summary/buildCourseData"
 
-export default async function SummaryPlayer({
+export default async function PrintSummaryPlayer({
   params,
 }: {
   params: Promise<{ ids: number[] }>
 }) {
   const { ids } = await params
   const competitionId = ids[0]
-  const selectedCourseId = ids[1]
   const playerId = ids[2]
 
   const [player, competitionData] = await Promise.all([
@@ -24,16 +23,13 @@ export default async function SummaryPlayer({
     await buildCoursesForPlayer(competitionId, playerId)
 
   return (
-    <PlayerScoreSheet
+    <PrintScoreSheet
       player={{
         name: player.name,
         furigana: player.furigana,
         bibNumber: player.bibNumber,
       }}
-      competitionId={competitionId}
       competitionName={competitionData?.name ?? ""}
-      selectedCourseId={selectedCourseId}
-      playerId={playerId}
       courses={courses}
       totalPoint={totalPoint}
       totalChallengeCount={totalChallengeCount}
