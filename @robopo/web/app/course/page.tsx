@@ -1,9 +1,15 @@
+import type { Metadata } from "next"
 import { View } from "@/components/course/view"
 import {
   getCourseWithCompetition,
   groupByCourse,
 } from "@/lib/db/queries/queries"
 import { getCompetitionList } from "@/server/db"
+
+export const metadata: Metadata = {
+  title: "コース一覧",
+  description: "コースの登録・編集・削除を行います",
+}
 
 export default async function Course() {
   const [courseRows, { competitions }] = await Promise.all([

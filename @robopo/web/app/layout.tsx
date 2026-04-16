@@ -20,7 +20,10 @@ const notoSansJP = Noto_Sans_JP({
 })
 
 export const metadata: Metadata = {
-  title: "ROBOPO",
+  title: {
+    default: "ROBOPO",
+    template: "%s | ROBOPO",
+  },
   description: "ロボサバ大会集計アプリ",
 }
 

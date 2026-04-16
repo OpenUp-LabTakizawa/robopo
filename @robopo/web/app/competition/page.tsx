@@ -1,5 +1,11 @@
+import type { Metadata } from "next"
 import { CompetitionView } from "@/components/competition/view"
 import { getCompetitionWithCourseList, getCourseList } from "@/server/db"
+
+export const metadata: Metadata = {
+  title: "大会一覧",
+  description: "大会の登録・編集・削除を行います",
+}
 
 export default async function Competition() {
   const [{ competitions }, { courses }] = await Promise.all([

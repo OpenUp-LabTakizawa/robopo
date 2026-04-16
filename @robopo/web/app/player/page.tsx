@@ -1,9 +1,15 @@
+import type { Metadata } from "next"
 import { PlayerView } from "@/components/player/view"
 import {
   getPlayersWithCompetition,
   groupByPlayer,
 } from "@/lib/db/queries/queries"
 import { getCompetitionList } from "@/server/db"
+
+export const metadata: Metadata = {
+  title: "選手一覧",
+  description: "選手の登録・編集・削除を行います",
+}
 
 export default async function Player() {
   const [playerRows, { competitions }] = await Promise.all([

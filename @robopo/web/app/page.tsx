@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm"
+import type { Metadata } from "next"
 import { headers } from "next/headers"
 import { Dashboard } from "@/components/home/dashboard"
 import { ChallengeTab } from "@/components/home/tabs"
@@ -19,6 +20,11 @@ import {
   getCourseList,
   getJudgeList,
 } from "@/server/db"
+
+export const metadata: Metadata = {
+  title: "ホーム",
+  description: "ロボサバ大会のダッシュボード",
+}
 
 export default async function Home() {
   const session = await auth.api.getSession({

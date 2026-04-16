@@ -1,7 +1,13 @@
+import type { Metadata } from "next"
 import { redirect } from "next/navigation"
 import { View } from "@/app/challenge/[competitionId]/[courseId]/[playerId]/view"
 import { getCourseById, getPlayerById } from "@/lib/db/queries/queries"
 import type { SelectCourse, SelectPlayer } from "@/lib/db/schema"
+
+export const metadata: Metadata = {
+  title: "採点",
+  description: "チャレンジの採点を行います",
+}
 
 export default async function Challenge({
   params,
