@@ -289,12 +289,14 @@ export function CommonSelectionList({
   selectionMode,
   selectedId,
   onSelect,
+  onSelectAll,
   onCourseCompetitionClick,
 }: {
   props: CommonListProps
   selectionMode: "radio" | "checkbox"
   selectedId: number | null | number[]
   onSelect: (id: number) => void
+  onSelectAll?: () => void
   onCourseCompetitionClick?: (names: string[]) => void
 }) {
   function isChecked(id: number): boolean {
@@ -317,13 +319,30 @@ export function CommonSelectionList({
             <thead>
               <tr className="border-base-300/50 border-b bg-base-200/60">
                 <th className="w-12">
-                  <label>
-                    <input
-                      type={selectionMode}
-                      disabled={true}
-                      className="opacity-0"
-                    />
-                  </label>
+                  {selectionMode === "checkbox" && onSelectAll ? (
+                    <label>
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-primary size-4"
+                        checked={
+                          commonDataList.length > 0 &&
+                          Array.isArray(selectedId) &&
+                          commonDataList.every((item) =>
+                            selectedId.includes(item.id),
+                          )
+                        }
+                        onChange={() => onSelectAll()}
+                      />
+                    </label>
+                  ) : (
+                    <label>
+                      <input
+                        type={selectionMode}
+                        disabled={true}
+                        className="opacity-0"
+                      />
+                    </label>
+                  )}
                 </th>
                 {itemNames(type).map((name) => (
                   <th
@@ -431,12 +450,21 @@ export function CommonCheckboxList({
     }
   }
 
+  function handleSelectAll() {
+    const allIds = props.commonDataList.map((item) => item.id)
+    setCommonId((prev) => {
+      const allSelected = allIds.every((id) => prev.includes(id))
+      return allSelected ? [] : allIds
+    })
+  }
+
   return (
     <CommonSelectionList
       props={props}
       selectionMode="checkbox"
       selectedId={commonId}
       onSelect={handleToggle}
+      onSelectAll={handleSelectAll}
       onCourseCompetitionClick={onCourseCompetitionClick}
     />
   )
