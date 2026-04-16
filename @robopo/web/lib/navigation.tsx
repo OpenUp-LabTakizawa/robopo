@@ -1,5 +1,6 @@
 import {
   BarChart3,
+  Eye,
   House,
   LogIn,
   LogOut,
@@ -71,5 +72,13 @@ export const ADMIN_SETTINGS_LIST: NavItem[] = [
     label: "管理者一覧",
     href: "/admin" as Route,
     icon: <Shield className="size-6" />,
+  },
+]
+
+export const SPECTATOR_LIST: NavItem[] = [
+  {
+    label: "観戦ページ",
+    href: "/spectator" as Route,
+    icon: <Eye className="size-6" />,
   },
 ]

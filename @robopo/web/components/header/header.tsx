@@ -1,5 +1,6 @@
 "use client"
 
+import { Eye } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
@@ -85,14 +86,24 @@ export function Header({ session }: Props) {
         {session?.user && !session.isJudge ? (
           <NavigationDrawer />
         ) : !session?.user ? (
-          <Link
-            href={SIGN_IN_CONST.href}
-            className="btn btn-ghost btn-sm rounded-full border border-primary/20 text-primary hover:bg-primary hover:text-primary-content"
-            aria-label={SIGN_IN_CONST.label}
-          >
-            {SIGN_IN_CONST.icon}
-            {SIGN_IN_CONST.label}
-          </Link>
+          <>
+            <Link
+              href="/spectator"
+              className="btn btn-sm rounded-full border-0 bg-gradient-to-r from-amber-400 to-orange-400 font-bold text-white shadow-amber-200/40 shadow-md transition-all duration-200 hover:from-amber-500 hover:to-orange-500 hover:shadow-amber-300/40 hover:shadow-lg"
+              aria-label="観戦"
+            >
+              <Eye className="size-4" />
+              LIVE観戦
+            </Link>
+            <Link
+              href={SIGN_IN_CONST.href}
+              className="btn btn-ghost btn-sm rounded-full border border-primary/20 text-primary hover:bg-primary hover:text-primary-content"
+              aria-label={SIGN_IN_CONST.label}
+            >
+              {SIGN_IN_CONST.icon}
+              {SIGN_IN_CONST.label}
+            </Link>
+          </>
         ) : null}
       </div>
     </header>
