@@ -156,7 +156,7 @@ export function CourseFormModal({
             <input
               id="course-name"
               type="text"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full rounded-xl"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="コース名"
@@ -169,7 +169,7 @@ export function CourseFormModal({
             </label>
             <textarea
               id="course-description"
-              className="textarea textarea-bordered w-full"
+              className="textarea textarea-bordered w-full rounded-xl"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="コースの説明（任意）"

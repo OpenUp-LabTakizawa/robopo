@@ -1,8 +1,8 @@
 "use client"
 
-import { ClipboardCheck, Settings } from "lucide-react"
+import { ClipboardCheck, Settings, Shield } from "lucide-react"
 import type React from "react"
-import { ChallengeTab, ManageTab } from "@/components/home/tabs"
+import { ChallengeTab, ManageTab, SettingsTab } from "@/components/home/tabs"
 import type {
   SelectCompetition,
   SelectCompetitionCourse,
@@ -92,6 +92,13 @@ export function Dashboard({
             icon={<Settings className="h-5 w-5" />}
           >
             <ManageTab />
+          </DashboardCard>
+        </div>
+
+        {/* Settings card */}
+        <div className="md:col-span-2">
+          <DashboardCard title="設定" icon={<Shield className="h-5 w-5" />}>
+            <SettingsTab />
           </DashboardCard>
         </div>
       </div>

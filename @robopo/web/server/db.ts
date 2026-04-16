@@ -1,6 +1,6 @@
 "use server"
 
-import { eq } from "drizzle-orm"
+import { eq, isNull, max } from "drizzle-orm"
 import { db } from "@/lib/db/db"
 import {
   getCompetitionWithCourse,
@@ -14,6 +14,7 @@ import {
   course,
   judge,
   player,
+  type SelectAdmin,
   type SelectCompetition,
   type SelectCompetitionCourse,
   type SelectCompetitionJudge,
@@ -21,6 +22,7 @@ import {
   type SelectCourse,
   type SelectJudgeWithUsername,
   type SelectPlayer,
+  session,
   user,
 } from "@/lib/db/schema"
 
@@ -132,4 +134,21 @@ export async function getCompetitionJudgeAssignList(): Promise<{
     .select()
     .from(competitionJudge)
   return { competitionJudgeList }
+}
+
+// Get admin users (users without a judge record)
+export async function getAdminList(): Promise<SelectAdmin[]> {
+  const rows = await db
+    .select({
+      id: user.id,
+      username: user.username,
+      lastLoginAt: max(session.createdAt),
+      createdAt: user.createdAt,
+    })
+    .from(user)
+    .leftJoin(judge, eq(user.id, judge.userId))
+    .leftJoin(session, eq(user.id, session.userId))
+    .where(isNull(judge.id))
+    .groupBy(user.id)
+  return rows
 }

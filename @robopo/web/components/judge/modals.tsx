@@ -32,7 +32,7 @@ export function JudgeFormModal({
   onClose,
   onSuccess,
 }: JudgeFormModalProps) {
-  const [username, setUsername] = useState("")
+  const [username, setUsername] = useState(judge?.username ?? "")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [note, setNote] = useState(judge?.note ?? "")
@@ -66,14 +66,15 @@ export function JudgeFormModal({
       }
     }
 
-    if (
-      mode === "edit" &&
-      password &&
-      password.length > 0 &&
-      password.length < 8
-    ) {
-      setError("パスワードは8文字以上で入力してください。")
-      return
+    if (mode === "edit") {
+      if (username.trim() && !/^[a-z0-9_]+$/.test(username.trim())) {
+        setError("ユーザー名は英小文字・数字・アンダースコアのみ使用できます。")
+        return
+      }
+      if (password && password.length > 0 && password.length < 8) {
+        setError("パスワードは8文字以上で入力してください。")
+        return
+      }
     }
 
     setLoading(true)
@@ -88,8 +89,13 @@ export function JudgeFormModal({
       if (mode === "create") {
         body.username = username.trim()
         body.password = password
-      } else if (password) {
-        body.password = password
+      } else {
+        if (username.trim() && username.trim() !== judge?.username) {
+          body.username = username.trim()
+        }
+        if (password) {
+          body.password = password
+        }
       }
 
       const url = mode === "create" ? "/api/judge" : `/api/judge/${judge?.id}`
@@ -136,7 +142,7 @@ export function JudgeFormModal({
               <input
                 id="judge-username"
                 type="text"
-                className="input input-bordered w-full lowercase"
+                className="input input-bordered w-full rounded-xl lowercase"
                 value={username}
                 onChange={(e) => setUsername(e.target.value.toLowerCase())}
                 placeholder="英小文字・数字（例: judge1）"
@@ -144,21 +150,26 @@ export function JudgeFormModal({
                 required
               />
               <p className="mt-1 text-base-content/40 text-xs">
-                英小文字・数字・アンダースコアのみ使用可能（ログインにも使用）
+                英小文字・数字・アンダースコアのみ使用可能
               </p>
             </div>
           ) : (
             <div>
-              <label className="label" htmlFor="judge-username-display">
+              <label className="label" htmlFor="judge-username-edit">
                 <span className="label-text">ユーザー名</span>
               </label>
               <input
-                id="judge-username-display"
+                id="judge-username-edit"
                 type="text"
-                className="input input-bordered w-full"
-                value={judge?.username ?? ""}
-                disabled
+                className="input input-bordered w-full rounded-xl lowercase"
+                value={username}
+                onChange={(e) => setUsername(e.target.value.toLowerCase())}
+                placeholder="英小文字・数字（例: judge1）"
+                pattern="[a-z0-9_]+"
               />
+              <p className="mt-1 text-base-content/40 text-xs">
+                英小文字・数字・アンダースコアのみ使用可能
+              </p>
             </div>
           )}
 
@@ -173,7 +184,7 @@ export function JudgeFormModal({
               <input
                 id="judge-password"
                 type={showPassword ? "text" : "password"}
-                className="input input-bordered w-full pr-12"
+                className="input input-bordered w-full rounded-xl pr-12"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={
@@ -210,7 +221,7 @@ export function JudgeFormModal({
             </label>
             <textarea
               id="judge-note"
-              className="textarea textarea-bordered w-full"
+              className="textarea textarea-bordered w-full rounded-xl"
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="備考（任意）"
