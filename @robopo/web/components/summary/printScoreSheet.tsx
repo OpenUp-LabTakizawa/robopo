@@ -18,7 +18,7 @@ type ChallengeResult = {
   detail: string | null
 }
 
-type PrintCourseData = {
+export type PrintCourseData = {
   id: number
   name: string
   missionPair: MissionValue[][]
@@ -152,7 +152,7 @@ export function PrintScoreSheet({
 }
 
 // Compact course table for A4 print
-function PrintCourseTable({ course }: { course: PrintCourseData }) {
+export function PrintCourseTable({ course }: { course: PrintCourseData }) {
   const columns = flattenAttempts(course.resultArray, course.id)
   const maxCols = 25
   const visibleColumns = columns.slice(0, maxCols)

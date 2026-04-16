@@ -1,6 +1,19 @@
+import type { Metadata } from "next"
 import { PrintScoreSheet } from "@/components/summary/printScoreSheet"
 import { getCompetitionById, getPlayerById } from "@/lib/db/queries/queries"
 import { buildCoursesForPlayer } from "@/lib/summary/buildCourseData"
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ ids: number[] }>
+}): Promise<Metadata> {
+  const { ids } = await params
+  const player = await getPlayerById(Number(ids[2]))
+  return {
+    title: player ? `${player.name}_個人成績シート` : "個人成績シート",
+  }
+}
 
 export default async function PrintSummaryPlayer({
   params,

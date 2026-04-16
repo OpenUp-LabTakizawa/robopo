@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { SummaryView } from "@/components/summary/summaryView"
 import { getCompetitionStatus } from "@/lib/competition"
 import type { SelectCompetition } from "@/lib/db/schema"
@@ -25,6 +26,11 @@ function getDefaultCompetitionId(
   }
 
   return null
+}
+
+export const metadata: Metadata = {
+  title: "集計結果",
+  description: "大会の集計結果を確認します",
 }
 
 export default async function SummaryPage({

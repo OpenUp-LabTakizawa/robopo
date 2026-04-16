@@ -368,6 +368,11 @@
     break-inside: avoid;
   }
 
+  /* Force page break after element (for bulk printing) */
+  .print\:break-after-page {
+    break-after: page;
+  }
+
   /* Ensure background colors print */
   .bg-base-200,
   .bg-base-200\/50,
@@ -383,8 +388,17 @@
     display: none;
   }
 
+  /* Override fixed width for print - let @page margins handle sizing */
+  .w-\[210mm\] {
+    width: 100%;
+  }
+
+  .min-h-\[297mm\] {
+    min-height: auto;
+  }
+
   @page {
-    margin: 1cm;
+    margin: 10mm;
     size: A4;
   }
 }

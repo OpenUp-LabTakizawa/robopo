@@ -1,6 +1,13 @@
 "use client"
 
-import { type LucideIcon, Route as RouteIcon, Scale, Users } from "lucide-react"
+import {
+  type LucideIcon,
+  Printer,
+  Route as RouteIcon,
+  Scale,
+  Users,
+} from "lucide-react"
+import Link from "next/link"
 import { useState } from "react"
 import { CourseSummaryTable } from "@/components/summary/courseSummaryTable"
 import { JudgeSummaryTable } from "@/components/summary/judgeSummaryTable"
@@ -54,7 +61,7 @@ export function SummaryView({ competitions, defaultCompetitionId }: Props) {
           </select>
         </div>
 
-        <div className="mt-2 lg:mt-0">
+        <div className="mt-2 flex items-end gap-3 lg:mt-0">
           <div className="inline-flex rounded-xl bg-base-200/60 p-1">
             {TABS.map(({ key, label, icon: Icon }) => (
               <button
@@ -72,6 +79,16 @@ export function SummaryView({ competitions, defaultCompetitionId }: Props) {
               </button>
             ))}
           </div>
+
+          {competitionId > 0 && (
+            <Link
+              href={`/summary/print-all/${competitionId}`}
+              className="btn btn-primary btn-sm rounded-xl"
+            >
+              <Printer className="size-4" />
+              一括印刷
+            </Link>
+          )}
         </div>
       </div>
 

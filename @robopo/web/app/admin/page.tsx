@@ -1,5 +1,11 @@
+import type { Metadata } from "next"
 import { AdminView } from "@/components/admin/view"
 import { getAdminList } from "@/server/db"
+
+export const metadata: Metadata = {
+  title: "管理者一覧",
+  description: "管理者の登録・編集・削除を行います",
+}
 
 export default async function Admin() {
   const initialAdminList = await getAdminList()

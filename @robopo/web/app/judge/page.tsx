@@ -1,6 +1,12 @@
+import type { Metadata } from "next"
 import { JudgeView } from "@/components/judge/view"
 import { getJudgeWithCompetition, groupByJudge } from "@/lib/db/queries/queries"
 import { getCompetitionList } from "@/server/db"
+
+export const metadata: Metadata = {
+  title: "採点者一覧",
+  description: "採点者の登録・編集・削除を行います",
+}
 
 export default async function JudgePage() {
   const [judgeRows, { competitions }] = await Promise.all([
