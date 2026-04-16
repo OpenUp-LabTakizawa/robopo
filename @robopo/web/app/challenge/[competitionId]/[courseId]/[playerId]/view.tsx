@@ -23,7 +23,7 @@ export function View({
   const { setStarted } = useAudioContext()
   const { setDirty } = useNavigationGuard()
 
-  // ページ表示と同時にチャレンジを開始
+  // Start the challenge as soon as the page is displayed
   useEffect(() => {
     setStarted(true)
     setDirty(true)

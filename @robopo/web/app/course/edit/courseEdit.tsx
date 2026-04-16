@@ -137,10 +137,9 @@ export default function CourseEdit({
             onClearAll={allClear}
           />
           <div
-            className="mt-3"
+            className="mt-3 touch-none"
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerUp}
-            style={{ touchAction: "none" }}
           >
             <Field
               type="edit"

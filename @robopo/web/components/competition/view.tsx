@@ -174,8 +174,7 @@ export function CompetitionView({
             <Filter className="size-3.5 shrink-0 text-base-content/40" />
             <span className="shrink-0 text-xs">状態</span>
             <select
-              className="select select-ghost select-xs bg-transparent pe-0 font-medium focus:outline-none [&>option]:bg-base-100 [&>option]:text-base-content"
-              style={{ backgroundImage: "none" }}
+              className="select select-ghost select-xs bg-transparent pe-0 font-medium [background-image:none] focus:outline-none [&>option]:bg-base-100 [&>option]:text-base-content"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
             >

@@ -26,7 +26,7 @@ export function Header({ session }: Props) {
         alt="ROBOPO Logo"
         width={36}
         height={36}
-        style={{ maxWidth: "100%", height: "auto" }}
+        className="h-auto max-w-full"
       />
       <span className="font-bold text-lg text-primary">ROBOPO</span>
     </>

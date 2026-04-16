@@ -1,4 +1,4 @@
-// コースアウト detail 値の定数
+// Constants for course-out detail values
 export const COURSE_OUT_FIRST = "courseOut:first" as const
 export const COURSE_OUT_RETRY = "courseOut:retry" as const
 export type CourseOutDetail = typeof COURSE_OUT_FIRST | typeof COURSE_OUT_RETRY
@@ -10,7 +10,7 @@ export type ParsedCourseOutRule = {
   penalty: number
 }
 
-// courseOutRuleをパースする
+// Parse the courseOutRule string
 export function parseCourseOutRule(rule: string): ParsedCourseOutRule {
   if (rule.startsWith("penalty:")) {
     const val = Number.parseInt(rule.split(":")[1], 10)
@@ -23,7 +23,7 @@ export function parseCourseOutRule(rule: string): ParsedCourseOutRule {
   return { type: "keep", penalty: 0 }
 }
 
-// コースアウト時のスコア計算（共通ロジック）
+// Score calculation on course-out (shared logic)
 export function applyCourseOutRule(
   earnedPoint: number,
   parsed: ParsedCourseOutRule,

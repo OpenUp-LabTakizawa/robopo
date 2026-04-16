@@ -21,7 +21,7 @@ export function ReloadButton() {
   )
 }
 
-/** 戻るボタン汎用コンポーネント */
+/** Generic back button component */
 export function BackButton({
   onClick,
   label = "戻る",
@@ -55,7 +55,7 @@ export function BackButton({
   )
 }
 
-/** 送信ボタン汎用コンポーネント */
+/** Generic submit button component */
 export function SubmitButton({
   onClick,
   label = "結果送信",
@@ -91,7 +91,7 @@ export function SubmitButton({
   )
 }
 
-/** リトライボタン汎用コンポーネント */
+/** Generic retry button component */
 export function RetryButton({
   onClick,
   label = "2回目のチャレンジへ",
@@ -119,7 +119,7 @@ export function RetryButton({
   )
 }
 
-/** コースアウトボタン */
+/** Course-out button */
 export function CourseOutButton({
   onClick,
   disabled = false,
@@ -148,7 +148,7 @@ export function CourseOutButton({
   )
 }
 
-/** 失敗ボタン */
+/** Fail button */
 export function FailButton({
   onClick,
   className: extraClassName,
