@@ -12,19 +12,21 @@ const { default: Layout } = await import("@/app/course/layout")
 describe("course layout", () => {
   test("renders children", () => {
     const { getByText } = render(
-      <Layout modal={null}>
+      <Layout>
         <p>child</p>
       </Layout>,
     )
     expect(getByText("child")).toBeDefined()
   })
 
-  test("renders modal", () => {
+  test("renders multiple children", () => {
     const { getByText } = render(
-      <Layout modal={<p>modal</p>}>
-        <p>child</p>
+      <Layout>
+        <p>first</p>
+        <p>second</p>
       </Layout>,
     )
-    expect(getByText("modal")).toBeDefined()
+    expect(getByText("first")).toBeDefined()
+    expect(getByText("second")).toBeDefined()
   })
 })

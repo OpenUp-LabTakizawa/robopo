@@ -1,5 +1,8 @@
 import type React from "react"
-import { NextArrow, NextPauseIndicator } from "@/components/course/nextArrow"
+import {
+  NextArrow,
+  NextPauseIndicator,
+} from "@/components/course/nextMissionIndicator"
 import { Panel } from "@/components/course/panel"
 import { Robot } from "@/components/course/robot"
 import { getFieldBounds } from "@/lib/course/field"

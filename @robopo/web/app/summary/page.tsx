@@ -6,13 +6,13 @@ import { getCompetitionList } from "@/server/db"
 function getDefaultCompetitionId(
   competitions: SelectCompetition[],
 ): number | null {
-  // 1. 開催中の大会があればそれを選択
+  // 1. Select the currently active competition if one exists
   const active = competitions.find((c) => getCompetitionStatus(c) === "active")
   if (active) {
     return active.id
   }
 
-  // 2. 最も最近終了した大会を選択
+  // 2. Select the most recently ended competition
   const ended = competitions
     .filter((c) => getCompetitionStatus(c) === "ended")
     .sort((a, b) => {

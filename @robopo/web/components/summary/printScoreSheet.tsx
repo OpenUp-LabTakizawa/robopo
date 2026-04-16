@@ -103,7 +103,7 @@ export function PrintScoreSheet({
 
       {/* A4 Sheet */}
       <div className="mx-auto mt-16 mb-8 print:mt-0 print:mb-0">
-        <div className="print-sheet mx-auto bg-white p-6 shadow-lg print:p-0 print:shadow-none">
+        <div className="mx-auto box-border min-h-[297mm] w-[210mm] bg-white p-6 shadow-lg print:p-0 print:shadow-none">
           {/* Header */}
           <div className="mb-2 flex items-baseline justify-between border-gray-400 border-b pb-1.5">
             <div className="flex items-baseline gap-2">
@@ -178,14 +178,11 @@ function PrintCourseTable({ course }: { course: PrintCourseData }) {
       </div>
 
       {/* Table */}
-      <table
-        className="w-full border-collapse text-[9px]"
-        style={{ tableLayout: "fixed" }}
-      >
+      <table className="w-full table-fixed border-collapse text-[9px]">
         <colgroup>
-          <col style={{ width: "18px" }} />
-          <col style={{ width: "72px" }} />
-          <col style={{ width: "20px" }} />
+          <col className="w-[18px]" />
+          <col className="w-[72px]" />
+          <col className="w-[20px]" />
           {visibleColumns.map((col) => (
             <col key={`col-${col.key}`} />
           ))}

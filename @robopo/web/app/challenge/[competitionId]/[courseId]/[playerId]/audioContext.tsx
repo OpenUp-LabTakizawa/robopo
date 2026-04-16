@@ -45,7 +45,7 @@ export function SoundController() {
 
   const handleToggle = () => {
     if (muted) {
-      // OFF → ON: プレビュー音を鳴らして音量を確認させる
+      // OFF → ON: Play preview sound to let user check volume
       if (!previewRef.current) {
         previewRef.current = new Audio("/sound/02_next.mp3")
         previewRef.current.volume = 0.4
@@ -59,7 +59,7 @@ export function SoundController() {
     setMuted((prev) => !prev)
   }
 
-  // Cleanup: アンマウント時にAudioインスタンスを解放
+  // Cleanup: Release Audio instances on unmount
   useEffect(() => {
     return () => {
       if (previewRef.current) {

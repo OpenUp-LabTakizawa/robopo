@@ -1,4 +1,4 @@
-import { View } from "@/components/common/view"
+import { View } from "@/components/course/view"
 import {
   getCourseWithCompetition,
   groupByCourse,

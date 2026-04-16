@@ -50,10 +50,10 @@ export const MissionString: {
 export type MissionState = MissionValue[]
 
 // Point
-// start時のポイント(ハンデ的な?機能), goal時のポイント, 以後missionクリア毎ポイント…
+// Points at start (handicap), points at goal, then points per mission clear...
 export type PointValue = number | null
-export type PointTier = number[] // 段階別ポイント（例: [20, 10, 5, 3, 0, -5]）
-export type PointEntry = PointValue | PointTier // 単一値 or 段階選択
+export type PointTier = number[] // Tiered points (e.g. [20, 10, 5, 3, 0, -5])
+export type PointEntry = PointValue | PointTier // Single value or tiered selection
 export type PointState = PointEntry[]
 
 // Mission error reasons

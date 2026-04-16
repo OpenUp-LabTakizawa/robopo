@@ -7,7 +7,7 @@ async function seed() {
 
   try {
     // --- Insert special courses with positive IDs ---
-    // THE一本橋 (ID: 1)
+    // THE One-Log Bridge (ID: 1)
     await db.execute(sql`
       INSERT INTO course (id, name, field, fieldvalid, mission, missionvalid, point, course_out_rule)
       VALUES (1, 'THE一本橋',
@@ -27,7 +27,7 @@ async function seed() {
         course_out_rule = EXCLUDED.course_out_rule
     `)
 
-    // センサーコース (ID: 2)
+    // Sensor Course (ID: 2)
     await db.execute(sql`
       INSERT INTO course (id, name, field, fieldvalid, mission, missionvalid, point, course_out_rule)
       VALUES (2, 'センサーコース',
@@ -242,12 +242,12 @@ async function seed() {
       `)
     }
 
-    // --- Challenge data for テスト大会 × TestCourse ---
+    // --- Challenge data for Test Competition × TestCourse ---
     // TestCourse point='0;10;5;5': result 0→0pt, 1→5pt, 2→20pt (full clear)
     const judgeId1 = judgeRows.rows[0].id
     const [pA, pB, pC] = playerResult.rows
 
-    // 選手A: 3 challenges, best=2 (full clear 20pt), achieved on 2nd attempt
+    // Player A: 3 challenges, best=2 (full clear 20pt), achieved on 2nd attempt
     await db.execute(sql`
       INSERT INTO challenge (first_result, retry_result, detail, competition_id, course_id, player_id, judge_id, created_at)
       VALUES
@@ -256,7 +256,7 @@ async function seed() {
         (2, NULL, NULL, ${competitionId}, ${testCourseId}, ${pA.id}, ${judgeId1}, NOW() - INTERVAL '1 hour')
     `)
 
-    // 選手B: 2 challenges, best=2 (full clear 20pt), achieved on 1st attempt
+    // Player B: 2 challenges, best=2 (full clear 20pt), achieved on 1st attempt
     await db.execute(sql`
       INSERT INTO challenge (first_result, retry_result, detail, competition_id, course_id, player_id, judge_id, created_at)
       VALUES
@@ -264,7 +264,7 @@ async function seed() {
         (2, NULL, NULL, ${competitionId}, ${testCourseId}, ${pB.id}, ${judgeId1}, NOW() - INTERVAL '2 hours')
     `)
 
-    // 選手C: 4 challenges, best=1 (5pt), never completed the course
+    // Player C: 4 challenges, best=1 (5pt), never completed the course
     await db.execute(sql`
       INSERT INTO challenge (first_result, retry_result, detail, competition_id, course_id, player_id, judge_id, created_at)
       VALUES

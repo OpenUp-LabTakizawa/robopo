@@ -67,7 +67,7 @@ type FieldPropsType = {
   isRetry: boolean
 }
 
-// チャレンジ用セクション
+// Challenge section
 interface NormalChallengeSectionProps {
   isGoal: boolean
   pointState: PointState
@@ -312,7 +312,7 @@ export function Challenge({
         pool.set(src, [])
       }
       const instances = pool.get(src) as HTMLAudioElement[]
-      // 再生が終了済みのインスタンスを再利用、なければ新規作成
+      // Reuse finished audio instances, or create a new one if none available
       let audio = instances.find((a) => a.ended || a.paused)
       if (!audio) {
         audio = new Audio(src)

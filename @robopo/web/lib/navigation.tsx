@@ -3,7 +3,6 @@ import {
   House,
   LogIn,
   LogOut,
-  Play,
   Route as RouteIcon,
   Trophy,
   UserCheck,
@@ -16,12 +15,6 @@ export interface NavItem {
   label: string
   href: Route
   icon: JSX.Element
-}
-
-export const HOME_CONST: NavItem = {
-  label: "ホーム",
-  href: "/",
-  icon: <House className="size-6" />,
 }
 
 export const SIGN_IN_CONST: NavItem = {
@@ -71,8 +64,3 @@ export const NAVIGATION_GENERAL_LIST: NavItem[] = [
     icon: <House className="size-6" />,
   },
 ]
-
-export const RETRY_CONST = {
-  label: "2回目のチャレンジへ",
-  icon: <Play className="size-6" />,
-}

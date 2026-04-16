@@ -1,6 +1,6 @@
 import type { PointState } from "@/lib/course/types"
 
-// ミッション進捗の計算
+// Mission progress calculation
 export type MissionProgress = {
   completed: number
   total: number
@@ -28,7 +28,7 @@ export function pointEntryValue(entry: PointState[number]): number {
   return Number(entry)
 }
 
-// コースの取得可能な合計ポイントを計算する
+// Calculate total available points for the course
 export function totalPossiblePoints(pointData: PointState): number {
   return pointData.reduce<number>(
     (sum, entry) => sum + pointEntryValue(entry),
@@ -36,7 +36,7 @@ export function totalPossiblePoints(pointData: PointState): number {
   )
 }
 
-// 進んだmissionの数によって獲得したポイントを計算する
+// Calculate earned points based on the number of missions completed
 // pointState contains points in order: start, goal, mission...
 // First mission starts at index=2 with point pointState[2], point for index=i is pointState[i]
 // Last mission is at index=pointState.length-1, at which point goal points pointState[1] are added

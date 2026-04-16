@@ -56,8 +56,9 @@
   }
 }
 
-@utility text-balance {
-  text-wrap: balance;
+/* Loading robot pulse animation (custom keyframe reference) */
+@utility loading-robot-pulse {
+  animation: robotPulse 2s ease-out infinite;
 }
 
 @layer utilities {
@@ -338,13 +339,6 @@
   }
 }
 
-/* A4 print sheet — screen preview */
-.print-sheet {
-  width: 210mm;
-  min-height: 297mm;
-  box-sizing: border-box;
-}
-
 /* Print styles for score sheet */
 @media print {
   body {
@@ -400,7 +394,6 @@ input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear,
 input[type="password"]::-webkit-credentials-auto-fill-button,
 input[type="password"]::-webkit-password-toggle-button {
-  /* biome-ignore lint/complexity/noImportantStyles: 各ブラウザの UA stylesheet（ブラウザ内部のデフォルト CSS）はかなり強い優先度を持っています。
-  Safari や一部のモバイルブラウザでは !important を付けないと UA stylesheet に勝てず、::-webkit-password-toggle-button が消せないことがあります。 */
+  /* biome-ignore lint/complexity/noImportantStyles: Browser UA stylesheets have very high specificity. Without !important, Safari and some mobile browsers cannot override the default ::-webkit-password-toggle-button. */
   display: none !important;
 }

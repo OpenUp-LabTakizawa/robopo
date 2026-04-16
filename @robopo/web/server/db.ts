@@ -133,25 +133,3 @@ export async function getCompetitionJudgeAssignList(): Promise<{
     .from(competitionJudge)
   return { competitionJudgeList }
 }
-
-// Get judges by competition ID (with username from user table)
-export async function getCompetitionJudgeList(competitionId: number): Promise<{
-  judges: SelectJudgeWithUsername[]
-}> {
-  const rows = await db
-    .select({
-      id: judge.id,
-      note: judge.note,
-      userId: judge.userId,
-      createdAt: judge.createdAt,
-      username: user.username,
-    })
-    .from(judge)
-    .innerJoin(user, eq(judge.userId, user.id))
-    .innerJoin(competitionJudge, eq(judge.id, competitionJudge.judgeId))
-    .where(eq(competitionJudge.competitionId, competitionId))
-
-  return {
-    judges: rows.map((r) => ({ ...r, username: r.username ?? "" })),
-  }
-}

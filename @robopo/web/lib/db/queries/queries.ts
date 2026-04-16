@@ -1,4 +1,4 @@
-import { and, count, eq, inArray, ne, type SQLWrapper, sql } from "drizzle-orm"
+import { and, eq, inArray, ne, type SQLWrapper, sql } from "drizzle-orm"
 import { db } from "@/lib/db/db"
 import {
   challenge,
@@ -65,14 +65,6 @@ export async function deletePlayerById(id: number) {
 }
 
 // Get player by QR code
-export async function getPlayerByQR(qr: string) {
-  const result = await db
-    .select()
-    .from(player)
-    .where(eq(player.qr, qr))
-    .limit(1)
-  return result.length > 0 ? result[0] : null
-}
 // Get player by ID
 export async function getPlayerById(id: number) {
   const result = await db
@@ -97,12 +89,6 @@ export async function deleteJudgeById(id: number) {
     .delete(judge)
     .where(eq(judge.id, id))
     .returning({ deletedId: judge.id })
-}
-
-// Get judge by ID
-export async function getJudgeById(id: number) {
-  const result = await db.select().from(judge).where(eq(judge.id, id)).limit(1)
-  return result.length > 0 ? result[0] : null
 }
 
 // Delete competition from DB by ID
@@ -736,17 +722,6 @@ export function groupByCompetition(
   }
 
   return Array.from(map.values())
-}
-
-// Count how many competitions a course is linked to
-export async function getCourseCompetitionCount(
-  courseId: number,
-): Promise<number> {
-  const result = await db
-    .select({ count: count() })
-    .from(competitionCourse)
-    .where(eq(competitionCourse.courseId, courseId))
-  return result[0]?.count ?? 0
 }
 
 // Batch: check if any of the given course IDs have competition links

@@ -4,14 +4,8 @@ function SkeletonBlock({ className }: { className?: string }) {
 
 function RobotIcon() {
   return (
-    <div
-      className="absolute inset-0 flex items-center justify-center"
-      style={{ zIndex: 1 }}
-    >
-      <div
-        className="flex size-14 items-center justify-center rounded-2xl bg-base-100"
-        style={{ animation: "robotPulse 2s ease-out infinite" }}
-      >
+    <div className="absolute inset-0 z-[1] flex items-center justify-center">
+      <div className="loading-robot-pulse flex size-14 items-center justify-center rounded-2xl bg-base-100">
         <svg
           width="32"
           height="32"
@@ -117,22 +111,12 @@ export function PageLoading() {
             <div className="card-body">
               <SkeletonBlock className="mb-3 h-4 w-24" />
               {/* 3x3 grid */}
-              <div
-                className="relative mx-auto grid gap-[1px]"
-                style={{
-                  gridTemplateColumns: "repeat(3, 85px)",
-                  gridTemplateRows: "repeat(3, 85px)",
-                }}
-              >
+              <div className="relative mx-auto grid grid-cols-[repeat(3,85px)] grid-rows-[repeat(3,85px)] gap-[1px]">
                 {gridCells.map((id, i) => (
                   <div
                     key={id}
-                    className="skeleton-shimmer rounded-lg border border-base-300/50"
-                    style={{
-                      width: 85,
-                      height: 85,
-                      animationDelay: `${i * 80}ms`,
-                    }}
+                    className="skeleton-shimmer size-[85px] rounded-lg border border-base-300/50"
+                    style={{ animationDelay: `${i * 80}ms` }}
                   />
                 ))}
                 <RobotIcon />
