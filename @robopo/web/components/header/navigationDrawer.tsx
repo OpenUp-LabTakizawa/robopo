@@ -10,6 +10,7 @@ import {
   ADMIN_SETTINGS_LIST,
   COMPETITION_MANAGEMENT_LIST,
   NAVIGATION_GENERAL_LIST,
+  SPECTATOR_LIST,
 } from "@/lib/navigation"
 
 function NavLink({
@@ -146,10 +147,13 @@ export function NavigationDrawer() {
     ...NAVIGATION_GENERAL_LIST,
     ...COMPETITION_MANAGEMENT_LIST,
     ...ADMIN_SETTINGS_LIST,
+    ...SPECTATOR_LIST,
   ]
   const dividerIndex = NAVIGATION_GENERAL_LIST.length
   const settingsDividerIndex =
     NAVIGATION_GENERAL_LIST.length + COMPETITION_MANAGEMENT_LIST.length
+  const spectatorDividerIndex =
+    settingsDividerIndex + ADMIN_SETTINGS_LIST.length
 
   const drawerOverlay = (
     <div
@@ -233,6 +237,12 @@ export function NavigationDrawer() {
                     設定
                   </span>
                 </>
+              )}
+              {i === spectatorDividerIndex && (
+                <div
+                  className={`drawer-divider my-2 border-base-300 border-t ${isOpen ? "drawer-divider-visible" : ""}`}
+                  style={{ "--drawer-item-index": i } as React.CSSProperties}
+                />
               )}
               <NavLink
                 item={item}
