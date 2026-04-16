@@ -18,7 +18,10 @@ import type {
   SelectJudgeWithUsername,
   SelectPlayer,
 } from "@/lib/db/schema"
-import { COMPETITION_MANAGEMENT_LIST } from "@/lib/navigation"
+import {
+  ADMIN_SETTINGS_LIST,
+  COMPETITION_MANAGEMENT_LIST,
+} from "@/lib/navigation"
 
 function SelectionCard({
   name,
@@ -368,6 +371,23 @@ export const ManageTab = (): React.JSX.Element => {
   return (
     <div className="grid gap-2">
       {COMPETITION_MANAGEMENT_LIST.map((btn) => (
+        <Link
+          key={btn.href}
+          href={btn.href}
+          className="btn btn-ghost justify-start gap-3 border border-base-300"
+        >
+          {btn.icon}
+          {btn.label}
+        </Link>
+      ))}
+    </div>
+  )
+}
+
+export const SettingsTab = (): React.JSX.Element => {
+  return (
+    <div className="grid gap-2">
+      {ADMIN_SETTINGS_LIST.map((btn) => (
         <Link
           key={btn.href}
           href={btn.href}

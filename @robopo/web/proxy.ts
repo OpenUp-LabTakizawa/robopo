@@ -16,5 +16,6 @@ export const config = {
     "/player/:path*",
     "/judge/:path*",
     "/summary/:path*",
+    "/admin/:path*",
   ],
 }

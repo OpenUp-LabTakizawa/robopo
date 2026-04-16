@@ -3,7 +3,7 @@ import { and, eq } from "drizzle-orm"
 import { sanitizeCompetitionIds } from "@/app/api/validate"
 import { db } from "@/lib/db/db"
 import { getJudgeWithCompetition, groupByJudge } from "@/lib/db/queries/queries"
-import { account, competitionJudge, judge } from "@/lib/db/schema"
+import { account, competitionJudge, judge, user } from "@/lib/db/schema"
 
 export async function PATCH(
   req: Request,
@@ -15,7 +15,18 @@ export async function PATCH(
     return Response.json({ error: "Invalid ID" }, { status: 400 })
   }
 
-  const { note, competitionIds, password } = await req.json()
+  const { note, competitionIds, password, username } = await req.json()
+
+  // Validate username if provided
+  if (username && !/^[a-z0-9_]+$/.test(username.trim().toLowerCase())) {
+    return Response.json(
+      {
+        success: false,
+        message: "ユーザー名は英小文字・数字・アンダースコアのみ使用できます。",
+      },
+      { status: 400 },
+    )
+  }
 
   // Validate password up front before any updates
   if (password && password.length > 0 && password.length < 8) {
@@ -35,27 +46,36 @@ export async function PATCH(
       .set({ note: note || null })
       .where(eq(judge.id, judgeId))
 
-    // Update password if provided
-    if (password && password.length >= 8) {
-      const judgeRecord = await db
-        .select({ userId: judge.userId })
-        .from(judge)
-        .where(eq(judge.id, judgeId))
-        .limit(1)
+    // Get linked user ID for username/password updates
+    const judgeRecord = await db
+      .select({ userId: judge.userId })
+      .from(judge)
+      .where(eq(judge.id, judgeId))
+      .limit(1)
+    const userId = judgeRecord[0]?.userId
 
-      const userId = judgeRecord[0]?.userId
-      if (userId) {
-        const hashed = await hashPassword(password)
-        await db
-          .update(account)
-          .set({ password: hashed })
-          .where(
-            and(
-              eq(account.userId, userId),
-              eq(account.providerId, "credential"),
-            ),
-          )
-      }
+    // Update username if provided
+    if (username && userId) {
+      const trimmed = username.trim().toLowerCase()
+      await db
+        .update(user)
+        .set({
+          username: trimmed,
+          displayUsername: trimmed,
+          name: trimmed,
+        })
+        .where(eq(user.id, userId))
+    }
+
+    // Update password if provided
+    if (password && password.length >= 8 && userId) {
+      const hashed = await hashPassword(password)
+      await db
+        .update(account)
+        .set({ password: hashed })
+        .where(
+          and(eq(account.userId, userId), eq(account.providerId, "credential")),
+        )
     }
 
     // Update competition links if provided

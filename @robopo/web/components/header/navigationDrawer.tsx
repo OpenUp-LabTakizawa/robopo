@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import type { NavItem } from "@/lib/navigation"
 import {
+  ADMIN_SETTINGS_LIST,
   COMPETITION_MANAGEMENT_LIST,
   NAVIGATION_GENERAL_LIST,
 } from "@/lib/navigation"
@@ -141,8 +142,14 @@ export function NavigationDrawer() {
     return pathname.startsWith(href)
   }
 
-  const allItems = [...NAVIGATION_GENERAL_LIST, ...COMPETITION_MANAGEMENT_LIST]
+  const allItems = [
+    ...NAVIGATION_GENERAL_LIST,
+    ...COMPETITION_MANAGEMENT_LIST,
+    ...ADMIN_SETTINGS_LIST,
+  ]
   const dividerIndex = NAVIGATION_GENERAL_LIST.length
+  const settingsDividerIndex =
+    NAVIGATION_GENERAL_LIST.length + COMPETITION_MANAGEMENT_LIST.length
 
   const drawerOverlay = (
     <div
@@ -210,6 +217,20 @@ export function NavigationDrawer() {
                     style={{ "--drawer-item-index": i } as React.CSSProperties}
                   >
                     大会管理
+                  </span>
+                </>
+              )}
+              {i === settingsDividerIndex && (
+                <>
+                  <div
+                    className={`drawer-divider my-2 border-base-300 border-t ${isOpen ? "drawer-divider-visible" : ""}`}
+                    style={{ "--drawer-item-index": i } as React.CSSProperties}
+                  />
+                  <span
+                    className={`drawer-item mb-1 block px-3 font-semibold text-base-content/40 text-xs uppercase tracking-wider ${isOpen ? "drawer-item-visible" : ""}`}
+                    style={{ "--drawer-item-index": i } as React.CSSProperties}
+                  >
+                    設定
                   </span>
                 </>
               )}

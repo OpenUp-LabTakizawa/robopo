@@ -49,10 +49,10 @@ const defaultProps = {
 }
 
 describe("Dashboard", () => {
-  test("renders two dashboard cards", () => {
+  test("renders three dashboard cards", () => {
     const { container } = renderWithRouter(<Dashboard {...defaultProps} />)
     const cards = container.querySelectorAll(".rounded-box")
-    expect(cards.length).toBe(2)
+    expect(cards.length).toBe(3)
   })
 
   test("renders scoring card with primary variant", () => {
@@ -65,5 +65,6 @@ describe("Dashboard", () => {
     renderWithRouter(<Dashboard {...defaultProps} />)
     expect(screen.getByText("採点")).toBeTruthy()
     expect(screen.getByText("大会管理")).toBeTruthy()
+    expect(screen.getByText("設定")).toBeTruthy()
   })
 })

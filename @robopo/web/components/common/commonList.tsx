@@ -307,106 +307,99 @@ export function CommonSelectionList({
   }
 
   return (
-    <>
-      {type !== "competition" && type !== "course" && (
-        <h2 className="text-center font-semibold text-xl">
-          {typeLabel(type)}一覧
-        </h2>
-      )}
-      <div className="flex min-h-0 w-full flex-1 flex-col">
-        <div className="m-3 min-h-0 flex-1 overflow-x-auto overflow-y-auto rounded-xl border border-base-300/50">
-          <table className="table-pin-rows table-zebra table">
-            <thead>
-              <tr className="border-base-300/50 border-b bg-base-200/60">
-                <th className="w-12">
-                  {selectionMode === "checkbox" && onSelectAll ? (
-                    <label>
-                      <input
-                        type="checkbox"
-                        className="checkbox checkbox-primary size-4"
-                        checked={
-                          commonDataList.length > 0 &&
-                          Array.isArray(selectedId) &&
-                          commonDataList.every((item) =>
-                            selectedId.includes(item.id),
-                          )
-                        }
-                        onChange={() => onSelectAll()}
-                      />
-                    </label>
-                  ) : (
+    <div className="flex min-h-0 w-full flex-1 flex-col">
+      <div className="m-3 min-h-0 flex-1 overflow-x-auto overflow-y-auto rounded-xl border border-base-300/50">
+        <table className="table-pin-rows table-zebra table">
+          <thead>
+            <tr className="border-base-300/50 border-b bg-base-200/60">
+              <th className="w-12">
+                {selectionMode === "checkbox" && onSelectAll ? (
+                  <label>
+                    <input
+                      type="checkbox"
+                      className="checkbox checkbox-primary size-4"
+                      checked={
+                        commonDataList.length > 0 &&
+                        Array.isArray(selectedId) &&
+                        commonDataList.every((item) =>
+                          selectedId.includes(item.id),
+                        )
+                      }
+                      onChange={() => onSelectAll()}
+                    />
+                  </label>
+                ) : (
+                  <label>
+                    <input
+                      type={selectionMode}
+                      disabled={true}
+                      className="opacity-0"
+                    />
+                  </label>
+                )}
+              </th>
+              {itemNames(type).map((name) => (
+                <th
+                  key={name}
+                  className="py-3 font-semibold text-base-content/50 text-xs uppercase tracking-wider"
+                  hidden={
+                    selectionMode === "radio" &&
+                    type === "player" &&
+                    name === "参加大会"
+                  }
+                >
+                  {name}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {commonDataList.length > 0 ? (
+              commonDataList.map((common) => (
+                <tr
+                  key={common.id}
+                  className="cursor-pointer transition-colors duration-150 hover:bg-primary/5"
+                  onClick={() => onSelect(common.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault()
+                      onSelect(common.id)
+                    }
+                  }}
+                >
+                  <th className="w-12">
                     <label>
                       <input
                         type={selectionMode}
-                        disabled={true}
-                        className="opacity-0"
+                        name="selectedCommon"
+                        value={common.id}
+                        checked={isChecked(common.id)}
+                        onChange={() => onSelect(common.id)}
+                        className={`size-4 ${selectionMode === "checkbox" ? "checkbox checkbox-primary" : ""}`}
                       />
                     </label>
-                  )}
-                </th>
-                {itemNames(type).map((name) => (
-                  <th
-                    key={name}
-                    className="py-3 font-semibold text-base-content/50 text-xs uppercase tracking-wider"
-                    hidden={
-                      selectionMode === "radio" &&
-                      type === "player" &&
-                      name === "参加大会"
-                    }
-                  >
-                    {name}
                   </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {commonDataList.length > 0 ? (
-                commonDataList.map((common) => (
-                  <tr
-                    key={common.id}
-                    className="cursor-pointer transition-colors duration-150 hover:bg-primary/5"
-                    onClick={() => onSelect(common.id)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault()
-                        onSelect(common.id)
-                      }
-                    }}
-                  >
-                    <th className="w-12">
-                      <label>
-                        <input
-                          type={selectionMode}
-                          name="selectedCommon"
-                          value={common.id}
-                          checked={isChecked(common.id)}
-                          onChange={() => onSelect(common.id)}
-                          className={`size-4 ${selectionMode === "checkbox" ? "checkbox checkbox-primary" : ""}`}
-                        />
-                      </label>
-                    </th>
-                    <TableComponent
-                      type={type}
-                      common={common}
-                      onCourseCompetitionClick={onCourseCompetitionClick}
-                    />
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td
-                    colSpan={itemNames(type).length + 1}
-                    className="py-12 text-center text-base-content/40"
-                  >
-                    {emptyLabel(type, selectionMode)}が登録されていません。
-                  </td>
+                  <TableComponent
+                    type={type}
+                    common={common}
+                    onCourseCompetitionClick={onCourseCompetitionClick}
+                  />
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan={itemNames(type).length + 1}
+                  className="py-12 text-center text-base-content/40"
+                >
+                  {emptyLabel(type, selectionMode)}が登録されていません。
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
-    </>
+    </div>
   )
 }
 

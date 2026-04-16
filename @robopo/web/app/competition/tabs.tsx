@@ -130,7 +130,7 @@ export function CompetitionFormModal({
             <input
               id="comp-name"
               type="text"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full rounded-xl"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="大会名"
@@ -143,7 +143,7 @@ export function CompetitionFormModal({
             </label>
             <textarea
               id="comp-desc"
-              className="textarea textarea-bordered w-full"
+              className="textarea textarea-bordered w-full rounded-xl"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="大会の説明（任意）"
@@ -158,7 +158,7 @@ export function CompetitionFormModal({
               <input
                 id="comp-start"
                 type="date"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full rounded-xl"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
               />
@@ -170,7 +170,7 @@ export function CompetitionFormModal({
               <input
                 id="comp-end"
                 type="date"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full rounded-xl"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
               />

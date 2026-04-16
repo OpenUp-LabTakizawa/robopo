@@ -227,3 +227,10 @@ export type SelectCompetitionWithCourse = {
   courseIds: number[]
   courseNames: string[]
 }
+
+export type SelectAdmin = {
+  id: string
+  username: string | null
+  lastLoginAt: Date | null
+  createdAt: Date | null
+}

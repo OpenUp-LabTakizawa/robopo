@@ -4,6 +4,7 @@ import {
   LogIn,
   LogOut,
   Route as RouteIcon,
+  Shield,
   Trophy,
   UserCheck,
   Users,
@@ -62,5 +63,13 @@ export const NAVIGATION_GENERAL_LIST: NavItem[] = [
     label: "ホーム",
     href: "/",
     icon: <House className="size-6" />,
+  },
+]
+
+export const ADMIN_SETTINGS_LIST: NavItem[] = [
+  {
+    label: "管理者一覧",
+    href: "/admin" as Route,
+    icon: <Shield className="size-6" />,
   },
 ]

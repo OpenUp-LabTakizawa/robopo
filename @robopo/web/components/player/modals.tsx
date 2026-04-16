@@ -110,7 +110,7 @@ export function PlayerFormModal({
             <input
               id="player-name"
               type="text"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full rounded-xl"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="選手名"
@@ -124,7 +124,7 @@ export function PlayerFormModal({
             <input
               id="player-furigana"
               type="text"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full rounded-xl"
               value={furigana}
               onChange={(e) => setFurigana(e.target.value)}
               placeholder="ふりがな（任意）"
@@ -137,7 +137,7 @@ export function PlayerFormModal({
             <input
               id="player-bib"
               type="text"
-              className="input input-bordered w-full"
+              className="input input-bordered w-full rounded-xl"
               value={bibNumber}
               onChange={(e) => setBibNumber(e.target.value)}
               placeholder="ゼッケン番号（任意）"
@@ -149,7 +149,7 @@ export function PlayerFormModal({
             </label>
             <textarea
               id="player-note"
-              className="textarea textarea-bordered w-full"
+              className="textarea textarea-bordered w-full rounded-xl"
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="備考（任意）"
