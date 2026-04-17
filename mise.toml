@@ -1,5 +1,6 @@
 [tools]
 bun = "latest"
+ffmpeg = "latest"
 markdownlint-cli2 = "latest"
 pitchfork = "latest"
 

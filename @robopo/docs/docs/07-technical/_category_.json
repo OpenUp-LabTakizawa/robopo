@@ -1,0 +1,8 @@
+{
+  "label": "技術情報",
+  "position": 7,
+  "link": {
+    "type": "generated-index",
+    "description": "ROBOPOのインフラ構成、使用技術、データ構造について解説します。"
+  }
+}

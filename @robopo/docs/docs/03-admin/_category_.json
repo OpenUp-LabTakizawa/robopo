@@ -1,0 +1,8 @@
+{
+  "label": "管理者向け",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "description": "管理者（大会運営者）向けの機能を解説します。大会・コース・選手・採点者の登録方法を説明します。"
+  }
+}

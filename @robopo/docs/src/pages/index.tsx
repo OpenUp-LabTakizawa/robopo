@@ -17,42 +17,8 @@ function HomepageHeader() {
         </Heading>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
         <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/intro"
-          >
-            マニュアルトップへ
-          </Link>
-        </div>
-        <br />
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="https://robopo.vercel.app/"
-            style={{ display: "flex", alignItems: "center" }}
-          >
-            <img
-              src="img/logo.svg"
-              alt="ROBOPOアプリへ"
-              width="30"
-              height="30"
-            />
-            ROBOPOアプリへ
-          </Link>
-        </div>
-        <br />
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="https://github.com/openup-labtakizawa/robopo"
-          >
-            <img
-              src="img/github-mark.png"
-              alt="ROBOPO GitHubへ"
-              width="20"
-              height="20"
-            />
-            ROBOPO GitHubへ
+          <Link className="button button--secondary button--lg" to="/docs/">
+            はじめに
           </Link>
         </div>
       </div>
