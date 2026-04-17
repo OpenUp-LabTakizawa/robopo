@@ -66,6 +66,7 @@ export function Leaderboard({
     defaultCompetitionId ?? 0,
   )
   const [players, setPlayers] = useState<SpectatorPlayer[]>([])
+  const [masked, setMasked] = useState(false)
   const [loading, setLoading] = useState(false)
   const [countdown, setCountdown] = useState(REFRESH_INTERVAL)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -79,7 +80,8 @@ export function Leaderboard({
       const res = await fetch(`/api/spectator/${competitionId}`)
       if (res.ok) {
         const data = await res.json()
-        setPlayers(data)
+        setPlayers(data.players)
+        setMasked(data.masked)
       }
     } catch {
       // Silently retry on next interval
@@ -165,6 +167,15 @@ export function Leaderboard({
         <p className="mb-6 text-center text-base-content/50 text-sm">
           {competitions[0].name}
         </p>
+      )}
+
+      {/* Mask indicator */}
+      {masked && (
+        <div className="mb-4 rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 px-4 py-2.5 text-center">
+          <span className="font-bold text-amber-700 text-sm">
+            選手名は結果発表までシークレットです
+          </span>
+        </div>
       )}
 
       {/* Refresh indicator */}

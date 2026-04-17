@@ -206,19 +206,51 @@ function TableComponent({
             {(common as SelectCompetitionWithCourse).startDate ? (
               new Date(
                 (common as SelectCompetitionWithCourse).startDate as Date,
-              ).toLocaleDateString("ja-JP")
+              ).toLocaleString("ja-JP", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+              })
             ) : (
               <span className="text-base-content/30">-</span>
             )}
           </td>
           <td
-            className="py-3 text-base-content/60 text-sm"
+            className="whitespace-nowrap py-3 text-base-content/60 text-sm"
             suppressHydrationWarning
           >
             {(common as SelectCompetitionWithCourse).endDate ? (
               new Date(
                 (common as SelectCompetitionWithCourse).endDate as Date,
-              ).toLocaleDateString("ja-JP")
+              ).toLocaleString("ja-JP", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            ) : (
+              <span className="text-base-content/30">-</span>
+            )}
+          </td>
+          <td className="py-3 text-center">
+            {(common as SelectCompetitionWithCourse).maskEnabled ? (
+              <span className="badge badge-warning badge-sm">ON</span>
+            ) : (
+              <span className="badge badge-ghost badge-sm">OFF</span>
+            )}
+          </td>
+          <td className="whitespace-nowrap py-3 text-base-content/60 text-sm">
+            {(common as SelectCompetitionWithCourse).maskEnabled ? (
+              <span>
+                終了前
+                <span className="mx-1 font-bold font-mono tabular-nums">
+                  {(common as SelectCompetitionWithCourse).maskMinutesBefore}
+                </span>
+                分
+              </span>
             ) : (
               <span className="text-base-content/30">-</span>
             )}
@@ -254,7 +286,16 @@ function itemNames(type: CommonListProps["type"]): string[] {
   } else if (type === "course") {
     itemNames.push("ID", "コース名", "設定済み", "使用大会", "作成日時", "説明")
   } else if (type === "competition") {
-    itemNames.push("ID", "名前", "コース", "開催日", "終了日", "説明")
+    itemNames.push(
+      "ID",
+      "名前",
+      "コース",
+      "開催日時",
+      "終了日時",
+      "マスク",
+      "マスク時間",
+      "説明",
+    )
   }
   return itemNames
 }

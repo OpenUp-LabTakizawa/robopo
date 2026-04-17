@@ -1,15 +1,27 @@
 import { deleteById } from "@/app/api/delete"
+import { normalizeMaskMinutesBefore } from "@/lib/competition"
 import { db } from "@/lib/db/db"
 import { createCompetition } from "@/lib/db/queries/insert"
 import { competitionCourse } from "@/lib/db/schema"
 import { getCompetitionWithCourseList } from "@/server/db"
 
 export async function POST(req: Request) {
-  const { name, description, startDate, endDate, courseIds } = await req.json()
+  const {
+    name,
+    description,
+    startDate,
+    endDate,
+    courseIds,
+    maskEnabled,
+    maskMinutesBefore,
+  } = await req.json()
 
   if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
     return Response.json(
-      { success: false, message: "開催日は終了日より前でなければなりません。" },
+      {
+        success: false,
+        message: "開催日時は終了日時より前でなければなりません。",
+      },
       { status: 400 },
     )
   }
@@ -19,6 +31,8 @@ export async function POST(req: Request) {
     description: description || null,
     startDate: startDate ? new Date(startDate) : null,
     endDate: endDate ? new Date(endDate) : null,
+    maskEnabled: !!maskEnabled,
+    maskMinutesBefore: normalizeMaskMinutesBefore(maskMinutesBefore),
   }
   try {
     const result = await createCompetition(competitionData)
