@@ -13,24 +13,21 @@ type FeatureItem = {
 const FeatureList: FeatureItem[] = [
   {
     title: "採点機能",
-    src: require("@site/static/img/screen/01_index/003_challenge_resize.webp")
-      .default,
-    url: "/robopo/docs/category/採点",
-    description: <>競技の採点ができます。</>,
+    src: require("@site/static/screens/04-scoring/scoring-basic.webp").default,
+    url: "/docs/category/採点者向け",
+    description: <>タブレットやスマホで競技の採点をリアルタイムに行えます。</>,
   },
   {
     title: "集計結果表示",
-    src: require("@site/static/img/screen/01_index/007_pointlist_mosaic_resize.webp")
-      .default,
-    url: "/robopo/docs/category/集計結果",
-    description: <>競技の結果を一覧で表示します。</>,
+    src: require("@site/static/screens/05-results/summary.webp").default,
+    url: "/docs/category/集計・印刷",
+    description: <>選手・採点者・コース別に結果を一覧表示、PDF出力できます。</>,
   },
   {
     title: "大会運営",
-    src: require("@site/static/img/screen/01_index/009_toppage_resize.webp")
-      .default,
-    url: "/robopo/docs/category/大会管理",
-    description: <>ロボサバコースの入力や選手登録の機能を提供します。</>,
+    src: require("@site/static/screens/03-admin/dashboard.webp").default,
+    url: "/docs/category/管理者向け",
+    description: <>大会・コース・選手の登録と運営をまとめて行えます。</>,
   },
 ]
 

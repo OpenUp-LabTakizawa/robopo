@@ -1,0 +1,8 @@
+{
+  "label": "採点者向け",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "採点者向けに、チャレンジ採点画面の使い方を解説します。"
+  }
+}

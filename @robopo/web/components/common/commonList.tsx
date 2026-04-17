@@ -273,16 +273,9 @@ function TableComponent({
 function itemNames(type: CommonListProps["type"]): string[] {
   const itemNames: string[] = []
   if (type === "player") {
-    itemNames.push(
-      "ID",
-      "ゼッケン番号",
-      "ふりがな",
-      "名前",
-      "紐付け大会",
-      "備考",
-    )
+    itemNames.push("ID", "ゼッケン番号", "ふりがな", "名前", "参加大会", "備考")
   } else if (type === "judge") {
-    itemNames.push("ID", "ユーザー名", "紐付け大会", "ログイン日時", "備考")
+    itemNames.push("ID", "ユーザー名", "担当大会", "ログイン日時", "備考")
   } else if (type === "course") {
     itemNames.push("ID", "コース名", "設定済み", "使用大会", "作成日時", "説明")
   } else if (type === "competition") {

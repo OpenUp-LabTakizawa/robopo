@@ -1,0 +1,8 @@
+{
+  "label": "集計・印刷",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "大会の集計結果の確認、個人成績シートの印刷方法を解説します。"
+  }
+}
