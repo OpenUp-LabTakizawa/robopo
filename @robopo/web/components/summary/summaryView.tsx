@@ -61,14 +61,14 @@ export function SummaryView({ competitions, defaultCompetitionId }: Props) {
           </select>
         </div>
 
-        <div className="mt-2 flex items-end gap-3 lg:mt-0">
-          <div className="inline-flex rounded-xl bg-base-200/60 p-1">
+        <div className="mt-2 flex flex-col gap-2 lg:mt-0 lg:flex-row lg:items-end lg:gap-3">
+          <div className="flex rounded-xl bg-base-200/60 p-1 lg:inline-flex">
             {TABS.map(({ key, label, icon: Icon }) => (
               <button
                 key={key}
                 type="button"
                 onClick={() => setActiveTab(key)}
-                className={`flex items-center gap-1.5 rounded-lg px-4 py-2 font-medium text-sm transition-all duration-200 ${
+                className={`flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 font-medium text-sm transition-all duration-200 lg:flex-none lg:px-4 ${
                   activeTab === key
                     ? "bg-primary text-primary-content shadow-sm"
                     : "text-base-content/60 hover:bg-base-300/50 hover:text-base-content"
@@ -83,7 +83,7 @@ export function SummaryView({ competitions, defaultCompetitionId }: Props) {
           {competitionId > 0 && (
             <Link
               href={`/summary/print-all/${competitionId}`}
-              className="btn btn-primary btn-sm rounded-xl"
+              className="btn btn-primary btn-sm self-end rounded-xl lg:self-auto"
             >
               <Printer className="size-4" />
               一括印刷
