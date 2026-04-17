@@ -59,7 +59,7 @@ export default async function SummaryPage({
         <h1 className="font-bold text-2xl text-base-content tracking-tight">
           集計結果
         </h1>
-        <p className="mt-0.5 text-base-content/60 text-sm lg:hidden">
+        <p className="mt-0.5 text-base-content/60 text-sm">
           大会を選択して集計結果を確認します
         </p>
       </div>
