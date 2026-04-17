@@ -6,7 +6,7 @@ import type { SelectCompetitionWithCourse, SelectCourse } from "@/lib/db/schema"
 
 const DEFAULT_COURSE_NAMES = ["THE一本橋", "センサーコース"]
 
-function formatDateForInput(date: Date | null | undefined): string {
+function formatDateTimeForInput(date: Date | null | undefined): string {
   if (!date) {
     return ""
   }
@@ -14,7 +14,9 @@ function formatDateForInput(date: Date | null | undefined): string {
   const year = d.getFullYear()
   const month = String(d.getMonth() + 1).padStart(2, "0")
   const day = String(d.getDate()).padStart(2, "0")
-  return `${year}-${month}-${day}`
+  const hours = String(d.getHours()).padStart(2, "0")
+  const minutes = String(d.getMinutes()).padStart(2, "0")
+  return `${year}-${month}-${day}T${hours}:${minutes}`
 }
 
 type CompetitionFormModalProps = {
@@ -35,10 +37,10 @@ export function CompetitionFormModal({
   const [name, setName] = useState(competition?.name ?? "")
   const [description, setDescription] = useState(competition?.description ?? "")
   const [startDate, setStartDate] = useState(
-    formatDateForInput(competition?.startDate),
+    formatDateTimeForInput(competition?.startDate),
   )
   const [endDate, setEndDate] = useState(
-    formatDateForInput(competition?.endDate),
+    formatDateTimeForInput(competition?.endDate),
   )
   const [selectedCourseIds, setSelectedCourseIds] = useState<number[]>(
     mode === "create"
@@ -46,6 +48,12 @@ export function CompetitionFormModal({
           .filter((c) => DEFAULT_COURSE_NAMES.includes(c.name))
           .map((c) => c.id)
       : (competition?.courseIds ?? []),
+  )
+  const [maskEnabled, setMaskEnabled] = useState(
+    competition?.maskEnabled ?? false,
+  )
+  const [maskMinutesBefore, setMaskMinutesBefore] = useState(
+    competition?.maskMinutesBefore ?? 30,
   )
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -63,7 +71,7 @@ export function CompetitionFormModal({
       return "名前は必須です。"
     }
     if (startDate && endDate && startDate > endDate) {
-      return "開催日は終了日より前でなければなりません。"
+      return "開催日時は終了日時より前でなければなりません。"
     }
     return null
   }
@@ -86,6 +94,8 @@ export function CompetitionFormModal({
         startDate: startDate || null,
         endDate: endDate || null,
         courseIds: selectedCourseIds,
+        maskEnabled,
+        maskMinutesBefore,
       }
 
       const url =
@@ -153,11 +163,11 @@ export function CompetitionFormModal({
           <div className="flex gap-4">
             <div className="flex-1">
               <label className="label" htmlFor="comp-start">
-                <span className="label-text">開催日</span>
+                <span className="label-text">開催日時</span>
               </label>
               <input
                 id="comp-start"
-                type="date"
+                type="datetime-local"
                 className="input input-bordered w-full rounded-xl"
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
@@ -165,11 +175,11 @@ export function CompetitionFormModal({
             </div>
             <div className="flex-1">
               <label className="label" htmlFor="comp-end">
-                <span className="label-text">終了日</span>
+                <span className="label-text">終了日時</span>
               </label>
               <input
                 id="comp-end"
-                type="date"
+                type="datetime-local"
                 className="input input-bordered w-full rounded-xl"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
@@ -178,9 +188,40 @@ export function CompetitionFormModal({
           </div>
           {startDate && endDate && startDate > endDate && (
             <p className="text-error text-sm">
-              開催日は終了日より前でなければなりません。
+              開催日時は終了日時より前でなければなりません。
             </p>
           )}
+
+          {/* Mask settings */}
+          <div className="rounded-xl border border-base-300/50 bg-base-200/30 p-3">
+            <label className="flex cursor-pointer items-center gap-3">
+              <input
+                type="checkbox"
+                className="checkbox checkbox-primary checkbox-sm"
+                checked={maskEnabled}
+                onChange={(e) => setMaskEnabled(e.target.checked)}
+              />
+              <span className="text-sm">終了間際に選手名をマスクする</span>
+            </label>
+            {maskEnabled && (
+              <div className="mt-3 flex items-center gap-2 pl-8">
+                <span className="text-base-content/60 text-sm">終了前</span>
+                <input
+                  type="number"
+                  min={1}
+                  max={999}
+                  className="input input-bordered input-sm w-20 rounded-xl text-center"
+                  value={maskMinutesBefore}
+                  onChange={(e) =>
+                    setMaskMinutesBefore(Number(e.target.value) || 30)
+                  }
+                />
+                <span className="text-base-content/60 text-sm">
+                  分からマスク
+                </span>
+              </div>
+            )}
+          </div>
 
           {/* Course selection */}
           <div>

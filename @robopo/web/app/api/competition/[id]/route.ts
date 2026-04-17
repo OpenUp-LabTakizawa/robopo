@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm"
+import { normalizeMaskMinutesBefore } from "@/lib/competition"
 import { db } from "@/lib/db/db"
 import { updateCompetition } from "@/lib/db/queries/update"
 import { competitionCourse } from "@/lib/db/schema"
@@ -32,7 +33,10 @@ export async function PATCH(
     parsedStart > parsedEnd
   ) {
     return Response.json(
-      { success: false, message: "開催日は終了日より前でなければなりません。" },
+      {
+        success: false,
+        message: "開催日時は終了日時より前でなければなりません。",
+      },
       { status: 400 },
     )
   }
@@ -49,6 +53,14 @@ export async function PATCH(
   }
   if (parsedEnd !== undefined) {
     updateData.endDate = parsedEnd
+  }
+  if (body.maskEnabled !== undefined) {
+    updateData.maskEnabled = !!body.maskEnabled
+  }
+  if (body.maskMinutesBefore !== undefined) {
+    updateData.maskMinutesBefore = normalizeMaskMinutesBefore(
+      body.maskMinutesBefore,
+    )
   }
 
   try {

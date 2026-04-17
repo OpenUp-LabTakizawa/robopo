@@ -13,6 +13,8 @@ export const competition = pgTable("competition", {
   description: text("description"),
   startDate: timestamp("start_date"),
   endDate: timestamp("end_date"),
+  maskEnabled: boolean("mask_enabled").notNull().default(false),
+  maskMinutesBefore: integer("mask_minutes_before").notNull().default(30),
   createdAt: timestamp("created_at").defaultNow(),
 })
 
@@ -223,6 +225,8 @@ export type SelectCompetitionWithCourse = {
   description: string | null
   startDate: Date | null
   endDate: Date | null
+  maskEnabled: boolean
+  maskMinutesBefore: number
   createdAt: Date | null
   courseIds: number[]
   courseNames: string[]

@@ -1,5 +1,22 @@
+import { getCompetitionById } from "@/lib/db/queries/queries"
 import { maxCoursePoint } from "@/lib/summary/calculations"
 import { getCompetitionCourseList, getCompetitionPlayerList } from "@/server/db"
+
+function shouldMask(competition: {
+  maskEnabled: boolean
+  maskMinutesBefore: number
+  endDate: Date | null
+}): boolean {
+  if (!competition.maskEnabled || !competition.endDate) {
+    return false
+  }
+  const now = new Date()
+  const maskStartTime = new Date(
+    new Date(competition.endDate).getTime() -
+      competition.maskMinutesBefore * 60 * 1000,
+  )
+  return now >= maskStartTime
+}
 
 export async function GET(
   _req: Request,
@@ -12,10 +29,18 @@ export async function GET(
     return Response.json({ error: "Invalid competition ID." }, { status: 400 })
   }
 
-  const [{ competitionCourses }, { players }] = await Promise.all([
-    getCompetitionCourseList(competitionId),
-    getCompetitionPlayerList(competitionId),
-  ])
+  const [competitionData, { competitionCourses }, { players }] =
+    await Promise.all([
+      getCompetitionById(competitionId),
+      getCompetitionCourseList(competitionId),
+      getCompetitionPlayerList(competitionId),
+    ])
+
+  if (!competitionData) {
+    return Response.json({ error: "Competition not found." }, { status: 404 })
+  }
+
+  const masked = shouldMask(competitionData)
 
   // Calculate total points for each player across all courses (parallelized)
   const playerScores = await Promise.all(
@@ -28,8 +53,8 @@ export async function GET(
       const totalPoint = coursePoints.reduce((sum, pt) => sum + pt, 0)
       return {
         playerId: player.id,
-        playerName: player.name,
-        bibNumber: player.bibNumber,
+        playerName: masked ? "???" : player.name,
+        bibNumber: masked ? null : player.bibNumber,
         totalPoint,
       }
     }),
@@ -49,5 +74,5 @@ export async function GET(
     return { ...player, rank: currentRank }
   })
 
-  return Response.json(result)
+  return Response.json({ players: result, masked })
 }

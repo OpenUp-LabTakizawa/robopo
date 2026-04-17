@@ -34,6 +34,8 @@ const competitions = [
     description: null,
     startDate: null,
     endDate: null,
+    maskEnabled: false,
+    maskMinutesBefore: 30,
     createdAt: new Date(),
     courseIds: [],
     courseNames: [],
@@ -44,6 +46,8 @@ const competitions = [
     description: null,
     startDate: null,
     endDate: null,
+    maskEnabled: false,
+    maskMinutesBefore: 30,
     createdAt: new Date(),
     courseIds: [],
     courseNames: [],
@@ -237,8 +241,10 @@ describe("Competition table columns", () => {
     expect(headerTexts).toContain("名前")
     expect(headerTexts).toContain("コース")
     expect(headerTexts).toContain("説明")
-    expect(headerTexts).toContain("開催日")
-    expect(headerTexts).toContain("終了日")
+    expect(headerTexts).toContain("開催日時")
+    expect(headerTexts).toContain("終了日時")
+    expect(headerTexts).toContain("マスク")
+    expect(headerTexts).toContain("マスク時間")
   })
 
   test("renders dash for null description, startDate, and endDate", () => {
@@ -253,8 +259,8 @@ describe("Competition table columns", () => {
     )
     const cells = container.querySelectorAll("tbody tr:first-child td")
     const cellTexts = Array.from(cells).map((c) => c.textContent?.trim())
-    // courses, description, startDate, endDate should all be "-"
-    expect(cellTexts.filter((t) => t === "-")).toHaveLength(4)
+    // courses, startDate, endDate, maskMinutesBefore, description should all be "-"
+    expect(cellTexts.filter((t) => t === "-")).toHaveLength(5)
   })
 
   test("renders formatted dates for non-null startDate and endDate", () => {
@@ -266,6 +272,8 @@ describe("Competition table columns", () => {
         description: "テスト説明",
         startDate: new Date("2026-04-01T00:00:00"),
         endDate: new Date("2026-04-30T00:00:00"),
+        maskEnabled: false,
+        maskMinutesBefore: 30,
         createdAt: new Date(),
         courseIds: [1],
         courseNames: ["テストコース"],
@@ -286,9 +294,9 @@ describe("Competition table columns", () => {
     const cellTexts = Array.from(cells).map((c) => c.textContent?.trim())
     // description should render
     expect(cellTexts).toContain("テスト説明")
-    // dates should not be "-"
+    // Only maskMinutesBefore should be "-" (maskEnabled is false)
     const dashCount = cellTexts.filter((t) => t === "-").length
-    expect(dashCount).toBe(0)
+    expect(dashCount).toBe(1)
     // dates should not contain ISO format "T" separator
     for (const text of cellTexts) {
       expect(text).not.toContain("T00:00:00")

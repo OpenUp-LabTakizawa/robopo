@@ -668,6 +668,8 @@ export async function getCompetitionWithCourse() {
       description: competition.description,
       startDate: competition.startDate,
       endDate: competition.endDate,
+      maskEnabled: competition.maskEnabled,
+      maskMinutesBefore: competition.maskMinutesBefore,
       createdAt: competition.createdAt,
       courseId: course.id,
       courseName: course.name,
@@ -689,6 +691,8 @@ export function groupByCompetition(
     description: string | null
     startDate: Date | null
     endDate: Date | null
+    maskEnabled: boolean
+    maskMinutesBefore: number
     createdAt: Date | null
     courseId: number | null
     courseName: string | null
@@ -705,6 +709,8 @@ export function groupByCompetition(
         description: row.description,
         startDate: row.startDate,
         endDate: row.endDate,
+        maskEnabled: row.maskEnabled,
+        maskMinutesBefore: row.maskMinutesBefore,
         createdAt: row.createdAt,
         courseIds: [],
         courseNames: [],
