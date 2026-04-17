@@ -51,7 +51,7 @@
     "@docusaurus/tsconfig": "^3.10.0",
     "@docusaurus/types": "^3.10.0",
     "docusaurus-plugin-drawio": "^0.4.0",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.3"
   },
   "browserslist": {
     "production": [
