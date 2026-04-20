@@ -17,13 +17,13 @@ run = "bun run setup-env"
 
 [tasks.update]
 description = "Update bun dependencies and reinstall with isolated linker"
-run = ["bun update", "bun i --linker=isolated", "mise prep"]
+run = ["bun update", "bun i --linker=isolated", "mise deps"]
+
+[deps.bun]
+auto = true
 
 [hooks]
-enter = ["mise i -q", "mise prep -q"]
-
-[prepare.bun]
-auto = true
+enter = ["mise i -q", "mise deps -q"]
 
 [settings]
 experimental = true
