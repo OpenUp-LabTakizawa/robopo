@@ -23,7 +23,7 @@ run = ["bun update", "bun i --linker=isolated", "mise deps"]
 auto = true
 
 [hooks]
-enter = ["mise i -q", "mise deps -q"]
+enter = ["mise upgrade -q", "mise deps -q"]
 
 [settings]
 experimental = true
