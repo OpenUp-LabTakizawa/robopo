@@ -51,12 +51,13 @@ Bun workspace monorepo with two packages:
 
 ### Authentication
 
-- Better Auth configured in `@robopo/web/lib/auth.ts` with Drizzle adapter and schema.
-- Auth client in `@robopo/web/lib/auth-client.ts`.
+- Better Auth configured in `@robopo/web/lib/auth/auth.ts` with Drizzle adapter and schema.
+- Auth client in `@robopo/web/lib/auth/auth-client.ts`.
 - API route at `@robopo/web/app/api/auth/[...all]/route.ts`.
-- Sign-in via server action in `@robopo/web/components/server/auth.ts`.
+- Sign-in via server action in `@robopo/web/actions/auth.ts`.
 - Session check in `@robopo/web/components/header/headerServer.tsx`.
-- Route protection via `proxy.ts` (redirects unauthenticated users on `/config`, `/course`, `/player`, `/judge`, `/summary`).
+- Route protection via `proxy.ts` (redirects unauthenticated users on
+  `/config`, `/course`, `/player`, `/judge`, `/summary`, `/admin`).
 - `.env` must have `BETTER_AUTH_URL=http://localhost:3000` for local development.
 
 ### File Organization (`@robopo/web`)
@@ -64,29 +65,39 @@ Bun workspace monorepo with two packages:
 ```bash
 app/
   @auth/           — Auth modal routes (parallel route)
-  api/             — API route handlers
+  admin/           — Admin user management page
+  api/             — API route handlers (auth, challenge, spectator SSE, etc.)
   challenge/       — Challenge/scoring pages
-  config/          — Competition management
+  competition/     — Competition management page
   course/          — Course list and editor
   judge/           — Judge management
   player/          — Player management
+  spectator/       — Spectator (public live ranking) page
   summary/         — Score aggregation and display
 actions/           — Server actions (auth)
 components/
+  admin/           — Admin user CRUD components
   challenge/       — Scoring components
   common/          — Shared list/register/modal components
+  competition/     — Competition CRUD components
   course/          — Course editor, field, panel, mission components
   header/          — Header (client + server)
   home/            — Top page
+  judge/           — Judge CRUD components
   parts/           — Reusable UI parts
-  server/          — Server actions (auth, db)
+  player/          — Player CRUD components
+  spectator/       — Live spectator UI (themes, effects, panels, search)
   summary/         — Summary utilities
 hooks/             — Custom React hooks
 lib/
-  auth.ts          — Better Auth server config
-  auth-client.ts   — Better Auth client config
+  auth/            — Better Auth server + client config
+  competition.ts   — Competition domain helpers
+  course/          — Course domain (field, mission, point, validation)
   db/              — Database (db client, schema, queries/, seed, migrations/)
-  const.tsx        — App-wide constants
+  navigation.tsx   — Navigation configuration
+  scoring/         — Scoring logic (course-out, point calculation)
+  spectator/       — Spectator domain (live-data, pubsub, types, SSE hook)
+  summary/         — Summary aggregation (buildCourseData, calculations, format)
 server/            — Server-only utilities (db connection)
 ```
 
