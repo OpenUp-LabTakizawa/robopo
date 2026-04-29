@@ -276,6 +276,19 @@
   }
 }
 
+/* Dark-mode shimmer for the spectator screen (matches the live theme bg). */
+.spectator-skeleton {
+  background: linear-gradient(
+    -60deg,
+    rgba(255, 255, 255, 0.04) 40%,
+    rgba(0, 224, 255, 0.18) 50%,
+    rgba(255, 255, 255, 0.04) 60%
+  );
+  background-size: 300% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+  border-radius: 6px;
+}
+
 /* Pause mission indicator pulse */
 .pause-indicator {
   animation: pausePulse 2s ease-in-out infinite;
@@ -410,4 +423,77 @@ input[type="password"]::-webkit-credentials-auto-fill-button,
 input[type="password"]::-webkit-password-toggle-button {
   /* biome-ignore lint/complexity/noImportantStyles: Browser UA stylesheets have very high specificity. Without !important, Safari and some mobile browsers cannot override the default ::-webkit-password-toggle-button. */
   display: none !important;
+}
+
+/* ============================================================
+   Spectator screen animations (kept in global CSS instead of
+   styled-jsx to avoid SSR/CSR hydration mismatches).
+   ============================================================ */
+@keyframes spectator-pulse-soft {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes spectator-banner-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) rotate(-12deg);
+  }
+  18% {
+    opacity: 1;
+    transform: scale(1.05) rotate(2deg);
+  }
+  32% {
+    transform: scale(0.97) rotate(-1deg);
+  }
+  50% {
+    transform: scale(1) rotate(0deg);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes spectator-flash-fade {
+  0% {
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes spectator-particle-fly {
+  0% {
+    opacity: 0;
+    transform: translate(0px, 0px) rotate(0deg) scale(0.4);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.6);
+  }
+}
+
+@keyframes spectator-ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }

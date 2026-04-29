@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
-import { Leaderboard } from "@/components/spectator/leaderboard"
+import { LiveSpectator } from "@/components/spectator/live-spectator"
 import { getCompetitionStatus } from "@/lib/competition"
 import type { SelectCompetition } from "@/lib/db/schema"
+import { buildSpectatorSnapshot } from "@/lib/spectator/live-data"
 import { getCompetitionList } from "@/server/db"
 
 export const metadata: Metadata = {
@@ -22,17 +23,22 @@ function getDefaultCompetitionId(
 export default async function SpectatorPage() {
   const { competitions } = await getCompetitionList()
 
-  // Only show active competitions
   const activeCompetitions = competitions.filter(
     (c) => getCompetitionStatus(c) === "active",
   )
 
   const defaultId = getDefaultCompetitionId(activeCompetitions)
 
+  // Build the initial snapshot on the server so the client renders the live
+  // theme on first paint instead of an empty placeholder while waiting for SSE.
+  const initialSnapshot =
+    defaultId !== null ? await buildSpectatorSnapshot(defaultId) : null
+
   return (
-    <Leaderboard
+    <LiveSpectator
       competitions={activeCompetitions}
       defaultCompetitionId={defaultId}
+      initialSnapshot={initialSnapshot}
     />
   )
 }

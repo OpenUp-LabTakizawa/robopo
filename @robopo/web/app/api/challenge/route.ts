@@ -1,6 +1,21 @@
+import { eq } from "drizzle-orm"
+import { db } from "@/lib/db/db"
 import { createChallenge } from "@/lib/db/queries/insert"
 import { deleteChallengeById } from "@/lib/db/queries/queries"
 import { updateChallenge } from "@/lib/db/queries/update"
+import { challenge } from "@/lib/db/schema"
+import { publishChallengeChange } from "@/lib/spectator/pubsub"
+
+async function getCompetitionIdForChallenge(
+  id: number,
+): Promise<number | null> {
+  const rows = await db
+    .select({ competitionId: challenge.competitionId })
+    .from(challenge)
+    .where(eq(challenge.id, id))
+    .limit(1)
+  return rows[0]?.competitionId ?? null
+}
 
 export async function POST(req: Request) {
   const {
@@ -23,6 +38,12 @@ export async function POST(req: Request) {
   }
   try {
     const result = await createChallenge(challengeData)
+    if (typeof competitionId === "number") {
+      publishChallengeChange({
+        competitionId,
+        cause: "challenge:create",
+      })
+    }
     return Response.json({ success: true, data: result }, { status: 200 })
   } catch (error) {
     console.error("Error creating challenge:", error)
@@ -62,7 +83,14 @@ export async function PATCH(req: Request) {
   }
 
   try {
+    const competitionId = await getCompetitionIdForChallenge(id)
     await updateChallenge(id, data)
+    if (competitionId !== null) {
+      publishChallengeChange({
+        competitionId,
+        cause: "challenge:update",
+      })
+    }
     return Response.json({ success: true }, { status: 200 })
   } catch (error) {
     console.error("Error updating challenge:", error)
@@ -85,7 +113,14 @@ export async function DELETE(req: Request) {
     )
   }
   try {
+    const competitionId = await getCompetitionIdForChallenge(id)
     await deleteChallengeById(id)
+    if (competitionId !== null) {
+      publishChallengeChange({
+        competitionId,
+        cause: "challenge:delete",
+      })
+    }
     return Response.json({ success: true }, { status: 200 })
   } catch (error) {
     console.error("Error deleting challenge:", error)
