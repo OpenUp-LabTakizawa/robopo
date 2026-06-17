@@ -43,7 +43,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "better-auth": "^1.6.19",
     "drizzle-orm": "^0.45.2",
-    "lucide-react": "^1.18.0",
+    "lucide-react": "^1.20.0",
     "next": "^16.2.9",
     "pg": "^8.21.0",
     "react": "^19.2.7",
@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.0",
-    "@happy-dom/global-registrator": "^20.10.4",
+    "@happy-dom/global-registrator": "^20.10.5",
     "@playwright/test": "^1.61.0",
     "@tailwindcss/postcss": "^4.3.1",
     "@testing-library/dom": "^10.4.1",
