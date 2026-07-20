@@ -16,8 +16,8 @@ description = "Setup environment variables for @robopo/web"
 run = "bun run setup-env"
 
 [tasks.update]
-description = "Update bun dependencies and reinstall with isolated linker"
-run = ["bun update", "bun i --linker=isolated", "mise deps"]
+description = "Update bun dependencies and reinstall"
+run = ["bun update", "bun i", "mise deps"]
 
 [deps.bun]
 auto = true
