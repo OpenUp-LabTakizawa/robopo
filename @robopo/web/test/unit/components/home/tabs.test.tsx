@@ -3,7 +3,11 @@ import { cleanup, fireEvent, screen } from "@testing-library/react"
 import { ChallengeTab, ManageTab } from "@/components/home/tabs"
 import { renderWithRouter } from "../../../utils/router"
 
-afterEach(cleanup)
+afterEach(() => {
+  cleanup()
+  // ChallengeTab restores its selection from localStorage on mount.
+  localStorage.clear()
+})
 
 const competitionList = {
   competitions: [
