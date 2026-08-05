@@ -32,7 +32,7 @@
     "lint": "biome lint --write",
     "format": "biome format --write",
     "lint:fix": "biome check --write",
-    "test:unit": "bun test test/unit --preload ./happydom.ts",
+    "test:unit": "bun test test/unit --preload ./happydom.ts --isolate --randomize",
     "test:e2e": "playwright test",
     "test:report": "playwright show-report",
     "db:seed": "bun run lib/db/seed.ts"
@@ -44,7 +44,7 @@
     "better-auth": "^1.6.25",
     "drizzle-orm": "^0.45.2",
     "lucide-react": "^1.28.0",
-    "next": "^16.2.12",
+    "next": "^16.3.0",
     "pg": "^8.22.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
