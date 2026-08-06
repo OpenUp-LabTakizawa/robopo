@@ -28,7 +28,7 @@ Bun workspace monorepo with two packages:
 
 ### Code Style
 
-- Biome enforces formatting and linting. Run `bun lint:fix` before committing.
+- Biome enforces formatting and linting. Run `bun fix` before committing.
 - Indent with spaces, no semicolons (ASI), sorted Tailwind classes (`useSortedClasses`).
 - All comments in English. UI-facing strings (labels, messages) are in Japanese.
 - Use `@/` path alias for imports within `@robopo/web` (maps to project root).
@@ -106,7 +106,7 @@ server/            — Server-only utilities (db connection)
 ```bash
 bun run dev          # Start Next.js dev server
 bun run build        # Production build
-bun run lint:fix     # Biome lint + format
+bun run fix          # Biome check (auto-fix)
 bun run test:unit    # Unit tests
 bun run test:e2e     # Playwright e2e tests
 bun run db:seed      # Seed database with test data
@@ -117,5 +117,5 @@ bun run docs-dev     # Start docs dev server
 
 After completing code changes, always run the following and fix any errors before finishing:
 
-1. `bun lint:fix --unsafe` — auto-fix lint and formatting issues
+1. `bun fix --unsafe` — auto-fix lint and formatting issues
 2. `bun test:unit` — ensure all unit tests pass

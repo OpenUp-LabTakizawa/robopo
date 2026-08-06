@@ -4,10 +4,10 @@ ffmpeg = "latest"
 rumdl = "latest"
 pitchfork = "latest"
 
-[tasks.lint]
-run = ["bun lint:fix --unsafe", "mise lint:md"]
+[tasks.fix]
+run = ["bun fix --unsafe", "mise fix:md"]
 
-[tasks."lint:md"]
+[tasks."fix:md"]
 description = "Check markdown files for linting issues"
 run = "rumdl check --fix ."
 
