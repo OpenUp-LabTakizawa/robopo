@@ -35,14 +35,9 @@ describe("serializeMission / deserializeMission", () => {
     const state: MissionState = ["u", "d", "mf", 1, "tr", 90]
     const serialized = serializeMission(state)
     const deserialized = deserializeMission(serialized)
-    expect(deserialized).toEqual([
-      "u",
-      "d",
-      "mf",
-      "1",
-      "tr",
-      "90",
-    ] as unknown as MissionState)
+    // deserializeMission types every value as MissionValue, but numeric
+    // parameters stay strings at runtime, so compare the values structurally.
+    expect<unknown[]>(deserialized).toEqual(["u", "d", "mf", "1", "tr", "90"])
   })
 
   test("handles null values", () => {
