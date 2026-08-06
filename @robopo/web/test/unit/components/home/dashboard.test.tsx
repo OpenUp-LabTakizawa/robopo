@@ -14,6 +14,8 @@ const defaultProps = {
         description: null,
         startDate: null,
         endDate: null,
+        maskEnabled: false,
+        maskMinutesBefore: 0,
         createdAt: null,
       },
     ],
@@ -40,7 +42,9 @@ const defaultProps = {
       { id: 1, competitionId: 1, courseId: 1, createdAt: null },
     ],
   },
-  judgeList: [{ id: 1, name: "Judge A", createdAt: null }],
+  judgeList: [
+    { id: 1, userId: "u1", username: "Judge A", note: null, createdAt: null },
+  ],
   competitionJudgeList: {
     competitionJudgeList: [
       { id: 1, competitionId: 1, judgeId: 1, createdAt: null },

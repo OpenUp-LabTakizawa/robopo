@@ -12,6 +12,8 @@ const competitions: SelectCompetition[] = [
     description: null,
     startDate: new Date("2025-01-01"),
     endDate: new Date("2027-12-31"),
+    maskEnabled: false,
+    maskMinutesBefore: 0,
     createdAt: null,
   },
   {
@@ -20,6 +22,8 @@ const competitions: SelectCompetition[] = [
     description: null,
     startDate: new Date("2025-06-01"),
     endDate: new Date("2027-12-31"),
+    maskEnabled: false,
+    maskMinutesBefore: 0,
     createdAt: null,
   },
 ]

@@ -8,15 +8,12 @@ import {
 
 let lastFromTable: unknown = null
 
-const selectSpy = spyOn(db, "select").mockImplementation(
-  () =>
-    ({
-      from: (table: unknown) => {
-        lastFromTable = table
-        return Promise.resolve([])
-      },
-    }) as ReturnType<typeof db.select>,
-)
+const selectSpy = spyOn(db, "select").mockImplementation((() => ({
+  from: (table: unknown) => {
+    lastFromTable = table
+    return Promise.resolve([])
+  },
+})) as unknown as typeof db.select)
 
 afterAll(() => {
   selectSpy.mockRestore()

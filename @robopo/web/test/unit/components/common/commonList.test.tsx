@@ -5,29 +5,39 @@ import {
   CommonRadioList,
   CommonSelectionList,
 } from "@/components/common/commonList"
+import type {
+  SelectCompetitionWithCourse,
+  SelectPlayerWithCompetition,
+} from "@/lib/db/schema"
 
 afterEach(cleanup)
 
-const players = [
+const players: SelectPlayerWithCompetition[] = [
   {
     id: 1,
     name: "Alice",
     furigana: "ありす",
-    bibNumber: 10,
-    qr: "",
+    bibNumber: "10",
+    note: null,
     createdAt: new Date(),
+    competitionId: null,
+    competitionIds: [],
+    competitionName: null,
   },
   {
     id: 2,
     name: "Bob",
     furigana: "ぼぶ",
-    bibNumber: 20,
-    qr: "",
+    bibNumber: "20",
+    note: null,
     createdAt: new Date(),
+    competitionId: null,
+    competitionIds: [],
+    competitionName: null,
   },
 ]
 
-const competitions = [
+const competitions: SelectCompetitionWithCourse[] = [
   {
     id: 1,
     name: "大会A",

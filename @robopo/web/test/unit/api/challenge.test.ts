@@ -1,11 +1,14 @@
 import { afterAll, describe, expect, mock, test } from "bun:test"
+import type { InsertChallenge } from "@/lib/db/schema"
 
 // Preserve original modules before mocking
 const originalInsert = await import("@/lib/db/queries/insert")
 const originalQueries = await import("@/lib/db/queries/queries")
 const originalUpdate = await import("@/lib/db/queries/update")
 
-const mockCreateChallenge = mock(() => Promise.resolve([{ id: 1 }]))
+const mockCreateChallenge = mock((_data: Omit<InsertChallenge, "id">) =>
+  Promise.resolve([{ id: 1 }]),
+)
 const mockUpdateChallenge = mock(() => Promise.resolve())
 const mockDeleteChallenge = mock(() => Promise.resolve([{ deletedId: 1 }]))
 
