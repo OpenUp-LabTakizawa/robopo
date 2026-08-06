@@ -16,7 +16,13 @@ permissions:
 jobs:
   comment:
     runs-on: ubuntu-latest
-    if: github.event.workflow_run.event == 'pull_request'
+    # The workflows above upload the artifacts only when they conclude with
+    # success or failure. Any other conclusion, such as a run cancelled by
+    # cancel-in-progress, leaves nothing to download.
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      (github.event.workflow_run.conclusion == 'success' ||
+      github.event.workflow_run.conclusion == 'failure')
     steps:
       - name: 📥 Download artifact
         uses: actions/download-artifact@v8
