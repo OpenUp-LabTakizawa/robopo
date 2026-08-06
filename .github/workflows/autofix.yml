@@ -30,7 +30,7 @@ jobs:
         run: mise update
 
       - name: 🔷 Run Lint
-        run: mise lint
+        run: mise fix
 
       - name: 💾 Commit
         if: success() || failure()
