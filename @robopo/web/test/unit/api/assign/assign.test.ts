@@ -37,20 +37,12 @@ function createChain(op: Operation) {
   return chain
 }
 
-const selectSpy = spyOn(db, "select").mockImplementation(
-  () =>
-    createChain({ type: "select", table: null }) as ReturnType<
-      typeof db.select
-    >,
-)
-const insertSpy = spyOn(db, "insert").mockImplementation(
-  (table: unknown) =>
-    createChain({ type: "insert", table }) as ReturnType<typeof db.insert>,
-)
-const deleteSpy = spyOn(db, "delete").mockImplementation(
-  (table: unknown) =>
-    createChain({ type: "delete", table }) as ReturnType<typeof db.delete>,
-)
+const selectSpy = spyOn(db, "select").mockImplementation((() =>
+  createChain({ type: "select", table: null })) as unknown as typeof db.select)
+const insertSpy = spyOn(db, "insert").mockImplementation(((table: unknown) =>
+  createChain({ type: "insert", table })) as unknown as typeof db.insert)
+const deleteSpy = spyOn(db, "delete").mockImplementation(((table: unknown) =>
+  createChain({ type: "delete", table })) as unknown as typeof db.delete)
 
 afterAll(() => {
   selectSpy.mockRestore()

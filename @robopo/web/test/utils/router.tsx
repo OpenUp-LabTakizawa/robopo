@@ -15,6 +15,7 @@ export function createMockRouter(
     back: () => {},
     forward: () => {},
     prefetch: () => Promise.resolve(),
+    bfcacheId: "",
     ...overrides,
   }
 }

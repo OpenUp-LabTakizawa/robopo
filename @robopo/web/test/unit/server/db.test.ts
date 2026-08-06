@@ -11,20 +11,17 @@ import {
 let lastFromTable: unknown = null
 let mockResult: unknown[] = []
 
-const selectSpy = spyOn(db, "select").mockImplementation(
-  () =>
-    ({
-      from: (table: unknown) => {
-        lastFromTable = table
-        const promise = Promise.resolve(mockResult)
-        return Object.assign(promise, {
-          where: () => Promise.resolve(mockResult),
-          innerJoin: () => promise,
-          orderBy: () => Promise.resolve(mockResult),
-        })
-      },
-    }) as ReturnType<typeof db.select>,
-)
+const selectSpy = spyOn(db, "select").mockImplementation((() => ({
+  from: (table: unknown) => {
+    lastFromTable = table
+    const promise = Promise.resolve(mockResult)
+    return Object.assign(promise, {
+      where: () => Promise.resolve(mockResult),
+      innerJoin: () => promise,
+      orderBy: () => Promise.resolve(mockResult),
+    })
+  },
+})) as unknown as typeof db.select)
 
 afterAll(() => {
   selectSpy.mockRestore()

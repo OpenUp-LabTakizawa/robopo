@@ -7,6 +7,7 @@ import {
   missionStatePair,
   serializeMission,
 } from "@/lib/course/mission"
+import type { MissionState } from "@/lib/course/types"
 
 describe("getMissionParameterUnit", () => {
   test("returns 'パネル' for forward/backward missions", () => {
@@ -31,14 +32,21 @@ describe("getMissionParameterUnit", () => {
 
 describe("serializeMission / deserializeMission", () => {
   test("round-trips mission state", () => {
-    const state = ["u", "d", "mf", 1, "tr", 90]
+    const state: MissionState = ["u", "d", "mf", 1, "tr", 90]
     const serialized = serializeMission(state)
     const deserialized = deserializeMission(serialized)
-    expect(deserialized).toEqual(["u", "d", "mf", "1", "tr", "90"])
+    expect(deserialized).toEqual([
+      "u",
+      "d",
+      "mf",
+      "1",
+      "tr",
+      "90",
+    ] as unknown as MissionState)
   })
 
   test("handles null values", () => {
-    const state = [null, "u", null]
+    const state: MissionState = [null, "u", null]
     const serialized = serializeMission(state)
     expect(serialized).toBe("null;u;null")
     const deserialized = deserializeMission(serialized)
@@ -54,7 +62,7 @@ describe("serializeMission / deserializeMission", () => {
 describe("missionStatePair", () => {
   test("returns pairs from index 2 onwards", () => {
     // [startDir, goalDir, mission1, param1, mission2, param2]
-    const state = ["u", "d", "mf", 1, "tr", 90]
+    const state: MissionState = ["u", "d", "mf", 1, "tr", 90]
     const pairs = missionStatePair(state)
     expect(pairs).toEqual([
       ["mf", 1],
@@ -69,7 +77,7 @@ describe("missionStatePair", () => {
   })
 
   test("handles odd-length state (last pair has null)", () => {
-    const state = ["u", "d", "mf", 1, "tr"]
+    const state: MissionState = ["u", "d", "mf", 1, "tr"]
     const pairs = missionStatePair(state)
     expect(pairs).toEqual([
       ["mf", 1],
@@ -125,7 +133,7 @@ describe("getNextPosition", () => {
 describe("getRobotPosition", () => {
   test("calculates position after multiple missions", () => {
     // Start at (2,0), facing up; mission: forward 1 panel
-    const missionState = ["u", "u", "mf", 1, "mf", 1]
+    const missionState: MissionState = ["u", "u", "mf", 1, "mf", 1]
     const [row, col, dir] = getRobotPosition(2, 0, missionState, 2)
     expect(row).toBe(0)
     expect(col).toBe(0)
@@ -133,7 +141,7 @@ describe("getRobotPosition", () => {
   })
 
   test("returns start position with 0 missions", () => {
-    const missionState = ["u", "u", "mf", 1]
+    const missionState: MissionState = ["u", "u", "mf", 1]
     const [row, col, dir] = getRobotPosition(3, 3, missionState, 0)
     expect(row).toBe(3)
     expect(col).toBe(3)
