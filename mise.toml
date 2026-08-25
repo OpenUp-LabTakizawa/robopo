@@ -17,7 +17,7 @@ run = "bun run setup-env"
 
 [tasks.update]
 description = "Update bun dependencies and reinstall"
-run = ["bun update", "bun i", "mise deps"]
+run = ["bun update", "mise deps"]
 
 [deps.bun]
 auto = true
