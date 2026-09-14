@@ -16,7 +16,11 @@ run = "rumdl check --fix ."
 
 [tasks.update]
 description = "Update bun dependencies and reinstall"
-run = ["bun update", "mise deps"]
+# `--recursive` because this is a workspace: a plain `bun update` rewrites only
+# the root package.json, leaving everything the workspace members declare on the
+# ranges it was added with. That is how react stayed on ^19.2.8 while autofix.ci
+# kept the root current.
+run = ["bun update --recursive", "mise deps"]
 
 # Replaces the former `pitchfork.toml`. mise writes the pitchfork config under
 # $MISE_STATE_DIR and registers it, so the daemon runs with the mise
