@@ -19,6 +19,14 @@ run = "bun run setup-env"
 description = "Update bun dependencies and reinstall"
 run = ["bun update", "mise deps"]
 
+# Replaces the former `pitchfork.toml`. mise writes the pitchfork config under
+# $MISE_STATE_DIR and registers it, so the daemon runs with the mise
+# environment. `mise daemons` drives pitchfork rather than replacing it, which
+# is why it stays in [tools].
+[daemons.web]
+run = "bun dev"
+ready_port = 3000
+
 [deps.bun]
 auto = true
 
