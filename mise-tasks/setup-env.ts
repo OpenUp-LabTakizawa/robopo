@@ -1,4 +1,5 @@
 #!/usr/bin/env bun
+//MISE description="Create @robopo/web/.env interactively"
 /**
  * Environment variables setup script for ROBOPO.
  * Creates @robopo/web/.env interactively.

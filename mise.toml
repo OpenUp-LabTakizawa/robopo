@@ -11,9 +11,8 @@ run = ["bun fix --unsafe", "mise fix:md"]
 description = "Check markdown files for linting issues"
 run = "rumdl check --fix ."
 
-[tasks.setup-env]
-description = "Setup environment variables for @robopo/web"
-run = "bun run setup-env"
+# `setup-env` is mise-tasks/setup-env.ts. Being there is what makes it a task,
+# so it needs no entry here; `mise tasks` reads its description from the file.
 
 [tasks.update]
 description = "Update bun dependencies and reinstall"
