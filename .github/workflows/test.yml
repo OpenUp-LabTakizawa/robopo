@@ -6,15 +6,8 @@ concurrency:
 
 on:
   pull_request:
-    paths:
-      - "@robopo/web/**"
-      - "bun.lock"
-      - "package.json"
   push:
-    paths:
-      - "@robopo/web/**"
-      - "bun.lock"
-      - "package.json"
+    branches: main
   workflow_dispatch:
 
 permissions:
