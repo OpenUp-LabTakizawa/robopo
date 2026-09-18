@@ -1,0 +1,31 @@
+name: 🤖 Dependabot auto-merge
+
+# Enables auto-merge (squash) on every pull request Dependabot opens.
+# GitHub merges it once the ruleset's required checks pass, so the
+# checks are the gate: a bump that breaks the build stays open.
+#
+# GITHUB_TOKEN on purpose. A merge it sets up does not start the `push`
+# workflows on main, so the next human-authored merge carries the
+# accumulated bumps out.
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔀 Enable auto-merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge --auto --squash "$PR_URL"
