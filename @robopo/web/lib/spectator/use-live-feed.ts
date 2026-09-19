@@ -54,6 +54,7 @@ export function useLiveFeed(
     }
     let es: EventSource | null = null
     let cancelled = false
+    let takeoverTimer: ReturnType<typeof setTimeout> | null = null
 
     const connect = () => {
       es = new EventSource(`/api/spectator/${competitionId}/stream`)
@@ -112,7 +113,14 @@ export function useLiveFeed(
       ) {
         if (prevLeader || nextLeader.total > 0) {
           // Stash takeover after slight delay so it can chain after score fx.
-          setTimeout(() => {
+          if (takeoverTimer !== null) {
+            clearTimeout(takeoverTimer)
+          }
+          takeoverTimer = setTimeout(() => {
+            takeoverTimer = null
+            if (cancelled) {
+              return
+            }
             setFxEvent({
               kind: "takeover",
               newLeaderName: nextLeader.player.name,
@@ -127,6 +135,10 @@ export function useLiveFeed(
 
     return () => {
       cancelled = true
+      if (takeoverTimer !== null) {
+        clearTimeout(takeoverTimer)
+        takeoverTimer = null
+      }
       if (es) {
         es.close()
       }
