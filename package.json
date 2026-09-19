@@ -2,6 +2,7 @@
   "name": "robopo",
   "version": "0.0.0",
   "private": true,
+  "packageManager": "bun@1.4.2",
   "workspaces": [
     "@robopo/*"
   ],
