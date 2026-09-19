@@ -1,6 +1,9 @@
 import { describe, expect, test } from "bun:test"
 import {
   applyCourseOutRule,
+  COURSE_OUT_FIRST,
+  COURSE_OUT_RETRY,
+  courseOutSubmission,
   parseCourseOutRule,
 } from "@/lib/scoring/course-out"
 
@@ -56,5 +59,41 @@ describe("applyCourseOutRule", () => {
 
   test("penalty rule with 0 earned points returns 0", () => {
     expect(applyCourseOutRule(0, { type: "penalty", penalty: 5 })).toBe(0)
+  })
+})
+
+describe("courseOutSubmission", () => {
+  test("first attempt keeps its score under keep / penalty rules", () => {
+    expect(courseOutSubmission("keep", false, 3, null)).toEqual({
+      firstResult: 3,
+      retryResult: null,
+      detail: COURSE_OUT_FIRST,
+    })
+    expect(courseOutSubmission("penalty:5", false, 3, null)).toEqual({
+      firstResult: 3,
+      retryResult: null,
+      detail: COURSE_OUT_FIRST,
+    })
+  })
+
+  test("first attempt scores zero under the zero rule", () => {
+    expect(courseOutSubmission("zero", false, 3, null)).toEqual({
+      firstResult: 0,
+      retryResult: null,
+      detail: COURSE_OUT_FIRST,
+    })
+  })
+
+  test("retry attempt keeps the first result intact", () => {
+    expect(courseOutSubmission("keep", true, 3, 2)).toEqual({
+      firstResult: 3,
+      retryResult: 2,
+      detail: COURSE_OUT_RETRY,
+    })
+    expect(courseOutSubmission("zero", true, 3, 2)).toEqual({
+      firstResult: 3,
+      retryResult: 0,
+      detail: COURSE_OUT_RETRY,
+    })
   })
 })

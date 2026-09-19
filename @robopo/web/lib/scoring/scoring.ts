@@ -53,3 +53,27 @@ export function calcPoint(pointState: PointState, index: number | null) {
   }
   return point
 }
+
+// Goal bonus, ignoring tiered goal entries (a tier at the goal is not
+// selectable, so it contributes nothing here)
+export function goalBonus(pointState: PointState): number {
+  const goalEntry = pointState[1]
+  return goalEntry !== null && !Array.isArray(goalEntry) ? Number(goalEntry) : 0
+}
+
+// Points after choosing tier `tierIndex` on mission `nowMission`
+// (0-based). Returns null when that mission has no tiers.
+export function calcTierPoint(
+  pointState: PointState,
+  nowMission: number,
+  tierIndex: number,
+  isLastMission: boolean,
+): number | null {
+  const entry = pointState[nowMission + 2]
+  if (!Array.isArray(entry)) {
+    return null
+  }
+  const tierPoint = entry[tierIndex] ?? 0
+  const base = calcPoint(pointState, nowMission) + tierPoint
+  return isLastMission ? base + goalBonus(pointState) : base
+}

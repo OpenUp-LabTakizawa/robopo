@@ -4,60 +4,28 @@ import Link from "next/link"
 import { useEffect, useState } from "react"
 import { DataTableShell } from "@/components/summary/DataTableShell"
 import { MultiSortToolbar } from "@/components/summary/MultiSortToolbar"
+import {
+  buildPlayerRowCells,
+  comparePlayerSummary,
+  matchesPlayerQuery,
+  PLAYER_NAME_SORT_KEYS,
+  PLAYER_SORT_OPTIONS,
+  PLAYER_TIME_SORT_KEYS,
+  type PlayerSortKey,
+} from "@/components/summary/playerSummarySort"
 import { makeOrderLabel, makeSortLabel } from "@/components/summary/sortHelpers"
 import { useMultiSort } from "@/hooks/useMultiSort"
 import { deserializePoint } from "@/lib/course/point"
 import type { PointState } from "@/lib/course/types"
 import type { SelectCourse } from "@/lib/db/schema"
-import { calcPoint } from "@/lib/scoring/scoring"
-import { formatTimestamp, isCompletedCourse } from "@/lib/summary/format"
+import { formatTimestamp } from "@/lib/summary/format"
 import type { CourseSummary } from "@/lib/summary/types"
 
-type SortKey =
-  | "playerFurigana"
-  | "playerBibNumber"
-  | "firstAttemptTime"
-  | "firstMaxAttemptTime"
-  | "elapsedToComplete"
-  | "lastAttemptTime"
-  | "firstMaxAttemptCount"
-  | "firstAttemptScore"
-  | "maxResult"
-  | "averageScore"
-  | "totalPoint"
-  | "sumPoint"
-  | "courseOutCount"
-  | "retryCount"
-  | "challengeCount"
-
-const SORT_OPTIONS: { value: SortKey; label: string }[] = [
-  { value: "playerFurigana", label: "ふりがな" },
-  { value: "playerBibNumber", label: "ゼッケン" },
-  { value: "firstAttemptTime", label: "初挑戦時刻" },
-  { value: "firstMaxAttemptTime", label: "完走時刻" },
-  { value: "elapsedToComplete", label: "完走経過時間" },
-  { value: "lastAttemptTime", label: "最終挑戦時刻" },
-  { value: "firstMaxAttemptCount", label: "完走数" },
-  { value: "firstAttemptScore", label: "初回得点" },
-  { value: "maxResult", label: "最高得点" },
-  { value: "averageScore", label: "平均得点" },
-  { value: "totalPoint", label: "総得点" },
-  { value: "sumPoint", label: "合計得点" },
-  { value: "courseOutCount", label: "コースアウト数" },
-  { value: "retryCount", label: "リトライ回数" },
-  { value: "challengeCount", label: "挑戦回数" },
-]
-
-const TIME_SORT_KEYS = new Set<SortKey>([
-  "firstAttemptTime",
-  "firstMaxAttemptTime",
-  "lastAttemptTime",
-])
-
-const NAME_SORT_KEYS = new Set<SortKey>(["playerFurigana"])
-
-const getSortLabel = makeSortLabel(SORT_OPTIONS)
-const getOrderLabel = makeOrderLabel(NAME_SORT_KEYS, TIME_SORT_KEYS)
+const getSortLabel = makeSortLabel(PLAYER_SORT_OPTIONS)
+const getOrderLabel = makeOrderLabel(
+  PLAYER_NAME_SORT_KEYS,
+  PLAYER_TIME_SORT_KEYS,
+)
 
 type Props = {
   competitionId: number
@@ -74,77 +42,10 @@ export function PlayerSummaryTable({ competitionId }: Props) {
   const compareByKey = (
     a: CourseSummary,
     b: CourseSummary,
-    key: SortKey,
-  ): number => {
-    switch (key) {
-      case "playerFurigana":
-        return (a.playerFurigana ?? "").localeCompare(
-          b.playerFurigana ?? "",
-          "ja",
-        )
-      case "playerBibNumber": {
-        const aNum = Number(a.playerBibNumber)
-        const bNum = Number(b.playerBibNumber)
-        if (!Number.isNaN(aNum) && !Number.isNaN(bNum)) {
-          return aNum - bNum
-        }
-        return (a.playerBibNumber ?? "").localeCompare(
-          b.playerBibNumber ?? "",
-          "ja",
-          { numeric: true },
-        )
-      }
-      case "firstAttemptTime":
-      case "lastAttemptTime": {
-        const aTime = a[key] ? Date.parse(a[key] as string) : Infinity
-        const bTime = b[key] ? Date.parse(b[key] as string) : Infinity
-        return aTime - bTime
-      }
-      case "firstMaxAttemptTime": {
-        const aC = isCompletedCourse(pointData, a.maxResult)
-        const bC = isCompletedCourse(pointData, b.maxResult)
-        const aT =
-          aC && a.firstMaxAttemptTime
-            ? Date.parse(a.firstMaxAttemptTime)
-            : Infinity
-        const bT =
-          bC && b.firstMaxAttemptTime
-            ? Date.parse(b.firstMaxAttemptTime)
-            : Infinity
-        return aT - bT
-      }
-      case "elapsedToComplete": {
-        const aV = a.elapsedToCompleteSeconds ?? Infinity
-        const bV = b.elapsedToCompleteSeconds ?? Infinity
-        return aV - bV
-      }
-      case "firstMaxAttemptCount": {
-        const aC = isCompletedCourse(pointData, a.maxResult)
-        const bC = isCompletedCourse(pointData, b.maxResult)
-        const aV = aC ? (a.firstMaxAttemptCount ?? Infinity) : Infinity
-        const bV = bC ? (b.firstMaxAttemptCount ?? Infinity) : Infinity
-        return aV - bV
-      }
-      default: {
-        const aV = (a[key] as number) ?? 0
-        const bV = (b[key] as number) ?? 0
-        return aV - bV
-      }
-    }
-  }
+    key: PlayerSortKey,
+  ) => comparePlayerSummary(a, b, key, pointData)
 
-  const filtered = (() => {
-    if (!searchQuery.trim()) {
-      return rawSummary
-    }
-    const q = searchQuery.trim().toLowerCase()
-    return rawSummary.filter(
-      (p) =>
-        (p.playerName?.toLowerCase().includes(q) ?? false) ||
-        (p.playerFurigana?.toLowerCase().includes(q) ?? false) ||
-        (p.playerBibNumber?.toLowerCase().includes(q) ?? false),
-    )
-  })()
+  const filtered = rawSummary.filter((p) => matchesPlayerQuery(p, searchQuery))
 
   const {
     sorted: filteredAndSorted,
@@ -154,11 +55,11 @@ export function PlayerSummaryTable({ competitionId }: Props) {
     toggleOrder,
     resetSort,
     availableKeys,
-  } = useMultiSort<CourseSummary, SortKey>({
+  } = useMultiSort<CourseSummary, PlayerSortKey>({
     data: filtered,
     defaultSort: [{ key: "totalPoint", order: "desc" }],
     compareByKey,
-    allKeys: SORT_OPTIONS,
+    allKeys: PLAYER_SORT_OPTIONS,
   })
 
   // Fetch courses when competition changes
@@ -201,7 +102,7 @@ export function PlayerSummaryTable({ competitionId }: Props) {
       try {
         const selectedCourse = courses.find((c) => c.id === courseId)
         if (selectedCourse) {
-          const point = await deserializePoint(selectedCourse.point)
+          const point = deserializePoint(selectedCourse.point)
           setPointData(point)
         }
 
@@ -240,7 +141,7 @@ export function PlayerSummaryTable({ competitionId }: Props) {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <MultiSortToolbar<SortKey>
+      <MultiSortToolbar<PlayerSortKey>
         searchPlaceholder="名前・ふりがな・ゼッケン番号で検索"
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -310,15 +211,7 @@ function PlayerRow({
   courseId: number
   pointData: PointState
 }) {
-  const completed = isCompletedCourse(pointData, player.maxResult)
-  const maxScore =
-    player.maxResult || player.maxResult === 0
-      ? calcPoint(pointData, player.maxResult)
-      : null
-  const firstScore =
-    player.firstAttemptScore !== null
-      ? calcPoint(pointData, player.firstAttemptScore)
-      : null
+  const cells = buildPlayerRowCells(player, pointData)
 
   return (
     <tr className="transition-colors duration-150 hover:bg-primary/5">
@@ -327,35 +220,29 @@ function PlayerRow({
           href={`/summary/${competitionId}/${courseId}/${player.playerId}`}
           className="text-primary underline-offset-2 hover:underline"
         >
-          {player.playerName ?? "-"}
+          {cells.name}
         </Link>
       </td>
-      <td className="whitespace-nowrap py-3">{player.playerFurigana ?? "-"}</td>
-      <td className="py-3">{player.playerBibNumber ?? "-"}</td>
+      <td className="whitespace-nowrap py-3">{cells.furigana}</td>
+      <td className="py-3">{cells.bibNumber}</td>
       <td className="whitespace-nowrap py-3">
         {formatTimestamp(player.firstAttemptTime)}
       </td>
       <td className="whitespace-nowrap py-3">
-        {completed ? formatTimestamp(player.firstMaxAttemptTime) : "-"}
+        {formatTimestamp(cells.completionTime)}
       </td>
-      <td className="whitespace-nowrap py-3">
-        {completed ? (player.elapsedToComplete ?? "-") : "-"}
-      </td>
+      <td className="whitespace-nowrap py-3">{cells.elapsedToComplete}</td>
       <td className="whitespace-nowrap py-3">
         {formatTimestamp(player.lastAttemptTime)}
       </td>
-      <td className="py-3">
-        {completed && player.firstMaxAttemptCount
-          ? player.firstMaxAttemptCount
-          : "-"}
-      </td>
-      <td className="py-3">{firstScore !== null ? firstScore : "-"}</td>
-      <td className="py-3">{maxScore !== null ? maxScore : "-"}</td>
-      <td className="py-3">{player.averageScore ?? "-"}</td>
-      <td className="py-3 font-medium">{player.totalPoint ?? "-"}</td>
-      <td className="py-3">{player.sumPoint ?? "-"}</td>
-      <td className="py-3">{player.courseOutCount ?? 0}</td>
-      <td className="py-3">{player.retryCount ?? 0}</td>
+      <td className="py-3">{cells.completionCount}</td>
+      <td className="py-3">{cells.firstScore}</td>
+      <td className="py-3">{cells.maxScore}</td>
+      <td className="py-3">{cells.averageScore}</td>
+      <td className="py-3 font-medium">{cells.totalPoint}</td>
+      <td className="py-3">{cells.sumPoint}</td>
+      <td className="py-3">{cells.courseOutCount}</td>
+      <td className="py-3">{cells.retryCount}</td>
       <td className="py-3">{player.challengeCount}</td>
     </tr>
   )

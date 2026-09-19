@@ -1,7 +1,9 @@
 import { describe, expect, test } from "bun:test"
 import {
   calcPoint,
+  calcTierPoint,
   getMissionProgress,
+  goalBonus,
   pointEntryValue,
   totalPossiblePoints,
 } from "@/lib/scoring/scoring"
@@ -82,5 +84,38 @@ describe("getMissionProgress", () => {
   test("handles 0 missions", () => {
     const result = getMissionProgress(0, 0, false)
     expect(result.percent).toBe(0)
+  })
+})
+
+describe("goalBonus", () => {
+  test("returns the scalar goal entry", () => {
+    expect(goalBonus([0, 10, 5])).toBe(10)
+  })
+
+  test("is 0 for null or tiered goal entries", () => {
+    expect(goalBonus([0, null, 5])).toBe(0)
+    expect(goalBonus([0, [10, 5], 5])).toBe(0)
+  })
+})
+
+describe("calcTierPoint", () => {
+  // [start=0, goal=10, mission1=5, mission2=(20,10,0)]
+  const pointState = [0, 10, 5, [20, 10, 0]]
+
+  test("returns null when the mission has no tiers", () => {
+    expect(calcTierPoint(pointState, 0, 0, false)).toBeNull()
+  })
+
+  test("adds the chosen tier to the points earned so far", () => {
+    // After mission1: 5; tier index 1 → +10
+    expect(calcTierPoint(pointState, 1, 1, false)).toBe(15)
+  })
+
+  test("adds the goal bonus on the last mission", () => {
+    expect(calcTierPoint(pointState, 1, 0, true)).toBe(35)
+  })
+
+  test("treats an out-of-range tier as 0", () => {
+    expect(calcTierPoint(pointState, 1, 9, false)).toBe(5)
   })
 })
