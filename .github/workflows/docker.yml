@@ -76,17 +76,3 @@ jobs:
         with:
           subject-name: ghcr.io/openup-labtakizawa/robopo
           subject-digest: ${{ needs.build.outputs.digest }}
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    env:
-      DOKPLOY_WEBHOOK_URL: ${{ secrets.DOKPLOY_WEBHOOK_URL }}
-
-    steps:
-      # Dokploy pulls the `canary` tag; the application's deploy webhook makes
-      # it redeploy as soon as the image lands. Skipped until the secret exists.
-      - name: 🚀 Trigger Dokploy deploy
-        if: env.DOKPLOY_WEBHOOK_URL != ''
-        run: curl --fail --silent --show-error -X POST "$DOKPLOY_WEBHOOK_URL"
