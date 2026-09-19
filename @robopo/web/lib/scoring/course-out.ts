@@ -37,3 +37,33 @@ export function applyCourseOutRule(
       return earnedPoint
   }
 }
+
+export type CourseOutSubmission = {
+  firstResult: number
+  retryResult: number | null
+  detail: CourseOutDetail
+}
+
+// Results to submit when the current attempt ends in a course-out.
+// Under the "zero" rule the attempt that went out scores nothing; the other
+// attempt keeps whatever it reached.
+export function courseOutSubmission(
+  rule: string,
+  isRetry: boolean,
+  firstResult: number,
+  retryResult: number | null,
+): CourseOutSubmission {
+  const zero = parseCourseOutRule(rule).type === "zero"
+  if (isRetry) {
+    return {
+      firstResult,
+      retryResult: zero ? 0 : retryResult,
+      detail: COURSE_OUT_RETRY,
+    }
+  }
+  return {
+    firstResult: zero ? 0 : firstResult,
+    retryResult,
+    detail: COURSE_OUT_FIRST,
+  }
+}

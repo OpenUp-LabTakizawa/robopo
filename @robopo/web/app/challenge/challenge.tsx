@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation"
 import type React from "react"
-import { useCallback, useRef, useState } from "react"
+import { useState } from "react"
 import {
   SoundController,
   useAudioContext,
@@ -12,6 +12,7 @@ import {
 } from "@/components/challenge/challengeModal"
 import { MissionOverview } from "@/components/challenge/missionOverview"
 import { resultSubmit } from "@/components/challenge/resultSubmit"
+import { useSoundEffects } from "@/components/challenge/useSoundEffects"
 import { Field } from "@/components/course/field"
 import {
   BackButton,
@@ -34,12 +35,12 @@ import {
   type MissionValue,
   type PointState,
 } from "@/lib/course/types"
+import { courseOutSubmission } from "@/lib/scoring/course-out"
 import {
-  COURSE_OUT_FIRST,
-  COURSE_OUT_RETRY,
-  parseCourseOutRule,
-} from "@/lib/scoring/course-out"
-import { calcPoint, getMissionProgress } from "@/lib/scoring/scoring"
+  calcPoint,
+  calcTierPoint,
+  getMissionProgress,
+} from "@/lib/scoring/scoring"
 
 // Type definitions
 type ChallengeProps = {
@@ -219,7 +220,6 @@ function NormalChallengeSection({
           <div className="grid w-full max-w-xs gap-2">
             {(currentPointEntry as number[]).map((pt, i) => (
               <button
-                // biome-ignore lint/suspicious/noArrayIndexKey: tiers may have duplicate values, need index for uniqueness
                 key={i}
                 type="button"
                 className={`btn min-h-[48px] text-lg ${
@@ -293,110 +293,89 @@ export function Challenge({
   const [message, setMessage] = useState("")
   const [modalOpen, setModalOpen] = useState(0)
   const start = findStart(fieldState)
+  const startRow = start?.[0] || 0
+  const startCol = start?.[1] || 0
   const [botPosition, setBotPosition] = useState({
-    row: start?.[0] || 0,
-    col: start?.[1] || 0,
+    row: startRow,
+    col: startCol,
   })
   const [botDirection, setBotDirection] = useState(missionState[0])
   const [strictMode, _setStrictMode] = useState(false)
   const { muted } = useAudioContext()
-  const audioPoolRef = useRef<Map<string, HTMLAudioElement[]>>(new Map())
+  const { play } = useSoundEffects(muted)
+  const isLastMission = nowMission === missionPair.length - 1
 
-  const playSound = useCallback(
-    (src: string, volume: number) => {
-      if (muted) {
-        return
-      }
-      const pool = audioPoolRef.current
-      if (!pool.has(src)) {
-        pool.set(src, [])
-      }
-      const instances = pool.get(src) as HTMLAudioElement[]
-      // Reuse finished audio instances, or create a new one if none available
-      let audio = instances.find((a) => a.ended || a.paused)
-      if (!audio) {
-        audio = new Audio(src)
-        instances.push(audio)
-      }
-      audio.volume = volume
-      audio.currentTime = 0
-      audio.play().catch(() => {})
-    },
-    [muted],
-  )
+  // Move the robot to where it stands after `missionIndex` missions
+  const moveBotTo = (missionIndex: number) => {
+    const [row, col, direction] = getRobotPosition(
+      startRow,
+      startCol,
+      missionState,
+      missionIndex,
+    )
+    setBotPosition({ row, col })
+    setBotDirection(direction)
+  }
 
-  const playNext = useCallback(
-    () => playSound("/sound/02_next.mp3", 0.4),
-    [playSound],
-  )
-  const playBack = useCallback(
-    () => playSound("/sound/03_back.mp3", 0.2),
-    [playSound],
-  )
-  const playGoal = useCallback(
-    () => playSound("/sound/04_goal.mp3", 1.0),
-    [playSound],
-  )
-
-  const handleNext = (row: number, col: number) => {
-    if (
-      nowMission < missionPair.length &&
-      pointState[nowMission + 2] !== null
-    ) {
-      const [newRow, newCol, direction] = getRobotPosition(
-        start?.[0] || 0,
-        start?.[1] || 0,
-        missionState,
-        nowMission + 1,
-      )
-      if ((strictMode && newRow === row && newCol === col) || !strictMode) {
-        const point = calcPoint(pointState, nowMission + 1)
-        setPointCount(point)
-        if (nowMission === missionPair.length - 1) {
-          setIsGoal(true)
-          setModalOpen(1)
-          playGoal()
-        } else if (nowMission < missionPair.length - 1) {
-          setNowMission(nowMission + 1)
-          playNext()
-        }
-        if (!isRetry && !isGoal) {
-          setFirstResult(firstResult + 1)
-        } else if (retryResult !== null && !isGoal) {
-          setRetryResult(retryResult + 1)
-        }
-        setBotPosition({ row: newRow, col: newCol })
-        setBotDirection(direction)
-      }
-    } else {
-      setNowMission(0)
+  // Count one more (or one fewer) cleared mission on the current attempt
+  const bumpResult = (delta: number) => {
+    if (!isRetry) {
+      setFirstResult(firstResult + delta)
+    } else if (retryResult !== null) {
+      setRetryResult(retryResult + delta)
     }
   }
 
-  const handleBack = () => {
-    if (nowMission > 0) {
-      if (!isRetry) {
-        setFirstResult(firstResult - 1)
-      } else if (retryResult !== null) {
-        setRetryResult(retryResult - 1)
-      }
-      const turnBackMission = isGoal ? nowMission : nowMission - 1
-      const point = calcPoint(pointState, turnBackMission)
-      setPointCount(point)
-      const [row, col, direction] = getRobotPosition(
-        start?.[0] || 0,
-        start?.[1] || 0,
-        missionState,
-        turnBackMission,
-      )
-      setBotPosition({ row, col })
-      setBotDirection(direction)
-      setNowMission(turnBackMission)
-      if (isGoal) {
-        setIsGoal(false)
-      }
-      playBack()
+  // Shared tail of clearing a mission: score, advance or finish, play sfx
+  const completeMission = (point: number) => {
+    setPointCount(point)
+    if (isLastMission) {
+      setIsGoal(true)
+      setModalOpen(1)
+      play("goal")
+    } else {
+      setNowMission(nowMission + 1)
+      play("next")
     }
+    if (!isGoal) {
+      bumpResult(1)
+    }
+    moveBotTo(nowMission + 1)
+  }
+
+  const handleNext = (row: number, col: number) => {
+    if (
+      nowMission >= missionPair.length ||
+      pointState[nowMission + 2] === null
+    ) {
+      setNowMission(0)
+      return
+    }
+    if (strictMode) {
+      const [newRow, newCol] = getRobotPosition(
+        startRow,
+        startCol,
+        missionState,
+        nowMission + 1,
+      )
+      if (newRow !== row || newCol !== col) {
+        return
+      }
+    }
+    completeMission(calcPoint(pointState, nowMission + 1))
+  }
+
+  const handleBack = () => {
+    if (nowMission === 0) {
+      return
+    }
+    bumpResult(-1)
+    const turnBackMission = isGoal ? nowMission : nowMission - 1
+    setPointCount(calcPoint(pointState, turnBackMission))
+    moveBotTo(turnBackMission)
+    setNowMission(turnBackMission)
+    setIsGoal(false)
+    play("back")
   }
 
   const handleRetry = () => {
@@ -405,50 +384,19 @@ export function Challenge({
     setPointCount(0)
     setNowMission(0)
     setIsGoal(false)
-    setBotPosition({ row: start?.[0] || 0, col: start?.[1] || 0 })
-    setBotDirection(missionState[0])
+    moveBotTo(0)
   }
 
   // Handle tier point selection (for graded scoring missions)
   const handleTierSelect = (tierIndex: number) => {
-    const currentEntry = pointState[nowMission + 2]
-    if (!Array.isArray(currentEntry)) {
-      return
-    }
-
-    const tierPoint = currentEntry[tierIndex] ?? 0
-    // Calculate point manually: base + tier point for this mission
-    const basePoint = calcPoint(pointState, nowMission)
-    const newPoint = basePoint + tierPoint
-    // Add goal bonus if this is the last mission
-    if (nowMission === missionPair.length - 1) {
-      const goalEntry = pointState[1]
-      const goalPt =
-        goalEntry !== null && !Array.isArray(goalEntry) ? Number(goalEntry) : 0
-      setPointCount(newPoint + goalPt)
-      setIsGoal(true)
-      setModalOpen(1)
-      playGoal()
-    } else {
-      setPointCount(newPoint)
-      setNowMission(nowMission + 1)
-      playNext()
-    }
-
-    // Update robot position
-    const [newRow, newCol, direction] = getRobotPosition(
-      start?.[0] || 0,
-      start?.[1] || 0,
-      missionState,
-      nowMission + 1,
+    const point = calcTierPoint(
+      pointState,
+      nowMission,
+      tierIndex,
+      isLastMission,
     )
-    setBotPosition({ row: newRow, col: newCol })
-    setBotDirection(direction)
-
-    if (!isRetry && !isGoal) {
-      setFirstResult(firstResult + 1)
-    } else if (retryResult !== null && !isGoal) {
-      setRetryResult(retryResult + 1)
+    if (point !== null) {
+      completeMission(point)
     }
   }
 
@@ -463,20 +411,12 @@ export function Challenge({
     isRetry,
   }
   // Pre-compute course-out submission values
-  const parsedCourseOutRule = parseCourseOutRule(courseOutRule)
-  const courseOutDetail = isRetry ? COURSE_OUT_RETRY : COURSE_OUT_FIRST
-  const courseOutSubmitFirst =
-    parsedCourseOutRule.type === "zero"
-      ? isRetry
-        ? firstResult
-        : 0
-      : firstResult
-  const courseOutSubmitRetry =
-    parsedCourseOutRule.type === "zero"
-      ? isRetry
-        ? 0
-        : retryResult
-      : retryResult
+  const courseOut = courseOutSubmission(
+    courseOutRule,
+    isRetry,
+    firstResult,
+    retryResult,
+  )
 
   if (field === null || mission === null || point === null) {
     return (
@@ -547,8 +487,8 @@ export function Challenge({
           setFirstResult={setFirstResult}
           handleSubmit={() =>
             resultSubmit(
-              courseOutSubmitFirst,
-              courseOutSubmitRetry,
+              courseOut.firstResult,
+              courseOut.retryResult,
               competitionId,
               courseId,
               playerId,
@@ -558,7 +498,7 @@ export function Challenge({
               setLoading,
               router,
               setIsEnabled,
-              courseOutDetail,
+              courseOut.detail,
             )
           }
           handleRetry={handleRetry}

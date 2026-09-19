@@ -217,7 +217,6 @@ export function MissionOverview({
 
                 return (
                   <MissionOverviewItem
-                    // biome-ignore lint/suspicious/noArrayIndexKey: mission pairs can have duplicate values
                     key={`mission-${i}-${String(pair[0])}`}
                     index={i}
                     pair={pair}

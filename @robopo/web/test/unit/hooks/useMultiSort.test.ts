@@ -1,6 +1,10 @@
 import { describe, expect, test } from "bun:test"
 import { act, renderHook } from "@testing-library/react"
-import { useMultiSort } from "@/hooks/useMultiSort"
+import {
+  multiSort,
+  type SortCondition,
+  useMultiSort,
+} from "@/hooks/useMultiSort"
 
 type Item = { name: string; score: number }
 type Key = "name" | "score"
@@ -122,5 +126,37 @@ describe("useMultiSort", () => {
     expect(result.current.availableKeys).toEqual([
       { value: "name", label: "Name" },
     ])
+  })
+})
+
+describe("multiSort", () => {
+  const tied: Item[] = [
+    { name: "b", score: 10 },
+    { name: "a", score: 20 },
+    { name: "c", score: 10 },
+  ]
+
+  test("sorts by the first condition", () => {
+    const out = multiSort(tied, [{ key: "score", order: "desc" }], compareByKey)
+    expect(out.map((r) => r.score)).toEqual([20, 10, 10])
+  })
+
+  test("breaks ties with later conditions", () => {
+    const conditions: SortCondition<Key>[] = [
+      { key: "score", order: "desc" },
+      { key: "name", order: "asc" },
+    ]
+    const out = multiSort(tied, conditions, compareByKey)
+    expect(out.map((r) => r.name)).toEqual(["a", "b", "c"])
+  })
+
+  test("keeps input order with no conditions", () => {
+    expect(multiSort(tied, [], compareByKey)).toEqual(tied)
+  })
+
+  test("does not mutate the input array", () => {
+    const copy = [...tied]
+    multiSort(tied, [{ key: "name", order: "asc" }], compareByKey)
+    expect(tied).toEqual(copy)
   })
 })

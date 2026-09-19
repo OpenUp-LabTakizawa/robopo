@@ -5,12 +5,19 @@ import {
   type PanelValue,
 } from "@/lib/course/types"
 
+// 4-neighbourhood offsets: up, down, left, right
+const DIRECTIONS: readonly (readonly [number, number])[] = [
+  [-1, 0],
+  [1, 0],
+  [0, -1],
+  [0, 1],
+]
+
 // Initialize field layout.
 export function initializeField(): FieldState {
-  const field: FieldState = Array(MAX_FIELD_HEIGHT)
-    .fill(null)
-    .map(() => Array(MAX_FIELD_WIDTH).fill(null))
-  return field
+  return Array.from({ length: MAX_FIELD_HEIGHT }, () =>
+    Array<PanelValue>(MAX_FIELD_WIDTH).fill(null),
+  )
 }
 
 // Get bounding box of non-null cells in the field
@@ -112,28 +119,11 @@ export function putPanel(
     if (mode === "goal" && isGoal(field)) {
       return null
     }
-    let nextTo = false // Flag for whether panel is adjacent
-    const directions = [
-      [-1, 0],
-      [1, 0],
-      [0, -1],
-      [0, 1],
-    ] // Array representing 4 directions
-
-    // Loop through each direction
-    directions.forEach(([dx, dy]) => {
+    // Panel must be adjacent (4-neighbourhood) to an existing panel
+    const nextTo = DIRECTIONS.some(([dx, dy]) => {
       const x = row + dx
       const y = col + dy
-      if (
-        x >= 0 &&
-        x < field.length &&
-        y >= 0 &&
-        y < (field[0]?.length ?? 0) &&
-        field[x][y] !== null
-      ) {
-        nextTo = true
-        return
-      }
+      return isInBounds(field, x, y) && field[x][y] !== null
     })
     if (!nextTo) {
       return null
@@ -205,19 +195,10 @@ export function findIsolatedPanels(field: FieldState): Set<string> {
   const visited = new Set<string>()
   const queue: [number, number][] = [start]
   visited.add(`${start[0]}-${start[1]}`)
-  const directions = [
-    [-1, 0],
-    [1, 0],
-    [0, -1],
-    [0, 1],
-  ]
-  while (queue.length > 0) {
-    const item = queue.shift()
-    if (!item) {
-      break
-    }
-    const [r, c] = item
-    for (const [dr, dc] of directions) {
+  // BFS with a moving head index instead of shift() to keep it O(n)
+  for (let head = 0; head < queue.length; head++) {
+    const [r, c] = queue[head]
+    for (const [dr, dc] of DIRECTIONS) {
       const nr = r + dr
       const nc = c + dc
       const key = `${nr}-${nc}`

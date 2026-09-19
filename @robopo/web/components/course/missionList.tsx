@@ -1040,11 +1040,7 @@ function InlineMissionEditor({
           ) : (
             <div className="flex flex-wrap items-center gap-1">
               {tierValues.map((val, i) => (
-                <div
-                  // biome-ignore lint/suspicious/noArrayIndexKey: tier values may duplicate
-                  key={i}
-                  className="flex items-center gap-0.5"
-                >
+                <div key={i} className="flex items-center gap-0.5">
                   <span className="text-[10px] text-base-content/40">
                     {i + 1}.
                   </span>

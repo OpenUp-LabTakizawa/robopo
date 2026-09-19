@@ -1,4 +1,3 @@
-import { useMemo } from "react"
 import { findIsolatedPanels, isGoal, isStart } from "@/lib/course/field"
 import { missionStatePair } from "@/lib/course/mission"
 import type {
@@ -8,7 +7,7 @@ import type {
 } from "@/lib/course/types"
 import { validateMissions } from "@/lib/course/validation"
 
-type ValidationResult = {
+export type ValidationResult = {
   hasStart: boolean
   hasGoal: boolean
   isolatedPanels: Set<string>
@@ -17,77 +16,86 @@ type ValidationResult = {
   saveBlockMessage: string | null
 }
 
-export function useCourseValidation({
-  field,
-  mission,
-  name,
-  nameError,
-}: {
+export type CourseValidationInput = {
   field: FieldState
   mission: MissionState
   name: string
   nameError: string
-}): ValidationResult {
-  return useMemo(() => {
-    const hasStartPanel = isStart(field)
-    const hasGoalPanel = isGoal(field)
+}
 
-    // Isolated panels check
-    const isolated = findIsolatedPanels(field)
+// The first failing check wins; this is the order the editor guides the
+// user through (field → name → connectivity → missions).
+type SaveCheck = { blocked: boolean; message: string }
 
-    // Mission validation
-    const invalidMissions =
-      hasStartPanel && hasGoalPanel
-        ? validateMissions(field, mission)
-        : new Map<number, MissionErrorReason>()
+function firstBlockingMessage(checks: readonly SaveCheck[]): string | null {
+  return checks.find((c) => c.blocked)?.message ?? null
+}
 
-    // Check mission configuration
-    const pairs = missionStatePair(mission)
-    const hasMissions = pairs.length > 0
-    const allMissionsConfigured =
-      hasMissions && pairs.every(([mType]) => mType !== null)
+// Pure validation so it can be unit-tested without React. The hook below is
+// a thin wrapper; the React Compiler memoizes the call for us.
+export function validateCourse({
+  field,
+  mission,
+  name,
+  nameError,
+}: CourseValidationInput): ValidationResult {
+  const hasStart = isStart(field)
+  const hasGoal = isGoal(field)
+  const isolatedPanels = findIsolatedPanels(field)
 
-    // Mission direction set
-    const hasStartDirection = mission[0] !== null
+  // Missions can only be validated against a field with both endpoints
+  const invalidMissionMap =
+    hasStart && hasGoal
+      ? validateMissions(field, mission)
+      : new Map<number, MissionErrorReason>()
 
-    // All conditions for save
-    const nameValid = name.trim() !== "" && nameError === ""
-    const fieldValid = hasStartPanel && hasGoalPanel && isolated.size === 0
-    const missionValid =
-      hasStartDirection && allMissionsConfigured && invalidMissions.size === 0
+  const pairs = missionStatePair(mission)
+  const hasMissions = pairs.length > 0
+  const allMissionsConfigured =
+    hasMissions && pairs.every(([mType]) => mType !== null)
+  const hasStartDirection = mission[0] !== null
+  const nameBlank = name.trim() === ""
 
-    const canSave = nameValid && fieldValid && missionValid
+  const saveBlockMessage = firstBlockingMessage([
+    {
+      blocked: !hasStart && !hasGoal,
+      message: "スタートとゴールパネルを配置してください",
+    },
+    { blocked: !hasStart, message: "スタートパネルを配置してください" },
+    { blocked: !hasGoal, message: "ゴールパネルを配置してください" },
+    { blocked: nameBlank, message: "コース名を入力してください" },
+    { blocked: nameError !== "", message: nameError },
+    {
+      blocked: isolatedPanels.size > 0,
+      message: "接続されていないパネルがあります",
+    },
+    {
+      blocked: !hasStartDirection,
+      message: "スタートの向きを選択してください",
+    },
+    { blocked: !hasMissions, message: "ミッションを追加してください" },
+    {
+      blocked: !allMissionsConfigured,
+      message: "未設定のミッションがあります",
+    },
+    {
+      blocked: invalidMissionMap.size > 0,
+      message: "無効なミッションがあります",
+    },
+  ])
 
-    const saveBlockMessage: string | null =
-      !hasStartPanel && !hasGoalPanel
-        ? "スタートとゴールパネルを配置してください"
-        : !hasStartPanel
-          ? "スタートパネルを配置してください"
-          : !hasGoalPanel
-            ? "ゴールパネルを配置してください"
-            : name.trim() === ""
-              ? "コース名を入力してください"
-              : nameError
-                ? nameError
-                : isolated.size > 0
-                  ? "接続されていないパネルがあります"
-                  : !hasStartDirection
-                    ? "スタートの向きを選択してください"
-                    : !hasMissions
-                      ? "ミッションを追加してください"
-                      : !allMissionsConfigured
-                        ? "未設定のミッションがあります"
-                        : invalidMissions.size > 0
-                          ? "無効なミッションがあります"
-                          : null
+  return {
+    hasStart,
+    hasGoal,
+    isolatedPanels,
+    invalidMissionMap,
+    canSave: saveBlockMessage === null,
+    saveBlockMessage,
+  }
+}
 
-    return {
-      hasStart: hasStartPanel,
-      hasGoal: hasGoalPanel,
-      isolatedPanels: isolated,
-      invalidMissionMap: invalidMissions,
-      canSave,
-      saveBlockMessage,
-    }
-  }, [field, mission, name, nameError])
+export function useCourseValidation(
+  input: CourseValidationInput,
+): ValidationResult {
+  return validateCourse(input)
 }

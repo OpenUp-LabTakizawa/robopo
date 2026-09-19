@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { createContext, useContext, useRef, useState } from "react"
+import { createContext, use, useRef, useState } from "react"
 import { useNavigationGuard } from "@/hooks/useNavigationGuard"
 import { useUndoRedo } from "@/hooks/useUndoRedo"
 import { initializeField } from "@/lib/course/field"
@@ -90,7 +90,7 @@ const dummy: CourseEditState = {
 
 const CourseEditContext = createContext<CourseEditState>(dummy)
 
-export const useCourseEdit = () => useContext(CourseEditContext)
+export const useCourseEdit = () => use(CourseEditContext)
 
 export function CourseEditProvider({
   children,
@@ -205,7 +205,7 @@ export function CourseEditProvider({
   })
 
   return (
-    <CourseEditContext.Provider
+    <CourseEditContext
       value={{
         name,
         description,
@@ -240,6 +240,6 @@ export function CourseEditProvider({
       }}
     >
       {children}
-    </CourseEditContext.Provider>
+    </CourseEditContext>
   )
 }

@@ -47,6 +47,11 @@ export const MASK_MINUTES_DEFAULT = 30
  * - Out-of-range values are clamped to [MIN, MAX]
  */
 export function normalizeMaskMinutesBefore(value: unknown): number {
+  // Number(null) / Number("") are 0, which would silently clamp to MIN;
+  // treat them as "not set" instead.
+  if (value === null || value === undefined || value === "") {
+    return MASK_MINUTES_DEFAULT
+  }
   const num = Number(value)
   if (!Number.isFinite(num)) {
     return MASK_MINUTES_DEFAULT

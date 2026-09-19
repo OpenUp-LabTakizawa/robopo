@@ -1,12 +1,6 @@
 "use client"
 
-import {
-  createContext,
-  type ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react"
+import { createContext, type ReactNode, use, useEffect, useState } from "react"
 
 type NavigationGuardContextType = {
   isDirty: boolean
@@ -18,14 +12,10 @@ const NavigationGuardContext = createContext<NavigationGuardContextType>({
   setDirty: () => {},
 })
 
-export const useNavigationGuard = () => useContext(NavigationGuardContext)
+export const useNavigationGuard = () => use(NavigationGuardContext)
 
 export function NavigationGuardProvider({ children }: { children: ReactNode }) {
-  const [isDirty, setIsDirty] = useState(false)
-
-  const setDirty = (dirty: boolean) => {
-    setIsDirty(dirty)
-  }
+  const [isDirty, setDirty] = useState(false)
 
   useEffect(() => {
     if (!isDirty) {
@@ -33,15 +23,14 @@ export function NavigationGuardProvider({ children }: { children: ReactNode }) {
     }
     const handler = (e: BeforeUnloadEvent) => {
       e.preventDefault()
-      e.returnValue = ""
     }
     window.addEventListener("beforeunload", handler)
     return () => window.removeEventListener("beforeunload", handler)
   }, [isDirty])
 
   return (
-    <NavigationGuardContext.Provider value={{ isDirty, setDirty }}>
+    <NavigationGuardContext value={{ isDirty, setDirty }}>
       {children}
-    </NavigationGuardContext.Provider>
+    </NavigationGuardContext>
   )
 }

@@ -1,7 +1,7 @@
 "use client"
 
 import { CircleCheck, Download, TriangleAlert } from "lucide-react"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import CourseEdit from "@/app/course/edit/courseEdit"
 import { useCourseEdit } from "@/app/course/edit/courseEditContext"
 import MissionEdit from "@/app/course/edit/missionEdit"
@@ -80,34 +80,22 @@ export function EditorPage({
   const [mounted, setMounted] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [playbackIndex, setPlaybackIndex] = useState<number | null>(null)
-  const playbackTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  const playbackCount = useMemo(
-    () => missionStatePair(mission).length,
-    [mission],
-  )
+  const playbackCount = missionStatePair(mission).length
 
   const canPlay =
     playbackCount > 0 && mission[0] !== null && findStart(field) !== null
-
-  const clearPlaybackTimer = useCallback(() => {
-    if (playbackTimerRef.current) {
-      clearInterval(playbackTimerRef.current)
-      playbackTimerRef.current = null
-    }
-  }, [])
 
   // Auto-advance playback timer
   useEffect(() => {
     if (!isPlaying) {
       setPlaybackIndex(null)
-      clearPlaybackTimer()
       return
     }
 
     setPlaybackIndex(0)
 
-    playbackTimerRef.current = setInterval(() => {
+    const timer = setInterval(() => {
       setPlaybackIndex((prev) => {
         if (prev === null || prev + 1 >= playbackCount) {
           setIsPlaying(false)
@@ -117,8 +105,8 @@ export function EditorPage({
       })
     }, 2400)
 
-    return clearPlaybackTimer
-  }, [isPlaying, playbackCount, clearPlaybackTimer])
+    return () => clearInterval(timer)
+  }, [isPlaying, playbackCount])
 
   const wasPlayingRef = useRef(false)
 
@@ -135,9 +123,9 @@ export function EditorPage({
     }
   }, [isPlaying, playbackIndex])
 
-  const handleTogglePlay = useCallback(() => {
+  const handleTogglePlay = () => {
     setIsPlaying((prev) => !prev)
-  }, [])
+  }
 
   const validation = useCourseValidation({ field, mission, name, nameError })
   const saveBlockMessage = mounted ? validation.saveBlockMessage : null
@@ -195,56 +183,46 @@ export function EditorPage({
     resetInitialized,
   ])
 
-  const robotPreview = useMemo(() => {
-    if (insertPreview) {
-      const { missionWithInsert, selectedIndex } = buildPreviewMission(
-        mission,
-        insertPreview,
-      )
-      return computeRobotPreview(field, missionWithInsert, selectedIndex)
-    }
-    return computeRobotPreview(field, mission, selectedMissionIndex)
-  }, [field, mission, selectedMissionIndex, insertPreview])
+  const robotPreview = insertPreview
+    ? (() => {
+        const { missionWithInsert, selectedIndex } = buildPreviewMission(
+          mission,
+          insertPreview,
+        )
+        return computeRobotPreview(field, missionWithInsert, selectedIndex)
+      })()
+    : computeRobotPreview(field, mission, selectedMissionIndex)
 
   // Auto-add an empty mission when a route panel is placed
-  const handleRouteAdded = useCallback(
-    (row: number, col: number) => {
-      pushMissionHistory()
-      const panelNumber = row * 5 + col + 1
-      const autoAddedCount = missionPanelHints.filter((h) => h !== null).length
-      setMission((prev) => {
-        const newMission = [...prev]
-        while (newMission.length < 4) {
-          newMission.push(null)
-        }
-        const insertAt = 4 + autoAddedCount * 2
-        newMission.splice(insertAt, 0, null, null)
-        return newMission
-      })
-      setPoint((prev) => {
-        const newPoint = [...prev]
-        while (newPoint.length < 3) {
-          newPoint.push(0)
-        }
-        const insertAt = 3 + autoAddedCount
-        newPoint.splice(insertAt, 0, 0)
-        return newPoint
-      })
-      setMissionPanelHints((prev) => {
-        const newHints = [...prev]
-        const hintInsertAt = 1 + autoAddedCount
-        newHints.splice(hintInsertAt, 0, panelNumber)
-        return newHints
-      })
-    },
-    [
-      pushMissionHistory,
-      setMission,
-      setPoint,
-      setMissionPanelHints,
-      missionPanelHints,
-    ],
-  )
+  const handleRouteAdded = (row: number, col: number) => {
+    pushMissionHistory()
+    const panelNumber = row * 5 + col + 1
+    const autoAddedCount = missionPanelHints.filter((h) => h !== null).length
+    setMission((prev) => {
+      const newMission = [...prev]
+      while (newMission.length < 4) {
+        newMission.push(null)
+      }
+      const insertAt = 4 + autoAddedCount * 2
+      newMission.splice(insertAt, 0, null, null)
+      return newMission
+    })
+    setPoint((prev) => {
+      const newPoint = [...prev]
+      while (newPoint.length < 3) {
+        newPoint.push(0)
+      }
+      const insertAt = 3 + autoAddedCount
+      newPoint.splice(insertAt, 0, 0)
+      return newPoint
+    })
+    setMissionPanelHints((prev) => {
+      const newHints = [...prev]
+      const hintInsertAt = 1 + autoAddedCount
+      newHints.splice(hintInsertAt, 0, panelNumber)
+      return newHints
+    })
+  }
 
   async function handleSave() {
     if (!validation.canSave) {
