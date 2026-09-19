@@ -70,7 +70,6 @@ export function NavigationDrawer() {
   }, [])
 
   // Escape key handler
-  // biome-ignore lint/correctness/useExhaustiveDependencies: React Compiler handles memoization of close
   useEffect(() => {
     if (!isOpen) {
       return

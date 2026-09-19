@@ -2,7 +2,7 @@
 
 import { Volume2, VolumeX } from "lucide-react"
 import type React from "react"
-import { createContext, useContext, useEffect, useRef, useState } from "react"
+import { createContext, use, useEffect, useRef, useState } from "react"
 
 export type AudioContextType = {
   muted: boolean
@@ -25,7 +25,7 @@ const dummy: AudioContextType = {
 const AudioContext = createContext<AudioContextType>(dummy)
 
 export function useAudioContext() {
-  return useContext(AudioContext)
+  return use(AudioContext)
 }
 
 export function AudioProvider({ children }: { children: React.ReactNode }) {
@@ -33,9 +33,9 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   const [started, setStarted] = useState<boolean>(false)
 
   return (
-    <AudioContext.Provider value={{ muted, setMuted, started, setStarted }}>
+    <AudioContext value={{ muted, setMuted, started, setStarted }}>
       {children}
-    </AudioContext.Provider>
+    </AudioContext>
   )
 }
 

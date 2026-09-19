@@ -1,7 +1,37 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import type { SpectatorPlayerDetail } from "@/lib/spectator/types"
+
+// Sort players (attempted first, then by total point desc, then by name)
+// and keep only those matching the query on name, furigana or bib number.
+export function filterPlayers(
+  players: readonly SpectatorPlayerDetail[],
+  query: string,
+): SpectatorPlayerDetail[] {
+  const q = query.trim().toLowerCase()
+  const sorted = [...players].sort((a, b) => {
+    if (a.totalAttempts === 0 && b.totalAttempts !== 0) {
+      return 1
+    }
+    if (b.totalAttempts === 0 && a.totalAttempts !== 0) {
+      return -1
+    }
+    if (b.totalPoint !== a.totalPoint) {
+      return b.totalPoint - a.totalPoint
+    }
+    return a.player.name.localeCompare(b.player.name, "ja")
+  })
+  if (!q) {
+    return sorted
+  }
+  return sorted.filter((d) => {
+    const name = d.player.name?.toLowerCase() ?? ""
+    const furigana = d.player.furigana?.toLowerCase() ?? ""
+    const bib = d.player.bibNumber?.toLowerCase() ?? ""
+    return name.includes(q) || furigana.includes(q) || bib.includes(q)
+  })
+}
 
 export function PlayerSearchDialog({
   open,
@@ -37,34 +67,7 @@ export function PlayerSearchDialog({
     return () => window.removeEventListener("keydown", onKeyDown)
   }, [open, onClose])
 
-  const filtered = useMemo(() => {
-    if (!open) {
-      return []
-    }
-    const q = query.trim().toLowerCase()
-    const sorted = [...players].sort((a, b) => {
-      // Players with attempts first, then by total point desc, then by name.
-      if (a.totalAttempts === 0 && b.totalAttempts !== 0) {
-        return 1
-      }
-      if (b.totalAttempts === 0 && a.totalAttempts !== 0) {
-        return -1
-      }
-      if (b.totalPoint !== a.totalPoint) {
-        return b.totalPoint - a.totalPoint
-      }
-      return a.player.name.localeCompare(b.player.name, "ja")
-    })
-    if (!q) {
-      return sorted
-    }
-    return sorted.filter((d) => {
-      const name = d.player.name?.toLowerCase() ?? ""
-      const furigana = d.player.furigana?.toLowerCase() ?? ""
-      const bib = d.player.bibNumber?.toLowerCase() ?? ""
-      return name.includes(q) || furigana.includes(q) || bib.includes(q)
-    })
-  }, [open, players, query])
+  const filtered = open ? filterPlayers(players, query) : []
 
   if (!open) {
     return null

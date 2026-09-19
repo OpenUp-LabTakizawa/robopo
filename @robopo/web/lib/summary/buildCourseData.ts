@@ -8,7 +8,10 @@ import {
   getFirstCount,
   getMaxResult,
 } from "@/lib/db/queries/queries"
-import { maxCoursePoint } from "@/lib/summary/calculations"
+import {
+  DEFAULT_COURSE_OUT_RULE,
+  maxPointFromResults,
+} from "@/lib/summary/calculations"
 import { getCompetitionCourseList } from "@/server/db"
 
 export type CourseData = {
@@ -40,25 +43,27 @@ export async function buildCoursesForPlayer(
 
   const courses = await Promise.all(
     competitionCourses.map(async (c) => {
-      const course = await getCourseById(c.id)
+      // The five lookups are independent, so issue them together
+      const [
+        course,
+        resultArray,
+        firstCountResult,
+        maxResultData,
+        challengeCountResult,
+      ] = await Promise.all([
+        getCourseById(c.id),
+        getCourseSummaryByPlayerId(competitionId, c.id, playerId),
+        getFirstCount(competitionId, c.id, playerId),
+        getMaxResult(competitionId, c.id, playerId),
+        getChallengeCount(competitionId, c.id, playerId),
+      ])
       const mPair = missionStatePair(deserializeMission(course?.mission || ""))
       const pointState = deserializePoint(course?.point || "")
-      const resultArray = await getCourseSummaryByPlayerId(
-        competitionId,
-        c.id,
-        playerId,
-      )
-      const firstCountResult = await getFirstCount(
-        competitionId,
-        c.id,
-        playerId,
-      )
-      const maxResultData = await getMaxResult(competitionId, c.id, playerId)
-      const maxPt = await maxCoursePoint(competitionId, playerId, c.id)
-      const challengeCountResult = await getChallengeCount(
-        competitionId,
-        c.id,
-        playerId,
+      // Reuse the rows we already fetched instead of re-querying via maxCoursePoint
+      const maxPt = maxPointFromResults(
+        resultArray,
+        pointState,
+        course?.courseOutRule || DEFAULT_COURSE_OUT_RULE,
       )
 
       return {

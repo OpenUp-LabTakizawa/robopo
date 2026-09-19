@@ -51,15 +51,17 @@ export async function GET(
     courseSummary.map(async (player) => {
       const playerId = player.playerId || 0
 
-      // Sum max score across all competition courses
-      let totalPoint = 0
-      for (const c of competitionCourses) {
-        const maxPt = await maxCoursePoint(competitionIdNum, playerId, c.id)
-        totalPoint += maxPt
-      }
-
-      // Sum of all attempt scores for this course
-      const sumPoint = await sumCoursePoint(competitionIdNum, playerId, cId)
+      // Max score per competition course and the sum of every attempt on
+      // this course are independent lookups, so run them together
+      const [coursePoints, sumPoint] = await Promise.all([
+        Promise.all(
+          competitionCourses.map((c) =>
+            maxCoursePoint(competitionIdNum, playerId, c.id),
+          ),
+        ),
+        sumCoursePoint(competitionIdNum, playerId, cId),
+      ])
+      const totalPoint = coursePoints.reduce((sum, pt) => sum + pt, 0)
 
       // Elapsed time from first attempt to completion
       const elapsedToCompleteSeconds = calcElapsedSeconds(

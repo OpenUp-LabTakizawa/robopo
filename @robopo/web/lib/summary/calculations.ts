@@ -1,4 +1,5 @@
 import { deserializePoint } from "@/lib/course/point"
+import type { PointState } from "@/lib/course/types"
 import {
   getCourseById,
   getCourseSummaryByPlayerId,
@@ -11,8 +12,17 @@ import {
 } from "@/lib/scoring/course-out"
 import { calcPoint } from "@/lib/scoring/scoring"
 
+// The subset of a challenge row the point calculations need
+export type ChallengeResult = {
+  firstResult: number
+  retryResult: number | null
+  detail: string | null
+}
+
+export const DEFAULT_COURSE_OUT_RULE = "keep"
+
 // Apply course-out penalty to a score based on the rule and detail
-function applyPenalty(
+export function applyPenalty(
   score: number,
   courseOutRule: string,
   detail: string | null,
@@ -30,34 +40,85 @@ function applyPenalty(
   return applyCourseOutRule(score, parseCourseOutRule(courseOutRule))
 }
 
+// Points for the first and retry attempts of one challenge row
+// (retry is null when the row has no retry)
+export function attemptPoints(
+  result: ChallengeResult,
+  pointState: PointState,
+  courseOutRule: string,
+): { first: number; retry: number | null } {
+  const first = applyPenalty(
+    calcPoint(pointState, result.firstResult),
+    courseOutRule,
+    result.detail,
+    "first",
+  )
+  const retry =
+    result.retryResult === null
+      ? null
+      : applyPenalty(
+          calcPoint(pointState, result.retryResult),
+          courseOutRule,
+          result.detail,
+          "retry",
+        )
+  return { first, retry }
+}
+
+// Total score across all attempts (pure)
+export function sumPointsFromResults(
+  results: readonly ChallengeResult[],
+  pointState: PointState,
+  courseOutRule: string,
+): number {
+  return results.reduce((sum, result) => {
+    const { first, retry } = attemptPoints(result, pointState, courseOutRule)
+    return sum + first + (retry ?? 0)
+  }, 0)
+}
+
+// Best single attempt score, never below 0 (pure)
+export function maxPointFromResults(
+  results: readonly ChallengeResult[],
+  pointState: PointState,
+  courseOutRule: string,
+): number {
+  let max = 0
+  for (const result of results) {
+    const { first, retry } = attemptPoints(result, pointState, courseOutRule)
+    max = Math.max(max, first, retry ?? 0)
+  }
+  return max
+}
+
+async function loadCourseResults(
+  competitionId: number,
+  playerId: number,
+  courseId: number,
+) {
+  const [results, course] = await Promise.all([
+    getCourseSummaryByPlayerId(competitionId, courseId, playerId),
+    getCourseById(courseId),
+  ])
+  return {
+    results,
+    pointState: deserializePoint(course?.point || ""),
+    courseOutRule: course?.courseOutRule || DEFAULT_COURSE_OUT_RULE,
+  }
+}
+
 // Calculate total score for a course (sum of all attempts)
 export async function sumCoursePoint(
   competitionId: number,
   playerId: number,
   courseId: number,
 ): Promise<number> {
-  const resultArray = await getCourseSummaryByPlayerId(
+  const { results, pointState, courseOutRule } = await loadCourseResults(
     competitionId,
-    courseId,
     playerId,
+    courseId,
   )
-  const course = await getCourseById(courseId)
-  const pointState = deserializePoint(course?.point || "")
-  const courseOutRule = course?.courseOutRule || "keep"
-
-  const sum = resultArray.reduce((sum, result) => {
-    let p1 = calcPoint(pointState, result.firstResult)
-    p1 = applyPenalty(p1, courseOutRule, result.detail, "first")
-    let temp = p1
-    if (result.retryResult !== null) {
-      let p2 = calcPoint(pointState, result.retryResult)
-      p2 = applyPenalty(p2, courseOutRule, result.detail, "retry")
-      temp += p2
-    }
-    return sum + temp
-  }, 0)
-
-  return sum
+  return sumPointsFromResults(results, pointState, courseOutRule)
 }
 
 // Calculate max score for a course (best single attempt)
@@ -66,26 +127,10 @@ export async function maxCoursePoint(
   playerId: number,
   courseId: number,
 ): Promise<number> {
-  const resultArray = await getCourseSummaryByPlayerId(
+  const { results, pointState, courseOutRule } = await loadCourseResults(
     competitionId,
-    courseId,
     playerId,
+    courseId,
   )
-  const course = await getCourseById(courseId)
-  const pointState = deserializePoint(course?.point || "")
-  const courseOutRule = course?.courseOutRule || "keep"
-
-  let max = 0
-  for (const result of resultArray) {
-    let p1 = calcPoint(pointState, result.firstResult)
-    p1 = applyPenalty(p1, courseOutRule, result.detail, "first")
-    let p2 = 0
-    if (result.retryResult !== null) {
-      p2 = calcPoint(pointState, result.retryResult)
-      p2 = applyPenalty(p2, courseOutRule, result.detail, "retry")
-    }
-    max = Math.max(max, p1, p2)
-  }
-
-  return max
+  return maxPointFromResults(results, pointState, courseOutRule)
 }

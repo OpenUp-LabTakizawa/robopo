@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { Panel } from "@/components/course/panel"
 import { deserializeField, getFieldBounds } from "@/lib/course/field"
 import {
@@ -13,6 +13,28 @@ import type { FieldState, MissionValue } from "@/lib/course/types"
 
 const STEP_MS = 700
 const HOLD_MS = 1100
+
+function parseField(raw: string | null): FieldState | null {
+  if (!raw) {
+    return null
+  }
+  try {
+    return deserializeField(raw)
+  } catch {
+    return null
+  }
+}
+
+function parseMission(raw: string | null): MissionValue[] {
+  if (!raw) {
+    return []
+  }
+  try {
+    return deserializeMission(raw)
+  } catch {
+    return []
+  }
+}
 
 function dirToDeg(dir: MissionValue): number {
   switch (dir) {
@@ -50,29 +72,9 @@ export function CoursePreview({
   failColor?: string
   showOverlayLabel?: boolean
 }) {
-  const field: FieldState | null = useMemo(() => {
-    if (!fieldRaw) {
-      return null
-    }
-    try {
-      return deserializeField(fieldRaw)
-    } catch {
-      return null
-    }
-  }, [fieldRaw])
-
-  const missionState = useMemo(() => {
-    if (!missionRaw) {
-      return []
-    }
-    try {
-      return deserializeMission(missionRaw)
-    } catch {
-      return []
-    }
-  }, [missionRaw])
-
-  const pairs = useMemo(() => missionStatePair(missionState), [missionState])
+  const field: FieldState | null = parseField(fieldRaw)
+  const missionState = parseMission(missionRaw)
+  const pairs = missionStatePair(missionState)
   const totalSteps = pairs.length
   const targetStep = Math.max(0, Math.min(reachedIndex, totalSteps))
   const isComplete = totalSteps > 0 && targetStep === totalSteps
@@ -251,7 +253,6 @@ export function CoursePreview({
         {/* Trail markers between cells (dots) */}
         {trail.map((t, i) => (
           <div
-            // biome-ignore lint/suspicious/noArrayIndexKey: trail step order is the identity (a cell may be revisited)
             key={`trail-${i}-${t.row}-${t.col}`}
             style={{
               position: "absolute",

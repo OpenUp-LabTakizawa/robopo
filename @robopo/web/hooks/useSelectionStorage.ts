@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 type StoredSelections = {
   competitionId?: number
@@ -31,7 +31,7 @@ export function useSelectionStorage() {
     setIsLoaded(true)
   }, [])
 
-  const save = useCallback((partial: Partial<StoredSelections>) => {
+  const save = (partial: Partial<StoredSelections>) => {
     // Always read fresh from localStorage to avoid stale state
     const current = readStorage()
     const next: Record<string, unknown> = { ...current, ...partial }
@@ -47,7 +47,7 @@ export function useSelectionStorage() {
       // localStorage full or unavailable
     }
     setStored(next as StoredSelections)
-  }, [])
+  }
 
   return { stored, isLoaded, save }
 }

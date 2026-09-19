@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation"
 import type React from "react"
-import { useCallback, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import {
   SoundController,
   useAudioContext,
@@ -219,7 +219,6 @@ function NormalChallengeSection({
           <div className="grid w-full max-w-xs gap-2">
             {(currentPointEntry as number[]).map((pt, i) => (
               <button
-                // biome-ignore lint/suspicious/noArrayIndexKey: tiers may have duplicate values, need index for uniqueness
                 key={i}
                 type="button"
                 className={`btn min-h-[48px] text-lg ${
@@ -302,41 +301,29 @@ export function Challenge({
   const { muted } = useAudioContext()
   const audioPoolRef = useRef<Map<string, HTMLAudioElement[]>>(new Map())
 
-  const playSound = useCallback(
-    (src: string, volume: number) => {
-      if (muted) {
-        return
-      }
-      const pool = audioPoolRef.current
-      if (!pool.has(src)) {
-        pool.set(src, [])
-      }
-      const instances = pool.get(src) as HTMLAudioElement[]
-      // Reuse finished audio instances, or create a new one if none available
-      let audio = instances.find((a) => a.ended || a.paused)
-      if (!audio) {
-        audio = new Audio(src)
-        instances.push(audio)
-      }
-      audio.volume = volume
-      audio.currentTime = 0
-      audio.play().catch(() => {})
-    },
-    [muted],
-  )
+  const playSound = (src: string, volume: number) => {
+    if (muted) {
+      return
+    }
+    const pool = audioPoolRef.current
+    if (!pool.has(src)) {
+      pool.set(src, [])
+    }
+    const instances = pool.get(src) as HTMLAudioElement[]
+    // Reuse finished audio instances, or create a new one if none available
+    let audio = instances.find((a) => a.ended || a.paused)
+    if (!audio) {
+      audio = new Audio(src)
+      instances.push(audio)
+    }
+    audio.volume = volume
+    audio.currentTime = 0
+    audio.play().catch(() => {})
+  }
 
-  const playNext = useCallback(
-    () => playSound("/sound/02_next.mp3", 0.4),
-    [playSound],
-  )
-  const playBack = useCallback(
-    () => playSound("/sound/03_back.mp3", 0.2),
-    [playSound],
-  )
-  const playGoal = useCallback(
-    () => playSound("/sound/04_goal.mp3", 1.0),
-    [playSound],
-  )
+  const playNext = () => playSound("/sound/02_next.mp3", 0.4)
+  const playBack = () => playSound("/sound/03_back.mp3", 0.2)
+  const playGoal = () => playSound("/sound/04_goal.mp3", 1.0)
 
   const handleNext = (row: number, col: number) => {
     if (

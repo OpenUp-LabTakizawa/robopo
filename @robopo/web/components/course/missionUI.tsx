@@ -243,7 +243,6 @@ function MissionSelect({
           ) : (
             <div className="space-y-1">
               {tierValues.map((val, i) => (
-                // biome-ignore lint/suspicious/noArrayIndexKey: tiers may have duplicate values, need index for uniqueness
                 <div key={i} className="flex items-center gap-2">
                   <span className="w-8 text-base-content/50 text-xs">
                     {i + 1}.

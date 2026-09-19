@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { DataTableShell } from "@/components/summary/DataTableShell"
 import { MultiSortToolbar } from "@/components/summary/MultiSortToolbar"
 import { makeOrderLabel, makeSortLabel } from "@/components/summary/sortHelpers"
@@ -71,66 +71,67 @@ export function PlayerSummaryTable({ competitionId }: Props) {
   const [loading, setLoading] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
 
-  const compareByKey = useCallback(
-    (a: CourseSummary, b: CourseSummary, key: SortKey): number => {
-      switch (key) {
-        case "playerFurigana":
-          return (a.playerFurigana ?? "").localeCompare(
-            b.playerFurigana ?? "",
-            "ja",
-          )
-        case "playerBibNumber": {
-          const aNum = Number(a.playerBibNumber)
-          const bNum = Number(b.playerBibNumber)
-          if (!Number.isNaN(aNum) && !Number.isNaN(bNum)) {
-            return aNum - bNum
-          }
-          return (a.playerBibNumber ?? "").localeCompare(
-            b.playerBibNumber ?? "",
-            "ja",
-            { numeric: true },
-          )
+  const compareByKey = (
+    a: CourseSummary,
+    b: CourseSummary,
+    key: SortKey,
+  ): number => {
+    switch (key) {
+      case "playerFurigana":
+        return (a.playerFurigana ?? "").localeCompare(
+          b.playerFurigana ?? "",
+          "ja",
+        )
+      case "playerBibNumber": {
+        const aNum = Number(a.playerBibNumber)
+        const bNum = Number(b.playerBibNumber)
+        if (!Number.isNaN(aNum) && !Number.isNaN(bNum)) {
+          return aNum - bNum
         }
-        case "firstAttemptTime":
-        case "lastAttemptTime": {
-          const aTime = a[key] ? Date.parse(a[key] as string) : Infinity
-          const bTime = b[key] ? Date.parse(b[key] as string) : Infinity
-          return aTime - bTime
-        }
-        case "firstMaxAttemptTime": {
-          const aC = isCompletedCourse(pointData, a.maxResult)
-          const bC = isCompletedCourse(pointData, b.maxResult)
-          const aT =
-            aC && a.firstMaxAttemptTime
-              ? Date.parse(a.firstMaxAttemptTime)
-              : Infinity
-          const bT =
-            bC && b.firstMaxAttemptTime
-              ? Date.parse(b.firstMaxAttemptTime)
-              : Infinity
-          return aT - bT
-        }
-        case "elapsedToComplete": {
-          const aV = a.elapsedToCompleteSeconds ?? Infinity
-          const bV = b.elapsedToCompleteSeconds ?? Infinity
-          return aV - bV
-        }
-        case "firstMaxAttemptCount": {
-          const aC = isCompletedCourse(pointData, a.maxResult)
-          const bC = isCompletedCourse(pointData, b.maxResult)
-          const aV = aC ? (a.firstMaxAttemptCount ?? Infinity) : Infinity
-          const bV = bC ? (b.firstMaxAttemptCount ?? Infinity) : Infinity
-          return aV - bV
-        }
-        default: {
-          const aV = (a[key] as number) ?? 0
-          const bV = (b[key] as number) ?? 0
-          return aV - bV
-        }
+        return (a.playerBibNumber ?? "").localeCompare(
+          b.playerBibNumber ?? "",
+          "ja",
+          { numeric: true },
+        )
       }
-    },
-    [pointData],
-  )
+      case "firstAttemptTime":
+      case "lastAttemptTime": {
+        const aTime = a[key] ? Date.parse(a[key] as string) : Infinity
+        const bTime = b[key] ? Date.parse(b[key] as string) : Infinity
+        return aTime - bTime
+      }
+      case "firstMaxAttemptTime": {
+        const aC = isCompletedCourse(pointData, a.maxResult)
+        const bC = isCompletedCourse(pointData, b.maxResult)
+        const aT =
+          aC && a.firstMaxAttemptTime
+            ? Date.parse(a.firstMaxAttemptTime)
+            : Infinity
+        const bT =
+          bC && b.firstMaxAttemptTime
+            ? Date.parse(b.firstMaxAttemptTime)
+            : Infinity
+        return aT - bT
+      }
+      case "elapsedToComplete": {
+        const aV = a.elapsedToCompleteSeconds ?? Infinity
+        const bV = b.elapsedToCompleteSeconds ?? Infinity
+        return aV - bV
+      }
+      case "firstMaxAttemptCount": {
+        const aC = isCompletedCourse(pointData, a.maxResult)
+        const bC = isCompletedCourse(pointData, b.maxResult)
+        const aV = aC ? (a.firstMaxAttemptCount ?? Infinity) : Infinity
+        const bV = bC ? (b.firstMaxAttemptCount ?? Infinity) : Infinity
+        return aV - bV
+      }
+      default: {
+        const aV = (a[key] as number) ?? 0
+        const bV = (b[key] as number) ?? 0
+        return aV - bV
+      }
+    }
+  }
 
   const filtered = (() => {
     if (!searchQuery.trim()) {

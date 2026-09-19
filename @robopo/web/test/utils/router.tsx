@@ -26,7 +26,5 @@ export function renderWithRouter(
   ui: React.ReactElement,
   router: AppRouterInstance = defaultMockRouter,
 ) {
-  return render(
-    <AppRouterContext.Provider value={router}>{ui}</AppRouterContext.Provider>,
-  )
+  return render(<AppRouterContext value={router}>{ui}</AppRouterContext>)
 }

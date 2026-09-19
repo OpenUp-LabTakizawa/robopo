@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { PlayerSearchDialog } from "@/components/spectator/player-search-dialog"
 import { ArcadeTheme } from "@/components/spectator/themes/arcade"
 import { CyberpunkTheme } from "@/components/spectator/themes/cyberpunk"
@@ -125,7 +125,7 @@ export function LiveSpectator({
     }
   }, [])
 
-  const setSelectedPlayerId = useCallback((id: number | null) => {
+  const setSelectedPlayerId = (id: number | null) => {
     setSelectedPlayerIdState(id)
     if (typeof window === "undefined") {
       return
@@ -135,7 +135,7 @@ export function LiveSpectator({
     } else {
       window.localStorage.setItem(SELECTED_PLAYER_STORAGE_KEY, String(id))
     }
-  }, [])
+  }
 
   useEffect(() => {
     if (!hydrated || typeof window === "undefined") {
@@ -180,15 +180,13 @@ export function LiveSpectator({
     return () => clearTimeout(t)
   }, [fxEvent, clearFxEvent])
 
-  const ThemeComponent = useMemo(() => THEME_COMPONENT(theme), [theme])
+  const ThemeComponent = THEME_COMPONENT(theme)
   const compact = useIsCompact()
 
-  const remainingMs = useMemo(() => {
-    if (!snapshot?.competition.endDate || now === null) {
-      return null
-    }
-    return new Date(snapshot.competition.endDate).getTime() - now
-  }, [snapshot?.competition.endDate, now])
+  const remainingMs =
+    snapshot?.competition.endDate && now !== null
+      ? new Date(snapshot.competition.endDate).getTime() - now
+      : null
 
   if (competitions.length === 0) {
     return (

@@ -5,7 +5,7 @@ import type { Route } from "next"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import type React from "react"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 import { PlayerSelector } from "@/components/home/player-selector"
 import { useSelectionStorage } from "@/hooks/useSelectionStorage"
@@ -172,42 +172,33 @@ export function ChallengeTab({
     )
   })()
 
-  const handleCourseSelect = useCallback(
-    (courseId: number) => {
-      setSelectedCourseId((prev) => {
-        const next = prev === courseId ? null : courseId
-        save({ courseId: next ?? undefined })
-        return next
-      })
-    },
-    [save],
-  )
+  const handleCourseSelect = (courseId: number) => {
+    setSelectedCourseId((prev) => {
+      const next = prev === courseId ? null : courseId
+      save({ courseId: next ?? undefined })
+      return next
+    })
+  }
 
   const handlePlayerSelect = (player: SelectPlayer) => {
     setSelectedPlayerId((prev) => (prev === player.id ? null : player.id))
   }
 
-  const handleCompetitionChange = useCallback(
-    (newId: number) => {
-      setCompetitionId(newId)
-      setJudgeId(loggedInJudgeId ?? 0)
-      setSelectedCourseId(null)
-      setSelectedPlayerId(null)
-      setJudgeSearchQuery("")
-      save({ competitionId: newId, courseId: undefined })
-    },
-    [loggedInJudgeId, save],
-  )
+  const handleCompetitionChange = (newId: number) => {
+    setCompetitionId(newId)
+    setJudgeId(loggedInJudgeId ?? 0)
+    setSelectedCourseId(null)
+    setSelectedPlayerId(null)
+    setJudgeSearchQuery("")
+    save({ competitionId: newId, courseId: undefined })
+  }
 
-  const handleJudgeChange = useCallback(
-    (newId: number) => {
-      setJudgeId(newId)
-      save({ judgeId: newId })
-    },
-    [save],
-  )
+  const handleJudgeChange = (newId: number) => {
+    setJudgeId(newId)
+    save({ judgeId: newId })
+  }
 
-  const handleStartScoring = useCallback(() => {
+  const handleStartScoring = () => {
     if (!selectedCourseId || !selectedPlayerId || !judgeId) {
       return
     }
@@ -219,7 +210,7 @@ export function ChallengeTab({
     router.push(
       `/challenge/${competitionId}/${selectedCourseId}/${selectedPlayerId}?judgeId=${judgeId}` as Route,
     )
-  }, [competitionId, selectedCourseId, selectedPlayerId, judgeId, save, router])
+  }
 
   const canStartScoring =
     competitionId !== 0 &&
