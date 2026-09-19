@@ -1,0 +1,14 @@
+# Only the web app is built into the image. The docs package.json is kept so
+# `bun i --frozen-lockfile` still sees the whole workspace.
+@robopo/docs/**
+!@robopo/docs/package.json
+**/node_modules
+**/.next
+**/.env*
+**/playwright-report
+**/test-results
+**/tsconfig.tsbuildinfo
+.devcontainer
+.github
+.vscode
+*.md
