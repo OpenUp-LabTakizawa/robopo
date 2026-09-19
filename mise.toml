@@ -34,7 +34,7 @@ ready_port = 3000
 auto = true
 
 [hooks]
-enter = ["mise upgrade -q", "mise deps -q"]
+enter = ["mise deps -q"]
 
 [settings]
 experimental = true
