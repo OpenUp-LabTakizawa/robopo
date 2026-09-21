@@ -5,6 +5,7 @@ rumdl = "latest"
 pitchfork = "latest"
 
 [tasks.fix]
+description = "Auto-fix with Biome, then rumdl on the markdown files"
 run = ["bun fix --unsafe", "mise fix:md"]
 
 [tasks."fix:md"]
