@@ -11,23 +11,13 @@ run = ["bun fix --unsafe", "mise fix:md"]
 description = "Check markdown files for linting issues"
 run = "rumdl check --fix ."
 
-# `setup-env` is mise-tasks/setup-env.ts. Being there is what makes it a task,
-# so it needs no entry here; `mise tasks` reads its description from the file.
-
 [tasks.update]
 description = "Update bun dependencies and reinstall"
-# `--recursive` because this is a workspace: a plain `bun update` rewrites only
-# the root package.json, leaving everything the workspace members declare on the
-# ranges it was added with. That is how react stayed on ^19.2.8 while autofix.ci
-# kept the root current.
 run = ["bun update --recursive", "mise deps"]
 
-# Replaces the former `pitchfork.toml`. mise writes the pitchfork config under
-# $MISE_STATE_DIR and registers it, so the daemon runs with the mise
-# environment. `mise daemons` drives pitchfork rather than replacing it, which
-# is why it stays in [tools].
 [daemons.web]
 run = "bun dev"
+port = 3000
 ready_port = 3000
 
 [deps.bun]
