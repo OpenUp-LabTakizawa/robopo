@@ -45,6 +45,6 @@
     "setup-env": "bun run mise-tasks/setup-env.ts"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.14"
+    "@biomejs/biome": "^2.5.15"
   }
 }
