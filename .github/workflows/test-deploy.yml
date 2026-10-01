@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: 🐣 Setup mise
-        uses: jdx/mise-action@v4.3.0
+        uses: jdx/mise-action@v5.0.0
         with:
           install_args: bun
 
