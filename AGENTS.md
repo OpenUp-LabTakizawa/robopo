@@ -77,6 +77,7 @@ app/
 actions/           — Server actions (auth)
 components/
   admin/           — Admin user CRUD components
+  auth/            — Sign-in modal (shared by /signIn and the @auth intercept)
   challenge/       — Scoring components
   common/          — Shared list/register/modal components
   competition/     — Competition CRUD components
