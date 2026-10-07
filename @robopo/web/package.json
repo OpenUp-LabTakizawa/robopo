@@ -43,7 +43,7 @@
     "better-auth": "^1.7.7",
     "drizzle-orm": "^0.45.3",
     "lucide-react": "^1.52.0",
-    "next": "^16.3.8",
+    "next": "^16.4.0",
     "pg": "^8.23.1",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
@@ -64,7 +64,7 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "daisyui": "^5.7.47",
     "drizzle-kit": "^0.31.11",
-    "postcss": "^8.5.28",
+    "postcss": "^8.5.29",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2"
   }
