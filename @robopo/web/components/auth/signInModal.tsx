@@ -2,10 +2,11 @@
 
 import { CircleAlert, CircleCheck, LogIn } from "lucide-react"
 import { useSearchParams } from "next/navigation"
-import { useActionState, useEffect, useId, useState } from "react"
+import { Suspense, useActionState, useEffect, useId, useState } from "react"
 import { useFormStatus } from "react-dom"
 import { signInAction } from "@/actions/auth"
 import { ModalBackButton, ModalBackdrop } from "@/components/common/commonModal"
+import { Skeleton } from "@/components/common/skeleton"
 
 function SubmitButton({
   success,
@@ -103,7 +104,7 @@ function FormFields({
   )
 }
 
-export default function SignIn() {
+function SignInForm() {
   const params = useSearchParams()
   const rawCallbackUrl = params.get("callbackUrl") || "/"
   const usernameId = useId()
@@ -174,5 +175,49 @@ export default function SignIn() {
       </div>
       <ModalBackdrop />
     </dialog>
+  )
+}
+
+function SignInSkeleton() {
+  return (
+    <dialog open className="modal modal-open">
+      <div className="modal-box max-w-sm">
+        <div className="flex animate-[skeletonFadeIn_0.3s_ease-out] flex-col items-center px-2">
+          {/* Title */}
+          <div className="mb-6 w-full text-center">
+            <Skeleton className="mx-auto h-7 w-24" />
+          </div>
+
+          {/* Form fields */}
+          <div className="flex w-full flex-col gap-4">
+            <div>
+              <Skeleton className="mb-1.5 h-3.5 w-20" />
+              <Skeleton className="h-12 w-full rounded-xl" />
+            </div>
+            <div>
+              <Skeleton className="mb-1.5 h-3.5 w-20" />
+              <Skeleton className="h-12 w-full rounded-xl" />
+            </div>
+          </div>
+
+          {/* Buttons */}
+          <div className="mt-6 flex w-full flex-col gap-2">
+            <Skeleton className="h-12 w-full rounded-xl" />
+            <Skeleton className="h-12 w-full rounded-xl" />
+          </div>
+        </div>
+      </div>
+      <div className="modal-backdrop" />
+    </dialog>
+  )
+}
+
+// useSearchParams() needs a Suspense boundary to keep the rest of the route
+// prerenderable.
+export function SignInModal() {
+  return (
+    <Suspense fallback={<SignInSkeleton />}>
+      <SignInForm />
+    </Suspense>
   )
 }
