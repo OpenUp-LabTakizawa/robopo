@@ -52,8 +52,8 @@ export function MultiSortToolbar<K extends string>({
   return (
     <div className="flex shrink-0 flex-col gap-2 px-4 pb-3 lg:flex-row lg:flex-wrap lg:items-center lg:gap-3">
       {leadingSlot}
-      <label className="input input-bordered flex items-center gap-2 rounded-xl bg-base-200/40 transition-colors focus-within:bg-base-100 lg:max-w-sm lg:flex-1">
-        <Search className="size-4 shrink-0 text-base-content/40" />
+      <label className="input input-bordered bg-base-200/40 focus-within:bg-base-100 flex items-center gap-2 rounded-xl transition-colors lg:max-w-sm lg:flex-1">
+        <Search className="text-base-content/40 size-4 shrink-0" />
         <input
           type="text"
           placeholder={searchPlaceholder}
@@ -64,19 +64,19 @@ export function MultiSortToolbar<K extends string>({
       </label>
 
       <div className="flex flex-wrap items-center gap-2">
-        <span className="shrink-0 text-base-content/40 text-xs">ソート:</span>
+        <span className="text-base-content/40 shrink-0 text-xs">ソート:</span>
         {sortConditions.map((sc, index) => (
           <div
             key={sc.key}
-            className="flex items-center gap-1 rounded-lg border border-base-300 bg-base-100 px-2 py-1 shadow-sm"
+            className="border-base-300 bg-base-100 flex items-center gap-1 rounded-lg border px-2 py-1 shadow-sm"
           >
-            <span className="flex size-4 items-center justify-center rounded-full bg-primary/10 font-bold text-primary text-xs">
+            <span className="bg-primary/10 text-primary flex size-4 items-center justify-center rounded-full text-xs font-bold">
               {index + 1}
             </span>
-            <span className="font-medium text-xs">{getSortLabel(sc.key)}</span>
+            <span className="text-xs font-medium">{getSortLabel(sc.key)}</span>
             <button
               type="button"
-              className="flex items-center gap-0.5 rounded-md bg-base-200/60 px-1.5 py-0.5 text-xs transition-colors hover:bg-base-300/60"
+              className="bg-base-200/60 hover:bg-base-300/60 flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-xs transition-colors"
               onClick={() => onToggleOrder(index)}
             >
               {isTextKey?.(sc.key) ? (
@@ -94,7 +94,7 @@ export function MultiSortToolbar<K extends string>({
             </button>
             <button
               type="button"
-              className="flex items-center justify-center rounded-full p-0.5 text-base-content/40 transition-colors hover:bg-error/10 hover:text-error"
+              className="text-base-content/40 hover:bg-error/10 hover:text-error flex items-center justify-center rounded-full p-0.5 transition-colors"
               onClick={() => onRemoveSort(index)}
               aria-label={`${getSortLabel(sc.key)}のソートを削除`}
             >
@@ -104,10 +104,10 @@ export function MultiSortToolbar<K extends string>({
         ))}
 
         {availableKeys.length > 0 && (
-          <div className="flex items-center gap-1 rounded-lg bg-base-200/50 px-1.5 py-1">
-            <Plus className="size-3.5 shrink-0 text-base-content/40" />
+          <div className="bg-base-200/50 flex items-center gap-1 rounded-lg px-1.5 py-1">
+            <Plus className="text-base-content/40 size-3.5 shrink-0" />
             <select
-              className="select select-ghost select-xs bg-transparent font-medium text-base-content/60 focus:outline-none [&>option]:bg-base-100 [&>option]:text-base-content"
+              className="select select-ghost select-xs text-base-content/60 [&>option]:bg-base-100 [&>option]:text-base-content bg-transparent font-medium focus:outline-none"
               value=""
               onChange={(e) => {
                 if (e.target.value) {
@@ -131,7 +131,7 @@ export function MultiSortToolbar<K extends string>({
         {onReset && (
           <button
             type="button"
-            className="text-base-content/40 text-xs transition-colors hover:text-error"
+            className="text-base-content/40 hover:text-error text-xs transition-colors"
             onClick={onReset}
           >
             リセット

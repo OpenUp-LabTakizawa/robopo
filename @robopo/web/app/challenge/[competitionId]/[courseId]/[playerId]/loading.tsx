@@ -4,7 +4,7 @@ export default function Loading() {
   return (
     <div className="flex h-[calc(100dvh-3.5rem)] animate-[skeletonFadeIn_0.3s_ease-out] flex-col">
       {/* Status bar */}
-      <div className="border-base-300 border-b bg-base-100">
+      <div className="border-base-300 bg-base-100 border-b">
         <div className="flex items-center justify-between px-3 py-1.5">
           {/* Left: attempt badge + course/player info */}
           <div className="flex min-w-0 items-center gap-2">
@@ -23,7 +23,7 @@ export default function Loading() {
       </div>
 
       {/* Mission info area */}
-      <div className="flex shrink-0 items-center justify-center gap-4 bg-base-200/30 px-4 py-3">
+      <div className="bg-base-200/30 flex shrink-0 items-center justify-center gap-4 px-4 py-3">
         <Skeleton className="h-9 w-9 rounded-full" />
         <div className="space-y-1">
           <Skeleton className="h-5 w-36" />
@@ -37,7 +37,7 @@ export default function Loading() {
       </div>
 
       {/* Action bar */}
-      <div className="border-base-300 border-t bg-base-100 px-4 py-3">
+      <div className="border-base-300 bg-base-100 border-t px-4 py-3">
         <div className="flex items-center gap-2">
           <Skeleton className="h-10 flex-1 rounded-lg" />
           <Skeleton className="h-10 w-28 rounded-lg" />

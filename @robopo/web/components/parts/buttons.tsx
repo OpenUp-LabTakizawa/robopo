@@ -12,7 +12,7 @@ export function ReloadButton() {
   return (
     <button
       type="button"
-      className="btn btn-primary mx-auto mt-5 min-w-28 max-w-fit"
+      className="btn btn-primary mx-auto mt-5 max-w-fit min-w-28"
       onClick={() => window.location.reload()}
     >
       <RefreshCw className="size-6" />

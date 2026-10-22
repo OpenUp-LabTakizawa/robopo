@@ -128,7 +128,7 @@ export function JudgeFormModal({
   return (
     <dialog className="modal modal-open">
       <div className="modal-box max-w-md">
-        <h3 className="mb-4 font-bold text-lg">
+        <h3 className="mb-4 text-lg font-bold">
           {mode === "create" ? "採点者を登録" : "採点者を編集"}
         </h3>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -149,7 +149,7 @@ export function JudgeFormModal({
                 pattern="[a-z0-9_]+"
                 required
               />
-              <p className="mt-1 text-base-content/40 text-xs">
+              <p className="text-base-content/40 mt-1 text-xs">
                 英小文字・数字・アンダースコアのみ使用可能
               </p>
             </div>
@@ -167,7 +167,7 @@ export function JudgeFormModal({
                 placeholder="英小文字・数字（例: judge1）"
                 pattern="[a-z0-9_]+"
               />
-              <p className="mt-1 text-base-content/40 text-xs">
+              <p className="text-base-content/40 mt-1 text-xs">
                 英小文字・数字・アンダースコアのみ使用可能
               </p>
             </div>
@@ -198,7 +198,7 @@ export function JudgeFormModal({
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute inset-y-0 right-2 flex items-center rounded-lg p-1.5 text-base-content/40 transition-colors hover:bg-base-300/50 hover:text-base-content/70"
+                className="text-base-content/40 hover:bg-base-300/50 hover:text-base-content/70 absolute inset-y-0 right-2 flex items-center rounded-lg p-1.5 transition-colors"
                 aria-label="パスワードを表示"
               >
                 {showPassword ? (
@@ -209,7 +209,7 @@ export function JudgeFormModal({
               </button>
             </div>
             {mode === "edit" && (
-              <p className="mt-1 text-base-content/40 text-xs">
+              <p className="text-base-content/40 mt-1 text-xs">
                 空欄の場合、パスワードは変更されません
               </p>
             )}
@@ -251,7 +251,7 @@ export function JudgeFormModal({
             </button>
             <button
               type="submit"
-              className="btn btn-primary gap-1.5 rounded-lg shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-primary/30 hover:shadow-xl"
+              className="btn btn-primary shadow-primary/20 hover:shadow-primary/30 gap-1.5 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl"
               disabled={loading}
             >
               {loading ? (
@@ -321,12 +321,12 @@ export function JudgeDeleteModal({
         <div className="flex flex-col items-center px-2 py-2">
           {successMessage ? (
             <div className="flex flex-col items-center gap-3">
-              <CircleCheck className="size-12 text-success" />
+              <CircleCheck className="text-success size-12" />
               <p className="text-center font-medium">{successMessage}</p>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-3">
-              <TriangleAlert className="size-12 text-warning" />
+              <TriangleAlert className="text-warning size-12" />
               <p className="text-center font-medium">
                 選択した採点者を削除しますか?
               </p>
@@ -337,14 +337,14 @@ export function JudgeDeleteModal({
                   </li>
                 ))}
               </ul>
-              <p className="text-sm text-warning">
+              <p className="text-warning text-sm">
                 この操作は取り消せません。関連するデータも全て削除されます。
               </p>
             </div>
           )}
 
           {errorMessage && (
-            <div className="mt-4 flex w-full items-center gap-2 rounded-lg bg-error/10 px-4 py-2.5 text-error text-sm">
+            <div className="bg-error/10 text-error mt-4 flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm">
               <CircleX className="size-5 shrink-0" />
               {errorMessage}
             </div>
@@ -354,7 +354,7 @@ export function JudgeDeleteModal({
             {!successMessage && (
               <button
                 type="button"
-                className="btn btn-error w-full rounded-xl shadow-error/20 shadow-lg transition-all duration-200 hover:shadow-error/30 hover:shadow-xl"
+                className="btn btn-error shadow-error/20 hover:shadow-error/30 w-full rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl"
                 onClick={handleDelete}
                 disabled={loading}
               >

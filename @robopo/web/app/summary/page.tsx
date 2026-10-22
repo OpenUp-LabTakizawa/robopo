@@ -56,14 +56,14 @@ export default async function SummaryPage({
   return (
     <div className="flex h-[calc(100dvh-3.5rem)] flex-col overflow-hidden px-4 py-3 sm:px-10 lg:px-16">
       <div className="mb-2 shrink-0">
-        <h1 className="font-bold text-2xl text-base-content tracking-tight">
+        <h1 className="text-base-content text-2xl font-bold tracking-tight">
           集計結果
         </h1>
-        <p className="mt-0.5 text-base-content/60 text-sm">
+        <p className="text-base-content/60 mt-0.5 text-sm">
           大会を選択して集計結果を確認します
         </p>
       </div>
-      <div className="flex min-h-0 flex-1 flex-col rounded-2xl border border-base-300 bg-base-100 shadow-sm">
+      <div className="border-base-300 bg-base-100 flex min-h-0 flex-1 flex-col rounded-2xl border shadow-sm">
         <SummaryView
           competitions={visibleCompetitions}
           defaultCompetitionId={defaultId}

@@ -66,7 +66,7 @@ export function PlayerSelector({
       {/* Search bar */}
       {loaded && players.length > 0 && (
         <div className="relative">
-          <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-base-content/40" />
+          <Search className="text-base-content/40 pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <input
             type="text"
             placeholder="選手を検索..."
@@ -97,12 +97,12 @@ export function PlayerSelector({
                 onClick={() => onSelect(player)}
                 className={`group flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-all active:scale-[0.98] ${
                   isSelected
-                    ? "border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20"
+                    ? "border-primary bg-primary/5 ring-primary/20 shadow-sm ring-1"
                     : "border-base-300 bg-base-100 hover:border-primary/30 hover:shadow-sm"
                 }`}
               >
                 <div
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full font-bold text-sm transition-colors ${
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold transition-colors ${
                     isSelected
                       ? "bg-primary text-primary-content"
                       : "bg-primary/10 text-primary"
@@ -111,17 +111,17 @@ export function PlayerSelector({
                   {player.bibNumber || "-"}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-semibold text-sm">
+                  <p className="truncate text-sm font-semibold">
                     {player.name}
                   </p>
                   {player.furigana && (
-                    <p className="truncate text-base-content/50 text-xs">
+                    <p className="text-base-content/50 truncate text-xs">
                       {player.furigana}
                     </p>
                   )}
                 </div>
                 {isSelected && (
-                  <Check className="h-5 w-5 shrink-0 text-primary" />
+                  <Check className="text-primary h-5 w-5 shrink-0" />
                 )}
               </button>
             )
@@ -130,7 +130,7 @@ export function PlayerSelector({
       )}
 
       {loaded && filteredPlayers.length === 0 && (
-        <p className="py-4 text-center text-base-content/40 text-sm">
+        <p className="text-base-content/40 py-4 text-center text-sm">
           {searchQuery ? "該当する選手がいません" : "選手が登録されていません"}
         </p>
       )}

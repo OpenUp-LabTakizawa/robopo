@@ -22,7 +22,7 @@ function SubmitButton({
       <button
         type="button"
         disabled
-        className="btn btn-success w-full rounded-xl text-success-content shadow-lg shadow-success/25"
+        className="btn btn-success text-success-content shadow-success/25 w-full rounded-xl shadow-lg"
       >
         <CircleCheck className="size-5" />
         ログイン成功
@@ -34,7 +34,7 @@ function SubmitButton({
     <button
       type="submit"
       disabled={pending || disabled}
-      className="btn btn-primary w-full rounded-xl shadow-lg shadow-primary/25 transition-all duration-200 hover:shadow-primary/30 hover:shadow-xl"
+      className="btn btn-primary shadow-primary/25 hover:shadow-primary/30 w-full rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl"
     >
       {pending ? (
         <>
@@ -69,7 +69,7 @@ function FormFields({
       <div>
         <label
           htmlFor={usernameId}
-          className="mb-1.5 block font-medium text-base-content/70 text-sm"
+          className="text-base-content/70 mb-1.5 block text-sm font-medium"
         >
           ユーザー名
         </label>
@@ -80,13 +80,13 @@ function FormFields({
           placeholder="robosava"
           required
           onChange={(e) => onUsernameChange(e.target.value)}
-          className="input w-full rounded-xl border-base-300/50 bg-base-200/50 transition-all duration-200 focus:border-primary/50 focus:bg-base-100 focus:ring-2 focus:ring-primary/20"
+          className="input border-base-300/50 bg-base-200/50 focus:border-primary/50 focus:bg-base-100 focus:ring-primary/20 w-full rounded-xl transition-all duration-200 focus:ring-2"
         />
       </div>
       <div>
         <label
           htmlFor={passwordId}
-          className="mb-1.5 block font-medium text-base-content/70 text-sm"
+          className="text-base-content/70 mb-1.5 block text-sm font-medium"
         >
           パスワード
         </label>
@@ -97,7 +97,7 @@ function FormFields({
           placeholder="12345678"
           required
           onChange={(e) => onPasswordChange(e.target.value)}
-          className="input w-full rounded-xl border-base-300/50 bg-base-200/50 transition-all duration-200 focus:border-primary/50 focus:bg-base-100 focus:ring-2 focus:ring-primary/20"
+          className="input border-base-300/50 bg-base-200/50 focus:border-primary/50 focus:bg-base-100 focus:ring-primary/20 w-full rounded-xl transition-all duration-200 focus:ring-2"
         />
       </div>
     </fieldset>
@@ -147,7 +147,7 @@ function SignInForm() {
       <div className="modal-box max-w-sm">
         <form action={action} className="flex flex-col items-center px-2">
           <div className="mb-6 w-full text-center">
-            <h2 className="font-bold text-2xl text-base-content">ログイン</h2>
+            <h2 className="text-base-content text-2xl font-bold">ログイン</h2>
           </div>
 
           <FormFields
@@ -166,7 +166,7 @@ function SignInForm() {
           </div>
 
           {state?.message && !state?.success && (
-            <div className="mt-4 flex w-full items-center gap-2 rounded-lg bg-error/10 px-4 py-2.5 text-error text-sm">
+            <div className="bg-error/10 text-error mt-4 flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm">
               <CircleAlert className="size-5 shrink-0" />
               {state.message}
             </div>

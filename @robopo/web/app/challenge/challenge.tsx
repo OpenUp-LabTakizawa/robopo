@@ -109,14 +109,14 @@ function NormalChallengeSection({
   return (
     <div className="flex h-[calc(100dvh-3.5rem)] w-full flex-col">
       {/* Status bar */}
-      <div className="border-base-300 border-b bg-base-100">
+      <div className="border-base-300 bg-base-100 border-b">
         <div className="flex items-center justify-between px-3 py-1.5">
           {/* Left: attempt badge + course/player info */}
           <div className="flex min-w-0 items-center gap-2">
-            <span className="shrink-0 rounded-full bg-primary/10 px-2.5 py-0.5 font-semibold text-primary text-xs">
+            <span className="bg-primary/10 text-primary shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold">
               {FieldProps.isRetry ? "2回目" : "1回目"}
             </span>
-            <span className="truncate text-base-content/50 text-xs">
+            <span className="text-base-content/50 truncate text-xs">
               {courseName} / {playerName}
             </span>
           </div>
@@ -131,7 +131,7 @@ function NormalChallengeSection({
             />
             <SoundController />
             <div className="score-display pl-1 text-right">
-              <p className="font-bold text-accent text-xl leading-tight">
+              <p className="text-accent text-xl leading-tight font-bold">
                 {pointCount}
                 <span className="text-xs">pt</span>
               </p>
@@ -139,9 +139,9 @@ function NormalChallengeSection({
           </div>
         </div>
         {/* Progress bar */}
-        <div className="h-1 w-full bg-base-300">
+        <div className="bg-base-300 h-1 w-full">
           <div
-            className="h-full bg-primary transition-all duration-500 ease-out"
+            className="bg-primary h-full transition-all duration-500 ease-out"
             style={{ width: `${progress.percent}%` }}
           />
         </div>
@@ -149,15 +149,15 @@ function NormalChallengeSection({
 
       {/* Goal celebration or Mission info */}
       {isGoal ? (
-        <div className="flex flex-col items-center gap-3 bg-gradient-to-b from-success/10 to-success/5 px-4 py-6">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-success/20">
+        <div className="from-success/10 to-success/5 flex flex-col items-center gap-3 bg-gradient-to-b px-4 py-6">
+          <div className="bg-success/20 flex h-16 w-16 items-center justify-center rounded-full">
             <span className="text-3xl">&#127881;</span>
           </div>
-          <p className="font-bold text-2xl text-success">おめでとう!</p>
+          <p className="text-success text-2xl font-bold">おめでとう!</p>
           {pointState[1] !== null &&
             !Array.isArray(pointState[1]) &&
             pointState[1] > 0 && (
-              <p className="text-sm text-success/80">
+              <p className="text-success/80 text-sm">
                 ゴールボーナス: +{pointState[1]}pt
               </p>
             )}
@@ -176,12 +176,12 @@ function NormalChallengeSection({
           {message && <p className="text-base-content/60 text-sm">{message}</p>}
         </div>
       ) : (
-        <div className="flex items-center justify-center gap-4 bg-base-200/30 px-4 py-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary font-bold text-primary-content text-sm shadow-sm">
+        <div className="bg-base-200/30 flex items-center justify-center gap-4 px-4 py-3">
+          <div className="bg-primary text-primary-content flex h-9 w-9 items-center justify-center rounded-full text-sm font-bold shadow-sm">
             {nowMission + 1}
           </div>
           <div>
-            <p className="font-bold text-lg text-primary leading-tight">
+            <p className="text-primary text-lg leading-tight font-bold">
               {missionPair[nowMission][0] === null
                 ? "-"
                 : MissionString[missionPair[nowMission][0]]}
@@ -194,12 +194,12 @@ function NormalChallengeSection({
             </p>
             <div className="flex items-center gap-2">
               {!isTierMission && (
-                <p className="font-medium text-accent text-xs">
+                <p className="text-accent text-xs font-medium">
                   +{pointState[nowMission + 2] as number}pt
                 </p>
               )}
               {isTierMission && (
-                <span className="rounded-md bg-accent/10 px-2 py-0.5 font-medium text-accent text-xs">
+                <span className="bg-accent/10 text-accent rounded-md px-2 py-0.5 text-xs font-medium">
                   段階評価
                 </span>
               )}
@@ -214,7 +214,7 @@ function NormalChallengeSection({
       {/* Tier selection UI - shown instead of field for tier missions */}
       {!isGoal && isTierMission ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-2 overflow-auto px-4 py-4">
-          <p className="mb-2 font-bold text-base-content/60 text-sm">
+          <p className="text-base-content/60 mb-2 text-sm font-bold">
             審判が評価を選択してください
           </p>
           <div className="grid w-full max-w-xs gap-2">
@@ -240,7 +240,7 @@ function NormalChallengeSection({
       )}
 
       {/* Action bar */}
-      <div className="border-base-300 border-t bg-base-100 px-4 py-3">
+      <div className="border-base-300 bg-base-100 border-t px-4 py-3">
         <div className="flex items-center gap-2">
           <BackButton
             onClick={handleBack}

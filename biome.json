@@ -15,7 +15,7 @@
         "noUnusedImports": "error"
       },
       "nursery": {
-        "useSortedClasses": "error"
+        "useTailwindSortedClasses": "error"
       },
       "style": {
         "noUselessElse": "error",
@@ -40,6 +40,11 @@
   "css": {
     "parser": {
       "tailwindDirectives": true
+    }
+  },
+  "markdown": {
+    "formatter": {
+      "enabled": false
     }
   }
 }

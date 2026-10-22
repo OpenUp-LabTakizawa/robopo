@@ -85,7 +85,7 @@ export default async function Home() {
 
   return (
     <div className="mx-auto mt-8 max-w-3xl px-4">
-      <div className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
+      <div className="rounded-box border-base-300 bg-base-100 border p-6 shadow-sm">
         {challengeTab}
       </div>
     </div>

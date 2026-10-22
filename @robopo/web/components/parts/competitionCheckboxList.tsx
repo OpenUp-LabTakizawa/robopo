@@ -17,11 +17,11 @@ export function CompetitionCheckboxList({
         <span className="label-text">大会紐付け</span>
       </span>
       {competitionList.length > 0 ? (
-        <div className="max-h-[8.5rem] overflow-y-auto rounded-xl border border-base-300/50 bg-base-200/30">
+        <div className="border-base-300/50 bg-base-200/30 max-h-[8.5rem] overflow-y-auto rounded-xl border">
           {competitionList.map((c) => (
             <label
               key={c.id}
-              className="flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 transition-colors hover:bg-base-200/60"
+              className="hover:bg-base-200/60 flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 transition-colors"
             >
               <input
                 type="checkbox"
@@ -34,11 +34,11 @@ export function CompetitionCheckboxList({
           ))}
         </div>
       ) : (
-        <p className="rounded-xl bg-base-200/30 px-3 py-2 text-base-content/40 text-sm">
+        <p className="bg-base-200/30 text-base-content/40 rounded-xl px-3 py-2 text-sm">
           大会が登録されていません
         </p>
       )}
-      <p className="mt-1 text-base-content/40 text-xs">
+      <p className="text-base-content/40 mt-1 text-xs">
         紐付けは任意です（0件でも可）
       </p>
     </div>

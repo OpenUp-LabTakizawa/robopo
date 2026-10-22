@@ -62,7 +62,7 @@ export function ThreeTabs({
             />
             <div
               role="tabpanel"
-              className="tab-content rounded-box border border-base-300 bg-base-100 p-6"
+              className="tab-content rounded-box border-base-300 bg-base-100 border p-6"
             >
               {content}
             </div>

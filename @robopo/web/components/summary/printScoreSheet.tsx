@@ -79,7 +79,7 @@ export function PrintScoreSheet({
   return (
     <>
       {/* Toolbar - hidden when printing */}
-      <div className="fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-base-300 border-b bg-base-100 px-4 py-3 shadow-sm print:hidden">
+      <div className="border-base-300 bg-base-100 fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-b px-4 py-3 shadow-sm print:hidden">
         <button
           type="button"
           className="btn btn-ghost btn-sm rounded-xl"
@@ -105,10 +105,10 @@ export function PrintScoreSheet({
       <div className="mx-auto mt-16 mb-8 print:mt-0 print:mb-0">
         <div className="mx-auto box-border min-h-[297mm] w-[210mm] bg-white p-6 shadow-lg print:p-0 print:shadow-none">
           {/* Header */}
-          <div className="mb-2 flex items-baseline justify-between border-gray-400 border-b pb-1.5">
+          <div className="mb-2 flex items-baseline justify-between border-b border-gray-400 pb-1.5">
             <div className="flex items-baseline gap-2">
               <span className="text-[10px] text-gray-500">ゼッケンNo：</span>
-              <span className="font-bold text-sm">
+              <span className="text-sm font-bold">
                 {player.bibNumber ?? "-"}
               </span>
             </div>
@@ -118,10 +118,10 @@ export function PrintScoreSheet({
           {/* Player info + totals */}
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-baseline gap-2">
-              <ruby className="font-bold text-base">
+              <ruby className="text-base font-bold">
                 {player.name}
                 {player.furigana && (
-                  <rt className="font-normal text-[8px] text-gray-400">
+                  <rt className="text-[8px] font-normal text-gray-400">
                     {player.furigana}
                   </rt>
                 )}
@@ -196,7 +196,7 @@ export function PrintCourseTable({ course }: { course: PrintCourseData }) {
             <th className="border border-gray-400 bg-gray-50 p-0.5 text-center">
               No
             </th>
-            <th className="whitespace-nowrap border border-gray-400 bg-gray-50 p-0.5 text-left">
+            <th className="border border-gray-400 bg-gray-50 p-0.5 text-left whitespace-nowrap">
               ミッション
             </th>
             <th className="border border-gray-400 bg-gray-50 p-0.5 text-center">
@@ -228,7 +228,7 @@ export function PrintCourseTable({ course }: { course: PrintCourseData }) {
               <td className="border border-gray-400 p-0.5 text-center tabular-nums">
                 {mIdx + 1}
               </td>
-              <td className="whitespace-nowrap border border-gray-400 p-0.5">
+              <td className="border border-gray-400 p-0.5 whitespace-nowrap">
                 {pair[0] !== null && MissionString[pair[0]]}
                 {pair[1] !== null && String(pair[1])}
                 {pair[0] !== null && getMissionParameterUnit(pair[0])}

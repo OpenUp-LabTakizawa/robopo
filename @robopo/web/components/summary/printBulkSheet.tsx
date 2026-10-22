@@ -33,7 +33,7 @@ export function PrintBulkSheet({
   return (
     <>
       {/* Toolbar - hidden when printing */}
-      <div className="fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-base-300 border-b bg-base-100 px-4 py-3 shadow-sm print:hidden">
+      <div className="border-base-300 bg-base-100 fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-b px-4 py-3 shadow-sm print:hidden">
         <button
           type="button"
           className="btn btn-ghost btn-sm rounded-xl"
@@ -69,10 +69,10 @@ export function PrintBulkSheet({
             }`}
           >
             {/* Header */}
-            <div className="mb-2 flex items-baseline justify-between border-gray-400 border-b pb-1.5">
+            <div className="mb-2 flex items-baseline justify-between border-b border-gray-400 pb-1.5">
               <div className="flex items-baseline gap-2">
                 <span className="text-[10px] text-gray-500">ゼッケンNo：</span>
-                <span className="font-bold text-sm">
+                <span className="text-sm font-bold">
                   {playerData.player.bibNumber ?? "-"}
                 </span>
               </div>
@@ -84,10 +84,10 @@ export function PrintBulkSheet({
             {/* Player info + totals */}
             <div className="mb-3 flex items-center justify-between">
               <div className="flex items-baseline gap-2">
-                <ruby className="font-bold text-base">
+                <ruby className="text-base font-bold">
                   {playerData.player.name}
                   {playerData.player.furigana && (
-                    <rt className="font-normal text-[8px] text-gray-400">
+                    <rt className="text-[8px] font-normal text-gray-400">
                       {playerData.player.furigana}
                     </rt>
                   )}

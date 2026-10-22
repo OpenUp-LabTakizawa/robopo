@@ -171,19 +171,19 @@ export function CourseSummaryTable({ competitionId }: Props) {
           {filteredAndSorted.map((course) => (
             <tr
               key={course.courseId}
-              className="transition-colors duration-150 hover:bg-primary/5"
+              className="hover:bg-primary/5 transition-colors duration-150"
             >
               <td className="py-3">{course.courseId}</td>
-              <td className="whitespace-nowrap py-3 font-medium">
+              <td className="py-3 font-medium whitespace-nowrap">
                 {course.courseName}
               </td>
-              <td className="whitespace-nowrap py-3">
+              <td className="py-3 whitespace-nowrap">
                 {formatTimestamp(course.firstChallengeTime)}
               </td>
-              <td className="whitespace-nowrap py-3">
+              <td className="py-3 whitespace-nowrap">
                 {formatTimestamp(course.firstCompletionTime)}
               </td>
-              <td className="whitespace-nowrap py-3">
+              <td className="py-3 whitespace-nowrap">
                 {formatTimestamp(course.lastChallengeTime)}
               </td>
               <td className="py-3">{course.challengerCount}</td>

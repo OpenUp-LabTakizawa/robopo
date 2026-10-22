@@ -90,11 +90,11 @@ export function PlayerScoreSheet({
       </div>
 
       {/* Header Card */}
-      <div className="card mb-6 border border-base-300 bg-base-100 shadow-sm print:mb-4 print:border print:shadow-none">
+      <div className="card border-base-300 bg-base-100 mb-6 border shadow-sm print:mb-4 print:border print:shadow-none">
         <div className="card-body p-4 sm:p-5">
           {/* Row 1: Title + Competition name */}
           <div className="flex items-center justify-between">
-            <h1 className="font-bold text-xl tracking-tight sm:text-2xl">
+            <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
               個人成績シート
             </h1>
             <span className="text-base-content/50 text-xs sm:text-sm">
@@ -105,13 +105,13 @@ export function PlayerScoreSheet({
           <div className="mt-2 flex items-center justify-between gap-2">
             {/* Player identity — compact on mobile */}
             <div className="flex items-baseline gap-1.5 overflow-hidden sm:gap-3">
-              <span className="shrink-0 rounded bg-base-200 px-1.5 py-0.5 font-mono text-xs tabular-nums">
+              <span className="bg-base-200 shrink-0 rounded px-1.5 py-0.5 font-mono text-xs tabular-nums">
                 {player.bibNumber ?? "-"}
               </span>
-              <ruby className="truncate font-bold text-base text-primary sm:text-lg">
+              <ruby className="text-primary truncate text-base font-bold sm:text-lg">
                 {player.name}
                 {player.furigana && (
-                  <rt className="font-normal text-[9px] text-base-content/50">
+                  <rt className="text-base-content/50 text-[9px] font-normal">
                     {player.furigana}
                   </rt>
                 )}
@@ -119,19 +119,19 @@ export function PlayerScoreSheet({
             </div>
             {/* Stats badges — always visible */}
             <div className="flex shrink-0 items-center gap-2">
-              <div className="flex flex-col items-center rounded-lg bg-base-200 px-2.5 py-1 sm:flex-row sm:gap-2 sm:px-3 sm:py-1.5">
-                <span className="text-[10px] text-base-content/60 sm:text-xs">
+              <div className="bg-base-200 flex flex-col items-center rounded-lg px-2.5 py-1 sm:flex-row sm:gap-2 sm:px-3 sm:py-1.5">
+                <span className="text-base-content/60 text-[10px] sm:text-xs">
                   試行
                 </span>
-                <span className="font-bold font-mono text-sm tabular-nums">
+                <span className="font-mono text-sm font-bold tabular-nums">
                   {totalChallengeCount}
                 </span>
               </div>
-              <div className="flex flex-col items-center rounded-lg bg-primary/10 px-2.5 py-1 sm:flex-row sm:gap-2 sm:px-3 sm:py-1.5">
-                <span className="font-medium text-[10px] sm:text-xs">
+              <div className="bg-primary/10 flex flex-col items-center rounded-lg px-2.5 py-1 sm:flex-row sm:gap-2 sm:px-3 sm:py-1.5">
+                <span className="text-[10px] font-medium sm:text-xs">
                   総得点
                 </span>
-                <span className="font-black font-mono text-lg text-primary tabular-nums sm:text-xl">
+                <span className="text-primary font-mono text-lg font-black tabular-nums sm:text-xl">
                   {totalPoint}
                 </span>
               </div>
@@ -174,11 +174,11 @@ function CourseSection({
   return (
     <div className="mb-6 print:mb-4 print:break-inside-avoid">
       {/* Section Header */}
-      <div className="mb-3 flex items-center justify-between border-primary border-l-4 pl-3">
-        <h2 className="font-bold text-lg">{course.name}</h2>
-        <div className="flex items-center gap-2 rounded-lg bg-primary/10 px-4 py-1.5">
-          <span className="font-medium text-sm">最高得点</span>
-          <span className="font-black font-mono text-primary tabular-nums">
+      <div className="border-primary mb-3 flex items-center justify-between border-l-4 pl-3">
+        <h2 className="text-lg font-bold">{course.name}</h2>
+        <div className="bg-primary/10 flex items-center gap-2 rounded-lg px-4 py-1.5">
+          <span className="text-sm font-medium">最高得点</span>
+          <span className="text-primary font-mono font-black tabular-nums">
             {course.maxPt !== null ? course.maxPt : "-"}
           </span>
         </div>

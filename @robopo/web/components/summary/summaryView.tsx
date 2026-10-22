@@ -37,10 +37,10 @@ export function SummaryView({ competitions, defaultCompetitionId }: Props) {
     <div className="flex min-h-0 flex-1 flex-col">
       {/* Competition selector + Tab bar */}
       <div className="shrink-0 px-4 pt-3 pb-2 lg:flex lg:items-end lg:gap-6">
-        <div className="min-w-[200px] max-w-md">
+        <div className="max-w-md min-w-[200px]">
           <label
             htmlFor="summary-competition"
-            className="mb-1 block font-semibold text-base-content/60 text-xs uppercase tracking-wider"
+            className="text-base-content/60 mb-1 block text-xs font-semibold tracking-wider uppercase"
           >
             大会
           </label>
@@ -62,13 +62,13 @@ export function SummaryView({ competitions, defaultCompetitionId }: Props) {
         </div>
 
         <div className="mt-2 flex flex-col gap-2 lg:mt-0 lg:flex-row lg:items-end lg:gap-3">
-          <div className="flex rounded-xl bg-base-200/60 p-1 lg:inline-flex">
+          <div className="bg-base-200/60 flex rounded-xl p-1 lg:inline-flex">
             {TABS.map(({ key, label, icon: Icon }) => (
               <button
                 key={key}
                 type="button"
                 onClick={() => setActiveTab(key)}
-                className={`flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 font-medium text-sm transition-all duration-200 lg:flex-none lg:px-4 ${
+                className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap transition-all duration-200 lg:flex-none lg:px-4 ${
                   activeTab === key
                     ? "bg-primary text-primary-content shadow-sm"
                     : "text-base-content/60 hover:bg-base-300/50 hover:text-base-content"
@@ -94,7 +94,7 @@ export function SummaryView({ competitions, defaultCompetitionId }: Props) {
 
       {/* Tab content */}
       {competitionId === 0 ? (
-        <div className="py-12 text-center text-base-content/40">
+        <div className="text-base-content/40 py-12 text-center">
           大会を選択してください
         </div>
       ) : (

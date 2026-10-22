@@ -38,7 +38,7 @@ async function HeaderWithSession() {
 // both the fallback and the resolved content in the DOM for a few frames, so
 // duplicated elements would briefly be queryable twice.
 function HeaderFallback() {
-  return <div className="h-8 w-40 animate-pulse rounded-full bg-base-300" />
+  return <div className="bg-base-300 h-8 w-40 animate-pulse rounded-full" />
 }
 
 export default function RootLayout(props: LayoutProps<"/">) {
@@ -49,7 +49,7 @@ export default function RootLayout(props: LayoutProps<"/">) {
           <main className="mx-auto min-h-dvh w-full text-sm sm:px-6 lg:px-12 lg:text-base">
             {/* The landmark itself stays outside the boundary so that the page
                 never has two <header> elements while the session resolves. */}
-            <header className="sticky top-0 z-40 flex h-14 items-center justify-between border-base-300 border-b bg-base-100/95 px-4 backdrop-blur-sm sm:px-0">
+            <header className="border-base-300 bg-base-100/95 sticky top-0 z-40 flex h-14 items-center justify-between border-b px-4 backdrop-blur-sm sm:px-0">
               <HeaderLogo />
               <Suspense fallback={<HeaderFallback />}>
                 <HeaderWithSession />

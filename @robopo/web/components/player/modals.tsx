@@ -97,7 +97,7 @@ export function PlayerFormModal({
   return (
     <dialog className="modal modal-open">
       <div className="modal-box max-w-md">
-        <h3 className="mb-4 font-bold text-lg">
+        <h3 className="mb-4 text-lg font-bold">
           {mode === "create" ? "選手を登録" : "選手を編集"}
         </h3>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -179,7 +179,7 @@ export function PlayerFormModal({
             </button>
             <button
               type="submit"
-              className="btn btn-primary gap-1.5 rounded-lg shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-primary/30 hover:shadow-xl"
+              className="btn btn-primary shadow-primary/20 hover:shadow-primary/30 gap-1.5 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl"
               disabled={loading}
             >
               {loading ? (
@@ -249,12 +249,12 @@ export function PlayerDeleteModal({
         <div className="flex flex-col items-center px-2 py-2">
           {successMessage ? (
             <div className="flex flex-col items-center gap-3">
-              <CircleCheck className="size-12 text-success" />
+              <CircleCheck className="text-success size-12" />
               <p className="text-center font-medium">{successMessage}</p>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-3">
-              <TriangleAlert className="size-12 text-warning" />
+              <TriangleAlert className="text-warning size-12" />
               <p className="text-center font-medium">
                 選択した選手を削除しますか?
               </p>
@@ -265,14 +265,14 @@ export function PlayerDeleteModal({
                   </li>
                 ))}
               </ul>
-              <p className="text-sm text-warning">
+              <p className="text-warning text-sm">
                 この操作は取り消せません。関連するデータも全て削除されます。
               </p>
             </div>
           )}
 
           {errorMessage && (
-            <div className="mt-4 flex w-full items-center gap-2 rounded-lg bg-error/10 px-4 py-2.5 text-error text-sm">
+            <div className="bg-error/10 text-error mt-4 flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm">
               <CircleX className="size-5 shrink-0" />
               {errorMessage}
             </div>
@@ -282,7 +282,7 @@ export function PlayerDeleteModal({
             {!successMessage && (
               <button
                 type="button"
-                className="btn btn-error w-full rounded-xl shadow-error/20 shadow-lg transition-all duration-200 hover:shadow-error/30 hover:shadow-xl"
+                className="btn btn-error shadow-error/20 hover:shadow-error/30 w-full rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl"
                 onClick={handleDelete}
                 disabled={loading}
               >

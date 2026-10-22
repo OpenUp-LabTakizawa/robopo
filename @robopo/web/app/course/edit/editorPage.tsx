@@ -346,7 +346,7 @@ export function EditorPage({
                 className="tooltip tooltip-right hidden sm:inline-flex"
                 data-tip={saveBlockMessage}
               >
-                <TriangleAlert className="size-5 text-warning" />
+                <TriangleAlert className="text-warning size-5" />
               </div>
               {/* Mobile: tap to toggle message */}
               <button
@@ -354,7 +354,7 @@ export function EditorPage({
                 className="sm:hidden"
                 onClick={() => setShowSaveWarning((prev) => !prev)}
               >
-                <TriangleAlert className="size-5 text-warning" />
+                <TriangleAlert className="text-warning size-5" />
               </button>
             </>
           )}
@@ -362,7 +362,7 @@ export function EditorPage({
             <button
               type="button"
               disabled
-              className="btn btn-success min-w-28 max-w-fit rounded-xl shadow-lg shadow-success/20 transition-all duration-200"
+              className="btn btn-success shadow-success/20 max-w-fit min-w-28 rounded-xl shadow-lg transition-all duration-200"
             >
               保存成功
               <CircleCheck className="size-5" />
@@ -370,7 +370,7 @@ export function EditorPage({
           ) : (
             <button
               type="button"
-              className={`btn min-w-28 max-w-fit rounded-xl transition-all duration-200 ${validation.canSave && !isBusy ? "btn-primary shadow-lg shadow-primary/20 hover:shadow-primary/30 hover:shadow-xl" : "btn-disabled"}`}
+              className={`btn max-w-fit min-w-28 rounded-xl transition-all duration-200 ${validation.canSave && !isBusy ? "btn-primary shadow-primary/20 hover:shadow-primary/30 shadow-lg hover:shadow-xl" : "btn-disabled"}`}
               disabled={!validation.canSave || isBusy}
               onClick={handleSave}
             >
@@ -395,7 +395,7 @@ export function EditorPage({
           />
         </div>
         {showSaveWarning && saveBlockMessage && (
-          <p className="text-sm text-warning sm:hidden">{saveBlockMessage}</p>
+          <p className="text-warning text-sm sm:hidden">{saveBlockMessage}</p>
         )}
       </div>
     </div>

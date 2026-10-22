@@ -23,21 +23,21 @@ export function DataTableShell({
 }: Props) {
   if (hasSearchQuery && !loading && rowCount === 0 && noMatchMessage) {
     return (
-      <div className="py-8 text-center text-base-content/40">
+      <div className="text-base-content/40 py-8 text-center">
         {noMatchMessage}
       </div>
     )
   }
 
   return (
-    <div className="mx-3 mb-3 min-h-0 overflow-x-auto overflow-y-auto rounded-xl border border-base-300/50">
+    <div className="border-base-300/50 mx-3 mb-3 min-h-0 overflow-x-auto overflow-y-auto rounded-xl border">
       <table className="table-pin-rows table-zebra table-sm table">
         <thead>
-          <tr className="border-base-300/50 border-b bg-base-200/60">
+          <tr className="border-base-300/50 bg-base-200/60 border-b">
             {columns.map((label) => (
               <th
                 key={label}
-                className="whitespace-nowrap py-2 font-semibold text-base-content/50 text-xs uppercase tracking-wider"
+                className="text-base-content/50 py-2 text-xs font-semibold tracking-wider whitespace-nowrap uppercase"
               >
                 {label}
               </th>
@@ -64,7 +64,7 @@ export function DataTableShell({
             <tr>
               <td
                 colSpan={columns.length}
-                className="py-12 text-center text-base-content/40"
+                className="text-base-content/40 py-12 text-center"
               >
                 {emptyMessage}
               </td>

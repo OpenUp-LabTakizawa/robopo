@@ -32,7 +32,7 @@ function TableComponent({
     <>
       {type === "player" && (
         <>
-          <td className="py-3 font-mono text-base-content/50 text-xs">
+          <td className="text-base-content/50 py-3 font-mono text-xs">
             {(common as SelectPlayerWithCompetition).id}
           </td>
           <td className="py-3">
@@ -65,7 +65,7 @@ function TableComponent({
           </td>
           <td className="max-w-xs py-3">
             {(common as SelectPlayerWithCompetition).note ? (
-              <span className="line-clamp-2 text-base-content/70 text-sm">
+              <span className="text-base-content/70 line-clamp-2 text-sm">
                 {(common as SelectPlayerWithCompetition).note}
               </span>
             ) : (
@@ -76,7 +76,7 @@ function TableComponent({
       )}
       {type === "judge" && (
         <>
-          <td className="py-3 font-mono text-base-content/50 text-xs">
+          <td className="text-base-content/50 py-3 font-mono text-xs">
             {(common as SelectJudgeWithCompetition).id}
           </td>
           <td className="py-3 font-medium">
@@ -98,7 +98,7 @@ function TableComponent({
             )}
           </td>
           <td
-            className="whitespace-nowrap py-3 text-base-content/60 text-sm"
+            className="text-base-content/60 py-3 text-sm whitespace-nowrap"
             suppressHydrationWarning={true}
           >
             {(common as SelectJudgeWithCompetition).lastLoginAt ? (
@@ -111,7 +111,7 @@ function TableComponent({
           </td>
           <td className="max-w-xs py-3">
             {(common as SelectJudgeWithCompetition).note ? (
-              <span className="line-clamp-2 text-base-content/70 text-sm">
+              <span className="text-base-content/70 line-clamp-2 text-sm">
                 {(common as SelectJudgeWithCompetition).note}
               </span>
             ) : (
@@ -122,7 +122,7 @@ function TableComponent({
       )}
       {type === "course" && (
         <>
-          <td className="py-3 font-mono text-base-content/50 text-xs">
+          <td className="text-base-content/50 py-3 font-mono text-xs">
             {(common as SelectCourseWithCompetition).id}
           </td>
           <td className="py-3 font-medium">
@@ -132,14 +132,14 @@ function TableComponent({
             {(common as SelectCourseWithCompetition).isConfigured ? (
               <span className="text-lg text-red-500">○</span>
             ) : (
-              <span className="text-blue-500 text-lg">✕</span>
+              <span className="text-lg text-blue-500">✕</span>
             )}
           </td>
           <td className="py-3">
             {(common as SelectCourseWithCompetition).competitionName?.length ? (
               <button
                 type="button"
-                className="badge badge-primary badge-outline cursor-pointer transition-colors hover:bg-primary hover:text-primary-content"
+                className="badge badge-primary badge-outline hover:bg-primary hover:text-primary-content cursor-pointer transition-colors"
                 onClick={(e) => {
                   e.stopPropagation()
                   onCourseCompetitionClick?.(
@@ -158,16 +158,16 @@ function TableComponent({
             )}
           </td>
           <td
-            className="py-3 text-base-content/60 text-sm"
+            className="text-base-content/60 py-3 text-sm"
             suppressHydrationWarning={true}
           >
             {(common as SelectCourseWithCompetition).createdAt?.toLocaleString(
               "ja-JP",
             )}
           </td>
-          <td className="min-w-64 max-w-sm py-3">
+          <td className="max-w-sm min-w-64 py-3">
             {(common as SelectCourseWithCompetition).description ? (
-              <span className="line-clamp-3 text-base-content/70 text-sm">
+              <span className="text-base-content/70 line-clamp-3 text-sm">
                 {(common as SelectCourseWithCompetition).description}
               </span>
             ) : (
@@ -178,7 +178,7 @@ function TableComponent({
       )}
       {type === "competition" && (
         <>
-          <td className="py-3 font-mono text-base-content/50 text-xs">
+          <td className="text-base-content/50 py-3 font-mono text-xs">
             {(common as SelectCompetitionWithCourse).id}
           </td>
           <td className="py-3 font-medium">
@@ -200,7 +200,7 @@ function TableComponent({
             )}
           </td>
           <td
-            className="py-3 text-base-content/60 text-sm"
+            className="text-base-content/60 py-3 text-sm"
             suppressHydrationWarning
           >
             {(common as SelectCompetitionWithCourse).startDate ? (
@@ -218,7 +218,7 @@ function TableComponent({
             )}
           </td>
           <td
-            className="whitespace-nowrap py-3 text-base-content/60 text-sm"
+            className="text-base-content/60 py-3 text-sm whitespace-nowrap"
             suppressHydrationWarning
           >
             {(common as SelectCompetitionWithCourse).endDate ? (
@@ -242,11 +242,11 @@ function TableComponent({
               <span className="badge badge-ghost badge-sm">OFF</span>
             )}
           </td>
-          <td className="whitespace-nowrap py-3 text-base-content/60 text-sm">
+          <td className="text-base-content/60 py-3 text-sm whitespace-nowrap">
             {(common as SelectCompetitionWithCourse).maskEnabled ? (
               <span>
                 終了前
-                <span className="mx-1 font-bold font-mono tabular-nums">
+                <span className="mx-1 font-mono font-bold tabular-nums">
                   {(common as SelectCompetitionWithCourse).maskMinutesBefore}
                 </span>
                 分
@@ -255,9 +255,9 @@ function TableComponent({
               <span className="text-base-content/30">-</span>
             )}
           </td>
-          <td className="min-w-64 max-w-sm py-3">
+          <td className="max-w-sm min-w-64 py-3">
             {(common as SelectCompetitionWithCourse).description ? (
-              <span className="line-clamp-3 text-base-content/70 text-sm">
+              <span className="text-base-content/70 line-clamp-3 text-sm">
                 {(common as SelectCompetitionWithCourse).description}
               </span>
             ) : (
@@ -342,10 +342,10 @@ export function CommonSelectionList({
 
   return (
     <div className="flex min-h-0 w-full flex-1 flex-col">
-      <div className="m-3 min-h-0 flex-1 overflow-x-auto overflow-y-auto rounded-xl border border-base-300/50">
+      <div className="border-base-300/50 m-3 min-h-0 flex-1 overflow-x-auto overflow-y-auto rounded-xl border">
         <table className="table-pin-rows table-zebra table">
           <thead>
-            <tr className="border-base-300/50 border-b bg-base-200/60">
+            <tr className="border-base-300/50 bg-base-200/60 border-b">
               <th className="w-12">
                 {selectionMode === "checkbox" && onSelectAll ? (
                   <label>
@@ -375,7 +375,7 @@ export function CommonSelectionList({
               {itemNames(type).map((name) => (
                 <th
                   key={name}
-                  className="py-3 font-semibold text-base-content/50 text-xs uppercase tracking-wider"
+                  className="text-base-content/50 py-3 text-xs font-semibold tracking-wider uppercase"
                   hidden={
                     selectionMode === "radio" &&
                     type === "player" &&
@@ -392,7 +392,7 @@ export function CommonSelectionList({
               commonDataList.map((common) => (
                 <tr
                   key={common.id}
-                  className="cursor-pointer transition-colors duration-150 hover:bg-primary/5"
+                  className="hover:bg-primary/5 cursor-pointer transition-colors duration-150"
                   onClick={() => onSelect(common.id)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
@@ -424,7 +424,7 @@ export function CommonSelectionList({
               <tr>
                 <td
                   colSpan={itemNames(type).length + 1}
-                  className="py-12 text-center text-base-content/40"
+                  className="text-base-content/40 py-12 text-center"
                 >
                   {emptyLabel(type, selectionMode)}が登録されていません。
                 </td>

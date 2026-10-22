@@ -53,7 +53,7 @@ export default function MissionEdit({
 }: MissionEditProps) {
   return (
     <div className="container mx-auto">
-      <div className="card w-full min-w-72 bg-base-100 shadow-xl">
+      <div className="card bg-base-100 w-full min-w-72 shadow-xl">
         <div className="card-body">
           <MissionList
             field={field}
@@ -78,9 +78,9 @@ export default function MissionEdit({
           />
         </div>
       </div>
-      <div className="card mt-3 w-full min-w-72 bg-base-100 shadow-xl">
+      <div className="card bg-base-100 mt-3 w-full min-w-72 shadow-xl">
         <div className="card-body">
-          <p className="font-bold text-sm">コースアウト時</p>
+          <p className="text-sm font-bold">コースアウト時</p>
           <div className="flex flex-wrap gap-4">
             <label className="label cursor-pointer gap-2">
               <input
@@ -121,7 +121,7 @@ export default function MissionEdit({
           </div>
           {courseOutRule.startsWith("penalty:") && (
             <div className="mt-2 flex items-center gap-1">
-              <span className="font-bold text-error text-sm">-</span>
+              <span className="text-error text-sm font-bold">-</span>
               <input
                 type="number"
                 min="0"

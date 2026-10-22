@@ -23,7 +23,7 @@ export function Header({ session }: Props) {
   return (
     <div className="flex items-center gap-3">
       {session?.user && (
-        <span className="hidden text-base-content/60 text-sm sm:inline">
+        <span className="text-base-content/60 hidden text-sm sm:inline">
           {session.user.name}
         </span>
       )}
@@ -65,7 +65,7 @@ export function Header({ session }: Props) {
         <>
           <Link
             href="/spectator"
-            className="btn btn-sm rounded-full border-0 bg-gradient-to-r from-amber-400 to-orange-400 font-bold text-white shadow-amber-200/40 shadow-md transition-all duration-200 hover:from-amber-500 hover:to-orange-500 hover:shadow-amber-300/40 hover:shadow-lg"
+            className="btn btn-sm rounded-full border-0 bg-gradient-to-r from-amber-400 to-orange-400 font-bold text-white shadow-md shadow-amber-200/40 transition-all duration-200 hover:from-amber-500 hover:to-orange-500 hover:shadow-lg hover:shadow-amber-300/40"
             aria-label="観戦"
           >
             <Eye className="size-4" />
@@ -73,7 +73,7 @@ export function Header({ session }: Props) {
           </Link>
           <Link
             href={SIGN_IN_CONST.href}
-            className="btn btn-ghost btn-sm rounded-full border border-primary/20 text-primary hover:bg-primary hover:text-primary-content"
+            className="btn btn-ghost btn-sm border-primary/20 text-primary hover:bg-primary hover:text-primary-content rounded-full border"
             aria-label={SIGN_IN_CONST.label}
           >
             {SIGN_IN_CONST.icon}

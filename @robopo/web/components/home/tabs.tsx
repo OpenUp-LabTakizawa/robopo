@@ -40,8 +40,8 @@ function SelectionCard({
       onClick={onClick}
       className={`group flex min-h-[56px] w-full items-center gap-3 rounded-xl border px-4 py-2.5 transition-all active:scale-[0.98] ${
         isSelected
-          ? "border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20"
-          : "border-base-300 bg-base-100 shadow-sm hover:border-primary/30 hover:shadow-md"
+          ? "border-primary bg-primary/5 ring-primary/20 shadow-sm ring-1"
+          : "border-base-300 bg-base-100 hover:border-primary/30 shadow-sm hover:shadow-md"
       }`}
     >
       <div
@@ -53,7 +53,7 @@ function SelectionCard({
       >
         {icon}
       </div>
-      <span className="text-left font-medium text-sm">{name}</span>
+      <span className="text-left text-sm font-medium">{name}</span>
     </button>
   )
 }
@@ -225,7 +225,7 @@ export function ChallengeTab({
     <div className="grid grid-cols-2 gap-3">
       {/* 1. Competition selection */}
       <div>
-        <p className="mb-2 text-base-content/60 text-sm">大会を選択</p>
+        <p className="text-base-content/60 mb-2 text-sm">大会を選択</p>
         {singleCompetition ? (
           <SelectionCard
             name={singleCompetition.name}
@@ -245,7 +245,7 @@ export function ChallengeTab({
             ))}
           </div>
         ) : (
-          <p className="py-4 text-center text-base-content/40 text-sm">
+          <p className="text-base-content/40 py-4 text-center text-sm">
             開催中の大会がありません
           </p>
         )}
@@ -253,7 +253,7 @@ export function ChallengeTab({
 
       {/* 2. Course selection */}
       <div className={courseDisabled ? "opacity-50" : ""}>
-        <p className="mb-2 text-base-content/60 text-sm">コースを選択</p>
+        <p className="text-base-content/60 mb-2 text-sm">コースを選択</p>
         {filteredCourses.length > 0 ? (
           <div className="grid gap-2">
             {filteredCourses.map((c) => (
@@ -269,7 +269,7 @@ export function ChallengeTab({
             ))}
           </div>
         ) : (
-          <p className="py-4 text-center text-base-content/40 text-sm">
+          <p className="text-base-content/40 py-4 text-center text-sm">
             {competitionDisabled
               ? "大会を選択してください"
               : "コースが割り当てられていません"}
@@ -279,11 +279,11 @@ export function ChallengeTab({
 
       {/* 3. Judge selection */}
       <div className={competitionDisabled ? "opacity-50" : ""}>
-        <p className="mb-2 text-base-content/60 text-sm">採点者を選択</p>
+        <p className="text-base-content/60 mb-2 text-sm">採点者を選択</p>
         {competitionJudges.length > 0 ? (
           <div className="space-y-2">
             <div className="relative">
-              <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-base-content/40" />
+              <Search className="text-base-content/40 pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="採点者を検索..."
@@ -310,13 +310,13 @@ export function ChallengeTab({
                 ))}
               </div>
             ) : (
-              <p className="py-4 text-center text-base-content/40 text-sm">
+              <p className="text-base-content/40 py-4 text-center text-sm">
                 該当する採点者がいません
               </p>
             )}
           </div>
         ) : (
-          <p className="py-4 text-center text-base-content/40 text-sm">
+          <p className="text-base-content/40 py-4 text-center text-sm">
             {competitionDisabled
               ? "大会を選択してください"
               : "採点者が割り当てられていません"}
@@ -326,7 +326,7 @@ export function ChallengeTab({
 
       {/* 4. Player selection */}
       <div className={competitionDisabled ? "opacity-50" : ""}>
-        <p className="mb-2 text-base-content/60 text-sm">選手を選択</p>
+        <p className="text-base-content/60 mb-2 text-sm">選手を選択</p>
         {competitionId !== 0 ? (
           <PlayerSelector
             competitionId={competitionId}
@@ -334,7 +334,7 @@ export function ChallengeTab({
             onSelect={handlePlayerSelect}
           />
         ) : (
-          <p className="py-4 text-center text-base-content/40 text-sm">
+          <p className="text-base-content/40 py-4 text-center text-sm">
             大会を選択してください
           </p>
         )}
@@ -345,10 +345,10 @@ export function ChallengeTab({
         type="button"
         onClick={handleStartScoring}
         disabled={!canStartScoring}
-        className={`btn col-span-2 w-full gap-2 rounded-xl border-0 font-bold text-base tracking-wide transition-all duration-300 ${
+        className={`btn col-span-2 w-full gap-2 rounded-xl border-0 text-base font-bold tracking-wide transition-all duration-300 ${
           canStartScoring
             ? "btn-primary scoring-btn-ready hover:brightness-110 active:scale-[0.97]"
-            : "cursor-not-allowed bg-base-300 text-base-content/30"
+            : "bg-base-300 text-base-content/30 cursor-not-allowed"
         }`}
       >
         <Play className="h-5 w-5" />
@@ -365,7 +365,7 @@ export const ManageTab = (): React.JSX.Element => {
         <Link
           key={btn.href}
           href={btn.href}
-          className="btn btn-ghost justify-start gap-3 border border-base-300"
+          className="btn btn-ghost border-base-300 justify-start gap-3 border"
         >
           {btn.icon}
           {btn.label}
@@ -382,7 +382,7 @@ export const SettingsTab = (): React.JSX.Element => {
         <Link
           key={btn.href}
           href={btn.href}
-          className="btn btn-ghost justify-start gap-3 border border-base-300"
+          className="btn btn-ghost border-base-300 justify-start gap-3 border"
         >
           {btn.icon}
           {btn.label}

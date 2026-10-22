@@ -33,9 +33,9 @@ function DashboardCard({
 }) {
   return (
     <div
-      className={`rounded-box border bg-base-100 p-5 shadow-sm transition-shadow hover:shadow-md ${
+      className={`rounded-box bg-base-100 border p-5 shadow-sm transition-shadow hover:shadow-md ${
         variant === "primary"
-          ? "border-primary/20 ring-1 ring-primary/10"
+          ? "border-primary/20 ring-primary/10 ring-1"
           : "border-base-300"
       }`}
     >
@@ -49,7 +49,7 @@ function DashboardCard({
         >
           {icon}
         </div>
-        <h2 className="font-bold text-lg">{title}</h2>
+        <h2 className="text-lg font-bold">{title}</h2>
       </div>
       {children}
     </div>

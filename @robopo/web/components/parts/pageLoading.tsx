@@ -5,7 +5,7 @@ function SkeletonBlock({ className }: { className?: string }) {
 function RobotIcon() {
   return (
     <div className="absolute inset-0 z-[1] flex items-center justify-center">
-      <div className="loading-robot-pulse flex size-14 items-center justify-center rounded-2xl bg-base-100">
+      <div className="loading-robot-pulse bg-base-100 flex size-14 items-center justify-center rounded-2xl">
         <svg
           width="32"
           height="32"
@@ -107,7 +107,7 @@ export function PageLoading() {
         {/* Left column: Field editor skeleton */}
         <div className="sm:w-full sm:justify-self-end">
           {/* Field grid card */}
-          <div className="card w-full min-w-72 bg-base-100 shadow-xl">
+          <div className="card bg-base-100 w-full min-w-72 shadow-xl">
             <div className="card-body">
               <SkeletonBlock className="mb-3 h-4 w-24" />
               {/* 3x3 grid */}
@@ -115,7 +115,7 @@ export function PageLoading() {
                 {gridCells.map((id, i) => (
                   <div
                     key={id}
-                    className="skeleton-shimmer size-[85px] rounded-lg border border-base-300/50"
+                    className="skeleton-shimmer border-base-300/50 size-[85px] rounded-lg border"
                     style={{ animationDelay: `${i * 80}ms` }}
                   />
                 ))}
@@ -124,7 +124,7 @@ export function PageLoading() {
             </div>
           </div>
           {/* Panel select card */}
-          <div className="card mt-4 w-full min-w-72 bg-base-100 shadow-xl">
+          <div className="card bg-base-100 mt-4 w-full min-w-72 shadow-xl">
             <div className="card-body flex w-full flex-row items-center gap-3">
               {panelItems.map((id) => (
                 <SkeletonBlock key={id} className="size-10" />
@@ -137,7 +137,7 @@ export function PageLoading() {
         {/* Right column: Mission editor skeleton */}
         <div className="mt-4 sm:mx-4 sm:mt-0 sm:w-full sm:justify-self-start">
           {/* Mission list card */}
-          <div className="card w-full min-w-72 bg-base-100 shadow-xl">
+          <div className="card bg-base-100 w-full min-w-72 shadow-xl">
             <div className="card-body">
               <SkeletonBlock className="mb-3 h-4 w-32" />
               <div className="space-y-2">
@@ -148,7 +148,7 @@ export function PageLoading() {
             </div>
           </div>
           {/* Course-out rule card */}
-          <div className="card mt-3 w-full min-w-72 bg-base-100 shadow-xl">
+          <div className="card bg-base-100 mt-3 w-full min-w-72 shadow-xl">
             <div className="card-body">
               <SkeletonBlock className="mb-3 h-4 w-24" />
               <div className="flex flex-wrap gap-4">

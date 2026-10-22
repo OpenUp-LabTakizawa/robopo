@@ -162,16 +162,16 @@ export function JudgeSummaryTable({ competitionId }: Props) {
           {filteredAndSorted.map((judge) => (
             <tr
               key={judge.judgeId}
-              className="transition-colors duration-150 hover:bg-primary/5"
+              className="hover:bg-primary/5 transition-colors duration-150"
             >
               <td className="py-3">{judge.judgeId}</td>
-              <td className="whitespace-nowrap py-3 font-medium">
+              <td className="py-3 font-medium whitespace-nowrap">
                 {judge.judgeName}
               </td>
               <td className="py-3">
                 <button
                   type="button"
-                  className="badge badge-primary badge-outline cursor-pointer transition-colors hover:bg-primary hover:text-primary-content"
+                  className="badge badge-primary badge-outline hover:bg-primary hover:text-primary-content cursor-pointer transition-colors"
                   onClick={(e) => {
                     e.stopPropagation()
                     setPlayerDetailNames(judge.scoredPlayerNames ?? [])
@@ -180,10 +180,10 @@ export function JudgeSummaryTable({ competitionId }: Props) {
                   {judge.scoredPlayerCount}
                 </button>
               </td>
-              <td className="whitespace-nowrap py-3">
+              <td className="py-3 whitespace-nowrap">
                 {formatTimestamp(judge.firstScoringTime)}
               </td>
-              <td className="whitespace-nowrap py-3">
+              <td className="py-3 whitespace-nowrap">
                 {formatTimestamp(judge.lastScoringTime)}
               </td>
               <td className="py-3">{judge.totalScoringCount}</td>
@@ -205,7 +205,7 @@ export function JudgeSummaryTable({ competitionId }: Props) {
         <dialog className="modal modal-open">
           <div className="modal-box max-w-sm">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="font-bold text-lg">採点選手一覧</h3>
+              <h3 className="text-lg font-bold">採点選手一覧</h3>
               <button
                 type="button"
                 className="btn btn-ghost btn-sm btn-circle"
@@ -220,14 +220,14 @@ export function JudgeSummaryTable({ competitionId }: Props) {
                   {playerDetailNames.map((name) => (
                     <li
                       key={name}
-                      className="rounded-lg bg-base-200/50 px-3 py-2.5 text-sm"
+                      className="bg-base-200/50 rounded-lg px-3 py-2.5 text-sm"
                     >
                       {name}
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="py-4 text-center text-base-content/40 text-sm">
+                <p className="text-base-content/40 py-4 text-center text-sm">
                   採点した選手はいません
                 </p>
               )}

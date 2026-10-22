@@ -6,7 +6,7 @@ const manageItems = ["m0", "m1", "m2", "m3", "m4"]
 
 function SelectionCardSkeleton() {
   return (
-    <div className="flex min-h-[56px] w-full items-center gap-3 rounded-xl border border-base-300 px-4 py-2.5">
+    <div className="border-base-300 flex min-h-[56px] w-full items-center gap-3 rounded-xl border px-4 py-2.5">
       <Skeleton className="h-9 w-9 shrink-0 rounded-lg" />
       <Skeleton className="h-4 w-3/5" />
     </div>
@@ -15,7 +15,7 @@ function SelectionCardSkeleton() {
 
 function PlayerCardSkeleton() {
   return (
-    <div className="flex w-full items-center gap-3 rounded-xl border border-base-300 px-3 py-2.5">
+    <div className="border-base-300 flex w-full items-center gap-3 rounded-xl border px-3 py-2.5">
       <Skeleton className="h-10 w-10 shrink-0 rounded-full" />
       <div className="min-w-0 flex-1 space-y-1">
         <Skeleton className="h-3.5 w-3/5" />
@@ -31,7 +31,7 @@ export default function Loading() {
       <div className="grid gap-5 md:grid-cols-2">
         {/* Scoring card skeleton */}
         <div className="md:col-span-2">
-          <div className="rounded-box border border-primary/20 bg-base-100 p-5 shadow-sm ring-1 ring-primary/10">
+          <div className="rounded-box border-primary/20 bg-base-100 ring-primary/10 border p-5 shadow-sm ring-1">
             {/* Card header */}
             <div className="mb-4 flex items-center gap-2">
               <Skeleton className="h-9 w-9 rounded-lg" />
@@ -88,7 +88,7 @@ export default function Loading() {
 
         {/* Management card skeleton */}
         <div className="md:col-span-2">
-          <div className="rounded-box border border-base-300 bg-base-100 p-5 shadow-sm">
+          <div className="rounded-box border-base-300 bg-base-100 border p-5 shadow-sm">
             {/* Card header */}
             <div className="mb-4 flex items-center gap-2">
               <Skeleton className="h-9 w-9 rounded-lg" />
@@ -99,7 +99,7 @@ export default function Loading() {
               {manageItems.map((id, i) => (
                 <div
                   key={id}
-                  className="flex items-center gap-3 rounded-lg border border-base-300 px-4 py-3"
+                  className="border-base-300 flex items-center gap-3 rounded-lg border px-4 py-3"
                   style={{ animationDelay: `${i * 60}ms` }}
                 >
                   <Skeleton className="h-6 w-6 shrink-0 rounded" />
