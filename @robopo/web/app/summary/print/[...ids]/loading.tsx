@@ -4,7 +4,7 @@ export default function Loading() {
   return (
     <>
       {/* Toolbar skeleton */}
-      <div className="fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-base-300 border-b bg-base-100 px-4 py-3 shadow-sm">
+      <div className="border-base-300 bg-base-100 fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-b px-4 py-3 shadow-sm">
         <Skeleton className="h-8 w-16 rounded-xl" />
         <div className="flex items-center gap-3">
           <Skeleton className="h-4 w-24" />
@@ -16,7 +16,7 @@ export default function Loading() {
       <div className="mx-auto mt-16 mb-8">
         <div className="mx-auto box-border min-h-[297mm] w-[210mm] bg-white p-6 shadow-lg">
           {/* Header */}
-          <div className="mb-3 flex items-baseline justify-between border-gray-200 border-b pb-2">
+          <div className="mb-3 flex items-baseline justify-between border-b border-gray-200 pb-2">
             <Skeleton className="h-4 w-32" />
             <Skeleton className="h-3 w-20" />
           </div>

@@ -73,7 +73,7 @@ export function Toolbar({
   return (
     <div className="flex flex-col gap-2">
       {/* Tool selection - segmented control style */}
-      <div className="flex gap-1 rounded-xl bg-base-200 p-1">
+      <div className="bg-base-200 flex gap-1 rounded-xl p-1">
         {tools.map((t) => {
           const active = selectedTool === t.value
           const disabled = isDisabled(t.value)
@@ -82,10 +82,10 @@ export function Toolbar({
             <button
               key={t.value}
               type="button"
-              className={`flex min-h-[44px] flex-1 items-center justify-center gap-1 rounded-lg px-1.5 py-2 font-medium text-xs transition-all duration-150 sm:gap-1.5 sm:px-2 sm:text-sm ${
+              className={`flex min-h-[44px] flex-1 items-center justify-center gap-1 rounded-lg px-1.5 py-2 text-xs font-medium transition-all duration-150 sm:gap-1.5 sm:px-2 sm:text-sm ${
                 active
                   ? `${t.activeBg} shadow-sm ring-2 ${t.activeRing} ring-offset-1`
-                  : "bg-transparent text-base-content/70 hover:bg-base-100"
+                  : "text-base-content/70 hover:bg-base-100 bg-transparent"
               } ${disabled ? "cursor-not-allowed opacity-40" : "cursor-pointer"}`}
               disabled={disabled}
               onClick={() => setSelectedTool(t.value)}
@@ -125,7 +125,7 @@ export function Toolbar({
         <div className="ml-auto">
           <button
             type="button"
-            className="btn btn-ghost btn-sm min-h-[36px] text-error"
+            className="btn btn-ghost btn-sm text-error min-h-[36px]"
             onClick={() => {
               if (window.confirm("フィールドをすべてクリアしますか？")) {
                 onClearAll()

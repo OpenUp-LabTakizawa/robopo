@@ -127,7 +127,7 @@ export function CompetitionFormModal({
   return (
     <dialog className="modal modal-open">
       <div className="modal-box max-w-md">
-        <h3 className="mb-4 font-bold text-lg">
+        <h3 className="mb-4 text-lg font-bold">
           {mode === "create" ? "大会を作成" : "大会を編集"}
         </h3>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -193,7 +193,7 @@ export function CompetitionFormModal({
           )}
 
           {/* Mask settings */}
-          <div className="rounded-xl border border-base-300/50 bg-base-200/30 p-3">
+          <div className="border-base-300/50 bg-base-200/30 rounded-xl border p-3">
             <label className="flex cursor-pointer items-center gap-3">
               <input
                 type="checkbox"
@@ -229,11 +229,11 @@ export function CompetitionFormModal({
               <span className="label-text">コース</span>
             </span>
             {courseList.length > 0 ? (
-              <div className="max-h-[8.5rem] overflow-y-auto rounded-xl border border-base-300/50 bg-base-200/30">
+              <div className="border-base-300/50 bg-base-200/30 max-h-[8.5rem] overflow-y-auto rounded-xl border">
                 {courseList.map((c) => (
                   <label
                     key={c.id}
-                    className="flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 transition-colors hover:bg-base-200/60"
+                    className="hover:bg-base-200/60 flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 transition-colors"
                   >
                     <input
                       type="checkbox"
@@ -246,11 +246,11 @@ export function CompetitionFormModal({
                 ))}
               </div>
             ) : (
-              <p className="rounded-xl bg-base-200/30 px-3 py-2 text-base-content/40 text-sm">
+              <p className="bg-base-200/30 text-base-content/40 rounded-xl px-3 py-2 text-sm">
                 コースが登録されていません
               </p>
             )}
-            <p className="mt-1 text-base-content/40 text-xs">
+            <p className="text-base-content/40 mt-1 text-xs">
               コースの選択は任意です
             </p>
           </div>
@@ -268,7 +268,7 @@ export function CompetitionFormModal({
             </button>
             <button
               type="submit"
-              className="btn btn-primary gap-1.5 rounded-lg shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-primary/30 hover:shadow-xl"
+              className="btn btn-primary shadow-primary/20 hover:shadow-primary/30 gap-1.5 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl"
               disabled={loading}
             >
               {loading ? (
@@ -350,7 +350,7 @@ export function DeleteCompetitionModal({
   return (
     <dialog className="modal modal-open">
       <div className="modal-box">
-        <h3 className="mb-4 font-bold text-lg">大会を削除</h3>
+        <h3 className="mb-4 text-lg font-bold">大会を削除</h3>
         <p className="mb-2">以下の大会を削除しますか？</p>
         <ul className="mb-4 list-inside list-disc text-sm">
           {selectedNames.map((name) => (
@@ -359,8 +359,8 @@ export function DeleteCompetitionModal({
             </li>
           ))}
         </ul>
-        <p className="text-sm text-warning">この操作は取り消せません。</p>
-        {error && <p className="mt-2 text-error text-sm">{error}</p>}
+        <p className="text-warning text-sm">この操作は取り消せません。</p>
+        {error && <p className="text-error mt-2 text-sm">{error}</p>}
         <div className="modal-action">
           <button
             type="button"
@@ -373,7 +373,7 @@ export function DeleteCompetitionModal({
           </button>
           <button
             type="button"
-            className="btn btn-error gap-1.5 rounded-lg shadow-error/20 shadow-lg transition-all duration-200 hover:shadow-error/30 hover:shadow-xl"
+            className="btn btn-error shadow-error/20 hover:shadow-error/30 gap-1.5 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl"
             onClick={handleDelete}
             disabled={loading}
           >

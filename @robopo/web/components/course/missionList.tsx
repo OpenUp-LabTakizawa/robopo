@@ -315,7 +315,7 @@ export function MissionList({
     <div className="w-full">
       {/* Header with Total Points & Undo/Redo */}
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="font-bold text-sm">ミッション</h3>
+        <h3 className="text-sm font-bold">ミッション</h3>
         <span className="badge badge-sm font-mono">
           合計{" "}
           {point.slice(1).reduce<number>((sum, entry) => {
@@ -340,7 +340,7 @@ export function MissionList({
                 className={`btn btn-xs ${
                   isPlaying
                     ? "btn-error text-white"
-                    : "bg-gradient-to-r from-primary to-secondary text-white shadow-sm hover:shadow-md"
+                    : "from-primary to-secondary bg-gradient-to-r text-white shadow-sm hover:shadow-md"
                 } transition-all duration-200`}
                 onClick={onTogglePlay}
                 disabled={!canPlay && !isPlaying}
@@ -478,7 +478,7 @@ export function MissionList({
         {items.length === 0 && insertingAt === null && (
           <button
             type="button"
-            className="w-full cursor-pointer rounded-lg border border-base-300 border-dashed p-4 text-center text-base-content/50 text-sm transition-colors hover:border-primary hover:text-primary"
+            className="border-base-300 text-base-content/50 hover:border-primary hover:text-primary w-full cursor-pointer rounded-lg border border-dashed p-4 text-center text-sm transition-colors"
             onClick={() => handleAddMission(-1)}
           >
             ミッションを追加してください
@@ -534,7 +534,7 @@ function StartRow({
       <div className="flex items-stretch">
         {/* Color accent bar + label */}
         <div className="flex w-20 shrink-0 flex-col items-center justify-center bg-gradient-to-b from-pink-400 to-pink-300 px-2 py-2.5">
-          <span className="font-bold text-white text-xs tracking-wider">
+          <span className="text-xs font-bold tracking-wider text-white">
             START
           </span>
           {panelNumber && (
@@ -563,7 +563,7 @@ function StartRow({
               ))}
             </select>
           ) : (
-            <span className="text-pink-900 text-sm">
+            <span className="text-sm text-pink-900">
               {dir ? MissionString[dir as Exclude<MissionValue, null>] : "-"}
             </span>
           )}
@@ -610,7 +610,7 @@ function GoalRow({
       <div className="flex items-stretch">
         {/* Color accent bar + label */}
         <div className="flex w-20 shrink-0 flex-col items-center justify-center bg-gradient-to-b from-green-400 to-green-300 px-2 py-2.5">
-          <span className="font-bold text-white text-xs tracking-wider">
+          <span className="text-xs font-bold tracking-wider text-white">
             GOAL
           </span>
           {panelNumber && (
@@ -644,7 +644,7 @@ function GoalRow({
               <span className="text-xs">pt</span>
             </div>
           ) : (
-            <span className="text-green-900 text-sm">{goalPoint} pt</span>
+            <span className="text-sm text-green-900">{goalPoint} pt</span>
           )}
         </div>
       </div>
@@ -744,8 +744,8 @@ function SortableMissionRow({
         isSelected
           ? "border-primary bg-primary/5"
           : isInvalid
-            ? "cursor-pointer border-error border-l-4 bg-error/5 hover:bg-error/10"
-            : "cursor-pointer border-transparent bg-base-200/50 hover:bg-base-200"
+            ? "border-error bg-error/5 hover:bg-error/10 cursor-pointer border-l-4"
+            : "bg-base-200/50 hover:bg-base-200 cursor-pointer border-transparent"
       } ${isDragging ? "z-50 shadow-lg" : ""}`}
       onClick={onSelect}
       onKeyDown={(e) => {
@@ -759,7 +759,7 @@ function SortableMissionRow({
         {/* Drag handle */}
         <button
           type="button"
-          className="cursor-grab touch-none text-base-content/30 hover:text-base-content/60"
+          className="text-base-content/30 hover:text-base-content/60 cursor-grab touch-none"
           {...attributes}
           {...listeners}
           onClick={(e) => e.stopPropagation()}
@@ -768,7 +768,7 @@ function SortableMissionRow({
         </button>
 
         {/* Order number */}
-        <span className="w-5 font-mono text-base-content/50 text-xs">
+        <span className="text-base-content/50 w-5 font-mono text-xs">
           {index + 1}
         </span>
 
@@ -828,7 +828,7 @@ function SortableMissionRow({
 
         {/* Point display (collapsed) */}
         {!isSelected && (
-          <span className="font-mono text-base-content/60 text-xs">
+          <span className="text-base-content/60 font-mono text-xs">
             {Array.isArray(point) ? `[${point.join(",")}]` : (point ?? 0)} pt
           </span>
         )}
@@ -841,7 +841,7 @@ function SortableMissionRow({
               className="tooltip tooltip-left hidden sm:block"
               data-tip={errorMessage}
             >
-              <TriangleAlert className="size-4 text-error" />
+              <TriangleAlert className="text-error size-4" />
             </div>
             {/* Mobile: tap to show message */}
             <button
@@ -849,7 +849,7 @@ function SortableMissionRow({
               className="sm:hidden"
               onClick={handleErrorTap}
             >
-              <TriangleAlert className="size-4 text-error" />
+              <TriangleAlert className="text-error size-4" />
             </button>
           </>
         )}
@@ -869,7 +869,7 @@ function SortableMissionRow({
       </div>
       {/* Mobile error message */}
       {isInvalid && showMobileError && !isSelected && (
-        <p className="mt-1 text-error text-xs sm:hidden">{errorMessage}</p>
+        <p className="text-error mt-1 text-xs sm:hidden">{errorMessage}</p>
       )}
     </div>
   )
@@ -1041,7 +1041,7 @@ function InlineMissionEditor({
             <div className="flex flex-wrap items-center gap-1">
               {tierValues.map((val, i) => (
                 <div key={i} className="flex items-center gap-0.5">
-                  <span className="text-[10px] text-base-content/40">
+                  <span className="text-base-content/40 text-[10px]">
                     {i + 1}.
                   </span>
                   <input
@@ -1145,7 +1145,7 @@ function InsertMissionRow({
   }
 
   return (
-    <div className="rounded-lg border-2 border-primary/40 border-dashed bg-primary/5 p-3">
+    <div className="border-primary/40 bg-primary/5 rounded-lg border-2 border-dashed p-3">
       <div className="flex flex-wrap items-center gap-2">
         {/* Panel ID */}
         <div className="flex items-center gap-0.5">
@@ -1273,11 +1273,11 @@ function AddButton({
     <div className="flex h-5 items-center justify-center">
       <button
         type="button"
-        className="flex size-5 items-center justify-center rounded-full border border-base-300 bg-base-100 shadow-sm transition-colors hover:border-primary hover:bg-primary/10"
+        className="border-base-300 bg-base-100 hover:border-primary hover:bg-primary/10 flex size-5 items-center justify-center rounded-full border shadow-sm transition-colors"
         onClick={onClick}
         title="ミッションを追加"
       >
-        <Plus className="size-3 text-primary" />
+        <Plus className="text-primary size-3" />
       </button>
     </div>
   )

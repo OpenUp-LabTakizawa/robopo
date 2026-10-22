@@ -60,7 +60,7 @@ export default function Loading() {
     >
       {/* TopBar */}
       <div
-        className={`flex items-center justify-between gap-2 border-[#00e0ff]/40 border-b-2 bg-black/55 px-3 py-2 sm:px-6 sm:py-3`}
+        className={`flex items-center justify-between gap-2 border-b-2 border-[#00e0ff]/40 bg-black/55 px-3 py-2 sm:px-6 sm:py-3`}
       >
         <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-5">
           {/* LIVE pill */}

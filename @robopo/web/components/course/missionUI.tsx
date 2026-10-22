@@ -206,7 +206,7 @@ function MissionSelect({
       {(hasParam || isPause) && (
         <div className="mt-3">
           <div className="mb-2 flex items-center gap-3">
-            <span className="font-bold text-sm">ポイント方式:</span>
+            <span className="text-sm font-bold">ポイント方式:</span>
             <label className="label cursor-pointer gap-1">
               <input
                 type="radio"
@@ -244,7 +244,7 @@ function MissionSelect({
             <div className="space-y-1">
               {tierValues.map((val, i) => (
                 <div key={i} className="flex items-center gap-2">
-                  <span className="w-8 text-base-content/50 text-xs">
+                  <span className="text-base-content/50 w-8 text-xs">
                     {i + 1}.
                   </span>
                   <input

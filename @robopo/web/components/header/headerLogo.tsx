@@ -21,7 +21,7 @@ export function HeaderLogo() {
         priority
         className="h-auto max-w-full"
       />
-      <span className="font-bold text-lg text-primary">ROBOPO</span>
+      <span className="text-primary text-lg font-bold">ROBOPO</span>
     </>
   )
 

@@ -15,12 +15,12 @@ export function PageLoadingShell({
   return (
     <div className="flex h-[calc(100dvh-3.5rem)] flex-col overflow-hidden px-4 py-6 sm:px-10 lg:px-16">
       <div className="mb-4 shrink-0">
-        <h1 className="font-bold text-2xl text-base-content tracking-tight">
+        <h1 className="text-base-content text-2xl font-bold tracking-tight">
           {title}
         </h1>
-        <p className="mt-1 text-base-content/60 text-sm">{description}</p>
+        <p className="text-base-content/60 mt-1 text-sm">{description}</p>
       </div>
-      <div className="flex min-h-0 flex-1 animate-[skeletonFadeIn_0.3s_ease-out] flex-col rounded-2xl border border-base-300 bg-base-100 shadow-sm">
+      <div className="border-base-300 bg-base-100 flex min-h-0 flex-1 animate-[skeletonFadeIn_0.3s_ease-out] flex-col rounded-2xl border shadow-sm">
         {children ?? <ListPageSkeleton />}
       </div>
     </div>
@@ -54,7 +54,7 @@ function ListPageSkeleton() {
         {listRows.map((id, i) => (
           <div
             key={id}
-            className="flex items-center gap-3 border-base-200/60 border-b py-3"
+            className="border-base-200/60 flex items-center gap-3 border-b py-3"
             style={{ animationDelay: `${i * 60}ms` }}
           >
             <Skeleton className="size-5 shrink-0 rounded" />

@@ -221,7 +221,7 @@ export function CourseDetailTable({
   }
 
   return (
-    <div className="card border border-base-300 bg-base-100 shadow-sm print:shadow-none">
+    <div className="card border-base-300 bg-base-100 border shadow-sm print:shadow-none">
       <div className="card-body p-4">
         {/* Table */}
         <div className="overflow-x-auto">
@@ -231,16 +231,16 @@ export function CourseDetailTable({
               <tr>
                 <th
                   colSpan={3}
-                  className="border border-base-300 bg-base-200 p-2 text-center text-xs"
+                  className="border-base-300 bg-base-200 border p-2 text-center text-xs"
                 />
                 {visibleColumns.map((col, i) => (
                   <th
                     key={`hdr-${col.challengeId}-${col.type}`}
-                    className="relative min-w-10 border border-base-300 bg-base-200 p-2 text-center font-mono text-xs"
+                    className="border-base-300 bg-base-200 relative min-w-10 border p-2 text-center font-mono text-xs"
                   >
                     <span className="tabular-nums">{startIndex + i + 1}</span>
                     {col.type === "retry" && (
-                      <span className="ml-0.5 text-warning text-xs">R</span>
+                      <span className="text-warning ml-0.5 text-xs">R</span>
                     )}
                     {isEditing && col.type === "first" && (
                       <button
@@ -259,7 +259,7 @@ export function CourseDetailTable({
                   return (
                     <th
                       key={key}
-                      className="min-w-10 border border-base-300 bg-base-200"
+                      className="border-base-300 bg-base-200 min-w-10 border"
                     />
                   )
                 })}
@@ -269,15 +269,15 @@ export function CourseDetailTable({
               {/* Mission rows */}
               {missionPair.map((pair, mIdx) => (
                 <tr key={missionKeys[mIdx]}>
-                  <td className="w-8 border border-base-300 p-2 text-center font-mono text-xs tabular-nums">
+                  <td className="border-base-300 w-8 border p-2 text-center font-mono text-xs tabular-nums">
                     {mIdx + 1}
                   </td>
-                  <td className="whitespace-nowrap border border-base-300 p-2 text-sm">
+                  <td className="border-base-300 border p-2 text-sm whitespace-nowrap">
                     {pair[0] !== null && MissionString[pair[0]]}
                     {pair[1] !== null && String(pair[1])}
                     {pair[0] !== null && getMissionParameterUnit(pair[0])}
                   </td>
-                  <td className="w-10 border border-base-300 bg-base-200/50 p-2 text-center font-mono text-xs tabular-nums">
+                  <td className="border-base-300 bg-base-200/50 w-10 border p-2 text-center font-mono text-xs tabular-nums">
                     {point[mIdx + 2] !== null &&
                       (Array.isArray(point[mIdx + 2])
                         ? (point[mIdx + 2] as number[])[0]
@@ -289,7 +289,7 @@ export function CourseDetailTable({
                     return (
                       <td
                         key={`c-${col.challengeId}-${col.type}-${missionKeys[mIdx]}`}
-                        className={`min-w-10 border border-base-300 p-2 text-center ${
+                        className={`border-base-300 min-w-10 border p-2 text-center ${
                           completed ? "text-success" : "text-base-content/20"
                         }`}
                       >
@@ -312,11 +312,11 @@ export function CourseDetailTable({
               <tr>
                 <td
                   colSpan={2}
-                  className="border border-base-300 p-2 text-center text-sm"
+                  className="border-base-300 border p-2 text-center text-sm"
                 >
                   ゴール
                 </td>
-                <td className="border border-base-300 bg-base-200/50 p-2 text-center font-mono text-xs tabular-nums">
+                <td className="border-base-300 bg-base-200/50 border p-2 text-center font-mono text-xs tabular-nums">
                   {point[1]}
                 </td>
                 {visibleColumns.map((col) => {
@@ -325,7 +325,7 @@ export function CourseDetailTable({
                   return (
                     <td
                       key={`goal-${col.challengeId}-${col.type}`}
-                      className={`min-w-10 border border-base-300 p-2 text-center ${
+                      className={`border-base-300 min-w-10 border p-2 text-center ${
                         completed ? "text-success" : "text-base-content/20"
                       }`}
                     >
@@ -347,7 +347,7 @@ export function CourseDetailTable({
               <tr className="bg-base-200/30">
                 <td
                   colSpan={3}
-                  className="border border-base-300 bg-base-200 p-2 text-center font-bold text-sm"
+                  className="border-base-300 bg-base-200 border p-2 text-center text-sm font-bold"
                 >
                   コースポイント
                 </td>
@@ -356,7 +356,7 @@ export function CourseDetailTable({
                   return (
                     <td
                       key={`pts-${col.challengeId}-${col.type}`}
-                      className="min-w-10 border border-base-300 p-2 text-center font-bold font-mono tabular-nums"
+                      className="border-base-300 min-w-10 border p-2 text-center font-mono font-bold tabular-nums"
                     >
                       {isEditing ? (
                         <input

@@ -75,13 +75,13 @@ function MissionOverviewItem({
     <div ref={isCurrent ? currentRef : undefined} className={containerClass}>
       {/* Status icon / Number */}
       {isCompleted ? (
-        <CircleCheck className="size-6 shrink-0 text-success" />
+        <CircleCheck className="text-success size-6 shrink-0" />
       ) : (
         <div
           className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs ${
             isCurrent
-              ? "bg-primary font-bold text-primary-content"
-              : "bg-base-300 font-medium text-base-content/40"
+              ? "bg-primary text-primary-content font-bold"
+              : "bg-base-300 text-base-content/40 font-medium"
           }`}
         >
           {index + 1}
@@ -102,7 +102,7 @@ function MissionOverviewItem({
 
       {/* Current indicator */}
       {isCurrent && (
-        <ChevronRight className="size-4 shrink-0 animate-pulse text-primary" />
+        <ChevronRight className="text-primary size-4 shrink-0 animate-pulse" />
       )}
     </div>
   )
@@ -162,7 +162,7 @@ export function MissionOverview({
         aria-label="ミッション一覧を開く"
       >
         <ListOrdered className="size-5" />
-        <span className="font-medium text-xs">
+        <span className="text-xs font-medium">
           {progress.completed}/{progress.total}
         </span>
       </button>
@@ -179,11 +179,11 @@ export function MissionOverview({
           />
 
           {/* Drawer panel */}
-          <div className="drawer-slide-in relative flex w-80 max-w-[85vw] flex-col bg-base-100 shadow-2xl">
+          <div className="drawer-slide-in bg-base-100 relative flex w-80 max-w-[85vw] flex-col shadow-2xl">
             {/* Header */}
-            <div className="flex items-center justify-between border-base-300 border-b px-4 py-3">
+            <div className="border-base-300 flex items-center justify-between border-b px-4 py-3">
               <div>
-                <h3 className="font-bold text-base">ミッション一覧</h3>
+                <h3 className="text-base font-bold">ミッション一覧</h3>
                 <p className="text-base-content/50 text-xs">
                   {progress.completed} / {progress.total} 完了
                 </p>
@@ -200,9 +200,9 @@ export function MissionOverview({
 
             {/* Progress bar */}
             <div className="px-4 py-2">
-              <div className="h-1.5 w-full overflow-hidden rounded-full bg-base-300">
+              <div className="bg-base-300 h-1.5 w-full overflow-hidden rounded-full">
                 <div
-                  className="h-full rounded-full bg-primary transition-all duration-500"
+                  className="bg-primary h-full rounded-full transition-all duration-500"
                   style={{ width: `${progress.percent}%` }}
                 />
               </div>

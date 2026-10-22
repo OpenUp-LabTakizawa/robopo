@@ -346,9 +346,9 @@ export function NextPauseIndicator({
 }) {
   return (
     <div style={getCellStyle({ row, col, responsive })}>
-      <div className="pause-indicator flex h-3/4 w-3/4 items-center justify-center rounded-full bg-warning/25 ring-2 ring-warning/40">
+      <div className="pause-indicator bg-warning/25 ring-warning/40 flex h-3/4 w-3/4 items-center justify-center rounded-full ring-2">
         <Pause
-          className="h-1/2 w-1/2 text-warning drop-shadow-sm"
+          className="text-warning h-1/2 w-1/2 drop-shadow-sm"
           fill="currentColor"
         />
       </div>

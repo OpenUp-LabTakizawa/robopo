@@ -101,19 +101,19 @@ export function JudgeView({
       {/* Action bar */}
       <div className="shrink-0 px-4 pt-4 pb-2">
         {successMessage && (
-          <div className="mb-3 rounded-lg bg-success/10 px-4 py-2 font-medium text-sm text-success">
+          <div className="bg-success/10 text-success mb-3 rounded-lg px-4 py-2 text-sm font-medium">
             {successMessage}
           </div>
         )}
         {errorMessage && (
-          <div className="mb-3 rounded-lg bg-error/10 px-4 py-2 font-medium text-error text-sm">
+          <div className="bg-error/10 text-error mb-3 rounded-lg px-4 py-2 text-sm font-medium">
             {errorMessage}
           </div>
         )}
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
-            className="btn btn-sm btn-primary gap-1.5 rounded-lg shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-primary/30 hover:shadow-xl"
+            className="btn btn-sm btn-primary shadow-primary/20 hover:shadow-primary/30 gap-1.5 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl"
             onClick={() => {
               setSuccessMessage(null)
               setCreateModalOpen(true)
@@ -159,8 +159,8 @@ export function JudgeView({
 
       {/* Filter bar */}
       <div className="flex shrink-0 flex-col gap-3 px-4 pb-4">
-        <label className="input input-bordered flex items-center gap-2 rounded-xl bg-base-200/40 transition-colors focus-within:bg-base-100">
-          <Search className="size-4 shrink-0 text-base-content/40" />
+        <label className="input input-bordered bg-base-200/40 focus-within:bg-base-100 flex items-center gap-2 rounded-xl transition-colors">
+          <Search className="text-base-content/40 size-4 shrink-0" />
           <input
             type="text"
             placeholder="ユーザー名・備考で検索"
@@ -170,11 +170,11 @@ export function JudgeView({
           />
         </label>
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex shrink-0 items-center gap-1.5 rounded-lg bg-base-200/50 px-2.5 py-1.5">
-            <Filter className="size-3.5 shrink-0 text-base-content/40" />
+          <div className="bg-base-200/50 flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5">
+            <Filter className="text-base-content/40 size-3.5 shrink-0" />
             <span className="shrink-0 text-xs">大会</span>
             <select
-              className="select select-ghost select-xs bg-transparent pe-0 font-medium [background-image:none] focus:outline-none [&>option]:bg-base-100 [&>option]:text-base-content"
+              className="select select-ghost select-xs [&>option]:bg-base-100 [&>option]:text-base-content bg-transparent [background-image:none] pe-0 font-medium focus:outline-none"
               value={competitionFilter}
               onChange={(e) => setCompetitionFilter(e.target.value)}
             >
@@ -186,9 +186,9 @@ export function JudgeView({
               ))}
             </select>
           </div>
-          <div className="flex items-center gap-1.5 rounded-lg bg-base-200/50 px-2.5 py-1.5">
+          <div className="bg-base-200/50 flex items-center gap-1.5 rounded-lg px-2.5 py-1.5">
             <select
-              className="select select-ghost select-xs bg-transparent font-medium focus:outline-none [&>option]:bg-base-100 [&>option]:text-base-content"
+              className="select select-ghost select-xs [&>option]:bg-base-100 [&>option]:text-base-content bg-transparent font-medium focus:outline-none"
               value={sortKey}
               onChange={(e) => setSortKey(e.target.value as SortKey)}
             >
@@ -197,7 +197,7 @@ export function JudgeView({
             </select>
             <button
               type="button"
-              className="flex shrink-0 items-center gap-1 rounded-md bg-base-100 px-2 py-1 text-xs shadow-sm transition-colors hover:bg-base-300/40"
+              className="bg-base-100 hover:bg-base-300/40 flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs shadow-sm transition-colors"
               onClick={() =>
                 setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
               }
@@ -229,7 +229,7 @@ export function JudgeView({
       <div className="min-h-0 flex-1 overflow-y-auto">
         {(searchQuery || competitionFilter) &&
         filteredAndSortedList.length === 0 ? (
-          <div className="py-8 text-center text-base-content/40">
+          <div className="text-base-content/40 py-8 text-center">
             条件に一致する採点者が見つかりません
           </div>
         ) : (

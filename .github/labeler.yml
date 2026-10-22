@@ -1,33 +1,35 @@
 🍱asset:
-- changed-files:
-  - any-glob-to-any-file: ['**/*.avif', '**/*.ico', '**/*.png', '**/*.svg']
-🐛bug:
-- head-branch: ['^fix', 'fix']
-♻️ci:
-- changed-files:
-  - any-glob-to-any-file: '.github/**/*.yml'
-⚙️config:
-- changed-files:
-  - any-glob-to-any-file: '**/*config.*'
-dependencies:
-- changed-files:
-  - any-glob-to-any-file: ['package-lock.json', '**/package.json']
-📝documentation:
-- changed-files:
-  - any-glob-to-any-file: ['@robopo/docs/**', '.rumdl.toml', '**/*.md', '**/*.mdx']
-🚀enhancement:
-- all:
   - changed-files:
-    - any-glob-to-any-file: '@robopo/web/app/**'
+      - any-glob-to-any-file: ["**/*.avif", "**/*.ico", "**/*.png", "**/*.svg"]
+🐛bug:
+  - head-branch: ["^fix", "fix"]
+♻️ci:
+  - changed-files:
+      - any-glob-to-any-file: ".github/**/*.yml"
+⚙️config:
+  - changed-files:
+      - any-glob-to-any-file: "**/*config.*"
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file: ["package-lock.json", "**/package.json"]
+📝documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          ["@robopo/docs/**", ".rumdl.toml", "**/*.md", "**/*.mdx"]
+🚀enhancement:
+  - all:
+      - changed-files:
+          - any-glob-to-any-file: "@robopo/web/app/**"
 🪸git:
-- changed-files:
-  - any-glob-to-any-file: ['.gitattributes', '**/.gitignore']
+  - changed-files:
+      - any-glob-to-any-file: [".gitattributes", "**/.gitignore"]
 🧰infrastructure:
-- changed-files:
-  - any-glob-to-any-file: ['**/*.toml', '.devcontainer/*', '.editorconfig', 'biome.json']
+  - changed-files:
+      - any-glob-to-any-file:
+          ["**/*.toml", ".devcontainer/*", ".editorconfig", "biome.json"]
 ✅test:
-- changed-files:
-  - any-glob-to-any-file: ['@robopo/web/happydom.ts', '@robopo/web/test/**']
+  - changed-files:
+      - any-glob-to-any-file: ["@robopo/web/happydom.ts", "@robopo/web/test/**"]
 🆚vscode:
-- changed-files:
-  - any-glob-to-any-file: '.vscode/*'
+  - changed-files:
+      - any-glob-to-any-file: ".vscode/*"

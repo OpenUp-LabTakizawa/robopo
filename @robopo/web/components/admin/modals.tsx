@@ -109,7 +109,7 @@ export function AdminFormModal({
     <dialog className="modal modal-open">
       <div className="modal-box max-w-md">
         <div className="flex items-center justify-between">
-          <h3 className="font-bold text-lg">
+          <h3 className="text-lg font-bold">
             {mode === "create" ? (
               <span className="flex items-center gap-2">
                 <Plus className="size-5" />
@@ -143,7 +143,7 @@ export function AdminFormModal({
               disabled={loading}
               autoComplete="off"
             />
-            <p className="mt-1 text-base-content/40 text-xs">
+            <p className="text-base-content/40 mt-1 text-xs">
               英小文字・数字・アンダースコアのみ使用可能
             </p>
           </label>
@@ -153,7 +153,7 @@ export function AdminFormModal({
               <span className="label-text font-medium">
                 パスワード
                 {mode === "edit" && (
-                  <span className="ml-1 text-base-content/50 text-xs">
+                  <span className="text-base-content/50 ml-1 text-xs">
                     (変更する場合のみ入力)
                   </span>
                 )}
@@ -185,7 +185,7 @@ export function AdminFormModal({
           </label>
 
           {error && (
-            <div className="flex items-center gap-2 rounded-lg bg-error/10 px-4 py-2.5 text-error text-sm">
+            <div className="bg-error/10 text-error flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm">
               <CircleX className="size-5 shrink-0" />
               {error}
             </div>
@@ -274,12 +274,12 @@ export function AdminDeleteModal({
         <div className="flex flex-col items-center px-2 py-2">
           {successMessage ? (
             <div className="flex flex-col items-center gap-3">
-              <CircleCheck className="size-12 text-success" />
+              <CircleCheck className="text-success size-12" />
               <p className="text-center font-medium">{successMessage}</p>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-3">
-              <TriangleAlert className="size-12 text-warning" />
+              <TriangleAlert className="text-warning size-12" />
               <p className="text-center font-medium">
                 以下の管理者を削除しますか？
               </p>
@@ -290,14 +290,14 @@ export function AdminDeleteModal({
                   </span>
                 ))}
               </div>
-              <p className="text-center text-base-content/60 text-sm">
+              <p className="text-base-content/60 text-center text-sm">
                 この操作は元に戻せません。関連するセッションやアカウントデータもすべて削除されます。
               </p>
             </div>
           )}
 
           {errorMessage && (
-            <div className="mt-4 flex w-full items-center gap-2 rounded-lg bg-error/10 px-4 py-2.5 text-error text-sm">
+            <div className="bg-error/10 text-error mt-4 flex w-full items-center gap-2 rounded-lg px-4 py-2.5 text-sm">
               <CircleX className="size-5 shrink-0" />
               {errorMessage}
             </div>
@@ -307,7 +307,7 @@ export function AdminDeleteModal({
             {!successMessage && (
               <button
                 type="button"
-                className="btn btn-error w-full rounded-xl shadow-error/20 shadow-lg transition-all duration-200 hover:shadow-error/30 hover:shadow-xl"
+                className="btn btn-error shadow-error/20 hover:shadow-error/30 w-full rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl"
                 onClick={handleDelete}
                 disabled={loading}
               >

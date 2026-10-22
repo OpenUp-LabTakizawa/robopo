@@ -122,7 +122,7 @@ export function AdminView({
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            className="btn btn-primary btn-sm rounded-xl shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-primary/30 hover:shadow-xl"
+            className="btn btn-primary btn-sm shadow-primary/20 hover:shadow-primary/30 rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl"
             onClick={() => setCreateModalOpen(true)}
           >
             <Plus className="size-4" />
@@ -152,14 +152,14 @@ export function AdminView({
 
         {/* Success message */}
         {successMessage && (
-          <div className="mt-2 rounded-lg bg-success/10 px-4 py-2 text-sm text-success">
+          <div className="bg-success/10 text-success mt-2 rounded-lg px-4 py-2 text-sm">
             {successMessage}
           </div>
         )}
 
         {/* Search */}
-        <label className="input mt-3 flex items-center gap-2 rounded-xl border-base-300/50 bg-base-200/50 transition-all duration-200 focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/20">
-          <Search className="size-4 text-base-content/40" />
+        <label className="input border-base-300/50 bg-base-200/50 focus-within:border-primary/50 focus-within:ring-primary/20 mt-3 flex items-center gap-2 rounded-xl transition-all duration-200 focus-within:ring-2">
+          <Search className="text-base-content/40 size-4" />
           <input
             type="text"
             className="grow bg-transparent text-sm"
@@ -170,7 +170,7 @@ export function AdminView({
         </label>
 
         {/* Sort */}
-        <div className="mt-2 flex items-center gap-2 text-base-content/60 text-xs">
+        <div className="text-base-content/60 mt-2 flex items-center gap-2 text-xs">
           <button
             type="button"
             className={`btn btn-ghost btn-xs gap-1 ${sortKey === "username" ? "text-primary" : ""}`}
@@ -191,10 +191,10 @@ export function AdminView({
       </div>
 
       {/* Table */}
-      <div className="m-3 min-h-0 flex-1 overflow-x-auto overflow-y-auto rounded-xl border border-base-300/50">
+      <div className="border-base-300/50 m-3 min-h-0 flex-1 overflow-x-auto overflow-y-auto rounded-xl border">
         <table className="table-pin-rows table-zebra table">
           <thead>
-            <tr className="border-base-300/50 border-b bg-base-200/60">
+            <tr className="border-base-300/50 bg-base-200/60 border-b">
               <th className="w-12">
                 <label>
                   <input
@@ -208,13 +208,13 @@ export function AdminView({
                   />
                 </label>
               </th>
-              <th className="py-3 font-semibold text-base-content/50 text-xs uppercase tracking-wider">
+              <th className="text-base-content/50 py-3 text-xs font-semibold tracking-wider uppercase">
                 ユーザー名
               </th>
-              <th className="py-3 font-semibold text-base-content/50 text-xs uppercase tracking-wider">
+              <th className="text-base-content/50 py-3 text-xs font-semibold tracking-wider uppercase">
                 最終ログイン
               </th>
-              <th className="py-3 font-semibold text-base-content/50 text-xs uppercase tracking-wider">
+              <th className="text-base-content/50 py-3 text-xs font-semibold tracking-wider uppercase">
                 作成日時
               </th>
             </tr>
@@ -224,7 +224,7 @@ export function AdminView({
               sorted.map((admin) => (
                 <tr
                   key={admin.id}
-                  className="cursor-pointer transition-colors duration-150 hover:bg-primary/5"
+                  className="hover:bg-primary/5 cursor-pointer transition-colors duration-150"
                   onClick={() => handleSelect(admin.id)}
                 >
                   <th className="w-12">
@@ -239,7 +239,7 @@ export function AdminView({
                   </th>
                   <td className="py-3 font-medium">{admin.username}</td>
                   <td
-                    className="whitespace-nowrap py-3 text-base-content/60 text-sm"
+                    className="text-base-content/60 py-3 text-sm whitespace-nowrap"
                     suppressHydrationWarning
                   >
                     {admin.lastLoginAt ? (
@@ -249,7 +249,7 @@ export function AdminView({
                     )}
                   </td>
                   <td
-                    className="py-3 text-base-content/60 text-sm"
+                    className="text-base-content/60 py-3 text-sm"
                     suppressHydrationWarning
                   >
                     {admin.createdAt
@@ -262,7 +262,7 @@ export function AdminView({
               <tr>
                 <td
                   colSpan={4}
-                  className="py-12 text-center text-base-content/40"
+                  className="text-base-content/40 py-12 text-center"
                 >
                   管理者が登録されていません。
                 </td>

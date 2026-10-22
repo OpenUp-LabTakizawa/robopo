@@ -124,7 +124,7 @@ export default function CourseEdit({
 
   return (
     <div className="container mx-auto">
-      <div className="card w-full min-w-72 bg-base-100 shadow-xl">
+      <div className="card bg-base-100 w-full min-w-72 shadow-xl">
         <div className="card-body">
           <Toolbar
             field={field}

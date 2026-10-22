@@ -48,30 +48,30 @@ export function Panel({
       }`}
     >
       {panelNumber !== undefined && (
-        <span className="pointer-events-none absolute top-0.5 left-0.5 font-mono text-[9px] text-gray-500 leading-none">
+        <span className="pointer-events-none absolute top-0.5 left-0.5 font-mono text-[9px] leading-none text-gray-500">
           P{panelNumber}
         </span>
       )}
       {hasRole &&
         (value === "startGoal" ? (
           <>
-            <div className="flex h-[34%] w-[68%] items-center justify-center whitespace-nowrap rounded-t-sm bg-pink-300 font-bold text-[10px] sm:text-sm">
+            <div className="flex h-[34%] w-[68%] items-center justify-center rounded-t-sm bg-pink-300 text-[10px] font-bold whitespace-nowrap sm:text-sm">
               {PanelString.start}
             </div>
-            <div className="flex h-[34%] w-[68%] items-center justify-center whitespace-nowrap rounded-b-sm bg-green-300 font-bold text-[10px] sm:text-sm">
+            <div className="flex h-[34%] w-[68%] items-center justify-center rounded-b-sm bg-green-300 text-[10px] font-bold whitespace-nowrap sm:text-sm">
               {PanelString.goal}
             </div>
           </>
         ) : (
           <div
-            className={`${routeStyle} flex h-[68%] w-[68%] items-center justify-center whitespace-nowrap rounded-sm font-bold text-[10px] sm:text-sm`}
+            className={`${routeStyle} flex h-[68%] w-[68%] items-center justify-center rounded-sm text-[10px] font-bold whitespace-nowrap sm:text-sm`}
           >
             {PanelString[value]}
           </div>
         ))}
       {isIsolated && hasRole && (
-        <div className="pointer-events-none absolute inset-0 flex items-start justify-end border-2 border-error border-dashed bg-error/20 p-0.5">
-          <TriangleAlert className="size-3.5 text-error sm:size-4" />
+        <div className="border-error bg-error/20 pointer-events-none absolute inset-0 flex items-start justify-end border-2 border-dashed p-0.5">
+          <TriangleAlert className="text-error size-3.5 sm:size-4" />
         </div>
       )}
     </button>

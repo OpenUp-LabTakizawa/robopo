@@ -30,10 +30,10 @@ function NavLink({
     <Link
       href={item.href}
       onClick={onClick}
-      className={`drawer-item group flex items-center gap-3 rounded-lg px-3 py-2.5 font-medium text-sm transition-all duration-200 ${
+      className={`drawer-item group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
         active
-          ? "border-primary border-l-4 bg-primary/10 text-primary"
-          : "border-transparent border-l-4 text-base-content/70 hover:bg-base-200 hover:text-base-content active:scale-[0.98]"
+          ? "border-primary bg-primary/10 text-primary border-l-4"
+          : "text-base-content/70 hover:bg-base-200 hover:text-base-content border-l-4 border-transparent active:scale-[0.98]"
       } ${isOpen ? "drawer-item-visible" : ""}`}
       style={{ "--drawer-item-index": index } as React.CSSProperties}
     >
@@ -177,7 +177,7 @@ export function NavigationDrawer() {
         role="dialog"
         aria-modal="true"
         aria-label="ナビゲーションメニュー"
-        className={`absolute top-0 right-0 h-full w-72 bg-base-100 shadow-2xl ${
+        className={`bg-base-100 absolute top-0 right-0 h-full w-72 shadow-2xl ${
           isOpen
             ? "drawer-slide-in"
             : hasBeenOpened
@@ -186,9 +186,9 @@ export function NavigationDrawer() {
         }`}
       >
         {/* Header */}
-        <div className="flex h-14 items-center justify-between border-base-300 border-b px-4">
+        <div className="border-base-300 flex h-14 items-center justify-between border-b px-4">
           <span
-            className={`drawer-title font-bold text-base text-base-content/80 ${isOpen ? "drawer-title-visible" : ""}`}
+            className={`drawer-title text-base-content/80 text-base font-bold ${isOpen ? "drawer-title-visible" : ""}`}
           >
             メニュー
           </span>
@@ -212,11 +212,11 @@ export function NavigationDrawer() {
               {i === dividerIndex && (
                 <>
                   <div
-                    className={`drawer-divider my-2 border-base-300 border-t ${isOpen ? "drawer-divider-visible" : ""}`}
+                    className={`drawer-divider border-base-300 my-2 border-t ${isOpen ? "drawer-divider-visible" : ""}`}
                     style={{ "--drawer-item-index": i } as React.CSSProperties}
                   />
                   <span
-                    className={`drawer-item mb-1 block px-3 font-semibold text-base-content/40 text-xs uppercase tracking-wider ${isOpen ? "drawer-item-visible" : ""}`}
+                    className={`drawer-item text-base-content/40 mb-1 block px-3 text-xs font-semibold tracking-wider uppercase ${isOpen ? "drawer-item-visible" : ""}`}
                     style={{ "--drawer-item-index": i } as React.CSSProperties}
                   >
                     大会管理
@@ -226,11 +226,11 @@ export function NavigationDrawer() {
               {i === settingsDividerIndex && (
                 <>
                   <div
-                    className={`drawer-divider my-2 border-base-300 border-t ${isOpen ? "drawer-divider-visible" : ""}`}
+                    className={`drawer-divider border-base-300 my-2 border-t ${isOpen ? "drawer-divider-visible" : ""}`}
                     style={{ "--drawer-item-index": i } as React.CSSProperties}
                   />
                   <span
-                    className={`drawer-item mb-1 block px-3 font-semibold text-base-content/40 text-xs uppercase tracking-wider ${isOpen ? "drawer-item-visible" : ""}`}
+                    className={`drawer-item text-base-content/40 mb-1 block px-3 text-xs font-semibold tracking-wider uppercase ${isOpen ? "drawer-item-visible" : ""}`}
                     style={{ "--drawer-item-index": i } as React.CSSProperties}
                   >
                     設定
@@ -239,7 +239,7 @@ export function NavigationDrawer() {
               )}
               {i === spectatorDividerIndex && (
                 <div
-                  className={`drawer-divider my-2 border-base-300 border-t ${isOpen ? "drawer-divider-visible" : ""}`}
+                  className={`drawer-divider border-base-300 my-2 border-t ${isOpen ? "drawer-divider-visible" : ""}`}
                   style={{ "--drawer-item-index": i } as React.CSSProperties}
                 />
               )}

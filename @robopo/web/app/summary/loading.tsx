@@ -36,7 +36,7 @@ export default function Loading() {
       {/* Table skeleton */}
       <div className="min-h-0 flex-1 overflow-hidden px-4">
         {/* Header row */}
-        <div className="flex items-center gap-3 border-base-300 border-b py-2.5">
+        <div className="border-base-300 flex items-center gap-3 border-b py-2.5">
           {tableCols.map((id) => (
             <Skeleton key={id} className="h-3 flex-1" />
           ))}
@@ -45,7 +45,7 @@ export default function Loading() {
         {tableRows.map((id, i) => (
           <div
             key={id}
-            className="flex items-center gap-3 border-base-200/60 border-b py-3"
+            className="border-base-200/60 flex items-center gap-3 border-b py-3"
             style={{ animationDelay: `${i * 60}ms` }}
           >
             {tableCols.map((cid) => (

@@ -214,8 +214,8 @@ function PlayerRow({
   const cells = buildPlayerRowCells(player, pointData)
 
   return (
-    <tr className="transition-colors duration-150 hover:bg-primary/5">
-      <td className="whitespace-nowrap py-3 font-medium">
+    <tr className="hover:bg-primary/5 transition-colors duration-150">
+      <td className="py-3 font-medium whitespace-nowrap">
         <Link
           href={`/summary/${competitionId}/${courseId}/${player.playerId}`}
           className="text-primary underline-offset-2 hover:underline"
@@ -223,16 +223,16 @@ function PlayerRow({
           {cells.name}
         </Link>
       </td>
-      <td className="whitespace-nowrap py-3">{cells.furigana}</td>
+      <td className="py-3 whitespace-nowrap">{cells.furigana}</td>
       <td className="py-3">{cells.bibNumber}</td>
-      <td className="whitespace-nowrap py-3">
+      <td className="py-3 whitespace-nowrap">
         {formatTimestamp(player.firstAttemptTime)}
       </td>
-      <td className="whitespace-nowrap py-3">
+      <td className="py-3 whitespace-nowrap">
         {formatTimestamp(cells.completionTime)}
       </td>
-      <td className="whitespace-nowrap py-3">{cells.elapsedToComplete}</td>
-      <td className="whitespace-nowrap py-3">
+      <td className="py-3 whitespace-nowrap">{cells.elapsedToComplete}</td>
+      <td className="py-3 whitespace-nowrap">
         {formatTimestamp(player.lastAttemptTime)}
       </td>
       <td className="py-3">{cells.completionCount}</td>

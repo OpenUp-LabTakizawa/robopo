@@ -42,29 +42,29 @@ export function ChallengeModal({
       <div className="modal-box max-w-sm">
         {isSuccess ? (
           <div className="flex flex-col items-center gap-4">
-            <p className="text-base text-base-content/70">{message}</p>
+            <p className="text-base-content/70 text-base">{message}</p>
             <p className="text-base-content/50 text-sm">
               ホーム画面へ自動遷移します
             </p>
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            <h3 className="text-center font-bold text-lg">
+            <h3 className="text-center text-lg font-bold">
               チャレンジを終了しますか?
             </h3>
 
             {/* Score summary card */}
-            <div className="rounded-lg bg-base-200 p-4">
+            <div className="bg-base-200 rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <span className="text-base-content/60 text-sm">1回目</span>
-                <span className="score-display font-bold text-primary text-xl">
+                <span className="score-display text-primary text-xl font-bold">
                   {firstResultPoint}pt
                 </span>
               </div>
               {retryResultPoint !== null && (
-                <div className="mt-2 flex items-center justify-between border-base-300 border-t pt-2">
+                <div className="border-base-300 mt-2 flex items-center justify-between border-t pt-2">
                   <span className="text-base-content/60 text-sm">2回目</span>
-                  <span className="score-display font-bold text-primary text-xl">
+                  <span className="score-display text-primary text-xl font-bold">
                     {retryResultPoint}pt
                   </span>
                 </div>
@@ -122,14 +122,14 @@ export function RetryModal({
     <dialog className="modal modal-open" onClose={() => setModalOpen(0)}>
       <div className="modal-box max-w-sm">
         <div className="flex flex-col gap-4">
-          <h3 className="text-center font-bold text-lg">再チャレンジ</h3>
-          <div className="rounded-lg bg-base-200 p-4 text-center">
+          <h3 className="text-center text-lg font-bold">再チャレンジ</h3>
+          <div className="bg-base-200 rounded-lg p-4 text-center">
             <p className="text-base-content/60 text-sm">1回目のスコア</p>
-            <p className="score-display font-bold text-2xl text-primary">
+            <p className="score-display text-primary text-2xl font-bold">
               {firstResultPoint}pt
             </p>
           </div>
-          <p className="text-center text-base-content/60 text-sm">
+          <p className="text-base-content/60 text-center text-sm">
             1回目のポイントを保存して再チャレンジしますか?
           </p>
           <div className="flex flex-col gap-2">
@@ -189,21 +189,21 @@ export function CourseOutModal({
       <div className="modal-box max-w-sm">
         {isSuccess ? (
           <div className="flex flex-col items-center gap-4">
-            <p className="text-base text-base-content/70">{message}</p>
+            <p className="text-base-content/70 text-base">{message}</p>
             <p className="text-base-content/50 text-sm">
               ホーム画面へ自動遷移します
             </p>
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            <h3 className="text-center font-bold text-error text-lg">
+            <h3 className="text-error text-center text-lg font-bold">
               コースアウト
             </h3>
 
-            <div className="rounded-lg bg-error/5 p-4">
+            <div className="bg-error/5 rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <span className="text-base-content/60 text-sm">1回目</span>
-                <span className="score-display font-bold text-xl">
+                <span className="score-display text-xl font-bold">
                   {retryResultPoint === null
                     ? courseOutAttemptScore
                     : firstResultPoint}
@@ -211,16 +211,16 @@ export function CourseOutModal({
                 </span>
               </div>
               {retryResultPoint !== null && (
-                <div className="mt-2 flex items-center justify-between border-base-300 border-t pt-2">
+                <div className="border-base-300 mt-2 flex items-center justify-between border-t pt-2">
                   <span className="text-base-content/60 text-sm">2回目</span>
-                  <span className="score-display font-bold text-xl">
+                  <span className="score-display text-xl font-bold">
                     {courseOutAttemptScore}pt
                   </span>
                 </div>
               )}
               {parsed.type === "penalty" && parsed.penalty > 0 && (
-                <div className="mt-2 border-base-300 border-t pt-2 text-center">
-                  <span className="font-semibold text-error text-xs">
+                <div className="border-base-300 mt-2 border-t pt-2 text-center">
+                  <span className="text-error text-xs font-semibold">
                     コースアウト減点: -{parsed.penalty}pt
                   </span>
                 </div>

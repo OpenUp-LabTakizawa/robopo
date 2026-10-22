@@ -13,7 +13,7 @@ export default function Loading() {
       </div>
 
       {/* Header card skeleton */}
-      <div className="card mb-6 border border-base-300 bg-base-100 p-5 shadow-sm">
+      <div className="card border-base-300 bg-base-100 mb-6 border p-5 shadow-sm">
         <div className="flex items-center justify-between">
           <Skeleton className="h-7 w-48" />
           <Skeleton className="h-4 w-20" />
@@ -33,11 +33,11 @@ export default function Loading() {
       {/* Course sections skeleton */}
       {["s1", "s2"].map((id) => (
         <div key={id} className="mb-6">
-          <div className="mb-3 flex items-center justify-between border-base-300 border-l-4 pl-3">
+          <div className="border-base-300 mb-3 flex items-center justify-between border-l-4 pl-3">
             <Skeleton className="h-5 w-32" />
             <Skeleton className="h-7 w-28 rounded-lg" />
           </div>
-          <div className="card border border-base-300 bg-base-100 p-4 shadow-sm">
+          <div className="card border-base-300 bg-base-100 border p-4 shadow-sm">
             <div className="space-y-2">
               {["r1", "r2", "r3", "r4", "r5"].map((rid) => (
                 <Skeleton key={rid} className="h-8 w-full rounded-lg" />

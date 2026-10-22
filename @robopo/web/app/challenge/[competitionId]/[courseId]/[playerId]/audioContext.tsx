@@ -78,9 +78,9 @@ export function SoundController() {
       aria-label="効果音のオン・オフ切り替え"
     >
       {muted ? (
-        <VolumeX className="size-5 text-base-content/40" />
+        <VolumeX className="text-base-content/40 size-5" />
       ) : (
-        <Volume2 className="size-5 text-success" />
+        <Volume2 className="text-success size-5" />
       )}
     </button>
   )

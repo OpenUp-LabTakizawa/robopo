@@ -143,7 +143,7 @@ export function CourseFormModal({
   return (
     <dialog className="modal modal-open">
       <div className="modal-box max-w-md">
-        <h3 className="mb-4 font-bold text-lg">
+        <h3 className="mb-4 text-lg font-bold">
           {mode === "create" ? "コースを登録" : "コースを編集"}
         </h3>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -199,7 +199,7 @@ export function CourseFormModal({
               <button
                 type="button"
                 disabled
-                className="btn btn-success gap-1.5 rounded-lg shadow-lg shadow-success/20 transition-all duration-200"
+                className="btn btn-success shadow-success/20 gap-1.5 rounded-lg shadow-lg transition-all duration-200"
               >
                 <CircleCheck className="size-4 animate-[scale-in_0.3s_ease-out]" />
                 登録成功
@@ -207,7 +207,7 @@ export function CourseFormModal({
             ) : (
               <button
                 type="submit"
-                className="btn btn-primary gap-1.5 rounded-lg shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-primary/30 hover:shadow-xl"
+                className="btn btn-primary shadow-primary/20 hover:shadow-primary/30 gap-1.5 rounded-lg shadow-lg transition-all duration-200 hover:shadow-xl"
                 disabled={loading}
               >
                 {loading ? (
