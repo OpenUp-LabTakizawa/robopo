@@ -63,7 +63,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: 🐣 Setup mise
-        uses: jdx/mise-action@v5.2.4
+        uses: jdx/mise-action@v5.2.5
         with:
           install_args: bun
 
