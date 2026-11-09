@@ -42,7 +42,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "better-auth": "^1.7.18",
     "drizzle-orm": "^0.45.4",
-    "lucide-react": "^1.69.0",
+    "lucide-react": "^1.70.0",
     "next": "^16.4.5",
     "pg": "^8.23.1",
     "react": "^19.3.1",
@@ -50,10 +50,10 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.6.5",
+    "@biomejs/biome": "^2.6.6",
     "@happy-dom/global-registrator": "^20.14.6",
     "@playwright/test": "^1.65.0",
-    "@tailwindcss/postcss": "^4.3.4",
+    "@tailwindcss/postcss": "^4.3.5",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",
     "@types/bun": "^1.4.4",
@@ -65,7 +65,7 @@
     "daisyui": "^5.7.50",
     "drizzle-kit": "^0.31.11",
     "postcss": "^8.5.32",
-    "tailwindcss": "^4.3.4",
+    "tailwindcss": "^4.3.5",
     "typescript": "^7.0.2"
   }
 }
