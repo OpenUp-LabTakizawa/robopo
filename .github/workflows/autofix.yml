@@ -19,12 +19,12 @@ jobs:
 
     steps:
       - name: 📥 Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: 🐣 Setup mise
-        uses: jdx/mise-action@v5.2.10
+        uses: jdx/mise-action@90f833d396d0cc3674b631d2d225e306476c303a # v5.2.10
 
       - name: 📦 Update dependencies
         run: mise update
@@ -34,6 +34,6 @@ jobs:
 
       - name: 💾 Commit
         if: success() || failure()
-        uses: autofix-ci/action@v1.3.4
+        uses: autofix-ci/action@c5b2d67aa2274e7b5a18224e8171550871fc7e4a # v1.3.4
         with:
           commit-message: "fix(autofix.ci): apply automated fixes"
