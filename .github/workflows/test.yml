@@ -33,12 +33,12 @@ jobs:
           - 5432:5432
     steps:
       - name: 📥 Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: 🐣 Setup mise
-        uses: jdx/mise-action@v5.2.10
+        uses: jdx/mise-action@90f833d396d0cc3674b631d2d225e306476c303a # v5.2.10
         with:
           install_args: bun
 
@@ -131,7 +131,7 @@ jobs:
           fi
 
       - name: 🆙 Upload test comment
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: comment
           path: comment.txt
